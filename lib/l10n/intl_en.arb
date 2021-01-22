@@ -8,5 +8,12 @@
   "home_wallet": "Wallet",
   "home_liquitiy": "Liquidity",
   "home_dex": "DEX",
-  "home_tokens": "Tokens"
+  "home_tokens": "Tokens",
+  
+  "welcome": "Welcome",
+  "welcome_wallet_create": "Create a new wallet",
+  "welcome_wallet_restore": "Import existing wallet",
+  "welcome_wallet_info": "Create your DeFiChain wallet and keep full control of your private keys!",
+  "welcome_wallet_secure": "Secure",
+  "welcome_wallet_privacy": "We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics."
 }

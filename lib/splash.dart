@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'package:defichainwallet/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/l10n.dart';
+import 'helper/constants.dart';
 import 'home.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,14 +26,25 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+  _init() async {
+    final prefs = await SharedPreferences.getInstance();
+    final mnemonic = prefs.getString(DefiChainConstants.MnemonicKey);
+
+    if (mnemonic == null || mnemonic == "") {
+     Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => WelcomeScreen()));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => HomeScreen()));
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _loadVersion();
-    Timer(
-        Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => HomeScreen())));
+
+    _init();
   }
 
   @override
@@ -44,7 +58,10 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Text(
             S.of(context).title,
-            style: TextStyle(fontSize: 30, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800), 
+            style: TextStyle(
+                fontSize: 30,
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w800),
           ),
           Image.asset('assets/logo.png'),
           SizedBox(height: 20),

@@ -5,5 +5,12 @@
   "home_wallet": "Wallet",
   "home_liquitiy": "Liquidity",
   "home_dex": "DEX",
-  "home_tokens": "Tokens"
+  "home_tokens": "Tokens",
+  
+  "welcome": "Willkommen",
+  "welcome_wallet_create": "Neues Wallet anlegen",
+  "welcome_wallet_restore": "Wallet importieren",
+  "welcome_wallet_info": "Erstelle dein DeFiChain Wallet und behalte die Kontrolle der Privaten Schlüssel!",
+  "welcome_wallet_secure": "Sicher",
+  "welcome_wallet_privacy": "Deine Privaten Schlüssel werden lokal verschlüsselt abgelegt und verwaltet, geschützt durch deine Biometrie/PIN."
 }

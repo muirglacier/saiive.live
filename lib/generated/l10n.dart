@@ -104,6 +104,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Welcome`
+  String get welcome {
+    return Intl.message(
+      'Welcome',
+      name: 'welcome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create a new wallet`
+  String get welcome_wallet_create {
+    return Intl.message(
+      'Create a new wallet',
+      name: 'welcome_wallet_create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import existing wallet`
+  String get welcome_wallet_restore {
+    return Intl.message(
+      'Import existing wallet',
+      name: 'welcome_wallet_restore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create your DeFiChain wallet and keep full control of your private keys!`
+  String get welcome_wallet_info {
+    return Intl.message(
+      'Create your DeFiChain wallet and keep full control of your private keys!',
+      name: 'welcome_wallet_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secure`
+  String get welcome_wallet_secure {
+    return Intl.message(
+      'Secure',
+      name: 'welcome_wallet_secure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics.`
+  String get welcome_wallet_privacy {
+    return Intl.message(
+      'We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics.',
+      name: 'welcome_wallet_privacy',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

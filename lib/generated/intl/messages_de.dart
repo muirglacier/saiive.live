@@ -27,6 +27,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_tokens" : MessageLookupByLibrary.simpleMessage("Tokens"),
     "home_wallet" : MessageLookupByLibrary.simpleMessage("Wallet"),
     "title" : MessageLookupByLibrary.simpleMessage("DeFiChain Wallet"),
-    "version" : MessageLookupByLibrary.simpleMessage("Version")
+    "version" : MessageLookupByLibrary.simpleMessage("Version"),
+    "welcome" : MessageLookupByLibrary.simpleMessage("Willkommen"),
+    "welcome_wallet_create" : MessageLookupByLibrary.simpleMessage("Neues Wallet anlegen"),
+    "welcome_wallet_info" : MessageLookupByLibrary.simpleMessage("Erstelle dein DeFiChain Wallet und behalte die Kontrolle der Privaten Schlüssel!"),
+    "welcome_wallet_privacy" : MessageLookupByLibrary.simpleMessage("Deine Privaten Schlüssel werden lokal verschlüsselt abgelegt und verwaltet, geschützt durch deine Biometrie/PIN."),
+    "welcome_wallet_restore" : MessageLookupByLibrary.simpleMessage("Wallet importieren"),
+    "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Sicher")
   };
 }

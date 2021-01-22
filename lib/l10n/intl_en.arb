@@ -1,8 +1,12 @@
 {
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    },
-    "title": "DeFiChain Wallet",
-    "version": "Version"
-  }
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "title": "DeFiChain Wallet",
+  "version": "Version",
+  "home_wallet": "Wallet",
+  "home_liquitiy": "Liquidity",
+  "home_dex": "DEX",
+  "home_tokens": "Tokens"
+}

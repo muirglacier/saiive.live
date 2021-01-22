@@ -64,6 +64,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Wallet`
+  String get home_wallet {
+    return Intl.message(
+      'Wallet',
+      name: 'home_wallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liquidity`
+  String get home_liquitiy {
+    return Intl.message(
+      'Liquidity',
+      name: 'home_liquitiy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DEX`
+  String get home_dex {
+    return Intl.message(
+      'DEX',
+      name: 'home_dex',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokens`
+  String get home_tokens {
+    return Intl.message(
+      'Tokens',
+      name: 'home_tokens',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

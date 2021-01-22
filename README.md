@@ -1,6 +1,6 @@
 # defichainwallet
 
-A mobile application for DeFiChain.
+A mobile application for [DeFiChain](https://defichain.com/).
 
 # Getting Started
 

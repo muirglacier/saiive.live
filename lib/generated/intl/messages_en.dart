@@ -22,6 +22,10 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "helloWorld" : MessageLookupByLibrary.simpleMessage("Hello World!"),
+    "home_dex" : MessageLookupByLibrary.simpleMessage("DEX"),
+    "home_liquitiy" : MessageLookupByLibrary.simpleMessage("Liquidity"),
+    "home_tokens" : MessageLookupByLibrary.simpleMessage("Tokens"),
+    "home_wallet" : MessageLookupByLibrary.simpleMessage("Wallet"),
     "title" : MessageLookupByLibrary.simpleMessage("DeFiChain Wallet"),
     "version" : MessageLookupByLibrary.simpleMessage("Version")
   };

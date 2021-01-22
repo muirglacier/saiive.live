@@ -65,7 +65,8 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           brightness: _brightness,
           primaryColor: Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF),
-          accentColor: Color.fromARGB(0xFF, 0xFF, 0xFF, 0x7F),
+          accentColor: Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF),
+          
           backgroundColor: isDark ? Colors.black : Colors.white,
 
           fontFamily: 'Helvetica, Arial, sans-serif',

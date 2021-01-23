@@ -100,22 +100,25 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
             Container(
                 child: SizedBox(
                     width: 300,
-                    child: ElevatedButton(
+                    child: RaisedButton(
                       child: Text(
                         S.of(context).welcome_wallet_create,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+
+                      },
                     ))),
             SizedBox(height: 10),
             Container(
                 child: SizedBox(
                     width: 300,
                     child: RaisedButton(
-                      color: Theme.of(context).backgroundColor,
                       child: Text(
                         S.of(context).welcome_wallet_restore,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/intro_wallet_restore');
+                      },
                     ))),
           ]),
     );

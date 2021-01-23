@@ -28,34 +28,34 @@ stages:
           version: 'latest'
       - task: FlutterCommand@0
         inputs:
-          arguments: 'precache'
+          arguments: 'flutter precache'
       
       - task: FlutterCommand@0
         inputs:
-          arguments: 'doctor -v'
+          arguments: 'flutter doctor -v'
       
-      - task: FlutterBuild@0
-        displayName: Android Debug APK
-        inputs:
-          target: 'apk'
-          projectDirectory: '.'
-          buildName: '0.1'
-          debugMode: true
-          apkTargetPlatform: 'android-arm64'
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/debug'
-      - task: FlutterBuild@0
-        displayName: Android Release APK
-        inputs:
-          target: 'apk'
-          projectDirectory: '.'
-          buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/release'
-      - task: PublishBuildArtifacts@1
+      # - task: FlutterBuild@0
+      #   displayName: Android Debug APK
+      #   inputs:
+      #     target: 'apk'
+      #     projectDirectory: '.'
+      #     buildName: '0.1'
+      #     debugMode: true
+      #     apkTargetPlatform: 'android-arm64'
+      # - task: CopyFiles@2
+      #   inputs:
+      #     contents: '**/*.apk'
+      #     targetFolder: '$(build.artifactStagingDirectory)/debug'
+      # - task: FlutterBuild@0
+      #   displayName: Android Release APK
+      #   inputs:
+      #     target: 'apk'
+      #     projectDirectory: '.'
+      #     buildName: '0.1'
+      #     apkTargetPlatform: 'android-arm64'
+      # - task: CopyFiles@2
+      #   inputs:
+      #     contents: '**/*.apk'
+      #     targetFolder: '$(build.artifactStagingDirectory)/release'
+      # - task: PublishBuildArtifacts@1
       

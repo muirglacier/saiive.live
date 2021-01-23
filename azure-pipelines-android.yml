@@ -9,7 +9,6 @@ trigger:
 variables: 
   vmImageName: 'windows-latest'
 
-
 stages:
 - stage: Android
   displayName: Android
@@ -28,7 +27,7 @@ stages:
       - task: FlutterBuild@0
         inputs:
           target: 'apk'
-          buildNumber: $(BuildID)
+          buildNumber: $(rev:r)
           projectDirectory: '.'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'

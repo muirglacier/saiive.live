@@ -20,6 +20,11 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: 'echo $(Rev:.r)'
+
       - task: FlutterInstall@0
         inputs:
           channel: 'beta'
@@ -27,7 +32,7 @@ stages:
       - task: FlutterBuild@0
         inputs:
           target: 'apk'
-          buildNumber: $(rev:r)
+          buildNumber: 
           projectDirectory: '.'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'

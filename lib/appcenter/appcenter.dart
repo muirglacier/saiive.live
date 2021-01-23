@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_appcenter_bundle/flutter_appcenter_bundle.dart';
 import 'package:device_info/device_info.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 class AppCenterWrapper {
   Future start() async {
     await AppCenter.startAsync(
-      appSecretAndroid: '89cdcc88-5073-4b4a-9235-29e12c47d731',
+      appSecretAndroid: FlutterConfig.get("APPCENTER_ANDROID_ID"),
       appSecretIOS: '374b0829-a9ee-401c-8187-ab0f0ebbec83',
       enableAnalytics: true,
       enableCrashes: true,

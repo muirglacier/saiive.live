@@ -9,7 +9,7 @@ import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
-import 'package:defichainwallet/model/vault.dart';
+import 'package:defichainwallet/network/model/vault.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

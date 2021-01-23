@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:defichainwallet/model/error.dart';
+import 'package:defichainwallet/network/model/error.dart';
 import 'package:defichainwallet/network/base_request.dart';
 
 import 'package:flutter_config/flutter_config.dart';

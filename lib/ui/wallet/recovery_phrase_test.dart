@@ -1,6 +1,6 @@
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/model/vault.dart';
+import 'package:defichainwallet/network/model/vault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:defichainwallet/model/feeEstimate.dart';
+import 'package:defichainwallet/network/model/feeEstimate.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 

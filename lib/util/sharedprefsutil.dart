@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:defichainwallet/model/available_language.dart';
-import 'package:defichainwallet/model/available_themes.dart';
+import 'package:defichainwallet/network/model/available_language.dart';
+import 'package:defichainwallet/network/model/available_themes.dart';
 
 class SharedPrefsUtil {
   // Keys

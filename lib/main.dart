@@ -1,5 +1,5 @@
 import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/model/available_language.dart';
+import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/ui/intro/intro_wallet_new.dart';
 import 'package:defichainwallet/ui/splash.dart';
 import 'package:defichainwallet/ui/home.dart';

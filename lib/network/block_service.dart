@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:defichainwallet/model/block.dart';
+import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 

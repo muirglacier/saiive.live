@@ -7,7 +7,7 @@ import 'package:defichainwallet/network/block_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:defichainwallet/util/sharedprefsutil.dart';
-import 'package:defichainwallet/model/vault.dart';
+import 'package:defichainwallet/network/model/vault.dart';
 
 GetIt sl = GetIt.instance;
 

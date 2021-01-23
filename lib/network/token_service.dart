@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:defichainwallet/model/token.dart';
+import 'package:defichainwallet/network/model/token.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 

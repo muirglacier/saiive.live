@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:defichainwallet/themes.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/model/available_language.dart';
-import 'package:defichainwallet/model/available_themes.dart';
+import 'package:defichainwallet/network/model/available_language.dart';
+import 'package:defichainwallet/network/model/available_themes.dart';
 
 class _InheritedStateContainer extends InheritedWidget {
   // Data is your entire state. In our case just 'User'

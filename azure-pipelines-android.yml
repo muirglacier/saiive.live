@@ -5,6 +5,7 @@
 
 trigger:
 - main
+name: $(BuildID)
 
 variables: 
   vmImageName: 'windows-latest'
@@ -20,10 +21,6 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
-      - task: Bash@3
-        inputs:
-          targetType: 'inline'
-          script: 'echo $(Rev:.r)'
 
       - task: FlutterInstall@0
         inputs:
@@ -32,7 +29,6 @@ stages:
       - task: FlutterBuild@0
         inputs:
           target: 'apk'
-          buildNumber: 
           projectDirectory: '.'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'

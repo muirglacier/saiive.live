@@ -28,6 +28,7 @@ stages:
       - task: FlutterBuild@0
         inputs:
           target: 'apk'
+          buildNumber: $(BuildID)
           projectDirectory: '.'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'

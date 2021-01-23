@@ -7,9 +7,6 @@ trigger:
 - main
 name: $(BuildID)
 
-variables: 
-  vmImageName: 'windows-latest'
-
 stages:
 - stage: Android
   displayName: Android
@@ -18,7 +15,58 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      vmImage: $(vmImageName)
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+
+      - task: FlutterInstall@0
+        inputs:
+          channel: 'beta'
+          version: 'latest'
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(FlutterToolPath)
+            ./flutter doctor -v
+            ./flutter precache
+      
+      - task: FlutterBuild@0
+        displayName: Android Debug APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '.'
+          buildName: '0.1'
+          debugMode: true
+          apkTargetPlatform: 'android-arm64'
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/android/debug'
+
+      - task: FlutterBuild@0
+        displayName: Android Release APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '.'
+          buildName: '0.1'
+          apkTargetPlatform: 'android-arm64'
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/android/release'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          ArtifactName: 'android'
+      
+- stage: iOS
+  displayName: iOS
+  
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'macOS-latest'
     
     steps:
 
@@ -33,29 +81,30 @@ stages:
             cd $(FlutterToolPath)
             flutter doctor -v
             flutter precache
-      
+            
       - task: FlutterBuild@0
-        displayName: Android Debug APK
         inputs:
-          target: 'apk'
+          target: 'ios'
           projectDirectory: '.'
-          buildName: '0.1'
+          verboseMode: true
           debugMode: true
-          apkTargetPlatform: 'android-arm64'
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/debug'
-      - task: FlutterBuild@0
-        displayName: Android Release APK
-        inputs:
-          target: 'apk'
-          projectDirectory: '.'
           buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
+
       - task: CopyFiles@2
         inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/release'
+          contents: '**/*.app'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
+      - task: FlutterBuild@0
+        inputs:
+          target: 'ios'
+          projectDirectory: '.'
+          verboseMode: true
+          debugMode: false
+          buildName: '0.1'
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.app'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/release'
       - task: PublishBuildArtifacts@1
-      
+        inputs:
+          ArtifactName: 'ios'    

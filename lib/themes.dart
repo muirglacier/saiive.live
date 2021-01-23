@@ -10,8 +10,8 @@ class AppColors {
 
 abstract class BaseTheme {
   static const pink = Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF);
-  static const black = Color(0xFFFFFFFF);
-  static const white = Color(0x00000000);
+  static const black = Color(0xFF000000);
+  static const white = Color(0xFFFFFFFF);
 
   Color primary;
   Color backgroundColor;
@@ -24,27 +24,23 @@ abstract class BaseTheme {
 }
 
 class DefiThemeLight extends BaseTheme {
-  DefiThemeLight() {
-    this.primary = BaseTheme.pink;
-    this.backgroundColor = BaseTheme.white;
-    this.text = BaseTheme.black;
+  Color primary = BaseTheme.pink;
+  Color backgroundColor = BaseTheme.white;
+  Color text = BaseTheme.black;
 
-    this.buttonColorPrimary = BaseTheme.white;
-    this.buttonColorSecondary = Colors.grey.shade50;
+  Color buttonColorPrimary = BaseTheme.white;
+  Color buttonColorSecondary = Colors.grey.withOpacity(0.8);
 
-    this.brightness = Brightness.light;
-  }
+  Brightness brightness = Brightness.light;
 }
 
 class DefiThemeDark extends BaseTheme {
-  DefiThemeDark() {
-    this.primary = BaseTheme.pink;
-    this.backgroundColor = BaseTheme.black;
-    this.text = BaseTheme.white;
+  Color primary = BaseTheme.pink;
+  Color backgroundColor = BaseTheme.black;
+  Color text = BaseTheme.white;
 
-    this.buttonColorPrimary = BaseTheme.black;
-    this.buttonColorSecondary = Colors.grey.shade50;
+  Color buttonColorPrimary = BaseTheme.black;
+  Color buttonColorSecondary = Colors.grey.shade50;
 
-    this.brightness = Brightness.light;
-  }
+  Brightness brightness = Brightness.light;
 }

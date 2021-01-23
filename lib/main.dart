@@ -64,18 +64,24 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
           const Locale('de', '')
         ],
         locale: StateContainer.of(context).curLanguage == null ||
-            StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT ? null : StateContainer.of(context).curLanguage.getLocale(),
+                StateContainer.of(context).curLanguage.language ==
+                    AvailableLanguage.DEFAULT
+            ? null
+            : StateContainer.of(context).curLanguage.getLocale(),
         title: "DeFiChain Wallet",
         theme: ThemeData(
           primaryColor: StateContainer.of(context).curTheme.primary,
           backgroundColor: StateContainer.of(context).curTheme.backgroundColor,
           buttonColor: StateContainer.of(context).curTheme.backgroundColor,
           brightness: StateContainer.of(context).curTheme.brightness,
+          buttonTheme: ButtonThemeData(
+              buttonColor:
+                  StateContainer.of(context).curTheme.buttonColorPrimary),
           fontFamily: 'Helvetica, Arial, sans-serif',
         ),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
-          switch(settings.name) {
+          switch (settings.name) {
             case '/':
               return NoTransitionRoute(
                 builder: (_) => SplashScreen(),
@@ -110,7 +116,6 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
             default:
               return null;
           }
-        }
-      );
+        });
   }
 }

@@ -2,7 +2,6 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'wallet/wallet.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen();
@@ -16,8 +15,10 @@ class _HomeScreenState extends State<HomeScreen> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    WalletScreen(),
     Text(
+      'Wallet - Work in Progress!',
+      style: optionStyle,
+    ),Text(
       'Liquidity - Work in Progress!',
       style: optionStyle,
     ),

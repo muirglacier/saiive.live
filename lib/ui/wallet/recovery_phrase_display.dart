@@ -28,7 +28,7 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
                       (i + 1).toString(),
                       style: TextStyle(color: Colors.white),
                     ),
-                    backgroundColor: Theme.of(context).accentColor),
+                    backgroundColor: Theme.of(context).primaryColor),
               ),
             )))
         .values
@@ -44,7 +44,6 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
         appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
             title: Text(S.of(context).wallet_recovery_phrase_title)),
-        backgroundColor: Theme.of(context).backgroundColor,
         body: Padding(
             padding: EdgeInsets.only(top: 0),
             child: Container(

@@ -50,8 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          SettingsScreen()));
+                      builder: (BuildContext context) => SettingsScreen()));
                 },
                 child: Icon(
                   Icons.settings,

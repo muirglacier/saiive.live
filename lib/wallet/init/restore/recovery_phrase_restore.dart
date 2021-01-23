@@ -164,7 +164,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                                         .wallet_restore_invalidMnemonic),
                                   ));
                               } else {
-                                Navigator.of(context).pushNamedAndRemoveUntil("home", (route) => true);
+                                Navigator.of(context).pushNamedAndRemoveUntil("homeScreen", (route) => false);
                               }
                             },
                           )))

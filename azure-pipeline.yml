@@ -82,14 +82,14 @@ stages:
         inputs:
           channel: 'beta'
           version: 'latest'
-      - task: Bash@3
-        displayName: "Flutter prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter doctor -v
-            $(FlutterToolPath)/flutter precache
+      # - task: Bash@3
+      #   displayName: "Flutter prepare"
+      #   inputs:
+      #     targetType: 'inline'
+      #     script: |
+      #       cd $(Build.SourcesDirectory)
+      #       $(FlutterToolPath)/flutter doctor -v
+      #       $(FlutterToolPath)/flutter precache
             
       - task: FlutterBuild@0
         displayName: "Build iOS debug"

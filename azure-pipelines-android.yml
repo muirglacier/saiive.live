@@ -21,10 +21,15 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
+
       - task: FlutterInstall@0
         inputs:
           channel: 'beta'
           version: 'latest'
+      - task: FlutterCommand@0
+        inputs:
+          arguments: 'precache'      
+      
       - task: FlutterBuild@0
         displayName: Android Debug APK
         inputs:

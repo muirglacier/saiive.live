@@ -30,7 +30,7 @@ stages:
         displayName: Android Debug APK
         inputs:
           target: 'apk'
-          projectDirectory: '.'
+          projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           debugMode: true
           apkTargetPlatform: 'android-arm64'
@@ -43,7 +43,7 @@ stages:
         displayName: Android Release APK
         inputs:
           target: 'apk'
-          projectDirectory: '.'
+          projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
       - task: CopyFiles@2
@@ -80,7 +80,7 @@ stages:
       - task: FlutterBuild@0
         inputs:
           target: 'ios'
-          projectDirectory: '.'
+          projectDirectory: '$(Build.SourcesDirectory)'
           verboseMode: true
           debugMode: true
           buildName: '0.1'
@@ -92,7 +92,7 @@ stages:
       - task: FlutterBuild@0
         inputs:
           target: 'ios'
-          projectDirectory: '.'
+          projectDirectory: '$(Build.SourcesDirectory)'
           verboseMode: true
           debugMode: false
           buildName: '0.1'

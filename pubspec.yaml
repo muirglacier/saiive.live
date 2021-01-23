@@ -23,8 +23,12 @@ dependencies:
   flutter_localizations:
     sdk: flutter   
   
-  #technical libs
+  #cryto libs
   defichaindart: ^0.1.0
+  bip32: ^1.0.7
+  bip39: ^1.0.3
+  
+  #technical libs
   flutter_config: ^1.0.8
   shared_preferences: ^0.5.12+4
   package_info: ^0.4.3+2

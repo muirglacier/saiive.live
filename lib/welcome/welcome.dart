@@ -18,12 +18,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         children: <Widget>[
           Text(
             S.of(context).welcome,
-            style: TextStyle(fontFamily: "Popins", fontSize: 20),
+            style: TextStyle(fontSize: 20),
           ),
           Text(
             S.of(context).welcome_wallet_info,
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: "Popins", fontSize: 15),
+            style: TextStyle(fontSize: 15),
           ),
         ],
       ),
@@ -31,12 +31,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         children: <Widget>[
           Text(
             S.of(context).welcome_wallet_secure,
-            style: TextStyle(fontFamily: "Popins", fontSize: 20),
+            style: TextStyle(fontSize: 20),
           ),
           Text(
             S.of(context).welcome_wallet_privacy,
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: "Popins", fontSize: 15),
+            style: TextStyle(fontSize: 15),
           ),
         ],
       )

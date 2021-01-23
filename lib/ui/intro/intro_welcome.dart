@@ -101,23 +101,38 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
                 child: SizedBox(
                     width: 300,
                     child: RaisedButton(
-                      child: Text(
-                        S.of(context).welcome_wallet_create,
-                      ),
-                      onPressed: () {
-
-                      },
-                    ))),
+                        color: Colors.white,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.account_balance_wallet,
+                                  color: Theme.of(context).primaryColor),
+                              SizedBox(width: 10),
+                              Text(
+                                S.of(context).welcome_wallet_create,
+                              ),
+                            ]),
+                        onPressed: () {}))),
             SizedBox(height: 10),
             Container(
                 child: SizedBox(
                     width: 300,
                     child: RaisedButton(
-                      child: Text(
-                        S.of(context).welcome_wallet_restore,
-                      ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.list,
+                                color: Theme.of(context).primaryColor),
+                            SizedBox(width: 10),
+                            Text(
+                              S.of(context).welcome_wallet_restore,
+                            )
+                          ]),
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/intro_wallet_restore');
+                        Navigator.of(context)
+                            .pushNamed('/intro_wallet_restore');
                       },
                     ))),
           ]),

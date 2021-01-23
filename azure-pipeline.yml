@@ -10,7 +10,7 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'ubuntu-latest'
     
     steps:
 
@@ -23,9 +23,9 @@ stages:
           targetType: 'inline'
           script: |
             cd $(FlutterToolPath)
-            .\flutter doctor -v
-            .\flutter precache
-            .\flutter create '$(Build.SourcesDirectory)'
+            ./flutter doctor -v
+            ./flutter precache
+            ./flutter create '$(Build.SourcesDirectory)'
       
       - task: FlutterBuild@0
         displayName: Android Debug APK

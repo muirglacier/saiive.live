@@ -54,7 +54,7 @@ class StateContainer extends StatefulWidget {
 ///
 /// Basically the central hub behind the entire app
 class StateContainerState extends State<StateContainer> {
-  BaseTheme curTheme = DefiTheme();
+  BaseTheme curTheme = DefiThemeLight();
   LanguageSetting curLanguage = LanguageSetting(AvailableLanguage.DEFAULT);
   Locale deviceLocale = Locale('en', 'US');
 

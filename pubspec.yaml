@@ -34,8 +34,14 @@ dependencies:
   shared_preferences: ^0.5.12+4
   package_info: ^0.4.3+2
 
-  # DefiChain API
+  #cryto libs
   defichaindart: ^0.1.0
+  bip32: ^1.0.7
+  bip39: ^1.0.3
+
+  #ui libs
+  carousel_slider: ^2.1.0
+  flutter_tagging: ^2.2.0+3
 
   # Dependency Injection
   get_it: ^5.0.6

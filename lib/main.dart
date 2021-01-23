@@ -6,6 +6,7 @@ import 'package:defichainwallet/model/available_language.dart';
 import 'package:defichainwallet/ui/splash.dart';
 import 'package:defichainwallet/ui/home.dart';
 import 'package:defichainwallet/ui/intro/intro_welcome.dart';
+import 'package:defichainwallet/ui/intro/intro_restore.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/routes.dart';
@@ -65,10 +66,10 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
             StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT ? null : StateContainer.of(context).curLanguage.getLocale(),
         title: "DeFiChain Wallet",
         theme: ThemeData(
-          dialogBackgroundColor: StateContainer.of(context).curTheme.backgroundDark,
           primaryColor: StateContainer.of(context).curTheme.primary,
-          accentColor: StateContainer.of(context).curTheme.accent,
-          backgroundColor: StateContainer.of(context).curTheme.backgroundDark,
+          buttonColor: StateContainer.of(context).curTheme.primary,
+          accentColor: Colors.white,
+          backgroundColor: StateContainer.of(context).curTheme.background,
           brightness: StateContainer.of(context).curTheme.brightness,
           fontFamily: 'Helvetica, Arial, sans-serif',
         ),
@@ -88,12 +89,19 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
                 settings: settings,
               );
               break;
+
             case '/intro_welcome':
               return NoTransitionRoute(
                 builder: (_) => IntroWelcomeScreen(),
                 settings: settings,
               );
               break;
+
+            case '/intro_wallet_restore':
+              return NoTransitionRoute(
+                builder: (_) => IntroRestoreScreen(),
+                settings: settings,
+              );
             default:
               return null;
           }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
-import 'package:defichainwallet/ui/widgets/buttons.dart';
 
 class IntroWelcomeScreen extends StatefulWidget {
   @override
@@ -19,7 +18,6 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       key: _scaffoldKey,
-      backgroundColor: StateContainer.of(context).curTheme.backgroundDark,
       body: LayoutBuilder(
         builder: (context, constraints) => SafeArea(
           minimum: EdgeInsets.only(
@@ -51,7 +49,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
                       margin: EdgeInsets.symmetric(
                           horizontal: 50, vertical: 20),
                       child: AutoSizeText(
-                        "Welcome to Defi Chain Wallet",
+                        S.of(context).welcome,
                         style: AppStyles.textStyleParagraph(context),
                         maxLines: 4,
                         stepGranularity: 0.5,
@@ -67,25 +65,27 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
                   Row(
                     children: <Widget>[
                       // New Wallet Button
-                      AppButton.buildAppButton(
-                          context,
-                          AppButtonType.PRIMARY,
-                          'New Wallet',
-                          ButtonDimensions.BUTTON_TOP_DIMENS, onPressed: () {
-
-                      }),
+                      ElevatedButton(
+                        child: Text(
+                          S.of(context).welcome_wallet_create,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/intro_wallet_create');
+                        },
+                      ),
                     ],
                   ),
                   Row(
                     children: <Widget>[
                       // Import Wallet Button
-                      AppButton.buildAppButton(
-                          context,
-                          AppButtonType.PRIMARY_OUTLINE,
-                          'Import Wallet',
-                          ButtonDimensions.BUTTON_BOTTOM_DIMENS, onPressed: () {
-                        // Navigator.of(context).pushNamed('/intro_import');
-                      }),
+                     ElevatedButton(
+                        child: Text(
+                          S.of(context).welcome_wallet_restore,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/intro_wallet_restore');
+                        },
+                      ),
                     ],
                   ),
                 ],

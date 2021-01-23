@@ -1,16 +1,22 @@
 # defichainwallet
 
-A new Flutter project.
+A mobile application for [DeFiChain](https://defichain.com/).
 
-## Getting Started
+# Getting Started
 
-This project is a starting point for a Flutter application.
+## Build
+We are working in the Flutter beta channel. 
 
-A few resources to get you started if this is your first Flutter project:
+``` 
+flutter channel beta
+flutter upgrade
+flutter config --enable-web
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+flutter pub get
+flutter build apk //for android
+flutter build ios //for iOS
+flutter build web //for web
+```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+more to come....

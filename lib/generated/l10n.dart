@@ -64,6 +64,436 @@ class S {
       args: [],
     );
   }
+
+  /// `Wallet`
+  String get home_wallet {
+    return Intl.message(
+      'Wallet',
+      name: 'home_wallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liquidity`
+  String get home_liquitiy {
+    return Intl.message(
+      'Liquidity',
+      name: 'home_liquitiy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DEX`
+  String get home_dex {
+    return Intl.message(
+      'DEX',
+      name: 'home_dex',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokens`
+  String get home_tokens {
+    return Intl.message(
+      'Tokens',
+      name: 'home_tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome`
+  String get welcome {
+    return Intl.message(
+      'Welcome',
+      name: 'welcome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message(
+      'Loading...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next`
+  String get next {
+    return Intl.message(
+      'Next',
+      name: 'next',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Later`
+  String get later {
+    return Intl.message(
+      'Later',
+      name: 'later',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create a new wallet`
+  String get welcome_wallet_create {
+    return Intl.message(
+      'Create a new wallet',
+      name: 'welcome_wallet_create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import existing wallet`
+  String get welcome_wallet_restore {
+    return Intl.message(
+      'Import existing wallet',
+      name: 'welcome_wallet_restore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create your DeFiChain wallet and keep full control of your private keys!`
+  String get welcome_wallet_info {
+    return Intl.message(
+      'Create your DeFiChain wallet and keep full control of your private keys!',
+      name: 'welcome_wallet_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secure`
+  String get welcome_wallet_secure {
+    return Intl.message(
+      'Secure',
+      name: 'welcome_wallet_secure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics.`
+  String get welcome_wallet_privacy {
+    return Intl.message(
+      'We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics.',
+      name: 'welcome_wallet_privacy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reveal my recovery phrase`
+  String get wallet_new_reveal {
+    return Intl.message(
+      'Reveal my recovery phrase',
+      name: 'wallet_new_reveal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What's a recovery phrase?`
+  String get wallet_new_info1_header {
+    return Intl.message(
+      'What\'s a recovery phrase?',
+      name: 'wallet_new_info1_header',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It's the master private key to your wallet and the assets within, only you can access and should take full control of it.`
+  String get wallet_new_info1_text {
+    return Intl.message(
+      'It\'s the master private key to your wallet and the assets within, only you can access and should take full control of it.',
+      name: 'wallet_new_info1_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Why do you need it?`
+  String get wallet_new_info2_header {
+    return Intl.message(
+      'Why do you need it?',
+      name: 'wallet_new_info2_header',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can use it to import and recover your wallet on a new device. If you lose it, you will never get your assets back we do not keep a copy!`
+  String get wallet_new_info2_text {
+    return Intl.message(
+      'You can use it to import and recover your wallet on a new device. If you lose it, you will never get your assets back we do not keep a copy!',
+      name: 'wallet_new_info2_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Where should you store it?`
+  String get wallet_new_info3_header {
+    return Intl.message(
+      'Where should you store it?',
+      name: 'wallet_new_info3_header',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It should be written down and store in a secure offline location. Never take screenshots of it as everything online is hackable!`
+  String get wallet_new_info3_text {
+    return Intl.message(
+      'It should be written down and store in a secure offline location. Never take screenshots of it as everything online is hackable!',
+      name: 'wallet_new_info3_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Let's get started!`
+  String get wallet_new_info4_header {
+    return Intl.message(
+      'Let\'s get started!',
+      name: 'wallet_new_info4_header',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You recovery phrase will be shown to you in the next screen as a 24-word phrase`
+  String get wallet_new_info4_text {
+    return Intl.message(
+      'You recovery phrase will be shown to you in the next screen as a 24-word phrase',
+      name: 'wallet_new_info4_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Family account?`
+  String get wallet_new_info5_header {
+    return Intl.message(
+      'Family account?',
+      name: 'wallet_new_info5_header',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can share your recovery phrase with people in your home!`
+  String get wallet_new_info5_text {
+    return Intl.message(
+      'You can share your recovery phrase with people in your home!',
+      name: 'wallet_new_info5_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` word`
+  String get wallet_new_test_word {
+    return Intl.message(
+      ' word',
+      name: 'wallet_new_test_word',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid word`
+  String get wallet_new_test_invalid {
+    return Intl.message(
+      'Invalid word',
+      name: 'wallet_new_test_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Put the #`
+  String get wallet_new_test_put1 {
+    return Intl.message(
+      'Put the #',
+      name: 'wallet_new_test_put1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` word here`
+  String get wallet_new_test_put2 {
+    return Intl.message(
+      ' word here',
+      name: 'wallet_new_test_put2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm recovery phrase`
+  String get wallet_new_test_confirm {
+    return Intl.message(
+      'Confirm recovery phrase',
+      name: 'wallet_new_test_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just to make sure that you wrote down the correct words!`
+  String get wallet_new_test_confirm_info {
+    return Intl.message(
+      'Just to make sure that you wrote down the correct words!',
+      name: 'wallet_new_test_confirm_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is your recovery phrase! Write it down, and do not lose it!`
+  String get wallet_new_phrase_info {
+    return Intl.message(
+      'This is your recovery phrase! Write it down, and do not lose it!',
+      name: 'wallet_new_phrase_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recovery phrase`
+  String get wallet_recovery_phrase_title {
+    return Intl.message(
+      'Recovery phrase',
+      name: 'wallet_recovery_phrase_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recovery phrase test`
+  String get wallet_recovery_phrase_test_title {
+    return Intl.message(
+      'Recovery phrase test',
+      name: 'wallet_recovery_phrase_test_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We did not found a used account, but we have created on for you!`
+  String get wallet_restore_noAccountFound {
+    return Intl.message(
+      'We did not found a used account, but we have created on for you!',
+      name: 'wallet_restore_noAccountFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We have found the following accounts:`
+  String get wallet_restore_accountsFound {
+    return Intl.message(
+      'We have found the following accounts:',
+      name: 'wallet_restore_accountsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The accounts have been added to your local datastore! Your acounts will be synced in the background!`
+  String get wallet_restore_accountsAdded {
+    return Intl.message(
+      'The accounts have been added to your local datastore! Your acounts will be synced in the background!',
+      name: 'wallet_restore_accountsAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restoring your wallet, this can take up some time!`
+  String get wallet_restore_loading {
+    return Intl.message(
+      'Restoring your wallet, this can take up some time!',
+      name: 'wallet_restore_loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your recovery phrase to restore your wallet!`
+  String get wallet_restore_enterMnemonic {
+    return Intl.message(
+      'Enter your recovery phrase to restore your wallet!',
+      name: 'wallet_restore_enterMnemonic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The recovery phrase is invalid!`
+  String get wallet_restore_invalidMnemonic {
+    return Intl.message(
+      'The recovery phrase is invalid!',
+      name: 'wallet_restore_invalidMnemonic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selelct phrase words`
+  String get wallet_restore_enterWords {
+    return Intl.message(
+      'Selelct phrase words',
+      name: 'wallet_restore_enterWords',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recovery phrase`
+  String get wallet_restore_recoveryPhrase {
+    return Intl.message(
+      'Recovery phrase',
+      name: 'wallet_restore_recoveryPhrase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You didn't safed your recovery words, wanna do that now?`
+  String get wallet_restore_not_safed {
+    return Intl.message(
+      'You didn\'t safed your recovery words, wanna do that now?',
+      name: 'wallet_restore_not_safed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

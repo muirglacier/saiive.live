@@ -1,8 +1,54 @@
 {
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    },
-    "title": "DeFiChain Wallet",
-    "version": "Version"
-  }
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "title": "DeFiChain Wallet",
+  "version": "Version",
+  "home_wallet": "Wallet",
+  "home_liquitiy": "Liquidity",
+  "home_dex": "DEX",
+  "home_tokens": "Tokens",
+  
+  "welcome": "Welcome",
+  "loading": "Loading...",
+  "next": "Next",
+  "later": "Later",
+  "welcome_wallet_create": "Create a new wallet",
+  "welcome_wallet_restore": "Import existing wallet",
+  "welcome_wallet_info": "Create your DeFiChain wallet and keep full control of your private keys!",
+  "welcome_wallet_secure": "Secure",
+  "welcome_wallet_privacy": "We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics.",
+  "wallet_new_reveal": "Reveal my recovery phrase",
+  "wallet_new_info1_header": "What's a recovery phrase?",
+  "wallet_new_info1_text": "It's the master private key to your wallet and the assets within, only you can access and should take full control of it.",
+  "wallet_new_info2_header": "Why do you need it?",
+  "wallet_new_info2_text": "You can use it to import and recover your wallet on a new device. If you lose it, you will never get your assets back we do not keep a copy!",
+  "wallet_new_info3_header": "Where should you store it?",
+  "wallet_new_info3_text": "It should be written down and store in a secure offline location. Never take screenshots of it as everything online is hackable!",
+  "wallet_new_info4_header": "Let's get started!",
+  "wallet_new_info4_text": "You recovery phrase will be shown to you in the next screen as a 24-word phrase",
+  "wallet_new_info5_header": "Family account?",
+  "wallet_new_info5_text": "You can share your recovery phrase with people in your home!",
+  "wallet_new_test_word": " word",
+  "wallet_new_test_invalid": "Invalid word",
+  "wallet_new_test_put1": "Put the #",
+  "wallet_new_test_put2": " word here",
+  "wallet_new_test_confirm": "Confirm recovery phrase",
+  "wallet_new_test_confirm_info": "Just to make sure that you wrote down the correct words!",
+  "wallet_new_phrase_info": "This is your recovery phrase! Write it down, and do not lose it!",
+
+  "wallet_recovery_phrase_title": "Recovery phrase",
+  "wallet_recovery_phrase_test_title": "Recovery phrase test",
+
+  "wallet_restore_noAccountFound": "We did not found a used account, but we have created on for you!",
+  "wallet_restore_accountsFound": "We have found the following accounts:",
+  "wallet_restore_accountsAdded": "The accounts have been added to your local datastore! Your acounts will be synced in the background!",
+  "wallet_restore_loading": "Restoring your wallet, this can take up some time!",
+  "wallet_restore_enterMnemonic": "Enter your recovery phrase to restore your wallet!",
+  "wallet_restore_invalidMnemonic": "The recovery phrase is invalid!",
+  "wallet_restore_enterWords": "Selelct phrase words",
+  "wallet_restore_recoveryPhrase": "Recovery phrase",
+  "wallet_restore_not_safed": "You didn't safed your recovery words, wanna do that now?",
+  "settings": "Settings"
+}

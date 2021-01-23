@@ -7,14 +7,14 @@ class AppStyles {
     return TextStyle(
         fontSize: AppFontSizes.medium,
         fontWeight: FontWeight.w200,
-        color: StateContainer.of(context).curTheme.text);
+    );
   }
 
   static TextStyle textStyleButtonPrimary(BuildContext context) {
     return TextStyle(
         fontSize: AppFontSizes.large,
         fontWeight: FontWeight.w700,
-        color: StateContainer.of(context).curTheme.background);
+    );
   }
 
   // Text style for outline button
@@ -22,14 +22,14 @@ class AppStyles {
     return TextStyle(
         fontSize: AppFontSizes.large,
         fontWeight: FontWeight.w700,
-        color: StateContainer.of(context).curTheme.primary);
+    );
   }
 
   static TextStyle textStyleButtonPrimaryOutlineDisabled(BuildContext context) {
     return TextStyle(
         fontSize: AppFontSizes.large,
         fontWeight: FontWeight.w700,
-        color: StateContainer.of(context).curTheme.primary60);
+    );
   }
 
   // Green primary button
@@ -37,7 +37,7 @@ class AppStyles {
     return TextStyle(
         fontSize: AppFontSizes.large,
         fontWeight: FontWeight.w700,
-        color: StateContainer.of(context).curTheme.successDark);
+    );
   }
 
   // Text style for success outline button
@@ -45,7 +45,7 @@ class AppStyles {
     return TextStyle(
         fontSize: AppFontSizes.large,
         fontWeight: FontWeight.w700,
-        color: StateContainer.of(context).curTheme.success);
+    );
   }
 
   // Text style for text outline button
@@ -53,7 +53,7 @@ class AppStyles {
     return TextStyle(
         fontSize: AppFontSizes.large,
         fontWeight: FontWeight.w700,
-        color: StateContainer.of(context).curTheme.text);
+    );
   }
 }
 

@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/model/available_language.dart';
 import 'package:defichainwallet/ui/intro/intro_wallet_new.dart';
@@ -15,10 +12,7 @@ import 'package:defichainwallet/ui/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_config/flutter_config.dart';
-
-import 'helper/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

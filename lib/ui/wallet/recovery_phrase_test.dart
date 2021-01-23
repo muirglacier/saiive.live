@@ -1,5 +1,6 @@
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/model/vault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,11 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
         .toList();
   }
 
+  Future saveSeed(bool seedIsBackedUp) async {
+    await sl.get<SharedPrefsUtil>().setSeedBackedUp(false);
+    await sl.get<Vault>().setSeed(widget.mnemonic.join(" "));
+  }
+
   @override
   Widget build(BuildContext context) {
     final randomWordsToTest = getRandomForTest(4, widget.mnemonic);
@@ -97,16 +103,7 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
           actions: <Widget>[
             InkWell(
                 onTap: () async {
-                  final prefs = await SharedPreferences.getInstance();
-
-                  await prefs.setString(DefiChainConstants.MnemonicKey,
-                      widget.mnemonic.join(" "));
-                  await prefs.setInt(DefiChainConstants.WorkingAccountKey, 0);
-                  await prefs.setBool(
-                      DefiChainConstants.RecoveryPhraseTested, false);
-
-                  await sl.get<SharedPrefsUtil>().setSeedBackedUp(false);
-
+                  await saveSeed(false);
                   Navigator.of(context).pushReplacementNamed("/home");
                 },
                 child: Padding(
@@ -147,20 +144,8 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
                                 child: Text(S.of(context).next),
                                 color: Theme.of(context).backgroundColor,
                                 onPressed: () async {
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-
                                   if (_formKey.currentState.validate()) {
-                                    await prefs.setString(
-                                        DefiChainConstants.MnemonicKey,
-                                        widget.mnemonic.join(" "));
-                                    await prefs.setInt(
-                                        DefiChainConstants.WorkingAccountKey,
-                                        0);
-                                    await prefs.setBool(
-                                        DefiChainConstants.RecoveryPhraseTested,
-                                        true);
-
+                                    await saveSeed(false);
                                     Navigator.of(context)
                                         .pushReplacementNamed("/home");
                                   }

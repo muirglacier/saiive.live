@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:package_info/package_info.dart';
+import '../appstate_container.dart';
 import '../generated/l10n.dart';
 
 import 'package:defichainwallet/service_locator.dart';
@@ -15,16 +16,19 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen>
+    with WidgetsBindingObserver {
   var _version = "";
   bool _hasCheckedLoggedIn;
   bool _retried;
+
   Future checkLoggedIn() async {
     if (!_hasCheckedLoggedIn) {
       _hasCheckedLoggedIn = true;
     } else {
       return;
     }
+    
     try {
       // iOS key store is persistent, so if this is first launch then we will clear the keystore
       bool firstLaunch = await sl.get<SharedPrefsUtil>().getFirstLaunch();
@@ -79,8 +83,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     WidgetsBinding.instance.addObserver(this);
     _hasCheckedLoggedIn = false;
     _retried = false;
-    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) => checkLoggedIn());
+
     }
   }
 
@@ -116,7 +122,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         children: [
           Text(
             S.of(context).title,
-            style: TextStyle(fontSize: 30, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800),
+            style: TextStyle(
+                fontSize: 30,
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w800),
           ),
           Image.asset('assets/logo.png'),
           SizedBox(height: 20),

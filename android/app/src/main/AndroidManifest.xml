@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.defichainwallet">
+    package="at.defichain.wallet">
    <application
         android:label="defichainwallet"
         android:icon="@mipmap/ic_launcher">

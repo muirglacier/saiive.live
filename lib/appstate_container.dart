@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,9 @@ class StateContainer extends StatefulWidget {
   // Exactly like MediaQuery.of and Theme.of
   // It basically says 'get the data from the widget of this type.
   static StateContainerState of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_InheritedStateContainer>().data;
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()
+        .data;
   }
 
   @override
@@ -57,6 +60,7 @@ class StateContainerState extends State<StateContainer> {
   BaseTheme curTheme = DefiThemeLight();
   LanguageSetting curLanguage = LanguageSetting(AvailableLanguage.DEFAULT);
   Locale deviceLocale = Locale('en', 'US');
+  AppCenterWrapper appCenter = AppCenterWrapper();
 
   @override
   void initState() {
@@ -66,6 +70,7 @@ class StateContainerState extends State<StateContainer> {
       updateTheme(theme);
     });
 
+    appCenter.start();
   }
 
   @override

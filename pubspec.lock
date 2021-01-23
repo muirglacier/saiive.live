@@ -155,6 +155,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0"
+  device_info:
+    dependency: "direct main"
+    description:
+      name: device_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  device_info_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -195,6 +209,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_appcenter_bundle:
+    dependency: "direct main"
+    description:
+      name: flutter_appcenter_bundle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.0+2"
   flutter_config:
     dependency: "direct main"
     description:
@@ -638,4 +659,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
-  flutter: ">=1.20.0"
+  flutter: ">=1.20.0 <2.0.0"

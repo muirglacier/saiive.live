@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:defichainwallet/model/account.dart';
 import 'package:defichainwallet/model/block.dart';
 import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/request/addresses_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
 class BlockService extends NetworkService

@@ -170,6 +170,12 @@ stages:
           KeyVaultName: 'defichain-wallet'
           SecretsFilter: 'apple-dev-cert-password'
           RunAsPreJob: true
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'apple.p12'
+          certPwd: '$(apple-dev-cert-password)'
+          keychain: 'temp'
+          
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -184,11 +190,7 @@ stages:
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
             echo $(apple-dev-cert) | base64 -d > dev-cert.p12
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'apple.p12'
-          certPwd: '$(apple-dev-cert-password)'
-          keychain: 'temp'
+
           
 
             

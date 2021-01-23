@@ -28,11 +28,11 @@ stages:
           version: 'latest'
       - task: FlutterCommand@0
         inputs:
-          arguments: 'precache'
+          arguments: 'flutter precache'
       
       - task: FlutterCommand@0
         inputs:
-          arguments: 'doctor -v'
+          arguments: 'flutter doctor -v'
       
       - task: FlutterBuild@0
         displayName: Android Debug APK

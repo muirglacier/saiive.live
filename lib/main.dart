@@ -67,8 +67,6 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
         title: "DeFiChain Wallet",
         theme: ThemeData(
           primaryColor: StateContainer.of(context).curTheme.primary,
-          buttonColor: StateContainer.of(context).curTheme.primary,
-          accentColor: Colors.white,
           backgroundColor: StateContainer.of(context).curTheme.background,
           brightness: StateContainer.of(context).curTheme.brightness,
           fontFamily: 'Helvetica, Arial, sans-serif',

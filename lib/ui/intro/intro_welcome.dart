@@ -1,9 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/ui/styles.dart';
-import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 
 class IntroWelcomeScreen extends StatefulWidget {
   @override
@@ -11,89 +9,115 @@ class IntroWelcomeScreen extends StatefulWidget {
 }
 
 class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
-  var _scaffoldKey = new GlobalKey<ScaffoldState>();
+  List<Widget> getCarouselItems(BuildContext context) {
+    return [
+      Column(
+        children: <Widget>[
+          Text(
+            S.of(context).welcome,
+            style: TextStyle(fontSize: 20),
+          ),
+          Text(
+            S.of(context).welcome_wallet_info,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15),
+          ),
+        ],
+      ),
+      Column(
+        children: <Widget>[
+          Text(
+            S.of(context).welcome_wallet_secure,
+            style: TextStyle(fontSize: 20),
+          ),
+          Text(
+            S.of(context).welcome_wallet_privacy,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15),
+          ),
+        ],
+      )
+    ];
+  }
+
+  int _current = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      key: _scaffoldKey,
-      body: LayoutBuilder(
-        builder: (context, constraints) => SafeArea(
-          minimum: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height * 0.035,
-            top: MediaQuery.of(context).size.height * 0.10,
-          ),
-          child: Column(
-            children: <Widget>[
-              //A widget that holds welcome animation + paragraph
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    // Container for the animation
-                    Container(
-                      //Width/Height ratio for the animation is needed because BoxFit is not working as expected
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.width * 5 / 8,
-                      child: Stack(
-                        children: <Widget>[
-                          Center(
-                            child: Image.asset('assets/logo.png'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    //Container for the paragraph
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 20),
-                      child: AutoSizeText(
-                        S.of(context).welcome,
-                        style: AppStyles.textStyleParagraph(context),
-                        maxLines: 4,
-                        stepGranularity: 0.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+    final carouselItems = getCarouselItems(context);
+    final height = MediaQuery.of(context).size.height;
 
-              //A column with "New Wallet" and "Import Wallet" buttons
-              Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      // New Wallet Button
-                      ElevatedButton(
-                        child: Text(
-                          S.of(context).welcome_wallet_create,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/intro_wallet_create');
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      // Import Wallet Button
-                     ElevatedButton(
-                        child: Text(
-                          S.of(context).welcome_wallet_restore,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushNamed('/intro_wallet_restore');
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+    return Scaffold(
+      body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          verticalDirection: VerticalDirection.down,
+          children: <Widget>[
+            Container(
+                margin: const EdgeInsets.only(top: 100),
+                child: SizedBox(
+                    height: height / 4,
+                    child: Image.asset(
+                      "assets/logo.png",
+                      fit: BoxFit.fill,
+                    ))),
+            SizedBox(height: 50),
+            Column(children: <Widget>[
+              Container(
+                  height: height / 5,
+                  width: double.infinity,
+                  child: CarouselSlider(
+                    items: carouselItems,
+                    options: CarouselOptions(
+                        enableInfiniteScroll: false,
+                        enlargeCenterPage: true,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        }),
+                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: carouselItems.map((url) {
+                  int index = carouselItems.indexOf(url);
+                  return Container(
+                    width: 8.0,
+                    height: 8.0,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _current == index
+                          ? Color.fromRGBO(0, 0, 0, 0.9)
+                          : Color.fromRGBO(0, 0, 0, 0.4),
+                    ),
+                  );
+                }).toList(),
               ),
-            ],
-          ),
-        ),
-      ),
+            ]),
+            SizedBox(height: 10),
+            Container(
+                child: SizedBox(
+                    width: 300,
+                    child: ElevatedButton(
+                      child: Text(
+                        S.of(context).welcome_wallet_create,
+                      ),
+                      onPressed: () {},
+                    ))),
+            SizedBox(height: 10),
+            Container(
+                child: SizedBox(
+                    width: 300,
+                    child: RaisedButton(
+                      color: Theme.of(context).backgroundColor,
+                      child: Text(
+                        S.of(context).welcome_wallet_restore,
+                      ),
+                      onPressed: () {},
+                    ))),
+          ]),
     );
   }
 }

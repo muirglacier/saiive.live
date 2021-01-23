@@ -29,8 +29,10 @@ stages:
       - task: Bash@3
         inputs:
           targetType: 'inline'
-          script: 'flutter doctor -v'
-          workingDirectory: '$(FLUTTER_TOOL_PATH_ENV_VAR)'
+          script: 
+            cd $(FlutterToolPath)
+            flutter doctor -v
+          workingDirectory: ''
       
       # - task: FlutterBuild@0
       #   displayName: Android Debug APK

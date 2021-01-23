@@ -42,7 +42,9 @@ class StateContainer extends StatefulWidget {
   // Exactly like MediaQuery.of and Theme.of
   // It basically says 'get the data from the widget of this type.
   static StateContainerState of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_InheritedStateContainer>().data;
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()
+        .data;
   }
 
   @override
@@ -68,6 +70,7 @@ class StateContainerState extends State<StateContainer> {
       updateTheme(theme);
     });
 
+    appCenter.start();
   }
 
   @override

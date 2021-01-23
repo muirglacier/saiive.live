@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:flutter_appcenter_bundle/flutter_appcenter_bundle.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,8 +37,6 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
   @override
   void initState() {
     super.initState();
-
-    StateContainer.of(context).appCenter.start();
   }
 
   @override

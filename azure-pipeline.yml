@@ -25,6 +25,7 @@ stages:
             cd $(FlutterToolPath)
             ./flutter doctor -v
             ./flutter precache
+            ./flutter create '$(Build.SourcesDirectory)'
       
       - task: FlutterBuild@0
         displayName: Android Debug APK

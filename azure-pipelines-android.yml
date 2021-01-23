@@ -7,7 +7,7 @@ trigger:
 - main
 
 variables: 
-  vmImageName: 'ubuntu-latest'
+  vmImageName: 'windows-latest'
 
 
 stages:

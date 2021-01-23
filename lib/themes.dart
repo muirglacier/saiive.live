@@ -24,23 +24,27 @@ abstract class BaseTheme {
 }
 
 class DefiThemeLight extends BaseTheme {
-  Color primary = BaseTheme.pink;
-  Color backgroundColor = BaseTheme.white;
-  Color text = BaseTheme.black;
+  DefiThemeLight() {
+    this.primary = BaseTheme.pink;
+    this.backgroundColor = BaseTheme.white;
+    this.text = BaseTheme.black;
 
-  Color buttonColorPrimary = BaseTheme.white;
-  Color buttonColorSecondary = Colors.grey.shade50;
+    this.buttonColorPrimary = BaseTheme.white;
+    this.buttonColorSecondary = Colors.grey.shade50;
 
-  Brightness brightness = Brightness.light;
+    this.brightness = Brightness.light;
+  }
 }
 
 class DefiThemeDark extends BaseTheme {
-  Color primary = BaseTheme.pink;
-  Color backgroundColor = BaseTheme.black;
-  Color text = BaseTheme.white;
+  DefiThemeDark() {
+    this.primary = BaseTheme.pink;
+    this.backgroundColor = BaseTheme.black;
+    this.text = BaseTheme.white;
 
-  Color buttonColorPrimary = BaseTheme.black;
-  Color buttonColorSecondary = Colors.grey.shade50;
+    this.buttonColorPrimary = BaseTheme.black;
+    this.buttonColorSecondary = Colors.grey.shade50;
 
-  Brightness brightness = Brightness.dark;
+    this.brightness = Brightness.light;
+  }
 }

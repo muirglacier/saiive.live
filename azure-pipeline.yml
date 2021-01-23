@@ -74,6 +74,11 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'beta'
+          version: 'latest'
       - task: Bash@3
         displayName: "Flutter prepare"
         inputs:
@@ -112,6 +117,12 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'beta'
+          version: 'latest'
+
       - task: Bash@3
         displayName: "Flutter prepare"
         inputs:

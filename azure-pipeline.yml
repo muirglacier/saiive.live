@@ -3,155 +3,155 @@ trigger:
 name: $(BuildID)
 
 stages:
-- stage: Android
-  displayName: Android
+# - stage: Android
+#   displayName: Android
   
-  jobs:
-  - job: BuildAndroidDev
-    displayName: "Build Android DEV"
-    pool:
-      vmImage: 'ubuntu-latest'
+#   jobs:
+#   - job: BuildAndroidDev
+#     displayName: "Build Android DEV"
+#     pool:
+#       vmImage: 'ubuntu-latest'
     
-    steps:
+#     steps:
 
-      - task: FlutterInstall@0
-        displayName: "Flutter install"
-        inputs:
-          channel: 'beta'
-          version: 'latest'
-      - task: Bash@3
-        displayName: "Flutter prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter doctor -v
-            $(FlutterToolPath)/flutter precache
-            export ENVFILE=.env-Debug
+#       - task: FlutterInstall@0
+#         displayName: "Flutter install"
+#         inputs:
+#           channel: 'beta'
+#           version: 'latest'
+#       - task: Bash@3
+#         displayName: "Flutter prepare"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             cd $(Build.SourcesDirectory)
+#             $(FlutterToolPath)/flutter doctor -v
+#             $(FlutterToolPath)/flutter precache
+#             export ENVFILE=.env-Debug
       
-      - task: FlutterBuild@0
-        displayName: Android Debug APK
-        inputs:
-          target: 'apk'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
-          debugMode: true
-          apkTargetPlatform: 'android-arm64'
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/android/debug'
-      - task: Bash@3
-        displayName: "Flutter clean"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
+#       - task: FlutterBuild@0
+#         displayName: Android Debug APK
+#         inputs:
+#           target: 'apk'
+#           projectDirectory: '$(Build.SourcesDirectory)'
+#           buildName: '0.1'
+#           debugMode: true
+#           apkTargetPlatform: 'android-arm64'
+#       - task: CopyFiles@2
+#         displayName: "Copy artifacts"
+#         inputs:
+#           contents: '**/*.apk'
+#           targetFolder: '$(build.artifactStagingDirectory)/android/debug'
+#       - task: Bash@3
+#         displayName: "Flutter clean"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             cd $(Build.SourcesDirectory)
+#             $(FlutterToolPath)/flutter clean
             
-      - task: FlutterBuild@0
-        displayName: Android Release APK
-        inputs:
-          target: 'apk'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/android/release'
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'dev-android'
+#       - task: FlutterBuild@0
+#         displayName: Android Release APK
+#         inputs:
+#           target: 'apk'
+#           projectDirectory: '$(Build.SourcesDirectory)'
+#           buildName: '0.1'
+#           apkTargetPlatform: 'android-arm64'
+#       - task: CopyFiles@2
+#         displayName: "Copy artifacts"
+#         inputs:
+#           contents: '**/*.apk'
+#           targetFolder: '$(build.artifactStagingDirectory)/android/release'
+#       - task: PublishBuildArtifacts@1
+#         displayName: "Publish artifacts"
+#         inputs:
+#           ArtifactName: 'dev-android'
 
-  - job: BuildAndroidStaging
-    displayName: "Build Android STAGING"
-    pool:
-      vmImage: 'ubuntu-latest'
+#   - job: BuildAndroidStaging
+#     displayName: "Build Android STAGING"
+#     pool:
+#       vmImage: 'ubuntu-latest'
     
-    steps:
-      - task: FlutterInstall@0
-        displayName: "Flutter install"
-        inputs:
-          channel: 'beta'
-          version: 'latest'
-      - task: Bash@3
-        displayName: "Flutter prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            export ENVFILE=.env-Staging
-      - task: Bash@3
-        displayName: "Flutter clean"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
+#     steps:
+#       - task: FlutterInstall@0
+#         displayName: "Flutter install"
+#         inputs:
+#           channel: 'beta'
+#           version: 'latest'
+#       - task: Bash@3
+#         displayName: "Flutter prepare"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             export ENVFILE=.env-Staging
+#       - task: Bash@3
+#         displayName: "Flutter clean"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             cd $(Build.SourcesDirectory)
+#             $(FlutterToolPath)/flutter clean
             
-      - task: FlutterBuild@0
-        displayName: Android Release APK
-        inputs:
-          target: 'apk'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/android/release'
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'staging-android'
+#       - task: FlutterBuild@0
+#         displayName: Android Release APK
+#         inputs:
+#           target: 'apk'
+#           projectDirectory: '$(Build.SourcesDirectory)'
+#           buildName: '0.1'
+#           apkTargetPlatform: 'android-arm64'
+#       - task: CopyFiles@2
+#         displayName: "Copy artifacts"
+#         inputs:
+#           contents: '**/*.apk'
+#           targetFolder: '$(build.artifactStagingDirectory)/android/release'
+#       - task: PublishBuildArtifacts@1
+#         displayName: "Publish artifacts"
+#         inputs:
+#           ArtifactName: 'staging-android'
   
-  - job: BuildAndroidProd
-    displayName: "Build Android PROD"
-    pool:
-      vmImage: 'ubuntu-latest'
+#   - job: BuildAndroidProd
+#     displayName: "Build Android PROD"
+#     pool:
+#       vmImage: 'ubuntu-latest'
     
-    steps:
+#     steps:
 
-      - task: FlutterInstall@0
-        displayName: "Flutter install"
-        inputs:
-          channel: 'beta'
-          version: 'latest'
+#       - task: FlutterInstall@0
+#         displayName: "Flutter install"
+#         inputs:
+#           channel: 'beta'
+#           version: 'latest'
 
-      - task: Bash@3
-        displayName: "Flutter prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            export ENVFILE=.env-Prod
-      - task: Bash@3
-        displayName: "Flutter clean"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
+#       - task: Bash@3
+#         displayName: "Flutter prepare"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             export ENVFILE=.env-Prod
+#       - task: Bash@3
+#         displayName: "Flutter clean"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             cd $(Build.SourcesDirectory)
+#             $(FlutterToolPath)/flutter clean
             
-      - task: FlutterBuild@0
-        displayName: Android Release APK
-        inputs:
-          target: 'apk'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)/android/release'
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'prod-android'
+#       - task: FlutterBuild@0
+#         displayName: Android Release APK
+#         inputs:
+#           target: 'apk'
+#           projectDirectory: '$(Build.SourcesDirectory)'
+#           buildName: '0.1'
+#           apkTargetPlatform: 'android-arm64'
+#       - task: CopyFiles@2
+#         displayName: "Copy artifacts"
+#         inputs:
+#           contents: '**/*.apk'
+#           targetFolder: '$(build.artifactStagingDirectory)/android/release'
+#       - task: PublishBuildArtifacts@1
+#         displayName: "Publish artifacts"
+#         inputs:
+#           ArtifactName: 'prod-android'
       
 - stage: iOS
   displayName: iOS
@@ -168,7 +168,7 @@ stages:
         inputs:
           azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
           KeyVaultName: 'defichain-wallet'
-          SecretsFilter: 'apple-dev-cert*'
+          SecretsFilter: 'apple-dev-cert-password'
           RunAsPreJob: true
       - task: FlutterInstall@0
         displayName: "Flutter install"

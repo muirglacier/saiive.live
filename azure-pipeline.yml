@@ -66,66 +66,66 @@ stages:
         inputs:
           ArtifactName: 'android'
       
-- stage: iOS
-  displayName: iOS
+# - stage: iOS
+#   displayName: iOS
   
-  jobs:
-  - job: BuildiOS
-    displayName: "Build iOS"
-    pool:
-      vmImage: 'macOS-latest'
+#   jobs:
+#   - job: BuildiOS
+#     displayName: "Build iOS"
+#     pool:
+#       vmImage: 'macOS-latest'
     
-    steps:
+#     steps:
 
-      - task: FlutterInstall@0
-        displayName: "Flutter install"
-        inputs:
-          channel: 'beta'
-          version: 'latest'
-      - task: Bash@3
-        displayName: "Flutter prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter doctor -v
-            $(FlutterToolPath)/flutter precache
+#       - task: FlutterInstall@0
+#         displayName: "Flutter install"
+#         inputs:
+#           channel: 'beta'
+#           version: 'latest'
+#       # - task: Bash@3
+#       #   displayName: "Flutter prepare"
+#       #   inputs:
+#       #     targetType: 'inline'
+#       #     script: |
+#       #       cd $(Build.SourcesDirectory)
+#       #       $(FlutterToolPath)/flutter doctor -v
+#       #       $(FlutterToolPath)/flutter precache
             
-      - task: FlutterBuild@0
-        displayName: "Build iOS debug"
-        inputs:
-          target: 'ios'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          verboseMode: true
-          debugMode: true
-          buildName: '0.1'
+#       - task: FlutterBuild@0
+#         displayName: "Build iOS debug"
+#         inputs:
+#           target: 'ios'
+#           projectDirectory: '$(Build.SourcesDirectory)'
+#           verboseMode: true
+#           debugMode: true
+#           buildName: '0.1'
 
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '**/*.app'
-          targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
-      - task: Bash@3
-        displayName: "Flutter clean"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
-      - task: FlutterBuild@0
-        displayName: "Build iOS release"
-        inputs:
-          target: 'ios'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          verboseMode: true
-          debugMode: false
-          buildName: '0.1'
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '**/*.app'
-          targetFolder: '$(build.artifactStagingDirectory)/ios/release'
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'ios'    
+#       - task: CopyFiles@2
+#         displayName: "Copy artifacts"
+#         inputs:
+#           contents: '**/*.app'
+#           targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
+#       - task: Bash@3
+#         displayName: "Flutter clean"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             cd $(Build.SourcesDirectory)
+#             $(FlutterToolPath)/flutter clean
+#       - task: FlutterBuild@0
+#         displayName: "Build iOS release"
+#         inputs:
+#           target: 'ios'
+#           projectDirectory: '$(Build.SourcesDirectory)'
+#           verboseMode: true
+#           debugMode: false
+#           buildName: '0.1'
+#       - task: CopyFiles@2
+#         displayName: "Copy artifacts"
+#         inputs:
+#           contents: '**/*.app'
+#           targetFolder: '$(build.artifactStagingDirectory)/ios/release'
+#       - task: PublishBuildArtifacts@1
+#         displayName: "Publish artifacts"
+#         inputs:
+#           ArtifactName: 'ios'    

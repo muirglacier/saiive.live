@@ -29,33 +29,33 @@ stages:
       - task: Bash@3
         inputs:
           targetType: 'inline'
-          script: 
+          script: |
             cd $(FlutterToolPath)
             flutter doctor -v
-          workingDirectory: ''
-      
-      # - task: FlutterBuild@0
-      #   displayName: Android Debug APK
-      #   inputs:
-      #     target: 'apk'
-      #     projectDirectory: '.'
-      #     buildName: '0.1'
-      #     debugMode: true
-      #     apkTargetPlatform: 'android-arm64'
-      # - task: CopyFiles@2
-      #   inputs:
-      #     contents: '**/*.apk'
-      #     targetFolder: '$(build.artifactStagingDirectory)/debug'
-      # - task: FlutterBuild@0
-      #   displayName: Android Release APK
-      #   inputs:
-      #     target: 'apk'
-      #     projectDirectory: '.'
-      #     buildName: '0.1'
-      #     apkTargetPlatform: 'android-arm64'
-      # - task: CopyFiles@2
-      #   inputs:
-      #     contents: '**/*.apk'
-      #     targetFolder: '$(build.artifactStagingDirectory)/release'
-      # - task: PublishBuildArtifacts@1
+            flutter precache
+            
+      - task: FlutterBuild@0
+        displayName: Android Debug APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '.'
+          buildName: '0.1'
+          debugMode: true
+          apkTargetPlatform: 'android-arm64'
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/debug'
+      - task: FlutterBuild@0
+        displayName: Android Release APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '.'
+          buildName: '0.1'
+          apkTargetPlatform: 'android-arm64'
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/release'
+      - task: PublishBuildArtifacts@1
       

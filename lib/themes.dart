@@ -17,6 +17,9 @@ abstract class BaseTheme {
   Color backgroundColor;
   Color text;
 
+  Color buttonColorPrimary;
+  Color buttonColorSecondary;
+
   Brightness brightness = Brightness.light;
 }
 
@@ -25,6 +28,9 @@ class DefiThemeLight extends BaseTheme {
   Color backgroundColor = BaseTheme.white;
   Color text = BaseTheme.black;
 
+  Color buttonColorPrimary = BaseTheme.white;
+  Color buttonColorSecondary = Colors.grey.shade50;
+
   Brightness brightness = Brightness.light;
 }
 
@@ -32,6 +38,9 @@ class DefiThemeDark extends BaseTheme {
   Color primary = BaseTheme.pink;
   Color backgroundColor = BaseTheme.black;
   Color text = BaseTheme.white;
+
+  Color buttonColorPrimary = BaseTheme.black;
+  Color buttonColorSecondary = Colors.grey.shade50;
 
   Brightness brightness = Brightness.dark;
 }

@@ -3,20 +3,20 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../recovery_phrase_display.dart';
+import '../wallet/recovery_phrase_display.dart';
 
-class RecoveryPhraseInfoScreen extends StatefulWidget {
+class RecoveryPhraseInfoWidget extends StatefulWidget {
   final String mnemonic;
 
-  RecoveryPhraseInfoScreen({this.mnemonic});
+  RecoveryPhraseInfoWidget({this.mnemonic});
 
   @override
   State<StatefulWidget> createState() {
-    return _RecoveryPhraseInfoScreen();
+    return _RecoveryPhraseInfoWidget();
   }
 }
 
-class _RecoveryPhraseInfoScreen extends State<RecoveryPhraseInfoScreen> {
+class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
   int _current = 0;
 
   Widget buildInfoWidget(String image, String header, String text) {

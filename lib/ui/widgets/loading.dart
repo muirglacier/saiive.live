@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LoadingControl extends StatelessWidget {
+class LoadingWidget extends StatelessWidget {
   final String text;
 
-  LoadingControl({@required this.text});
+  LoadingWidget({@required this.text});
   
   @override
   Widget build(BuildContext context) {

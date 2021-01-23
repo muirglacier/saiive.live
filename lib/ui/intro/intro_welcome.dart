@@ -99,28 +99,20 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
             ]),
             SizedBox(height: 10),
             Container(
-                child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).welcome_wallet_create, onPressed: () => {}, icon: Icons.account_balance_wallet)),
+                child: AppButton.buildAppButton(context, AppButtonType.PRIMARY,
+                    S.of(context).welcome_wallet_create,
+                    onPressed: () =>
+                        {Navigator.of(context).pushNamed("/intro_wallet_new")},
+                    icon: Icons.account_balance_wallet)),
             SizedBox(height: 10),
             Container(
-                child: SizedBox(
-                    width: 300,
-                    child: RaisedButton(
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.list,
-                                color: Theme.of(context).primaryColor),
-                            SizedBox(width: 10),
-                            Text(
-                              S.of(context).welcome_wallet_restore,
-                            )
-                          ]),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed('/intro_wallet_restore');
-                      },
-                    ))),
+                child: AppButton.buildAppButton(
+                    context,
+                    AppButtonType.SECONDARY,
+                    S.of(context).welcome_wallet_restore,
+                    onPressed: () =>
+                        {Navigator.of(context).pushNamed("/intro_wallet_restore")},
+                    icon: Icons.list)),
           ]),
     );
   }

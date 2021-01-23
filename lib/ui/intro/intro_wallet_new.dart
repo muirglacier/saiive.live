@@ -1,17 +1,16 @@
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:defichainwallet/ui/widgets/recovery_phrase_info.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:bip39/bip39.dart' as bip39;
 
-class WalletInitScreen extends StatefulWidget {
-  WalletInitScreen();
-
-  _WalletInitScreenState createState() => _WalletInitScreenState();
+class IntroWalletNewScreen extends StatefulWidget {
+  @override
+  _IntroWalletNewScreenState createState() => _IntroWalletNewScreenState();
 }
 
-class _WalletInitScreenState extends State<WalletInitScreen> {
+class _IntroWalletNewScreenState extends State<IntroWalletNewScreen> {
   var recoveryPhrase;
 
   @override
@@ -25,10 +24,9 @@ class _WalletInitScreenState extends State<WalletInitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (recoveryPhrase == "" || recoveryPhrase == null) {
-    //   return LoadingControl(text: S.of(context).loading);
-    // }
-
-    // return RecoveryPhraseInfoScreen(mnemonic: recoveryPhrase);
+     if (recoveryPhrase == "" || recoveryPhrase == null) {
+      return LoadingWidget(text: S.of(context).loading);
+    }
+    return RecoveryPhraseInfoWidget(mnemonic: recoveryPhrase);
   }
 }

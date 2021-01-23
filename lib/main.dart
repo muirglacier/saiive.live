@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/model/available_language.dart';
+import 'package:defichainwallet/ui/intro/intro_wallet_new.dart';
 import 'package:defichainwallet/ui/splash.dart';
 import 'package:defichainwallet/ui/home.dart';
 import 'package:defichainwallet/ui/intro/intro_welcome.dart';
@@ -99,6 +100,11 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
             case '/intro_wallet_restore':
               return NoTransitionRoute(
                 builder: (_) => IntroRestoreScreen(),
+                settings: settings,
+              );
+            case '/intro_wallet_new':
+              return NoTransitionRoute(
+                builder: (_) => IntroWalletNewScreen(),
                 settings: settings,
               );
             default:

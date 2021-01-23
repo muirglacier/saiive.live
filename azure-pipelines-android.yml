@@ -32,4 +32,9 @@ stages:
           projectDirectory: '.'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
       

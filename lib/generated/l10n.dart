@@ -394,6 +394,106 @@ class S {
       args: [],
     );
   }
+
+  /// `We did not found a used account, but we have created on for you!`
+  String get wallet_restore_noAccountFound {
+    return Intl.message(
+      'We did not found a used account, but we have created on for you!',
+      name: 'wallet_restore_noAccountFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We have found the following accounts:`
+  String get wallet_restore_accountsFound {
+    return Intl.message(
+      'We have found the following accounts:',
+      name: 'wallet_restore_accountsFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The accounts have been added to your local datastore! Your acounts will be synced in the background!`
+  String get wallet_restore_accountsAdded {
+    return Intl.message(
+      'The accounts have been added to your local datastore! Your acounts will be synced in the background!',
+      name: 'wallet_restore_accountsAdded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restoring your wallet, this can take up some time!`
+  String get wallet_restore_loading {
+    return Intl.message(
+      'Restoring your wallet, this can take up some time!',
+      name: 'wallet_restore_loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your recovery phrase to restore your wallet!`
+  String get wallet_restore_enterMnemonic {
+    return Intl.message(
+      'Enter your recovery phrase to restore your wallet!',
+      name: 'wallet_restore_enterMnemonic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The recovery phrase is invalid!`
+  String get wallet_restore_invalidMnemonic {
+    return Intl.message(
+      'The recovery phrase is invalid!',
+      name: 'wallet_restore_invalidMnemonic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selelct phrase words`
+  String get wallet_restore_enterWords {
+    return Intl.message(
+      'Selelct phrase words',
+      name: 'wallet_restore_enterWords',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recovery phrase`
+  String get wallet_restore_recoveryPhrase {
+    return Intl.message(
+      'Recovery phrase',
+      name: 'wallet_restore_recoveryPhrase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You didn't safed your recovery words, wanna do that now?`
+  String get wallet_restore_not_safed {
+    return Intl.message(
+      'You didn\'t safed your recovery words, wanna do that now?',
+      name: 'wallet_restore_not_safed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

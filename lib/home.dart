@@ -1,7 +1,9 @@
+import 'package:defichainwallet/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'generated/l10n.dart';
+import 'wallet/wallet.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen();
@@ -14,11 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Wallet - Work in Progress!',
-      style: optionStyle,
-    ),
+  static List<Widget> _widgetOptions = <Widget>[
+    WalletScreen(),
     Text(
       'Liquidity - Work in Progress!',
       style: optionStyle,
@@ -44,6 +43,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).home_wallet),
+        actionsIconTheme: Theme.of(context).iconTheme,
+        actions: [
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          SettingsScreen()));
+                },
+                child: Icon(
+                  Icons.settings,
+                  size: 26.0,
+                ),
+              ))
+        ],
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

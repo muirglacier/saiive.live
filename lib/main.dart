@@ -1,3 +1,4 @@
+import 'package:defichainwallet/home.dart';
 import 'package:defichainwallet/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helper/constants.dart';
+import 'welcome/welcome.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,20 +59,20 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [
-          const Locale('en', ''),
-          const Locale('de', '')
-        ],
+        supportedLocales: [const Locale('en', ''), const Locale('de', '')],
         title: "DeFiChain Wallet",
         theme: ThemeData(
           brightness: _brightness,
           primaryColor: Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF),
           accentColor: Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF),
-          
           backgroundColor: isDark ? Colors.black : Colors.white,
-
+          iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.white),
           fontFamily: 'Helvetica, Arial, sans-serif',
         ),
+        routes: <String, WidgetBuilder>{
+          "homeScreen": (BuildContext context) => HomeScreen(),
+          "welcomeScreen": (BuildContext context) => WelcomeScreen()
+        },
         home: SplashScreen());
   }
 }

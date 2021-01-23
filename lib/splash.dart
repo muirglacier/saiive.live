@@ -1,10 +1,8 @@
-import 'package:defichainwallet/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/l10n.dart';
 import 'helper/constants.dart';
-import 'home.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -30,11 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
     final mnemonic = prefs.getString(DefiChainConstants.MnemonicKey);
 
     if (mnemonic == null || mnemonic == "") {
-     Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => WelcomeScreen()));
+      Navigator.of(context).pushReplacementNamed("welcomeScreen");
     } else {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => HomeScreen()));
+      Navigator.of(context).pushReplacementNamed("homeScreen");
     }
   }
 

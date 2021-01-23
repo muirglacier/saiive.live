@@ -37,5 +37,16 @@
   "wallet_new_phrase_info": "Das sind deine Wiederherstellungswörter. Schreibe sie auf, und verliere sie nicht!",
 
   "wallet_recovery_phrase_title": "Wiederherstellungswörter",
-  "wallet_recovery_phrase_test_title": "Wiederherstellungswörter Test"
+  "wallet_recovery_phrase_test_title": "Wiederherstellungswörter Test",
+
+  "wallet_restore_noAccountFound": "Wir konnten kein Konto finden, wir haben einen für dich angelegt!",
+  "wallet_restore_accountsFound": "Wir haben die folgenden Kontos gefunden:",
+  "wallet_restore_accountsAdded": "Wir haben die Kontos in deinem lokalen Datestore hinzugefügt! Deine Konten werden im Hintergrund aktualisiert!",
+  "wallet_restore_loading": "Wallet wiederherstellung, dies kann einige Zeit dauern!",
+  "wallet_restore_enterMnemonic": "Gib deinen Wiederherstellungssatz ein!",
+  "wallet_restore_invalidMnemonic": "Der Wiederherstellungsastz ist ungültig.",
+  "wallet_restore_enterWords": "Wiederherstellungswörter eingeben",
+  "wallet_restore_recoveryPhrase": "Wiederherstellungswörter",
+  "wallet_restore_not_safed": "Du hast deine Wiederherstellungswörter noch nicht gesichert, willst du das jetzt machen?",
+  "settings": "Einstellungen"
 }

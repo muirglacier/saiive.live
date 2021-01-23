@@ -37,6 +37,7 @@ dependencies:
   #ui libs
   carousel_slider: ^2.1.0
   cupertino_icons: ^1.0.1
+  flutter_tagging: ^2.2.0+3
   
 
 

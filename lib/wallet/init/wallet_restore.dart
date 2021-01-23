@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'restore/recovery_phrase_restore.dart';
+
 class WalletRestoreScreen extends StatefulWidget {
   WalletRestoreScreen();
 
@@ -10,6 +12,6 @@ class WalletRestoreScreen extends StatefulWidget {
 class _WalletRestoreScreenState extends State<WalletRestoreScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Text("RESTORE WALLET SCREEN"));
+    return RestoreRecoveryPhraseScreen();
   }
 }

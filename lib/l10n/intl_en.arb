@@ -39,5 +39,16 @@
   "wallet_new_phrase_info": "This is your recovery phrase! Write it down, and do not lose it!",
 
   "wallet_recovery_phrase_title": "Recovery phrase",
-  "wallet_recovery_phrase_test_title": "Recovery phrase test"
+  "wallet_recovery_phrase_test_title": "Recovery phrase test",
+
+  "wallet_restore_noAccountFound": "We did not found a used account, but we have created on for you!",
+  "wallet_restore_accountsFound": "We have found the following accounts:",
+  "wallet_restore_accountsAdded": "The accounts have been added to your local datastore! Your acounts will be synced in the background!",
+  "wallet_restore_loading": "Restoring your wallet, this can take up some time!",
+  "wallet_restore_enterMnemonic": "Enter your recovery phrase to restore your wallet!",
+  "wallet_restore_invalidMnemonic": "The recovery phrase is invalid!",
+  "wallet_restore_enterWords": "Selelct phrase words",
+  "wallet_restore_recoveryPhrase": "Recovery phrase",
+  "wallet_restore_not_safed": "You didn't safed your recovery words, wanna do that now?",
+  "settings": "Settings"
 }

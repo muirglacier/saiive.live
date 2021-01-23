@@ -48,10 +48,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         route = '/home';
       }
 
-      Timer(
-          Duration(seconds: 3),
-              () => Navigator.of(context).pushReplacementNamed(route)
-      );
+      Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {
       await sl.get<Vault>().deleteAll();
       await sl.get<SharedPrefsUtil>().deleteAll();

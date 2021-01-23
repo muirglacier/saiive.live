@@ -1,45 +1,46 @@
-import 'package:defichainwallet/splash.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/model/available_language.dart';
+import 'package:defichainwallet/ui/splash.dart';
+import 'package:defichainwallet/ui/home.dart';
+import 'package:defichainwallet/ui/intro/intro_welcome.dart';
+import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/utils/routes.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_config/flutter_config.dart';
 
 import 'helper/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  setupServiceLocator();
+
   await FlutterConfig.loadEnvVariables();
 
-  runApp(MyApp());
+  // Run app
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(new StateContainer(child: new DefiChainWalletApp()));
+  });
 }
 
-class MyApp extends StatefulWidget {
+class DefiChainWalletApp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _MyAppState();
+  State<StatefulWidget> createState() => _DefiChainWalletAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  var _brightness = Brightness.dark;
-
-  void loadThemeSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    if (!prefs.containsKey(DefiChainConstants.ThemeBrightness)) {
-      prefs.setInt(DefiChainConstants.ThemeBrightness, Brightness.light.index);
-    }
-    setState(() {
-      _brightness =
-          Brightness.values[prefs.getInt(DefiChainConstants.ThemeBrightness)];
-    });
-  }
-
+class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
   @override
   void initState() {
     super.initState();
-
-    loadThemeSettings();
   }
 
   @override
@@ -49,7 +50,6 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.portraitDown,
     ]);
 
-    var isDark = _brightness == Brightness.dark;
     return MaterialApp(
         localizationsDelegates: [
           S.delegate,
@@ -61,15 +61,43 @@ class _MyAppState extends State<MyApp> {
           const Locale('en', ''),
           const Locale('de', '')
         ],
+        locale: StateContainer.of(context).curLanguage == null ||
+            StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT ? null : StateContainer.of(context).curLanguage.getLocale(),
         title: "DeFiChain Wallet",
         theme: ThemeData(
-          brightness: _brightness,
-          primaryColor: Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF),
-          accentColor: Color.fromARGB(0xFF, 0xFF, 0xFF, 0x7F),
-          backgroundColor: isDark ? Colors.black : Colors.white,
-
+          dialogBackgroundColor: StateContainer.of(context).curTheme.backgroundDark,
+          primaryColor: StateContainer.of(context).curTheme.primary,
+          accentColor: StateContainer.of(context).curTheme.accent,
+          backgroundColor: StateContainer.of(context).curTheme.backgroundDark,
+          brightness: StateContainer.of(context).curTheme.brightness,
           fontFamily: 'Helvetica, Arial, sans-serif',
         ),
-        home: SplashScreen());
+        initialRoute: '/',
+        onGenerateRoute: (RouteSettings settings) {
+          switch(settings.name) {
+            case '/':
+              return NoTransitionRoute(
+                builder: (_) => SplashScreen(),
+                settings: settings,
+              );
+              break;
+
+            case '/home':
+              return NoTransitionRoute(
+                builder: (_) => HomeScreen(),
+                settings: settings,
+              );
+              break;
+            case '/intro_welcome':
+              return NoTransitionRoute(
+                builder: (_) => IntroWelcomeScreen(),
+                settings: settings,
+              );
+              break;
+            default:
+              return null;
+          }
+        }
+      );
   }
 }

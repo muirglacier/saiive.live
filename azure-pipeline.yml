@@ -27,7 +27,6 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter doctor -v
             $(FlutterToolPath)/flutter precache
-            $(FlutterToolPath)/flutter create
       
       - task: FlutterBuild@0
         displayName: Android Debug APK
@@ -91,7 +90,6 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter doctor -v
             $(FlutterToolPath)/flutter precache
-            $(FlutterToolPath)/flutter create
             
       - task: FlutterBuild@0
         displayName: "Build iOS debug"

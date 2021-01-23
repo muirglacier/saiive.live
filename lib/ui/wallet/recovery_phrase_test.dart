@@ -1,9 +1,13 @@
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../appstate_container.dart';
 
 class RecoveryPhraseTestScreen extends StatefulWidget {
   final List<String> mnemonic;
@@ -95,15 +99,15 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
                 onTap: () async {
                   final prefs = await SharedPreferences.getInstance();
 
-                  await prefs.setString(
-                      DefiChainConstants.MnemonicKey, widget.mnemonic.join(" "));
+                  await prefs.setString(DefiChainConstants.MnemonicKey,
+                      widget.mnemonic.join(" "));
                   await prefs.setInt(DefiChainConstants.WorkingAccountKey, 0);
                   await prefs.setBool(
                       DefiChainConstants.RecoveryPhraseTested, false);
 
-                  //RecoveryPhraseBackupSettings.backupWalletAlreadyShown = true;
+                  await sl.get<SharedPrefsUtil>().setSeedBackedUp(false);
 
-                  // Navigator.of(context).pushReplacementNamed("walletPage");
+                  Navigator.of(context).pushReplacementNamed("/home");
                 },
                 child: Padding(
                     padding: EdgeInsets.only(top: 15, right: 15),
@@ -157,8 +161,8 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
                                         DefiChainConstants.RecoveryPhraseTested,
                                         true);
 
-                                    // Navigator.of(context)
-                                    //     .pushReplacementNamed("walletPage");
+                                    Navigator.of(context)
+                                        .pushReplacementNamed("/home");
                                   }
                                 },
                               )))

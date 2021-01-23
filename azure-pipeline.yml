@@ -188,9 +188,10 @@ stages:
             echo $(apple-dev-cert) | base64 -d > dev-cert.p12
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'dev-cert.p12'
+          certSecureFile: 'apple.p12'
           certPwd: '$(apple-dev-cert-password)'
           keychain: 'temp'
+          
 
             
       - task: FlutterBuild@0

@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:defichainwallet/ui/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:defichainwallet/generated/l10n.dart';
@@ -98,22 +99,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
             ]),
             SizedBox(height: 10),
             Container(
-                child: SizedBox(
-                    width: 300,
-                    child: RaisedButton(
-                        color: Colors.white,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.account_balance_wallet,
-                                  color: Theme.of(context).primaryColor),
-                              SizedBox(width: 10),
-                              Text(
-                                S.of(context).welcome_wallet_create,
-                              ),
-                            ]),
-                        onPressed: () {}))),
+                child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).welcome_wallet_create, onPressed: () => {}, icon: Icons.account_balance_wallet)),
             SizedBox(height: 10),
             Container(
                 child: SizedBox(

@@ -106,7 +106,6 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
@@ -118,7 +117,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           Padding(
-              padding: EdgeInsets.only(top: 0),
+              padding: EdgeInsets.only(top: 0, left: 10, right: 10),
               child: Container(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

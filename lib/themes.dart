@@ -10,11 +10,11 @@ class AppColors {
 
 abstract class BaseTheme {
   static const pink = Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF);
-  static const black = Color(0xFF000000);
+  static const black = Color(0xFFFFFFFF);
   static const white = Color(0x00000000);
 
   Color primary;
-  Color background;
+  Color backgroundColor;
   Color text;
 
   Brightness brightness = Brightness.light;
@@ -22,7 +22,7 @@ abstract class BaseTheme {
 
 class DefiThemeLight extends BaseTheme {
   Color primary = BaseTheme.pink;
-  Color background = BaseTheme.white;
+  Color backgroundColor = BaseTheme.white;
   Color text = BaseTheme.black;
 
   Brightness brightness = Brightness.light;
@@ -30,7 +30,7 @@ class DefiThemeLight extends BaseTheme {
 
 class DefiThemeDark extends BaseTheme {
   Color primary = BaseTheme.pink;
-  Color background = BaseTheme.black;
+  Color backgroundColor = BaseTheme.black;
   Color text = BaseTheme.white;
 
   Brightness brightness = Brightness.dark;

@@ -75,9 +75,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
         autofocus: _autoFocus,
         focusNode: _tagBoxFocus,
         decoration: InputDecoration(
-            border: InputBorder.none,
             filled: true,
-            fillColor: Theme.of(context).hintColor,
             labelText: S.of(context).wallet_restore_enterWords,
             enabled: _inputEnabled),
       ),
@@ -106,12 +104,10 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
-          backgroundColor: Theme.of(context).backgroundColor,
           brightness: Brightness.light,
           elevation: 0,
         ),

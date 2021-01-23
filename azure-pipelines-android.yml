@@ -21,10 +21,6 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
-      - task: CopyFiles@2
-        inputs:
-          contents: '.env-Debug'
-          targetFolder: '.env'
       - task: FlutterInstall@0
         inputs:
           channel: 'beta'

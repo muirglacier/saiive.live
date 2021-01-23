@@ -26,13 +26,11 @@ stages:
         inputs:
           channel: 'beta'
           version: 'latest'
-      - task: FlutterCommand@0
+      - task: Bash@3
         inputs:
-          arguments: 'flutter precache'
-      
-      - task: FlutterCommand@0
-        inputs:
-          arguments: 'flutter doctor -v'
+          targetType: 'inline'
+          script: 'flutter doctor -v'
+          workingDirectory: '$FLUTTER_TOOL_PATH_ENV_VAR'
       
       # - task: FlutterBuild@0
       #   displayName: Android Debug APK

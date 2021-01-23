@@ -52,6 +52,10 @@ dependencies:
   # Flare for animations
   flare_flutter: ^2.0.6
 
+  # HTTP client
+  http: ^0.12.2
+
+
   # Auto resize text widget
   auto_size_text: ^2.1.0
 dev_dependencies:
@@ -59,7 +63,6 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-
 
 flutter_intl:
   enabled: true

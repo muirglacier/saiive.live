@@ -1,3 +1,4 @@
+
 class Account {
   final String token;
   final String address;
@@ -14,9 +15,9 @@ class Account {
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(
       token: json['token'],
-      address: json['address'],
+      address: json['address'] ?? '',
       balance: json['balance'],
-      raw: json['raw'],
+      raw: json['raw'] ?? '',
     );
   }
 }

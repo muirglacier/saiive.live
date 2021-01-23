@@ -69,7 +69,6 @@ stages:
 
   - job: BuildAndroidStaging
     displayName: "Build Android STAGING"
-    dependsOn: BuildAndroidDev
     pool:
       vmImage: 'ubuntu-latest'
     
@@ -112,7 +111,6 @@ stages:
   
   - job: BuildAndroidProd
     displayName: "Build Android PROD"
-    dependsOn: BuildAndroidStaging
     pool:
       vmImage: 'ubuntu-latest'
     

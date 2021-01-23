@@ -54,6 +54,11 @@ dependencies:
 
   # Auto resize text widget
   auto_size_text: ^2.1.0
+
+  #appcenter
+  flutter_appcenter_bundle: ^3.2.0+2
+  device_info: 1.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

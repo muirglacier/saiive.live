@@ -73,6 +73,11 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'beta'
+          version: 'latest'
       - task: Bash@3
         displayName: "Flutter prepare"
         inputs:
@@ -110,6 +115,13 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'beta'
+          version: 'latest'
+
       - task: Bash@3
         displayName: "Flutter prepare"
         inputs:
@@ -152,19 +164,35 @@ stages:
     
 #     steps:
 
+#       - task: AzureKeyVault@1
+#         inputs:
+#           azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
+#           KeyVaultName: 'defichain-wallet'
+#           SecretsFilter: 'apple-dev-cert-password'
+#           RunAsPreJob: true
+#       - task: InstallAppleCertificate@2
+#         inputs:
+#           certSecureFile: 'apple.p12'
+#           certPwd: '$(apple-dev-cert-password)'
+#           keychain: 'temp'
+          
 #       - task: FlutterInstall@0
 #         displayName: "Flutter install"
 #         inputs:
 #           channel: 'beta'
 #           version: 'latest'
-#       # - task: Bash@3
-#       #   displayName: "Flutter prepare"
-#       #   inputs:
-#       #     targetType: 'inline'
-#       #     script: |
-#       #       cd $(Build.SourcesDirectory)
-#       #       $(FlutterToolPath)/flutter doctor -v
-#       #       $(FlutterToolPath)/flutter precache
+#       - task: Bash@3
+#         displayName: "Flutter prepare"
+#         inputs:
+#           targetType: 'inline'
+#           script: |
+#             #cd $(Build.SourcesDirectory)
+#             #$(FlutterToolPath)/flutter doctor -v
+#             #$(FlutterToolPath)/flutter precache
+#             echo $(apple-dev-cert) | base64 -d > dev-cert.p12
+
+          
+
             
 #       - task: FlutterBuild@0
 #         displayName: "Build iOS debug"

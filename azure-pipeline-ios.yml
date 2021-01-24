@@ -1,0 +1,90 @@
+trigger:
+- main
+name: $(BuildID)
+
+stages:
+- stage: iOS
+  displayName: iOS
+  
+  jobs:
+  - job: BuildiOS
+    displayName: "Build iOS"
+    pool:
+      vmImage: 'macOS-latest'
+    
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
+          KeyVaultName: 'defichain-wallet'
+          SecretsFilter: 'apple-dev-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DefiChainWalletDev.p12'
+          certPwd: '$(apple-dev-cert-password)'
+          keychain: 'temp'
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'DefiChainWalletDev.mobileprovision'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'beta'
+          version: 'latest'
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+            export ENVFILE=.env-Debug
+
+      - task: FlutterBuild@0
+        displayName: "Build iOS debug"
+        inputs:
+          target: 'ios'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          verboseMode: true
+          debugMode: true
+          buildName: '0.1'
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.app'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
+
+      - task: Bash@3
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter clean
+
+      - task: FlutterBuild@0
+        displayName: "Build iOS release"
+        inputs:
+          target: 'ios'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          verboseMode: true
+          debugMode: false
+          buildName: '0.1'
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.app'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'ios'    

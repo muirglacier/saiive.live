@@ -22,10 +22,14 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'apple.p12'
+          certSecureFile: 'DefiChainWalletDev.p12'
           certPwd: '$(apple-dev-cert-password)'
           keychain: 'temp'
-          
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'DefiChainWalletDev.mobileprovision'
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -79,7 +83,7 @@ stages:
         inputs:
           contents: '**/*.app'
           targetFolder: '$(build.artifactStagingDirectory)/ios/release'
-          
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:

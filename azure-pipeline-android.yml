@@ -37,6 +37,8 @@ stages:
           buildName: '0.1'
           debugMode: true
           apkTargetPlatform: 'android-arm64'
+          buildFlavor: 'dev'
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -57,6 +59,8 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
+          buildFlavor: 'dev'
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -84,6 +88,7 @@ stages:
           targetType: 'inline'
           script: |
             export ENVFILE=.env-Staging
+
       - task: Bash@3
         displayName: "Flutter clean"
         inputs:
@@ -99,11 +104,14 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
+          buildFlavor: 'staging'
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)/android/release'
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
@@ -128,6 +136,7 @@ stages:
           targetType: 'inline'
           script: |
             export ENVFILE=.env-Prod
+
       - task: Bash@3
         displayName: "Flutter clean"
         inputs:
@@ -143,11 +152,14 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
+          buildFlavor: 'prod'
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)/android/release'
+          
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:

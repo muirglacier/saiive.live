@@ -48,6 +48,32 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "env"
+    productFlavors {
+ 
+        dev {
+            dimension "env"
+            applicationId "at.defichain.wallet.dev"
+            versionCode 1
+            versionName "1.0"
+            isDefault true
+        }
+ 
+        staging {
+            dimension "env"
+            applicationId "at.defichain.wallet.staging"
+            versionCode 1
+            versionName "1.0"
+        }
+
+        prod {
+            dimension "env"
+            applicationId "at.defichain.wallet"
+            versionCode 1
+            versionName "1.0"
+        }
+    }
 }
 
 flutter {

@@ -58,7 +58,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.app'
+          contents: '**/*.ipa'
           targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
 
       - task: Bash@3
@@ -81,7 +81,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.app'
+          contents: '**/*.ipa'
           targetFolder: '$(build.artifactStagingDirectory)/ios/release'
 
       - task: PublishBuildArtifacts@1

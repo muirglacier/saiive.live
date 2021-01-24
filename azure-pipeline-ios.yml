@@ -56,25 +56,25 @@ stages:
           debugMode: true
           buildName: '0.1'
 
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '$(Build.SourcesDirectory)/**/*.app'
-          targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
-
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: '$(Build.SourcesDirectory)/**/*.ipa'
-          targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
-
       - task: Bash@3
-        displayName: "Flutter clean"
+        displayName: 'Create ipa package'
         inputs:
           targetType: 'inline'
           script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
+            xcodebuild -workspace ios/Runner.xcworkspace -scheme prod -sdk iphoneos -configuration debug archive -archivePath build/ios/Runner.xcarchive
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist ci/ExportOptions.plist -exportPath build/ios/App.ipa
+
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'build/ios'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-android'
 
   - job: BuildiOSStaging
     displayName: "Build iOS Staging"
@@ -125,15 +125,22 @@ stages:
           verboseMode: true
           debugMode: true
           buildName: '0.1'
-
+      
+      - task: Bash@3
+        displayName: 'Create ipa package'
+        inputs:
+          targetType: 'inline'
+          script: |
+            xcodebuild -workspace ios/Runner.xcworkspace -scheme prod -sdk iphoneos -configuration debug-staging archive -archivePath build/ios/Runner.xcarchive
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist ci/ExportOptions.plist -exportPath build/ios/App.ipa
+      
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '$(Build.SourcesDirectory)/**/*.app'
+          contents: 'build/ios'
           targetFolder: '$(build.artifactStagingDirectory)/ios/staging'
-
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
+          
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
         inputs:
-          contents: '$(Build.SourcesDirectory)/**/*.ipa'
-          targetFolder: '$(build.artifactStagingDirectory)/ios/staging'
+          ArtifactName: 'staging-android'

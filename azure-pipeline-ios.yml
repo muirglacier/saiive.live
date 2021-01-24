@@ -41,6 +41,7 @@ stages:
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
             echo $(apple-dev-cert) | base64 -d > dev-cert.p12
+            export ENVFILE=.env-Debug
 
       - task: FlutterBuild@0
         displayName: "Build iOS debug"

@@ -59,7 +59,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.ipa'
+          contents: '**/*.app'
           targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
 
       - task: Bash@3
@@ -123,7 +123,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.ipa'
+          contents: '**/*.app'
           targetFolder: '$(build.artifactStagingDirectory)/ios/staging'
 
       - task: Bash@3

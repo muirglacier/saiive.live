@@ -51,6 +51,7 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter clean
+            $(FlutterToolPath)/flutter precache
             
       - task: FlutterBuild@0
         displayName: Android Release APK

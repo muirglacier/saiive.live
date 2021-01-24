@@ -366,6 +366,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2c579b2c-ab89-40f2-8467-a48914ec1187";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;

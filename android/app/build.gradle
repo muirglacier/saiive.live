@@ -53,11 +53,11 @@ android {
     productFlavors {
  
         dev {
+            getIsDefault().set(true)
             dimension "env"
             applicationId "at.defichain.wallet.dev"
             versionCode 1
             versionName "1.0"
-            isDefault true
         }
  
         staging {

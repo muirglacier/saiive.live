@@ -10,7 +10,7 @@ class AppCenterWrapper {
   Future start() async {
     await AppCenter.startAsync(
       appSecretAndroid: FlutterConfig.get("APPCENTER_ANDROID_ID"),
-      appSecretIOS: '374b0829-a9ee-401c-8187-ab0f0ebbec83',
+      appSecretIOS: FlutterConfig.get("APPCENTER_IOS_ID"),
       enableAnalytics: true,
       enableCrashes: true,
       enableDistribute: true,

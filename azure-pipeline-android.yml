@@ -37,7 +37,7 @@ stages:
           buildName: '0.1'
           debugMode: true
           apkTargetPlatform: 'android-arm64'
-          buildFlavor: 'dev'
+          buildFlavour: 'dev'
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -59,7 +59,7 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
-          buildFlavor: 'dev'
+          buildFlavour: 'dev'
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -104,7 +104,7 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
-          buildFlavor: 'staging'
+          buildFlavour: 'staging'
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -152,14 +152,14 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           apkTargetPlatform: 'android-arm64'
-          buildFlavor: 'prod'
+          buildFlavour: 'prod'
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)/android/release'
-          
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:

@@ -132,6 +132,7 @@ stages:
         displayName: "Build iOS debug"
         inputs:
           target: 'ios'
+          buildFlavor: 'staging'
           projectDirectory: '$(Build.SourcesDirectory)'
           verboseMode: true
           debugMode: true

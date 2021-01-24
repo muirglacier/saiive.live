@@ -36,7 +36,7 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
           debugMode: true
-          apkTargetPlatform: 'android-arm64'
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'dev'
 
       - task: CopyFiles@2
@@ -59,7 +59,7 @@ stages:
           target: 'apk'
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'dev'
 
       - task: CopyFiles@2
@@ -104,7 +104,7 @@ stages:
           target: 'apk'
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'staging'
 
       - task: CopyFiles@2
@@ -152,7 +152,7 @@ stages:
           target: 'apk'
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: '0.1'
-          apkTargetPlatform: 'android-arm64'
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'prod'
 
       - task: CopyFiles@2

@@ -14,10 +14,10 @@ class HttpService {
     this.serverAddress = FlutterConfig.get('API_URL');
   }
 
-  Future<dynamic> makeHttpGetRequest(String url, {BaseRequest request = null}) async {
-    http.Response response = await http.post(this.serverAddress + url,
-        headers: {'Content-type': 'application/json'},
-        body: request != null ? json.encode(request.toJson()) : null
+  Future<Map<String, String>> makeHttpGetRequest(String url) async {
+    http.Response response = await http.get(
+      this.serverAddress + url,
+      headers: {'Content-type': 'application/json'},
     );
 
     if (response.statusCode != 200) {
@@ -25,22 +25,22 @@ class HttpService {
     }
     Map decoded = json.decode(response.body);
     if (decoded.containsKey("error")) {
-      return Error.fromJson(decoded);
+      throw Error.fromJson(decoded);
     }
     return decoded;
   }
 
   Future<dynamic> makeHttpPostRequest(String url, BaseRequest request) async {
+    final body = json.encode(request.toJson());
     http.Response response = await http.post(this.serverAddress + url,
-        headers: {'Content-type': 'application/json'},
-        body: json.encode(request.toJson()));
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: body);
     if (response.statusCode != 200) {
       return null;
     }
-    Map decoded = json.decode(response.body);
-    if (decoded.containsKey("error")) {
-      return Error.fromJson(decoded);
-    }
-    return decoded;
+    return response;
   }
 }

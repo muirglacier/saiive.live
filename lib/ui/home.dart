@@ -1,5 +1,6 @@
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
+import 'package:defichainwallet/ui/wallet/wallet_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
+    WalletHomeScreen(),
     Text(
-      'Wallet - Work in Progress!',
-      style: optionStyle,
-    ),Text(
       'Liquidity - Work in Progress!',
       style: optionStyle,
     ),
@@ -50,8 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          SettingsScreen()));
+                      builder: (BuildContext context) => SettingsScreen()));
                 },
                 child: Icon(
                   Icons.settings,

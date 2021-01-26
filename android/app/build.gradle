@@ -43,6 +43,7 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resValue "string", "build_config_package", "at.defichain.wallet"
     }
 
     buildTypes {
@@ -67,6 +68,7 @@ android {
             applicationId "at.defichain.wallet.dev"
             versionCode 1
             versionName "1.0"
+            resValue "string", "build_config_package", "at.defichain.wallet"
         }
  
         staging {
@@ -74,6 +76,7 @@ android {
             applicationId "at.defichain.wallet.staging"
             versionCode 1
             versionName "1.0"
+            resValue "string", "build_config_package", "at.defichain.wallet"
         }
 
         prod {
@@ -81,6 +84,7 @@ android {
             applicationId "at.defichain.wallet"
             versionCode 1
             versionName "1.0"
+            resValue "string", "build_config_package", "at.defichain.wallet"
         }
     }
 }

@@ -8,9 +8,11 @@ import 'package:flutter_config/flutter_config.dart';
 
 class AppCenterWrapper {
   Future start() async {
+    final android = FlutterConfig.get("APPCENTER_ANDROID_ID");
+    final iOs = FlutterConfig.get("APPCENTER_IOS_ID");
     await AppCenter.startAsync(
-      appSecretAndroid: FlutterConfig.get("APPCENTER_ANDROID_ID"),
-      appSecretIOS: FlutterConfig.get("APPCENTER_IOS_ID"),
+      appSecretAndroid: android,
+      appSecretIOS: iOs,
       enableAnalytics: true,
       enableCrashes: true,
       enableDistribute: true,

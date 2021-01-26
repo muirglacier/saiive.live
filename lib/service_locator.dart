@@ -9,6 +9,8 @@ import 'package:get_it/get_it.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:defichainwallet/network/model/vault.dart';
 
+import 'network/api_service.dart';
+
 GetIt sl = GetIt.instance;
 
 void setupServiceLocator() {
@@ -20,4 +22,5 @@ void setupServiceLocator() {
   sl.registerLazySingleton<TransactionService>(() => TransactionService());
   sl.registerLazySingleton<FeeService>(() => FeeService());
   sl.registerLazySingleton<BlockService>(() => BlockService());
+  sl.registerLazySingleton<ApiService>(() => ApiService());
 }

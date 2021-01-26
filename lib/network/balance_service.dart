@@ -28,7 +28,7 @@ class BalanceService extends NetworkService
 
   Future<List<Balance>> getAllBalancesAddresses(String coin, List<String> addresses) async {
     AddressesRequest request = AddressesRequest(addresses: addresses);
-    dynamic response = await this.httpService.makeHttpGetRequest('/$coin/balance-all', request: request);
+    dynamic response = await this.httpService.makeHttpPostRequest('/v1/api/$coin/balance-all',  request);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -41,7 +41,7 @@ class BalanceService extends NetworkService
   }
 
   Future<Balance> getBalance(String coin, String address) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/$coin/balance/$address');
+    dynamic response = await this.httpService.makeHttpGetRequest('/v1/api/$coin/balance/$address');
 
     if (response is ErrorResponse) {
       this.handleError(response);

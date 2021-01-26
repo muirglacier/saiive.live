@@ -1,4 +1,5 @@
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/ui/intro/intro_wallet_new.dart';
 import 'package:defichainwallet/ui/splash.dart';
@@ -8,6 +9,7 @@ import 'package:defichainwallet/ui/intro/intro_restore.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/routes.dart';
+import 'package:defichainwallet/ui/widgets/restore_accounts.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,6 +102,11 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
             case '/intro_wallet_restore':
               return NoTransitionRoute(
                 builder: (_) => IntroRestoreScreen(),
+                settings: settings,
+              );
+            case '/intro_accounts_restore':
+              return NoTransitionRoute(
+                builder: (_) => RestoreAccountsScreen(ChainType.DeFiChain),
                 settings: settings,
               );
             case '/intro_wallet_new':

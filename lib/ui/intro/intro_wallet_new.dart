@@ -3,7 +3,7 @@ import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:defichainwallet/ui/widgets/recovery_phrase_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:bip39/bip39.dart' as bip39;
+import 'package:defichaindart/defichaindart.dart';
 
 class IntroWalletNewScreen extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _IntroWalletNewScreenState extends State<IntroWalletNewScreen> {
     super.initState();
 
     setState(() {
-      recoveryPhrase = bip39.generateMnemonic(strength: 256);
+      recoveryPhrase = generateMnemonic(strength: 256);
     });
   }
 

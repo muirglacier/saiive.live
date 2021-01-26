@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'dart:io';
 
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/network/model/available_themes.dart';
@@ -11,6 +12,7 @@ class SharedPrefsUtil {
   static const String seed_backed_up_key = 'defi_seed_backup';
   static const String cur_language = 'defi_language_pref';
   static const String cur_theme = 'defi_theme_pref';
+  static const String cur_net = 'cur_net';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -62,6 +64,10 @@ class SharedPrefsUtil {
 
   Future<ThemeSetting> getTheme() async {
     return ThemeSetting(ThemeOptions.values[await get(cur_theme, defaultValue: ThemeOptions.DEFI_LIGHT.index)]);
+  }
+
+  Future<ChainNet> getChainNetwork() async {
+    return ChainNet.values[await get(cur_net, defaultValue: ChainNet.Testnet.index)];
   }
 
   // For logging out

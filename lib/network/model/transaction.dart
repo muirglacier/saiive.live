@@ -1,3 +1,5 @@
+import 'dart:core';
+
 class Transaction {
   final String id;
   final String chain;
@@ -34,13 +36,28 @@ class Transaction {
       network: json['network'],
       coinbase: json['coinbase'],
       mintIndex: json['mintIndex'],
-      spentTxId: json['spendTxId'],
+      spentTxId: json['spentTxId'],
       mintTxId: json['mintTxId'],
       mintHeight: json['mintHeight'],
       spentHeight: json['spentHeight'],
       address: json['address'],
-      value: json['value'],
+      value: double.parse(json['value'].toString()),
       confirmations: json['confirmations'],
     );
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'chain': chain,
+        'network': network,
+        'coinbase': coinbase,
+        'mintIndex': mintIndex,
+        'spendTxId': spentTxId,
+        'mintTxId': mintTxId,
+        'mintHeight': mintHeight,
+        'spentHeight': spentHeight,
+        'address': address,
+        'value': value,
+        'confirmationsid': confirmations
+      };
 }

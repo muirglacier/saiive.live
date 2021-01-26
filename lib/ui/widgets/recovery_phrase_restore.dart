@@ -1,8 +1,11 @@
+import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/bip39/english.dart';
+import 'package:defichainwallet/network/model/vault.dart';
+import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
-import 'package:bip39/bip39.dart' as bip39;
 
 class RestoreRecoveryPhraseScreen extends StatefulWidget {
   @override
@@ -103,6 +106,11 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
     );
   }
 
+  Future saveSeed() async {
+    await sl.get<SharedPrefsUtil>().setSeedBackedUp(true);
+    await sl.get<Vault>().setSeed(mnemonicToSeedHex(_phrase));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,7 +163,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                             child: Text(S.of(context).next),
                             color: Theme.of(context).backgroundColor,
                             onPressed: () async {
-                              if (!bip39.validateMnemonic(_phrase)) {
+                              if (!validateMnemonic(_phrase)) {
                                 ScaffoldMessenger.of(context)
                                   ..showSnackBar(SnackBar(
                                     content: Text(S
@@ -163,7 +171,9 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                                         .wallet_restore_invalidMnemonic),
                                   ));
                               } else {
-                                Navigator.of(context).pushNamedAndRemoveUntil("homeScreen", (route) => false);
+                                await saveSeed();
+                                Navigator.of(context)
+                                    .pushNamed("/intro_accounts_restore");
                               }
                             },
                           )))

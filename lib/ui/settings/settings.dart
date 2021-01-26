@@ -1,5 +1,8 @@
+import 'package:defichainwallet/crypto/database/wallet_db.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/network/model/vault.dart';
+import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,14 +27,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Text("Remove seed"),
                       color: Theme.of(context).backgroundColor,
                       onPressed: () async {
-                        final prefs = await SharedPreferences.getInstance();
+                        await sl.get<Vault>().setSeed(null);
+                        await WalletDatabase.destory();
 
-                        await prefs.setString(
-                            DefiChainConstants.MnemonicKey, null);
-                        await prefs.setBool(
-                            DefiChainConstants.RecoveryPhraseTested, null);
-                        await prefs.setInt(
-                            DefiChainConstants.WorkingAccountKey, null);
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil("/", (route) => false);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Removed saved seed"),

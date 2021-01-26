@@ -70,10 +70,13 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
           backgroundColor: StateContainer.of(context).curTheme.backgroundColor,
           buttonColor: StateContainer.of(context).curTheme.backgroundColor,
           brightness: StateContainer.of(context).curTheme.brightness,
+          iconTheme: IconThemeData(
+              color: StateContainer.of(context).curTheme.backgroundColor),
           buttonTheme: ButtonThemeData(
               buttonColor:
                   StateContainer.of(context).curTheme.buttonColorPrimary),
           fontFamily: 'Helvetica, Arial, sans-serif',
+          cardTheme: CardTheme(color: StateContainer.of(context).curTheme.backgroundColor)
         ),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {

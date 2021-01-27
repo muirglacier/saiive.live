@@ -34,6 +34,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   _refresh() async {
     EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
+    _refreshController.refreshCompleted();
     final syncText = S.of(context).home_welcome_account_syncing;
     setState(() {
       _syncText = syncText;
@@ -58,7 +59,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           _accountBalance = accountBalance;
         });
 
-        _refreshController.loadComplete();
         _initSyncText();
       });
     }
@@ -84,9 +84,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
               [accounts.length.toString()]);
           _accountBalance = accountBalance;
         });
-        _refreshController.refreshCompleted();
       });
     }
+    _refreshController.loadComplete();
   }
 
   _initSyncText() {
@@ -175,6 +175,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
               SingleChildScrollView(
                   child: Center(
                       child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemExtent: 100.0,

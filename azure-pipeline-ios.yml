@@ -45,7 +45,7 @@ stages:
             #cd $(Build.SourcesDirectory)
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
-            export ENVFILE=.env-Debug
+            export ENVFILE=.env-Staging
 
       - task: FlutterBuild@0
         displayName: "Build iOS debug"
@@ -73,4 +73,4 @@ stages:
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
-          ArtifactName: 'prod-android'
+          ArtifactName: 'staging-ios'

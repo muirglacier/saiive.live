@@ -7,8 +7,8 @@ stages:
   displayName: iOS
   
   jobs:
-  - job: BuildiOSDev
-    displayName: "Build iOS Dev"
+  - job: BuildiOSTestflight
+    displayName: "Build iOS Testflight"
     pool:
       vmImage: 'macOS-latest'
     
@@ -17,88 +17,19 @@ stages:
         inputs:
           azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
           KeyVaultName: 'defichain-wallet'
-          SecretsFilter: 'apple-dev-cert-password'
+          SecretsFilter: 'apple-adhoc-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletDev.p12'
-          certPwd: '$(apple-dev-cert-password)'
+          certSecureFile: 'DefiChainWalletAdHoc.p12'
+          certPwd: '$(apple-adhoc-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'DefiChainWalletDev.mobileprovision'
-
-      - task: FlutterInstall@0
-        displayName: "Flutter install"
-        inputs:
-          channel: 'beta'
-          version: 'latest'
-
-      - task: Bash@3
-        displayName: "Flutter prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            #cd $(Build.SourcesDirectory)
-            #$(FlutterToolPath)/flutter doctor -v
-            #$(FlutterToolPath)/flutter precache
-            export ENVFILE=.env-Debug
-
-      - task: FlutterBuild@0
-        displayName: "Build iOS debug"
-        inputs:
-          target: 'ios'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          verboseMode: true
-          debugMode: true
-          buildName: '0.1'
-
-      - task: Bash@3
-        displayName: 'Create ipa package'
-        inputs:
-          targetType: 'inline'
-          script: |
-            xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration debug archive -archivePath build/ios/Runner.xcarchive
-            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportPath build/ios/App.ipa
-
-
-      - task: CopyFiles@2
-        displayName: "Copy artifacts"
-        inputs:
-          contents: 'build/ios'
-          targetFolder: '$(build.artifactStagingDirectory)/ios/debug'
-
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'prod-android'
-
-  - job: BuildiOSStaging
-    displayName: "Build iOS Staging"
-    pool:
-      vmImage: 'macOS-latest'
-
-    steps:
-      - task: AzureKeyVault@1
-        inputs:
-          azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
-          KeyVaultName: 'defichain-wallet'
-          SecretsFilter: 'apple-dist-cert-password'
-          RunAsPreJob: true
-
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'DefiChainWalletDist.p12'
-          certPwd: '$(apple-dist-cert-password)'
-          keychain: 'temp'
-
-      - task: InstallAppleProvisioningProfile@1
-        inputs:
-          provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'DefiChainWalletStaging.mobileprovision'
+          provProfileSecureFile: 'DefiChainWalletAdHoc.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -117,30 +48,30 @@ stages:
             export ENVFILE=.env-Staging
 
       - task: FlutterBuild@0
-        displayName: "Build iOS release"
+        displayName: "Build iOS staging"
         inputs:
           target: 'ios'
-          buildFlavour: 'staging'
           projectDirectory: '$(Build.SourcesDirectory)'
+          buildFlavour: 'staging'
           verboseMode: true
-          debugMode: true
+          debugMode: false
           buildName: '0.1'
-      
+
       - task: Bash@3
         displayName: 'Create ipa package'
         inputs:
           targetType: 'inline'
           script: |
-            xcodebuild -workspace ios/Runner.xcworkspace -scheme staging -sdk iphoneos -configuration debug-staging archive -archivePath build/ios/Runner.xcarchive
-            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist ci/ExportOptions.plist -exportPath build/ios/App.ipa
-      
+            xcodebuild -workspace ios/Runner.xcworkspace -scheme staging -sdk iphoneos -configuration Release-staging archive -archivePath build/ios/Runner.xcarchive
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist .devops/AdHocExportOptions.plist -exportPath build/ios/App.ipa
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
           contents: 'build/ios'
           targetFolder: '$(build.artifactStagingDirectory)/ios/staging'
-          
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
-          ArtifactName: 'staging-android'
+          ArtifactName: 'staging-ios'

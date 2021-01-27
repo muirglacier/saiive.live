@@ -42,9 +42,9 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
   ChainNet _network;
 
   void init() async {
-    _network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
     setState(() {
-      
+      _network = network;
     });
   }
 
@@ -58,6 +58,8 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
 
       debugPrint("Event " + eventType + " called...");
     });
+
+    init();
   }
 
   @override

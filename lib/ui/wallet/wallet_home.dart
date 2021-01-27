@@ -6,6 +6,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/events/events.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
+import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -145,6 +146,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
             Text(balance.toString(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
           ]),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => WalletTokenScreen(token)));
+      },
     ));
   }
 

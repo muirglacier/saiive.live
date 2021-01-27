@@ -108,7 +108,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
 
   Future saveSeed() async {
     await sl.get<SharedPrefsUtil>().setSeedBackedUp(true);
-    await sl.get<Vault>().setSeed(mnemonicToSeedHex(_phrase));
+    await sl.get<Vault>().setSeed(_phrase);
   }
 
   @override

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:package_info/package_info.dart';

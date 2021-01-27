@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'dart:async';
+import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
@@ -13,13 +14,20 @@ import 'package:hex/hex.dart';
 class WalletRestore {
   static Future<List<WalletAccount>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
       {List<int> existingAccounts}) async {
+
+    assert(chain != null);
+    assert(network != null);
+    assert(seed != null);
+    assert(password != null);
+    assert(apiService != null);
+
     int i = 0;
     int max = IWallet.MaxUnusedAccountScan;
     final api = apiService;
 
     final ret = List<WalletAccount>.empty(growable: true);
 
-    final key = HEX.decode(seed);
+    final key = HEX.decode(mnemonicToSeedHex(seed));
 
     if (existingAccounts == null) {
       existingAccounts = [];

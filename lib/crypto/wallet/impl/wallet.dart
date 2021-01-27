@@ -1,3 +1,4 @@
+import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
@@ -6,7 +7,7 @@ import 'package:defichainwallet/crypto/wallet/impl/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
+import 'package:defichainwallet/network/model/transaction.dart' as tx;
 import 'package:flutter/foundation.dart';
 
 import 'package:mutex/mutex.dart';
@@ -34,7 +35,7 @@ class Wallet extends IWallet {
 
     for (var account in accounts) {
       final wallet = new HdWallet(
-          _password, account, _chain, _network, _seed, _apiService, _walletDatabase);
+          _password, account, _chain, _network, mnemonicToSeedHex(_seed), _apiService, _walletDatabase);
 
       _wallets.putIfAbsent(account.account, () => wallet);
     }
@@ -136,7 +137,7 @@ class Wallet extends IWallet {
   }
 
   @override
-  Future<Transaction> getTransaction(String id) {
+  Future<tx.Transaction> getTransaction(String id) {
     // TODO: implement getTransaction
     throw UnimplementedError();
   }

@@ -48,12 +48,13 @@ stages:
             export ENVFILE=.env-Staging
 
       - task: FlutterBuild@0
-        displayName: "Build iOS debug"
+        displayName: "Build iOS staging"
         inputs:
           target: 'ios'
           projectDirectory: '$(Build.SourcesDirectory)'
+          buildFlavour: 'staging'
           verboseMode: true
-          debugMode: true
+          debugMode: false
           buildName: '0.1'
 
       - task: Bash@3

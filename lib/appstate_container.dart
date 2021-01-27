@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/impl/wallet.dart';
+import 'package:defichainwallet/crypto/wallet/wallet.dart';
+import 'package:defichainwallet/network/api_service.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,7 @@ import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/network/model/available_themes.dart';
 
 import 'network/events/events.dart';
+import 'network/model/vault.dart';
 
 class _InheritedStateContainer extends InheritedWidget {
   // Data is your entire state. In our case just 'User'
@@ -72,7 +76,9 @@ class StateContainerState extends State<StateContainer> {
     _walletInitSubscribe = EventTaxiImpl.singleton()
         .registerTo<WalletInitStartEvent>()
         .listen((event) async {
-      wallet = Wallet("", 0, ChainType.DeFiChain, ChainNet.Testnet);
+      final seed = await sl.get<Vault>().getSeed();
+      wallet = Wallet("", 0, ChainType.DeFiChain, ChainNet.Testnet, seed,
+          sl.get<ApiService>(), sl.get<IWalletDatabase>());
 
       try {
         await wallet.init();
@@ -87,13 +93,44 @@ class StateContainerState extends State<StateContainer> {
         .registerTo<WalletSyncStartEvent>()
         .listen((event) async {
       try {
-        await wallet.syncWallet();
+        var dataMap = Map();
+        dataMap["chain"] = ChainType.DeFiChain;
+        dataMap["network"] = ChainNet.Testnet;
+        dataMap["seed"] = await sl.get<Vault>().getSeed();
+        dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
+        dataMap["apiService"] = sl.get<ApiService>();
+        dataMap["database"] = sl.get<IWalletDatabase>();
+
+        await compute(StateContainerState.syncWallet, dataMap);
         EventTaxiImpl.singleton().fire(WalletSyncDoneEvent());
       } catch (e) {
         EventTaxiImpl.singleton()
             .fire(WalletSyncDoneEvent(hasError: true, error: e));
       }
     });
+  }
+
+  void _destroyBus() {
+    if (_walletInitSubscribe != null) {
+      _walletInitSubscribe.cancel();
+    }
+    if (_walletSyncSubscribe != null) {
+      _walletSyncSubscribe.cancel();
+    }
+  }
+
+  static Future syncWallet(Map dataMap) async {
+    var wallet = Wallet(
+        dataMap["password"],
+        0,
+        dataMap["chain"],
+        dataMap["network"],
+        dataMap["seed"],
+        dataMap["apiService"],
+        dataMap["database"]);
+
+    await wallet.init();
+    await wallet.syncWallet();
   }
 
   @override
@@ -112,6 +149,7 @@ class StateContainerState extends State<StateContainer> {
   @override
   void dispose() {
     super.dispose();
+    _destroyBus();
   }
 
   // Change language

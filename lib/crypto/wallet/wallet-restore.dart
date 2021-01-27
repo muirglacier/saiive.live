@@ -5,27 +5,21 @@ import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
-import 'package:defichainwallet/network/model/vault.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 
 class WalletRestore {
-  static Future<List<WalletAccount>> restore(ChainType chain,
+  static Future<List<WalletAccount>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
       {List<int> existingAccounts}) async {
     int i = 0;
     int max = IWallet.MaxUnusedAccountScan;
-    final api = sl.get<ApiService>();
-    final vault = sl.get<Vault>();
-    final sharedPrefs = sl.get<SharedPrefsUtil>();
+    final api = apiService;
 
-    final network = await sharedPrefs.getChainNetwork();
     final ret = List<WalletAccount>.empty(growable: true);
 
-    final key = HEX.decode(await vault.getSeed());
+    final key = HEX.decode(seed);
 
     if (existingAccounts == null) {
       existingAccounts = [];

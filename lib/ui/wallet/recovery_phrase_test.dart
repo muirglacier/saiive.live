@@ -1,15 +1,10 @@
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/network/model/vault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../appstate_container.dart';
 
 class RecoveryPhraseTestScreen extends StatefulWidget {
   final List<String> mnemonic;

@@ -1,14 +1,19 @@
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_db.dart';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/network/model/vault.dart';
+import 'package:defichainwallet/service_locator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RestoreAccountsScreen extends StatefulWidget {
   final ChainType chain;
+  final ChainNet network;
 
-  RestoreAccountsScreen(this.chain);
+  RestoreAccountsScreen(this.chain, this.network);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,12 +22,20 @@ class RestoreAccountsScreen extends StatefulWidget {
 }
 
 class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
-  Future<List<WalletAccount>> searchAccounts(ChainType chain) async {
-    var result = await _searchAccounts(chain);
+  Future<List<WalletAccount>> searchAccounts(
+      ChainType chain, ChainNet network) async {
+    var dataMap = Map();
+    dataMap["chain"] = chain;
+    dataMap["network"] = network;
+    dataMap["seed"] = await sl.get<Vault>().getSeed();
+    dataMap["password"] = "";//await sl.get<Vault>().getSecret();
+    dataMap["apiService"] = sl.get<ApiService>();
+
+    var result = await compute(_searchAccounts, dataMap);
 
     var isFirst = true;
     for (var element in result) {
-      await WalletDatabase.instance.addAccount(
+      await sl.get<IWalletDatabase>().addAccount(
           name: element.name,
           account: element.account,
           chain: chain,
@@ -32,15 +45,21 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
     }
 
     if (result.length == 0) {
-      await WalletDatabase.instance.addAccount(
+      await sl.get<IWalletDatabase>().addAccount(
           name: ChainHelper.chainTypeString(chain), account: 0, chain: chain);
     }
-    
+
     return result;
   }
 
-  Future<List<WalletAccount>> _searchAccounts(ChainType chain) async {
-    final ret = await WalletRestore.restore(chain);
+  static Future<List<WalletAccount>> _searchAccounts(Map dataMap) async {
+    final ret = await WalletRestore.restore(
+      dataMap["chain"],
+      dataMap["network"],
+      dataMap["seed"],
+      dataMap["password"],
+      dataMap["apiService"],
+    );
 
     return ret;
   }
@@ -83,7 +102,8 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
               child: RaisedButton(
             child: Text(S.of(context).next),
             onPressed: () async {
-              Navigator.of(context).pushNamedAndRemoveUntil("/home", (_) => false);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("/home", (_) => false);
             },
           )))
     ]);
@@ -110,7 +130,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
 
   Widget _buildRestoreRunner(BuildContext context) {
     return FutureBuilder<List<WalletAccount>>(
-      future: searchAccounts(widget.chain),
+      future: searchAccounts(widget.chain, widget.network),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<WalletAccount> data = snapshot.data;

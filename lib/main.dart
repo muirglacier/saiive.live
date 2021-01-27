@@ -10,6 +10,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/routes.dart';
 import 'package:defichainwallet/ui/widgets/restore_accounts.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 
 import 'package:flutter/material.dart';
@@ -37,6 +38,16 @@ class DefiChainWalletApp extends StatefulWidget {
 }
 
 class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
+
+  ChainNet _network;
+
+  void init() async {
+    _network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    setState(() {
+      
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -118,7 +129,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
               );
             case '/intro_accounts_restore':
               return NoTransitionRoute(
-                builder: (_) => RestoreAccountsScreen(ChainType.DeFiChain),
+                builder: (_) => RestoreAccountsScreen(ChainType.DeFiChain, _network),
                 settings: settings,
               );
             case '/intro_wallet_new':

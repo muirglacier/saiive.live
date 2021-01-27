@@ -7,6 +7,9 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter_config/flutter_config.dart';
 
 class AppCenterWrapper {
+  AndroidDeviceInfo _android;
+  IosDeviceInfo _ios;
+
   Future start() async {
     final android = FlutterConfig.get("APPCENTER_ANDROID_ID");
     final iOs = FlutterConfig.get("APPCENTER_IOS_ID");
@@ -25,6 +28,7 @@ class AppCenterWrapper {
 
       if (Platform.isAndroid) {
         var deviceInfo = await deviceInfoPlugin.androidInfo;
+        _android = deviceInfo;
 
         this.trackEvent('startApp', <String, String>{
           'os': "android",
@@ -42,7 +46,7 @@ class AppCenterWrapper {
         });
       } else if (Platform.isIOS) {
         var deviceInfo = await deviceInfoPlugin.iosInfo;
-
+        _ios = deviceInfo;
         this.trackEvent('startApp', <String, String>{
           'os': "ios",
           'name': deviceInfo.name,
@@ -68,6 +72,37 @@ class AppCenterWrapper {
 
   Future trackEvent(String eventName, Map<String, String> properties) async {
     try {
+      assert(properties != null);
+
+      if (Platform.isAndroid && _android != null) {
+        properties.putIfAbsent("os", () => "android");
+        properties.putIfAbsent("brand", () => _android.brand);
+        properties.putIfAbsent("device", () => _android.device);
+        properties.putIfAbsent("hardware", () => _android.hardware);
+        properties.putIfAbsent("manufacturer", () => _android.manufacturer);
+        properties.putIfAbsent("model", () => _android.model);
+        properties.putIfAbsent("id", () => _android.id);
+        properties.putIfAbsent("baseOs", () => _android.version.baseOS);
+        properties.putIfAbsent("release", () => _android.version.release);
+        properties.putIfAbsent(
+            "sdkInt", () => _android.version.sdkInt.toString());
+        properties.putIfAbsent("codename", () => _android.version.codename);
+        properties.putIfAbsent(
+            "isPhysicalDevice", () => _android.isPhysicalDevice.toString());
+      } else if (Platform.isIOS && _ios != null) {
+        properties.putIfAbsent("os", () => "android");
+        properties.putIfAbsent("name", () => _ios.name);
+        properties.putIfAbsent("systemName", () => _ios.systemName);
+        properties.putIfAbsent("systemVersion", () => _ios.systemVersion);
+        properties.putIfAbsent("id", () => _ios.identifierForVendor);
+        properties.putIfAbsent("sysname", () => _ios.systemName);
+        properties.putIfAbsent("nodename", () => _ios.utsname.nodename);
+        properties.putIfAbsent("release", () => _ios.utsname.version);
+        properties.putIfAbsent("version", () => _ios.utsname.version);
+        properties.putIfAbsent("machine", () => _ios.utsname.machine);
+        properties.putIfAbsent(
+            "isPhysicalDevice", () => _ios.isPhysicalDevice.toString());
+      }
       await AppCenter.trackEventAsync(eventName, properties);
     } on Exception catch (e) {
       debugPrint("error track event: " + e.toString());

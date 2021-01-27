@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:defichainwallet/appstate_container.dart';
 
 class AppStyles {
   // Text style for paragraph text.

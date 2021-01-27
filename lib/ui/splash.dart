@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:package_info/package_info.dart';
-import '../appstate_container.dart';
 import '../generated/l10n.dart';
 
 import 'package:defichainwallet/service_locator.dart';
@@ -51,6 +51,8 @@ class _SplashScreenState extends State<SplashScreen>
       if (isLoggedIn) {
         route = '/home';
       }
+
+      // await sl.get<IWalletDatabase>().open();
 
       Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {

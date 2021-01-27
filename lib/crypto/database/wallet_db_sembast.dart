@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/network/model/vault.dart';
-import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/foundation.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
@@ -15,11 +12,7 @@ import "package:collection/collection.dart";
 
 import '../chain.dart';
 
-class WalletDatabase {
-  WalletDatabase._();
-
-  static final WalletDatabase instance = WalletDatabase._();
-
+class SembastWalletDatabase extends IWalletDatabase {
   static Database _database;
 
   static const int _dbVersion = 1;
@@ -42,43 +35,37 @@ class WalletDatabase {
   Stream<List<WalletAccount>> get accountStream =>
       _accountStreamController.stream;
 
-  static Future destory() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+  final String _path;
+  SembastWalletDatabase(this._path);
 
-    final dbName = await sl.get<Vault>().getSeedHash();
-    final path = join(documentsDirectory.path, "db", dbName + "wallet.db");
-
+  Future destroy() async {
     _database = null;
 
-    final file = File(path);
+    final file = File(_path);
 
     if (await file.exists()) {
       await file.delete();
     }
   }
 
+  Future open() async {}
+
   Future<Database> get database async {
     if (_database != null) return _database;
-
-    final dbName = await sl.get<Vault>().getSeedHash();
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, "db", dbName + "_wallet.db");
-
-    final file = File(path);
+    final file = File(_path);
 
     if (await file.exists()) {
       debugPrint("Use existing database...");
     } else {
       debugPrint("Create new database...");
     }
-
-    _database = await databaseFactoryIo.openDatabase(path, version: _dbVersion);
+    _database = await databaseFactoryIo.openDatabase(_path);
     return _database;
   }
 
   Future<List<WalletAccount>> getAccounts() async {
+    var db = await database;
     var dbStore = _accountStoreInstance;
-    final db = await database;
 
     final accounts = await dbStore.find(db);
 
@@ -93,13 +80,12 @@ class WalletDatabase {
 
   Future<int> getNextFreeIndex(int account) async {
     var dbStore = _accountStoreInstance;
-    final db = await database;
 
     var finder = Finder(
         filter: Filter.equals('account', account),
         sortOrders: [SortOrder('index', false)]);
 
-    var records = await dbStore.find(db, finder: finder);
+    var records = await dbStore.find(await database, finder: finder);
     if (records.length == 0) {
       return 0;
     }
@@ -108,8 +94,9 @@ class WalletDatabase {
 
   Future<WalletAccount> updateAccount(WalletAccount account) async {
     final db = await database;
-
-    await _accountStoreInstance.record(account.id).put(db, account.toJson());
+    await _accountStoreInstance
+        .record(account.id)
+        .put(db, account.toJson());
 
     return WalletAccount.fromJson(
         await _accountStoreInstance.record(account.id).get(db));
@@ -121,6 +108,7 @@ class WalletDatabase {
       @required ChainType chain,
       bool isSelected = false}) async {
     final db = await database;
+
     if (!await _accountStoreInstance.record(account).exists(db)) {
       var newAccount = WalletAccount();
       newAccount.name = name;
@@ -140,9 +128,8 @@ class WalletDatabase {
 
   Future<List<tx.Transaction>> getTransactions() async {
     var dbStore = _transactionStoreInstance;
-    final db = await database;
 
-    final transactions = await dbStore.find(db);
+    final transactions = await dbStore.find(await database);
 
     final data = transactions
         .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
@@ -163,27 +150,25 @@ class WalletDatabase {
     item.putIfAbsent("account", () => account);
 
     final dbStore = stringMapStoreFactory.store(store);
-    final db = await database;
-    await dbStore.record(key).put(db, item);
+    await dbStore.record(key).put(await database, item);
   }
 
   Future<bool> transactionExists(String txId) async {
     var dbStore = stringMapStoreFactory.store(_transactionStore);
-    final db = await database;
 
-    return await dbStore.record(txId).exists(db);
+    return await dbStore.record(txId).exists(await database);
   }
 
   Future setAccountBalance(Account balance) async {
-    final db = await database;
-    await _balancesStoreInstance.record(balance.key).put(db, balance.toJson());
+    await _balancesStoreInstance
+        .record(balance.key)
+        .put(await database, balance.toJson());
   }
 
   Future<List<Account>> getAccountBalance() async {
     var dbStore = _balancesStoreInstance;
-    final db = await database;
 
-    final accounts = await dbStore.find(db);
+    final accounts = await dbStore.find(await database);
 
     final data = accounts
         .map((e) => e == null ? null : Account.fromJson(e.value))
@@ -194,9 +179,8 @@ class WalletDatabase {
 
   Future<Map<String, double>> getTotalBalances() async {
     var dbStore = _balancesStoreInstance;
-    final db = await database;
 
-    final accounts = await dbStore.find(db);
+    final accounts = await dbStore.find(await database);
 
     final data = accounts
         .map((e) => e == null ? null : Account.fromJson(e.value))

@@ -33,6 +33,9 @@ class Vault {
   // Specific keys
   Future<String> getSeedHash() async {
     var seed = await _read(seedKey);
+    if (seed == null || seed.isEmpty) {
+      return "";
+    }
     var utf8 = utf.utf8.encode(seed);
     var value = sha256.convert(utf8).toString();
 

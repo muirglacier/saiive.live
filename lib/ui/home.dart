@@ -1,5 +1,4 @@
 import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/wallet/wallet_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

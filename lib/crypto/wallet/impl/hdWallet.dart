@@ -1,24 +1,27 @@
 import 'dart:async';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
-import 'package:defichainwallet/crypto/database/wallet_db.dart';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
-import 'package:defichainwallet/network/model/vault.dart';
-import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hex/hex.dart';
 
 class HdWallet extends IHdWallet {
   int _nextFreeIndex;
 
+  final String _password;
   final WalletAccount _account;
   final ChainType _chain;
   final ChainNet _network;
+  final String _seed;
+  final ApiService _apiService;
+  final IWalletDatabase _walletDatabase;
 
-  HdWallet(this._account, this._chain, this._network);
+  HdWallet(this._password, this._account, this._chain, this._network,
+      this._seed, this._apiService, this._walletDatabase);
 
   @override
   Future<bool> syncWallet() async {
@@ -28,9 +31,8 @@ class HdWallet extends IHdWallet {
     _nextFreeIndex = 0;
 
     var startDate = DateTime.now();
-    var seed = await sl.get<Vault>().getSeed();
-    final key = HEX.decode(seed);
-    final apiService = sl.get<ApiService>();
+    final key = HEX.decode(_seed);
+    final apiService = _apiService;
 
     do {
       try {
@@ -55,7 +57,7 @@ class HdWallet extends IHdWallet {
         for (final balance in accountBalance) {
           for (final account in balance.accounts) {
             hasAnyTransactions = true;
-            await WalletDatabase.instance.setAccountBalance(account);
+            await _walletDatabase.setAccountBalance(account);
             anyBalanceFound = true;
           }
         }
@@ -69,7 +71,7 @@ class HdWallet extends IHdWallet {
         debugPrint(e);
         continue;
       }
- 
+
       if (empty >= IWallet.MaxUnusedIndexScan) {
         break;
       }
@@ -102,10 +104,8 @@ class HdWallet extends IHdWallet {
 
   @override
   Future<String> nextFreePublicKey(ChainType chain) async {
-    final nextIndex =
-        await WalletDatabase.instance.getNextFreeIndex(_account.account);
-    var seed = await sl.get<Vault>().getSeed();
-    final key = HEX.decode(seed);
+    final nextIndex = await _walletDatabase.getNextFreeIndex(_account.account);
+    final key = HEX.decode(_seed);
 
     var publicKey = await HdWalletUtil.derivePublicKey(
         key, _account.account, false, nextIndex, chain, _network);

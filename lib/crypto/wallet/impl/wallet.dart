@@ -1,11 +1,13 @@
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_db.dart';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/impl/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
+import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:mutex/mutex.dart';
 
@@ -18,14 +20,21 @@ class Wallet extends IWallet {
   final ChainType _chain;
   final ChainNet _network;
 
-  Wallet(String password, this._account, this._chain, this._network) {}
+  final String _password;
+  final String _seed;
+  final ApiService _apiService;
+  final IWalletDatabase _walletDatabase;
+
+  Wallet(this._password, this._account, this._chain, this._network, this._seed,
+      this._apiService, this._walletDatabase);
 
   @override
   Future init() async {
-    final accounts = await WalletDatabase.instance.getAccounts();
+    final accounts = await _walletDatabase.getAccounts();
 
     for (var account in accounts) {
-      final wallet = new HdWallet(account, _chain, _network);
+      final wallet = new HdWallet(
+          _password, account, _chain, _network, _seed, _apiService, _walletDatabase);
 
       _wallets.putIfAbsent(account.account, () => wallet);
     }
@@ -74,19 +83,20 @@ class Wallet extends IWallet {
 
       print("wallet sync took ${diffTx / 1000} seconds");
     } on Exception catch (e) {
+      debugPrint(e.toString());
       _mutex.release();
     }
   }
 
   @override
   Future<WalletAccount> addAccount(String name, int account) {
-    return WalletDatabase.instance
+    return _walletDatabase
         .addAccount(name: name, account: account, chain: _chain);
   }
 
   @override
   Future<List<WalletAccount>> getAccounts() {
-    return WalletDatabase.instance.getAccounts();
+    return _walletDatabase.getAccounts();
   }
 
   @override
@@ -96,8 +106,9 @@ class Wallet extends IWallet {
 
     var accountIdList = accounts.map((e) => e.id).toList();
 
-    var unusedAccounts =
-        await WalletRestore.restore(_chain, existingAccounts: accountIdList);
+    var unusedAccounts = await WalletRestore.restore(
+        _chain, _network, _seed, _password, _apiService,
+        existingAccounts: accountIdList);
 
     unusedAccounts.sort((a, b) => a.id.compareTo(b.id));
 

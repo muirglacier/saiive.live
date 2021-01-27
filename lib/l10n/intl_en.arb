@@ -50,5 +50,13 @@
   "wallet_restore_enterWords": "Selelct phrase words",
   "wallet_restore_recoveryPhrase": "Recovery phrase",
   "wallet_restore_not_safed": "You didn't safed your recovery words, wanna do that now?",
-  "settings": "Settings"
+  "wallet_empty": "Your wallet is empty!",
+  "settings": "Settings",
+
+
+  "home_welcome_good_morning": "Good morning",
+  "home_welcome_good_day": "Good day",
+  "home_welcome_good_evening": "Good evening",
+  "home_welcome_account_synced": "Your %s accounts are synced!",
+  "home_welcome_account_syncing": "Synchronizing..."
 }

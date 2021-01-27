@@ -25,10 +25,10 @@ class PhraseTaggable extends Taggable {
 
 class PhraseService {
   /// Mocks fetching language from network API with delay of 500ms.
-  static Future<List<PhraseTaggable>> getLanguages(String query) async {
+  static List<PhraseTaggable> getLanguages(String query) {
     final words =
         WORDLIST_ENGLISH.where((element) => element.startsWith(query));
-    var phraseList = [];
+    var phraseList = List<PhraseTaggable>.empty(growable: true);
 
     words.forEach((element) {
       phraseList.add(PhraseTaggable(name: element));

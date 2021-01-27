@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:defichainwallet/appcenter/appcenter.dart';
+import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/wallet/impl/wallet.dart';
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +12,8 @@ import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/network/model/available_themes.dart';
+
+import 'network/events/events.dart';
 
 class _InheritedStateContainer extends InheritedWidget {
   // Data is your entire state. In our case just 'User'
@@ -56,9 +63,44 @@ class StateContainerState extends State<StateContainer> {
   Locale deviceLocale = Locale('en', 'US');
   AppCenterWrapper appCenter = AppCenterWrapper();
 
+  Wallet wallet;
+
+  StreamSubscription<WalletInitStartEvent> _walletInitSubscribe;
+  StreamSubscription<WalletSyncStartEvent> _walletSyncSubscribe;
+
+  _registerBus() {
+    _walletInitSubscribe = EventTaxiImpl.singleton()
+        .registerTo<WalletInitStartEvent>()
+        .listen((event) async {
+      wallet = Wallet("", 0, ChainType.DeFiChain, ChainNet.Testnet);
+
+      try {
+        await wallet.init();
+        EventTaxiImpl.singleton().fire(WalletInitDoneEvent());
+      } catch (e) {
+        EventTaxiImpl.singleton()
+            .fire(WalletInitDoneEvent(hasError: true, error: e));
+      }
+    });
+
+    _walletSyncSubscribe = EventTaxiImpl.singleton()
+        .registerTo<WalletSyncStartEvent>()
+        .listen((event) async {
+      try {
+        await wallet.syncWallet();
+        EventTaxiImpl.singleton().fire(WalletSyncDoneEvent());
+      } catch (e) {
+        EventTaxiImpl.singleton()
+            .fire(WalletSyncDoneEvent(hasError: true, error: e));
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _registerBus();
     // Get theme default
     sl.get<SharedPrefsUtil>().getTheme().then((theme) {
       updateTheme(theme);

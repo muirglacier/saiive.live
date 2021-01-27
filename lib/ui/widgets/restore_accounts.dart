@@ -1,12 +1,8 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_db.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/wallet/impl/hdWallet.dart';
-import 'package:defichainwallet/crypto/wallet/impl/wallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
-import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/material.dart';
 
 class RestoreAccountsScreen extends StatefulWidget {
@@ -87,7 +83,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
               child: RaisedButton(
             child: Text(S.of(context).next),
             onPressed: () async {
-              Navigator.of(context).pushReplacementNamed("/home");
+              Navigator.of(context).pushNamedAndRemoveUntil("/home", (_) => false);
             },
           )))
     ]);

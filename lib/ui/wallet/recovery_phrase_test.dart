@@ -1,3 +1,4 @@
+import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/network/model/vault.dart';
@@ -84,7 +85,8 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
 
   Future saveSeed(bool seedIsBackedUp) async {
     await sl.get<SharedPrefsUtil>().setSeedBackedUp(false);
-    await sl.get<Vault>().setSeed(widget.mnemonic.join(" "));
+    await sl.get<Vault>().setSeed(mnemonicToSeedHex(widget.mnemonic.join(" ")));
+
   }
 
   @override

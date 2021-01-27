@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/network/model/account.dart';
+import 'package:defichainwallet/network/model/vault.dart';
+import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,7 +44,9 @@ class WalletDatabase {
 
   static Future destory() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, "db", "wallet.db");
+
+    final dbName = await sl.get<Vault>().getSeedHash();
+    final path = join(documentsDirectory.path, "db", dbName + "wallet.db");
 
     _database = null;
 
@@ -56,8 +60,9 @@ class WalletDatabase {
   Future<Database> get database async {
     if (_database != null) return _database;
 
+    final dbName = await sl.get<Vault>().getSeedHash();
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, "db", "wallet.db");
+    final path = join(documentsDirectory.path, "db", dbName + "_wallet.db");
 
     final file = File(path);
 

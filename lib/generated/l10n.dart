@@ -485,11 +485,71 @@ class S {
     );
   }
 
+  /// `Your wallet is empty!`
+  String get wallet_empty {
+    return Intl.message(
+      'Your wallet is empty!',
+      name: 'wallet_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settings {
     return Intl.message(
       'Settings',
       name: 'settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Good morning`
+  String get home_welcome_good_morning {
+    return Intl.message(
+      'Good morning',
+      name: 'home_welcome_good_morning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Good day`
+  String get home_welcome_good_day {
+    return Intl.message(
+      'Good day',
+      name: 'home_welcome_good_day',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Good evening`
+  String get home_welcome_good_evening {
+    return Intl.message(
+      'Good evening',
+      name: 'home_welcome_good_evening',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your %s accounts are synced!`
+  String get home_welcome_account_synced {
+    return Intl.message(
+      'Your %s accounts are synced!',
+      name: 'home_welcome_account_synced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Synchronizing...`
+  String get home_welcome_account_syncing {
+    return Intl.message(
+      'Synchronizing...',
+      name: 'home_welcome_account_syncing',
       desc: '',
       args: [],
     );

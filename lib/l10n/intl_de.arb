@@ -6,12 +6,10 @@
   "home_liquitiy": "Liquidity",
   "home_dex": "DEX",
   "home_tokens": "Tokens",
-  
   "welcome": "Willkommen",
   "loading": "Laden...",
   "next": "Weiter",
   "later": "Später",
-
   "welcome_wallet_create": "Neues Wallet anlegen",
   "welcome_wallet_restore": "Wallet importieren",
   "welcome_wallet_info": "Erstelle dein DeFiChain Wallet und behalte die Kontrolle der Privaten Schlüssel!",
@@ -35,11 +33,9 @@
   "wallet_new_test_confirm": "Bestätige deine Wiederherstellungswörter",
   "wallet_new_test_confirm:info": "Nur um sicher zu gehen, dass du die Richtigen Wörter hast.",
   "wallet_new_phrase_info": "Das sind deine Wiederherstellungswörter. Schreibe sie auf, und verliere sie nicht!",
-
   "wallet_recovery_phrase_title": "Wiederherstellungswörter",
   "wallet_recovery_phrase_test_title": "Wiederherstellungswörter Test",
-
-  "wallet_restore_noAccountFound": "Wir konnten kein Konto finden, wir haben einen für dich angelegt!",
+  "wallet_restore_noAccountFound": "Wir konnten kein Konto finden, wir haben eines für dich angelegt!",
   "wallet_restore_accountsFound": "Wir haben die folgenden Kontos gefunden:",
   "wallet_restore_accountsAdded": "Wir haben die Kontos in deinem lokalen Datestore hinzugefügt! Deine Konten werden im Hintergrund aktualisiert!",
   "wallet_restore_loading": "Wallet wiederherstellung, dies kann einige Zeit dauern!",
@@ -48,5 +44,12 @@
   "wallet_restore_enterWords": "Wiederherstellungswörter eingeben",
   "wallet_restore_recoveryPhrase": "Wiederherstellungswörter",
   "wallet_restore_not_safed": "Du hast deine Wiederherstellungswörter noch nicht gesichert, willst du das jetzt machen?",
-  "settings": "Einstellungen"
+  "wallet_empty": "Dein Wallet ist leer!",
+  "settings": "Einstellungen",
+  
+  "home_welcome_good_morning": "Guten Tag",
+  "home_welcome_good_day": "Guten Tag",
+  "home_welcome_good_evening": "Guten Abend",
+  "home_welcome_account_synced": "Deine %s Konten sind aktualisiert!",
+  "home_welcome_account_syncing": "Aktualisieren..."
 }

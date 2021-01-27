@@ -1,5 +1,7 @@
-import 'package:flutter/services.dart';
+import 'dart:convert' as utf;
 
+import 'package:flutter/services.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Vault {
@@ -26,6 +28,15 @@ class Vault {
   // Specific keys
   Future<String> getSeed() async {
     return await _read(seedKey);
+  }
+
+  // Specific keys
+  Future<String> getSeedHash() async {
+    var seed = await _read(seedKey);
+    var utf8 = utf.utf8.encode(seed);
+    var value = sha256.convert(utf8).toString();
+
+    return value;
   }
 
   Future<String> setSeed(String seed) async {

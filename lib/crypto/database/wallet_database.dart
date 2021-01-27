@@ -23,5 +23,6 @@ abstract class IWalletDatabase {
   Future<Map<String, double>> getTotalBalances();
   
   Future open();
+  Future close();
   Future destroy();  
 }

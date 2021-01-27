@@ -7,15 +7,12 @@ import 'package:defichainwallet/crypto/wallet/impl/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
 import 'package:flutter/foundation.dart';
 
-import 'package:mutex/mutex.dart';
-
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
-
-  final Mutex _mutex = Mutex();
 
   int _account;
   final ChainType _chain;
@@ -34,8 +31,8 @@ class Wallet extends IWallet {
     final accounts = await _walletDatabase.getAccounts();
 
     for (var account in accounts) {
-      final wallet = new HdWallet(
-          _password, account, _chain, _network, mnemonicToSeedHex(_seed), _apiService, _walletDatabase);
+      final wallet = new HdWallet(_password, account, _chain, _network,
+          mnemonicToSeedHex(_seed), _apiService);
 
       _wallets.putIfAbsent(account.account, () => wallet);
     }
@@ -60,23 +57,15 @@ class Wallet extends IWallet {
   }
 
   @override
-  Future syncWallet() async {
-    if (_mutex.isLocked) {
-      return;
-    }
+  Future<List<Account>> syncBalance() async {
     var startDate = DateTime.now();
-
+    var ret = List<Account>();
     try {
-      _mutex.acquire();
-
       for (final wallet in _wallets.values) {
-        await wallet.syncWallet();
+        var balance = await wallet.syncBalance();
+        ret.addAll(balance);
       }
 
-      // var futures = _wallets.values.map((e) => e.syncWallet());
-      // await Future.wait(futures);
-
-      _mutex.release();
       var endTxDate = DateTime.now();
 
       var diffTx =
@@ -85,14 +74,14 @@ class Wallet extends IWallet {
       print("wallet sync took ${diffTx / 1000} seconds");
     } on Exception catch (e) {
       debugPrint(e.toString());
-      _mutex.release();
     }
+    return ret;
   }
 
   @override
   Future<WalletAccount> addAccount(String name, int account) {
-    return _walletDatabase
-        .addAccount(name: name, account: account, chain: _chain);
+    return _walletDatabase.addAccount(
+        name: name, account: account, chain: _chain);
   }
 
   @override

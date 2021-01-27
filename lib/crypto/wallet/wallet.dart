@@ -1,4 +1,5 @@
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
+import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 
 abstract class IWallet {
@@ -7,7 +8,7 @@ abstract class IWallet {
   static const int KeysPerQuery = 20;
 
   Future init();
-  Future syncWallet();
+  Future<List<Account>> syncBalance();
 
   Future<Transaction> getTransaction(String id);
 

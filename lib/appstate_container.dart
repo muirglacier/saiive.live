@@ -4,6 +4,7 @@ import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/impl/wallet.dart';
+import 'package:defichainwallet/crypto/wallet/wallet-sync.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
@@ -98,14 +99,20 @@ class StateContainerState extends State<StateContainer> {
         dataMap["seed"] = await sl.get<Vault>().getSeed();
         dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
         dataMap["apiService"] = sl.get<ApiService>();
-        dataMap["database"] = sl.get<IWalletDatabase>();
+        dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
 
-        await compute(StateContainerState.syncWallet, dataMap);
+        var balances = await compute(StateContainerState.syncWallet, dataMap);
+
+        var db = sl.get<IWalletDatabase>();
+        for (final balance in balances) {
+            db.setAccountBalance(balance);
+        }
+
         EventTaxiImpl.singleton().fire(WalletSyncDoneEvent());
       } catch (e) {
         EventTaxiImpl.singleton()
             .fire(WalletSyncDoneEvent(hasError: true, error: e));
-      }
+      } finally {}
     });
   }
 
@@ -119,17 +126,13 @@ class StateContainerState extends State<StateContainer> {
   }
 
   static Future syncWallet(Map dataMap) async {
-    var wallet = Wallet(
-        dataMap["password"],
-        0,
+    return await WalletSync.syncBalance(
         dataMap["chain"],
         dataMap["network"],
         dataMap["seed"],
+        dataMap["password"],
         dataMap["apiService"],
-        dataMap["database"]);
-
-    await wallet.init();
-    await wallet.syncWallet();
+        dataMap["accounts"]);
   }
 
   @override

@@ -72,6 +72,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           .registerTo<WalletSyncDoneEvent>()
           .listen((event) async {
         final accounts = await StateContainer.of(context).wallet.getAccounts();
+        if (accounts.length == 0) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              "/intro_accounts_restore", (route) => false);
+        }
 
         var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
 

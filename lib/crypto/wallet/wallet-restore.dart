@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 
 class WalletRestore {
+
   static Future<List<WalletAccount>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
       {List<int> existingAccounts}) async {
 

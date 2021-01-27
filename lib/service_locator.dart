@@ -36,5 +36,7 @@ void setupServiceLocator() {
     var db = SembastWalletDatabase(path);
     await db.open();
     return db;
+  }, dispose: (object) async {
+    await object.close();
   });
 }

@@ -13,7 +13,7 @@ import "package:collection/collection.dart";
 import '../chain.dart';
 
 class SembastWalletDatabase extends IWalletDatabase {
-  static Database _database;
+  Database _database;
 
   static const int _dbVersion = 1;
 
@@ -49,6 +49,11 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future open() async {}
+
+  Future close() async {
+    _database.close();
+    _database = null;
+  }
 
   Future<Database> get database async {
     if (_database != null) return _database;

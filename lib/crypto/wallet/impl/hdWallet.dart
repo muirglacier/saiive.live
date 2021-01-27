@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/network/model/account.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hex/hex.dart';
 
@@ -18,21 +18,20 @@ class HdWallet extends IHdWallet {
   final ChainNet _network;
   final String _seed;
   final ApiService _apiService;
-  final IWalletDatabase _walletDatabase;
 
   HdWallet(this._password, this._account, this._chain, this._network,
-      this._seed, this._apiService, this._walletDatabase);
+      this._seed, this._apiService);
 
   @override
-  Future<bool> syncWallet() async {
+  Future<List<Account>> syncBalance() async {
     int empty = 0;
     int i = 0;
-    var hasAnyTransactions = false;
     _nextFreeIndex = 0;
 
     var startDate = DateTime.now();
     final key = HEX.decode(_seed);
     final apiService = _apiService;
+    var balanceList = List<Account>();
 
     do {
       try {
@@ -55,11 +54,8 @@ class HdWallet extends IHdWallet {
 
         var anyBalanceFound = false;
         for (final balance in accountBalance) {
-          for (final account in balance.accounts) {
-            hasAnyTransactions = true;
-            await _walletDatabase.setAccountBalance(account);
-            anyBalanceFound = true;
-          }
+          anyBalanceFound = true;
+          balanceList.addAll(balance.accounts);
         }
 
         if (anyBalanceFound) {
@@ -99,17 +95,18 @@ class HdWallet extends IHdWallet {
     print("sync took ${diff / 1000} seconds");
 
     _nextFreeIndex++;
-    return hasAnyTransactions;
+    return balanceList;
   }
 
   @override
   Future<String> nextFreePublicKey(ChainType chain) async {
-    final nextIndex = await _walletDatabase.getNextFreeIndex(_account.account);
-    final key = HEX.decode(_seed);
+    // final nextIndex = await _walletDatabase.getNextFreeIndex(_account.account);
+    // final key = HEX.decode(_seed);
 
-    var publicKey = await HdWalletUtil.derivePublicKey(
-        key, _account.account, false, nextIndex, chain, _network);
+    // var publicKey = await HdWalletUtil.derivePublicKey(
+    //     key, _account.account, false, nextIndex, chain, _network);
 
-    return publicKey;
+    // return publicKey;
+    throw new Error();
   }
 }

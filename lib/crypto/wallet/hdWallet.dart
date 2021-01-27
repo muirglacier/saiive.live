@@ -1,7 +1,8 @@
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/network/model/account.dart';
 
 abstract class IHdWallet {
-  Future<bool> syncWallet();
+  Future<List<Account>> syncBalance();
 
   Future<String> nextFreePublicKey(ChainType chain);
 }

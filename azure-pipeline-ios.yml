@@ -63,12 +63,12 @@ stages:
           targetType: 'inline'
           script: |
             xcodebuild -workspace ios/Runner.xcworkspace -scheme staging -sdk iphoneos -configuration Release-staging archive -archivePath build/ios/Runner.xcarchive
-            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist .devops/AdHocExportOptions.plist -exportPath build/ios/App.ipa
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist .devops/AdHocExportOptions.plist -exportPath build/ios
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: 'build/ios/App.ipa'
+          contents: 'build/ios/*.ipa'
           targetFolder: '$(build.artifactStagingDirectory)/ios/staging'
 
       - task: PublishBuildArtifacts@1

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:defichainwallet/bus/transaction_loaded_event.dart';
+import 'package:defichainwallet/bus/transactions_loaded_event.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
@@ -15,10 +17,14 @@ class TransactionService extends NetworkService
       this.handleError(response);
     }
 
-    return json
+    List<Transaction> transactions = json
         .decode(response.body)
         .map<Transaction>((data) => Transaction.fromJson(data))
         .toList();
+
+    this.fireEvent(new TransactionsLoadedEvent(transactions: transactions));
+
+    return transactions;
   }
 
   Future<List<Transaction>> getAddressesTransactions(String coin, List<String> addresses) async {
@@ -29,10 +35,14 @@ class TransactionService extends NetworkService
       this.handleError(response);
     }
 
-    return json
+    List<Transaction> transactions = json
         .decode(response.body)
         .map<Transaction>((data) => Transaction.fromJson(data))
         .toList();
+
+    this.fireEvent(new TransactionsLoadedEvent(transactions: transactions));
+
+    return transactions;
   }
 
   Future<Transaction> getWithTxId(String coin, String txId) async {
@@ -42,32 +52,44 @@ class TransactionService extends NetworkService
       this.handleError(response);
     }
 
-    return Transaction.fromJson(response);
+    Transaction transaction = Transaction.fromJson(response);
+    
+    this.fireEvent(new TransactionLoadedEvent(transaction: transaction));
+    
+    return transaction;
   }
 
-  Future<Transaction> getBlockTransactions(String coin, String blockId) async {
+  Future<List<Transaction>> getBlockTransactions(String coin, String blockId) async {
     dynamic response = await this.httpService.makeHttpGetRequest('/$coin/tx/block/$blockId');
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    return json
+    List<Transaction> transactions = json
         .decode(response.body)
         .map<Transaction>((data) => Transaction.fromJson(data))
         .toList();
+
+    this.fireEvent(new TransactionsLoadedEvent(transactions: transactions));
+
+    return transactions;
   }
 
-  Future<Transaction> getTransactionsHeight(String coin, int height) async {
+  Future<List<Transaction>> getTransactionsHeight(String coin, int height) async {
     dynamic response = await this.httpService.makeHttpGetRequest('/$coin/tx/height/$height');
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    return json
+    List<Transaction> transactions = json
         .decode(response.body)
         .map<Transaction>((data) => Transaction.fromJson(data))
         .toList();
+
+    this.fireEvent(new TransactionsLoadedEvent(transactions: transactions));
+
+    return transactions;
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichainwallet/bus/block_loaded_event.dart';
 import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
@@ -13,7 +14,11 @@ class BlockService extends NetworkService
       this.handleError(response);
     }
 
-    return Block.fromJson(response);
+    Block block = Block.fromJson(response);
+    
+    this.fireEvent(new BlockLoadedEvent(block: block));
+    
+    return block;
   }
 
   Future<Block> getBlockTip(String coin) async {
@@ -23,7 +28,10 @@ class BlockService extends NetworkService
       this.handleError(response);
     }
 
-    return Block.fromJson(response);
-  }
+    Block block = Block.fromJson(response);
 
+    this.fireEvent(new BlockLoadedEvent(block: block));
+
+    return block;
+  }
 }

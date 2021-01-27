@@ -62,7 +62,7 @@ stages:
           targetType: 'inline'
           script: |
             xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration debug archive -archivePath build/ios/Runner.xcarchive
-            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist ci/ExportOptions.plist -exportPath build/ios/App.ipa
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportPath build/ios/App.ipa
 
 
       - task: CopyFiles@2

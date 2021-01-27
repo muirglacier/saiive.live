@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:defichainwallet/bus/balance_loaded_event.dart';
+import 'package:defichainwallet/bus/balances_loaded_event.dart';
 import 'package:defichainwallet/network/model/balance.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
@@ -20,10 +22,14 @@ class BalanceService extends NetworkService
       this.handleError(response);
     }
 
-    return json
+    List<Balance> balances = json
         .decode(response.body)
         .map<Balance>((data) => Balance.fromJson(data))
         .toList();
+    
+    this.fireEvent(new BalancesLoadedEvent(balances: balances));
+    
+    return balances;
   }
 
   Future<List<Balance>> getAllBalancesAddresses(String coin, List<String> addresses) async {
@@ -34,10 +40,14 @@ class BalanceService extends NetworkService
       this.handleError(response);
     }
 
-    return json
+    List<Balance> balances = json
         .decode(response.body)
         .map<Balance>((data) => Balance.fromJson(data))
         .toList();
+
+    this.fireEvent(new BalancesLoadedEvent(balances: balances));
+
+    return balances;
   }
 
   Future<Balance> getBalance(String coin, String address) async {
@@ -47,10 +57,14 @@ class BalanceService extends NetworkService
       this.handleError(response);
     }
 
-    return Balance.fromJson(response);
+    Balance balance = Balance.fromJson(response);
+
+    this.fireEvent(new BalanceLoadedEvent(balance: balance));
+
+    return balance;
   }
 
-  Future<Balance> getBalancesAddresses(String coin, List<String> addresses) async {
+  Future<List<Balance>> getBalancesAddresses(String coin, List<String> addresses) async {
     AddressesRequest request = AddressesRequest(addresses: addresses);
     dynamic response = await this.httpService.makeHttpPostRequest('/$coin/balances', request);
 
@@ -58,10 +72,13 @@ class BalanceService extends NetworkService
       this.handleError(response);
     }
 
-    return json
+    List<Balance> balances = json
         .decode(response.body)
         .map<Balance>((data) => Balance.fromJson(data))
         .toList();
-  }
 
+    this.fireEvent(new BalancesLoadedEvent(balances: balances));
+
+    return balances;
+  }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:defichainwallet/bus/accounts_loaded_event.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
@@ -36,10 +37,14 @@ class AccountService extends NetworkService {
       this.handleError(response);
     }
 
-    return json
+    List<Account> accounts = json
         .decode(response.body)
         .map<Account>((data) => Account.fromJson(data))
         .toList();
+
+    this.fireEvent(new AccountsLoadedEvent(accounts: accounts));
+    
+    return accounts;
   }
 
   Future<List<KeyAccountWrapper>> getAccounts(
@@ -53,9 +58,13 @@ class AccountService extends NetworkService {
       this.handleError(response);
     }
 
-    return json
+    List<Account> accounts = json
         .decode(response.body)
         .map<KeyAccountWrapper>((data) => KeyAccountWrapper.fromJson(data))
         .toList();
+
+    this.fireEvent(new AccountsLoadedEvent(accounts: accounts));
+
+    return accounts;
   }
 }

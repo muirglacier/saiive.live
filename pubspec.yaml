@@ -58,6 +58,9 @@ dependencies:
   sembast: any
   mutex: ^1.1.0
 
+  # Eventbus
+  event_taxi: ^0.1.5
+
   # Auto resize text widget
   auto_size_text: ^2.1.0
 

@@ -14,6 +14,9 @@ class Transaction {
   final double value;
   final int confirmations;
 
+  int index;
+  int account;
+
   Transaction({
     this.id,
     this.chain,

@@ -46,7 +46,14 @@
   "wallet_restore_not_safed": "Du hast deine Wiederherstellungswörter noch nicht gesichert, willst du das jetzt machen?",
   "wallet_empty": "Dein Wallet ist leer!",
   "settings": "Einstellungen",
+
   
+  "wallet_token_available_balance": "Verfügbar",
+  "wallet_token_transactions": "Transaktionen",
+  
+  "receive": "Empfangen",
+  "send": "Senden",
+
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",
   "home_welcome_good_evening": "Guten Abend",

@@ -19,6 +19,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   static const String _accountStore = "accounts";
   static const String _transactionStore = "transactions";
+  static const String _unspentStore = "unspent";
   static const String _balanceStore = "balances";
 
   final StoreRef _accountStoreInstance =
@@ -26,6 +27,8 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   final StoreRef _transactionStoreInstance =
       stringMapStoreFactory.store(_transactionStore);
+  final StoreRef _unspentStoreInstance =
+      stringMapStoreFactory.store(_unspentStore);
 
   final StoreRef _balancesStoreInstance =
       stringMapStoreFactory.store(_balanceStore);
@@ -99,9 +102,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   Future<WalletAccount> updateAccount(WalletAccount account) async {
     final db = await database;
-    await _accountStoreInstance
-        .record(account.id)
-        .put(db, account.toJson());
+    await _accountStoreInstance.record(account.id).put(db, account.toJson());
 
     return WalletAccount.fromJson(
         await _accountStoreInstance.record(account.id).get(db));
@@ -134,7 +135,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future<List<tx.Transaction>> getTransactions() async {
     var dbStore = _transactionStoreInstance;
 
-    final transactions = await dbStore.find(await database);
+    final db = await database;
+    final transactions = await dbStore.find(db);
 
     final data = transactions
         .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
@@ -143,19 +145,43 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
-  Future addTransaction(
-      tx.Transaction transaction, int account, int index) async {
-    await _getStoreAndAdd(_transactionStore, transaction.toJson(),
-        transaction.id, account, index);
+  Future clearTransactions() async {
+    final txs = await getTransactions();
+    final txIds = txs.map((e) => e.id);
+
+    await _transactionStoreInstance.records(txIds).delete(await database);
   }
 
-  Future _getStoreAndAdd(String store, Map<String, dynamic> item, String key,
-      int account, int index) async {
-    item.putIfAbsent("index", () => index);
-    item.putIfAbsent("account", () => account);
+  Future addTransaction(tx.Transaction transaction) async {
+    final db = await database;
+    final obj = transaction.toJson();
+    await _transactionStoreInstance.record(transaction.id).put(db, obj);
+  }
 
-    final dbStore = stringMapStoreFactory.store(store);
-    await dbStore.record(key).put(await database, item);
+  Future<List<tx.Transaction>> getUnspentTransactions() async {
+    var dbStore = _unspentStoreInstance;
+
+    final db = await database;
+    final transactions = await dbStore.find(db);
+
+    final data = transactions
+        .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
+        ?.toList();
+
+    return data;
+  }
+
+  Future clearUnspentTransactions() async {
+    final txs = await getUnspentTransactions();
+    final txIds = txs.map((e) => e.id);
+
+    await _unspentStoreInstance.records(txIds).delete(await database);
+  }
+
+  Future addUnspentTransaction(tx.Transaction transaction) async {
+    final db = await database;
+    final obj = transaction.toJson();
+    await _unspentStoreInstance.record(transaction.id).put(db, obj);
   }
 
   Future<bool> transactionExists(String txId) async {
@@ -170,7 +196,28 @@ class SembastWalletDatabase extends IWalletDatabase {
         .put(await database, balance.toJson());
   }
 
-  Future<List<Account>> getAccountBalance() async {
+  Future<double> getAccountBalance(String token) async {
+    var dbStore = _balancesStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('token', token));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : Account.fromJson(e.value))
+        ?.toList();
+
+    final ret = groupBy(data, (e) => e.token);
+
+    Map sumMap = Map<String, double>();
+
+    ret.forEach((k, v) {
+      sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
+    });
+
+    return sumMap[token];
+  }
+
+  Future<List<Account>> getAccountBalances() async {
     var dbStore = _balancesStoreInstance;
 
     final accounts = await dbStore.find(await database);

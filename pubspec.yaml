@@ -29,6 +29,7 @@ dependencies:
   cupertino_icons: ^1.0.1
   intl: ^0.17.0-nullsafety.2
   path_provider: ^1.6.27
+  url_launcher: ^5.7.10 
 
   flutter_config: ^1.0.8
   shared_preferences: ^0.5.12+4

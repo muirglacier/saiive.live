@@ -53,6 +53,11 @@
   "wallet_empty": "Your wallet is empty!",
   "settings": "Settings",
 
+  "wallet_token_available_balance": "Available balance",
+  "wallet_token_transactions": "Transactions",
+  "receive": "Receive",
+  "send": "Send",
+
 
   "home_welcome_good_morning": "Good morning",
   "home_welcome_good_day": "Good day",

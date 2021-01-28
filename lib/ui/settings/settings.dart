@@ -28,8 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         await sl.get<IWalletDatabase>().destroy();
                         await sl.get<Vault>().setSeed(null);
 
-                        sl.reset();
-
+                        
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil("/", (route) => false);
 

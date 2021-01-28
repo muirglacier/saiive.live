@@ -505,6 +505,46 @@ class S {
     );
   }
 
+  /// `Available balance`
+  String get wallet_token_available_balance {
+    return Intl.message(
+      'Available balance',
+      name: 'wallet_token_available_balance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transactions`
+  String get wallet_token_transactions {
+    return Intl.message(
+      'Transactions',
+      name: 'wallet_token_transactions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Receive`
+  String get receive {
+    return Intl.message(
+      'Receive',
+      name: 'receive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send`
+  String get send {
+    return Intl.message(
+      'Send',
+      name: 'send',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(

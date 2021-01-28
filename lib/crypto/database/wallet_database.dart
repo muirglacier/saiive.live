@@ -15,14 +15,21 @@ abstract class IWalletDatabase {
       @required ChainType chain,
       bool isSelected = false});
 
+  Future clearTransactions();
   Future<List<Transaction>> getTransactions();
-  Future addTransaction(Transaction transaction, int account, int index);
+  Future addTransaction(Transaction transaction);
+
+  
+  Future clearUnspentTransactions();
+  Future<List<Transaction>> getUnspentTransactions();
+  Future addUnspentTransaction(Transaction transaction);
 
   Future setAccountBalance(Account balance);
-  Future<List<Account>> getAccountBalance();
+  Future<List<Account>> getAccountBalances();
+  Future<double> getAccountBalance(String token);
   Future<Map<String, double>> getTotalBalances();
-  
+
   Future open();
   Future close();
-  Future destroy();  
+  Future destroy();
 }

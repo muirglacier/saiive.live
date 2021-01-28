@@ -525,6 +525,16 @@ class S {
     );
   }
 
+  /// `Open in explorer`
+  String get wallet_token_show_in_explorer {
+    return Intl.message(
+      'Open in explorer',
+      name: 'wallet_token_show_in_explorer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Receive`
   String get receive {
     return Intl.message(

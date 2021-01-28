@@ -55,6 +55,7 @@
 
   "wallet_token_available_balance": "Available balance",
   "wallet_token_transactions": "Transactions",
+  "wallet_token_show_in_explorer": "Open in explorer",
   "receive": "Receive",
   "send": "Send",
 

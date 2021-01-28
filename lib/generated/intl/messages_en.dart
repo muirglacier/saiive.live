@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_restore_not_safed" : MessageLookupByLibrary.simpleMessage("You didn\'t safed your recovery words, wanna do that now?"),
     "wallet_restore_recoveryPhrase" : MessageLookupByLibrary.simpleMessage("Recovery phrase"),
     "wallet_token_available_balance" : MessageLookupByLibrary.simpleMessage("Available balance"),
+    "wallet_token_show_in_explorer" : MessageLookupByLibrary.simpleMessage("Open in explorer"),
     "wallet_token_transactions" : MessageLookupByLibrary.simpleMessage("Transactions"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Welcome"),
     "welcome_wallet_create" : MessageLookupByLibrary.simpleMessage("Create a new wallet"),

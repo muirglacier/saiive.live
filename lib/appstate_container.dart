@@ -115,9 +115,8 @@ class StateContainerState extends State<StateContainer> {
         for (Transaction tx in txs) {
           if (tx.spentTxId == null || tx.spentTxId.isEmpty) {
             await db.addUnspentTransaction(tx);
-          } else {
-            await db.addTransaction(tx);
           }
+          await db.addTransaction(tx);
         }
 
         EventTaxiImpl.singleton().fire(WalletSyncDoneEvent());

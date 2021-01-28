@@ -12,7 +12,7 @@
   "later": "Später",
   "welcome_wallet_create": "Neues Wallet anlegen",
   "welcome_wallet_restore": "Wallet importieren",
-  "welcome_wallet_info": "Erstelle dein DeFiChain Wallet und behalte die Kontrolle der Privaten Schlüssel!",
+  "welcome_wallet_info": "Erstelle dein DeFiChain Wallet und behalte die Kontrolle deiner Privaten Schlüssel!",
   "welcome_wallet_secure": "Sicher",
   "welcome_wallet_privacy": "Deine Privaten Schlüssel werden lokal verschlüsselt abgelegt und verwaltet, geschützt durch deine Biometrie/PIN.",
   "wallet_new_reveal": "Zeig meine Wiederherstellungswörter",
@@ -50,6 +50,7 @@
   
   "wallet_token_available_balance": "Verfügbar",
   "wallet_token_transactions": "Transaktionen",
+  "wallet_token_show_in_explorer": "Im Explorer anzeigen",
   
   "receive": "Empfangen",
   "send": "Senden",

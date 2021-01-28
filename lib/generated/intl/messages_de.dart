@@ -69,10 +69,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_restore_not_safed" : MessageLookupByLibrary.simpleMessage("Du hast deine Wiederherstellungswörter noch nicht gesichert, willst du das jetzt machen?"),
     "wallet_restore_recoveryPhrase" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter"),
     "wallet_token_available_balance" : MessageLookupByLibrary.simpleMessage("Verfügbar"),
+    "wallet_token_show_in_explorer" : MessageLookupByLibrary.simpleMessage("Im Explorer anzeigen"),
     "wallet_token_transactions" : MessageLookupByLibrary.simpleMessage("Transaktionen"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Willkommen"),
     "welcome_wallet_create" : MessageLookupByLibrary.simpleMessage("Neues Wallet anlegen"),
-    "welcome_wallet_info" : MessageLookupByLibrary.simpleMessage("Erstelle dein DeFiChain Wallet und behalte die Kontrolle der Privaten Schlüssel!"),
+    "welcome_wallet_info" : MessageLookupByLibrary.simpleMessage("Erstelle dein DeFiChain Wallet und behalte die Kontrolle deiner Privaten Schlüssel!"),
     "welcome_wallet_privacy" : MessageLookupByLibrary.simpleMessage("Deine Privaten Schlüssel werden lokal verschlüsselt abgelegt und verwaltet, geschützt durch deine Biometrie/PIN."),
     "welcome_wallet_restore" : MessageLookupByLibrary.simpleMessage("Wallet importieren"),
     "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Sicher")

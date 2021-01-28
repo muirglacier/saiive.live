@@ -17,6 +17,9 @@ class Transaction {
   int index;
   int account;
 
+  double get correctValue =>
+      (spentHeight <= 0) ? value : (value * -1);
+
   Transaction({
     this.id,
     this.chain,

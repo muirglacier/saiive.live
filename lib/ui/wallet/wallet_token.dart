@@ -125,17 +125,25 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
     return Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-                child: new Text("explorer", style: TextStyle(color: Theme.of(context).primaryColor)),
-                onTap: () => launch(
-                   DefiChainConstants.getExplorerUrl(_chainNet, tx.mintTxId))),
-            Text(tx.value.toString()),
-            Divider()
-          ],
-        ));
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                  child: new Text(S.of(context).wallet_token_show_in_explorer,
+                      style: TextStyle(color: Theme.of(context).primaryColor)),
+                  onTap: () => launch(DefiChainConstants.getExplorerUrl(
+                      _chainNet, tx.mintTxId))),
+              Text(tx.correctValue.toString())
+            ],
+          ),
+          SizedBox(height: 5),
+          Text(tx.mintTxId, style: TextStyle(fontSize: 8)),
+          Divider()
+        ]));
   }
 
   buildTransactionsList(BuildContext context) {

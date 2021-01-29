@@ -495,6 +495,56 @@ class S {
     );
   }
 
+  /// `Receive`
+  String get wallet_receive {
+    return Intl.message(
+      'Receive',
+      name: 'wallet_receive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send`
+  String get wallet_send {
+    return Intl.message(
+      'Send',
+      name: 'wallet_send',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address`
+  String get wallet_send_address {
+    return Intl.message(
+      'Address',
+      name: 'wallet_send_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan`
+  String get wallet_send_address_scan {
+    return Intl.message(
+      'Scan',
+      name: 'wallet_send_address_scan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount`
+  String get wallet_send_amount {
+    return Intl.message(
+      'Amount',
+      name: 'wallet_send_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get settings {
     return Intl.message(

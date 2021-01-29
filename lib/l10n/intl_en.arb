@@ -51,6 +51,12 @@
   "wallet_restore_recoveryPhrase": "Recovery phrase",
   "wallet_restore_not_safed": "You didn't safed your recovery words, wanna do that now?",
   "wallet_empty": "Your wallet is empty!",
+  "wallet_receive": "Receive",
+
+  "wallet_send": "Send",
+  "wallet_send_address": "Address",
+  "wallet_send_address_scan": "Scan",
+  "wallet_send_amount": "Amount",
   "settings": "Settings",
 
   "wallet_token_available_balance": "Available balance",

@@ -27,7 +27,7 @@ class WalletTokenScreen extends StatefulWidget {
 
 class _WalletTokenScreen extends State<WalletTokenScreen>
     with TickerProviderStateMixin {
-  double _balance;
+  dynamic _balance;
   bool _balanceLoaded = false;
   bool _balanceRefreshing = false;
   AnimationController _controller;

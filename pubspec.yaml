@@ -47,6 +47,11 @@ dependencies:
   flutter_tagging: ^2.2.0+3
   pull_to_refresh: ^1.6.4 
   auto_size_text: ^2.1.0
+  qr_flutter: ^2.0.1
+  barcode_scan:
+    git:
+      url: https://github.com/bbedward/flutter_barcode_reader.git
+      ref: master
 
   # Dependency Injection
   get_it: ^5.0.6
@@ -70,6 +75,7 @@ dependencies:
   #appcenter
   flutter_appcenter_bundle: ^3.2.0+2
   device_info: 1.0.0
+
   
 dev_dependencies:
   flutter_test:

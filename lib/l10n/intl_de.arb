@@ -45,8 +45,12 @@
   "wallet_restore_recoveryPhrase": "Wiederherstellungswörter",
   "wallet_restore_not_safed": "Du hast deine Wiederherstellungswörter noch nicht gesichert, willst du das jetzt machen?",
   "wallet_empty": "Dein Wallet ist leer!",
+  "wallet_receive": "Empfangen",
+  "wallet_send": "Senden",
+  "wallet_send_address": "Adresse",
+  "wallet_send_address_scan": "Scan",
+  "wallet_send_amount": "Menge",
   "settings": "Einstellungen",
-
   
   "wallet_token_available_balance": "Verfügbar",
   "wallet_token_transactions": "Transaktionen",

@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/events/events.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
+import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
+import 'package:defichainwallet/ui/wallet/wallet_send.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
@@ -164,7 +168,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
     if (_accountBalance.isEmpty) {
       return Padding(
-          padding: EdgeInsets.all(30), child: Text(S.of(context).wallet_empty));
+          padding: EdgeInsets.all(30),
+          child: Row(
+              children: [
+                Text(S.of(context).wallet_empty)
+              ]
+          )
+
+      );
     }
     return Padding(
         padding: EdgeInsets.all(30),
@@ -204,6 +215,35 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           ),
           actionsIconTheme: Theme.of(context).iconTheme,
           actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    var wallet = sl.get<DeFiChainWallet>();
+                    var pubKey = await wallet.getPublicKey();
+
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
+                  },
+                  child: Icon(
+                    Icons.arrow_downward,
+                    size: 26.0,
+                  ),
+                )
+            ),
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => WalletSendScreen()));
+                  },
+                  child: Icon(
+                    Icons.arrow_upward,
+                    size: 26.0,
+                  ),
+                )
+            ),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(

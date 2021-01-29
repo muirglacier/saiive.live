@@ -605,6 +605,16 @@ class S {
     );
   }
 
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(

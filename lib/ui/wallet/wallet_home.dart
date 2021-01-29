@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';

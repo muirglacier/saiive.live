@@ -9,9 +9,6 @@ PODS:
     - AppCenter/Core
   - AppCenter/Distribute (3.2.0):
     - AppCenter/Core
-  - barcode_scan (0.0.1):
-    - Flutter
-    - MTBBarcodeScanner
   - device_info (0.0.1):
     - Flutter
   - Flutter (1.0.0)
@@ -19,13 +16,14 @@ PODS:
     - AppCenter (~> 3.2.0)
     - AppCenter/Distribute (~> 3.2.0)
     - Flutter
+  - flutter_barcode_scanner (1.0.2):
+    - Flutter
   - flutter_config (0.0.1):
     - Flutter
   - flutter_secure_storage (3.3.1):
     - Flutter
   - integration_test (0.0.1):
     - Flutter
-  - MTBBarcodeScanner (5.0.11)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -36,10 +34,10 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
   - flutter_appcenter_bundle (from `.symlinks/plugins/flutter_appcenter_bundle/ios`)
+  - flutter_barcode_scanner (from `.symlinks/plugins/flutter_barcode_scanner/ios`)
   - flutter_config (from `.symlinks/plugins/flutter_config/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
@@ -51,17 +49,16 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppCenter
-    - MTBBarcodeScanner
 
 EXTERNAL SOURCES:
-  barcode_scan:
-    :path: ".symlinks/plugins/barcode_scan/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   Flutter:
     :path: Flutter
   flutter_appcenter_bundle:
     :path: ".symlinks/plugins/flutter_appcenter_bundle/ios"
+  flutter_barcode_scanner:
+    :path: ".symlinks/plugins/flutter_barcode_scanner/ios"
   flutter_config:
     :path: ".symlinks/plugins/flutter_config/ios"
   flutter_secure_storage:
@@ -79,14 +76,13 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: ca66175050d538b157959382dd43f1ab96cdab84
-  barcode_scan: 33f586d02270046fc6559135038b34b5754eaa4f
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_appcenter_bundle: bbf1dd726a7a090027c88201a62b83269a56f075
+  flutter_barcode_scanner: fc42adac0732eca7bd9d3d676b215bce5903f269
   flutter_config: 2226c1df19c78fe34a05eb7f1363445f18e76fc1
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   integration_test: 6eb66a19f7104200dcfdd62bc0077e1b09686e4f
-  MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d

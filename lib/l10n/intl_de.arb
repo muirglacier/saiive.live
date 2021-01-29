@@ -59,6 +59,8 @@
   "receive": "Empfangen",
   "send": "Senden",
 
+  "cancel": "Abbrechen",
+
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",
   "home_welcome_good_evening": "Guten Abend",

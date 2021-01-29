@@ -65,6 +65,7 @@
   "receive": "Receive",
   "send": "Send",
 
+  "cancel": "Cancel",
 
   "home_welcome_good_morning": "Good morning",
   "home_welcome_good_day": "Good day",

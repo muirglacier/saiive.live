@@ -1,4 +1,6 @@
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/ui/dex/dex.dart';
+import 'package:defichainwallet/ui/tokens/tokens.dart';
 import 'package:defichainwallet/ui/wallet/wallet_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
       'Liquidity - Work in Progress!',
       style: optionStyle,
     ),
-    Text(
-      'DEX - Work in Progress!',
-      style: optionStyle,
-    ),
-    Text(
-      'Tokens - Work in Progress!',
-      style: optionStyle,
-    ),
+    DexScreen(),
+    TokensScreen(),
   ];
 
   void _onItemTapped(int index) {

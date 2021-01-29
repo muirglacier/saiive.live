@@ -10,15 +10,14 @@ import 'package:defichainwallet/network/response/error_response.dart';
 class TokenService extends NetworkService
 {
   Future<List<Token>> getTokens(String coin) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/tokens', coin);
+    dynamic map = await this.httpService.makeHttpGetRequest('/tokens', coin);
 
-    if (response is ErrorResponse) {
-      this.handleError(response);
+    if (map is ErrorResponse) {
+      this.handleError(map);
     }
 
-    List<Token> tokens = json
-        .decode(response.body)
-        .map<Token>((data) => Token.fromJson(data))
+    List<Token> tokens = map.entries
+        .map<Token>((data) => Token.fromJson(data.value))
         .toList();
 
     this.fireEvent(new TokensLoadedEvent(tokens: tokens));

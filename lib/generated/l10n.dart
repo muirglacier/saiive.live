@@ -615,6 +615,16 @@ class S {
     );
   }
 
+  /// `DEX`
+  String get dex {
+    return Intl.message(
+      'DEX',
+      name: 'dex',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(

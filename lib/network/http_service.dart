@@ -27,7 +27,7 @@ class HttpService {
     this.serverAddress = FlutterConfig.get('API_URL');
   }
 
-  Future<Map<String, String>> makeHttpGetRequest(
+  Future<Map<String, dynamic>> makeHttpGetRequest(
       String url, String coin) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
     http.Response response = await http.get(

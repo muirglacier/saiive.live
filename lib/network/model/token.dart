@@ -44,6 +44,26 @@ class Token {
       isDAT: json['isDAT'],
       isLPS: json['isLPS'],
       finalized: json['finalized'],
+      minted: double.parse(json['minted'].toString()),
+      creationTx: json['creationTx'],
+      creationHeight: json['creationHeight'],
+      destructionTx: json['destructionTx'],
+      destructionHeight: json['destructionHeight'],
+      collateralAddress: json['collateralAddress'],
+    );
+  }
+
+  factory Token.fromJsonEntry(Map<String, dynamic> json) {
+    return Token(
+      symbol: json['symbol'],
+      symbolKey: json['symbolKey'],
+      name: json['name'],
+      decimal: json['decimal'],
+      mintable: json['mintable'],
+      tradeable: json['tradeable'],
+      isDAT: json['isDAT'],
+      isLPS: json['isLPS'],
+      finalized: json['finalized'],
       minted: json['minted'],
       creationTx: json['creationTx'],
       creationHeight: json['creationHeight'],

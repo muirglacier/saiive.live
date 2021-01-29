@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen>
     } else {
       return;
     }
-    
+
     try {
       // iOS key store is persistent, so if this is first launch then we will clear the keystore
       bool firstLaunch = await sl.get<SharedPrefsUtil>().getFirstLaunch();
@@ -50,6 +50,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (isLoggedIn) {
         route = '/home';
       }
+      await sl.allReady();
 
       // await sl.get<IWalletDatabase>().open();
 
@@ -87,7 +88,6 @@ class _SplashScreenState extends State<SplashScreen>
     if (SchedulerBinding.instance.schedulerPhase ==
         SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) => checkLoggedIn());
-
     }
   }
 

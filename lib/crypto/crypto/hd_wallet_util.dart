@@ -11,6 +11,16 @@ class PublicPrivateKeyPair {
 }
 
 class HdWalletUtil {
+  static bip32.NetworkType _getNetwork(ChainType chainType, ChainNet network) {
+    final networkInstance = getNetworkType(chainType, network);
+    final networkType = bip32.NetworkType(
+        bip32: bip32.Bip32Type(
+            private: networkInstance.bip32.private,
+            public: networkInstance.bip32.public),
+        wif: networkInstance.wif);
+    return networkType;
+  }
+
   static Future<String> getPublicKey(
       Uint8List seed,
       int account,
@@ -18,21 +28,28 @@ class HdWalletUtil {
       int index,
       ChainType chainType,
       ChainNet network) async {
-    final networkInstance = getNetworkType(chainType, network);
-    final networkType = bip32.NetworkType(
-        bip32: bip32.Bip32Type(
-            private: networkInstance.bip32.private,
-            public: networkInstance.bip32.public),
-        wif: networkInstance.wif);
-        
+    final networkType = _getNetwork(chainType, network);
+
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
     final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
 
     final path = derivePath(account, changeAddress, index);
-    final address =
-        await _getPublicAddress(xMasterPriv.derivePath(path), chainType, network);
+    final address = await _getPublicAddress(
+        xMasterPriv.derivePath(path), chainType, network);
 
     return address;
+  }
+
+  static ECPair getKeyPair(Uint8List seed, int account,
+      bool isChangeAddress, int index, ChainType chainType, ChainNet network) {
+    final networkType = _getNetwork(chainType, network);
+
+    final path = derivePath(account, isChangeAddress, index);
+
+    final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
+    final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
+    return ECPair.fromPrivateKey(xMasterPriv.derivePath(path).privateKey,
+        network: getNetworkType(chainType, network));
   }
 
   static Future<String> _getPublicAddress(

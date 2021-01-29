@@ -1,22 +1,37 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/network/model/error.dart';
 import 'package:defichainwallet/network/base_request.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpService {
   String serverAddress;
+  String network;
+  String baseUri = "/api/v1/";
 
   HttpService() {
+  }
+
+  Future init() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final rawValue = await sharedPreferences.get(SharedPrefsUtil.cur_net);
+
+    final chainNet = ChainNet.values[rawValue ?? ChainNet.Testnet.index];
+    this.network = ChainHelper.chainNetworkString(chainNet);
     this.serverAddress = FlutterConfig.get('API_URL');
   }
 
-  Future<Map<String, String>> makeHttpGetRequest(String url) async {
+  Future<Map<String, String>> makeHttpGetRequest(
+      String url, String coin) async {
+    final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
     http.Response response = await http.get(
-      this.serverAddress + url,
+      finalUrl,
       headers: {'Content-type': 'application/json'},
     );
 
@@ -30,9 +45,11 @@ class HttpService {
     return decoded;
   }
 
-  Future<dynamic> makeHttpPostRequest(String url, BaseRequest request) async {
+  Future<dynamic> makeHttpPostRequest(
+      String url, String coin, BaseRequest request) async {
+    final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
     final body = json.encode(request.toJson());
-    http.Response response = await http.post(this.serverAddress + url,
+    http.Response response = await http.post(finalUrl,
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json'

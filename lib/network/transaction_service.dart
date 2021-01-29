@@ -12,7 +12,7 @@ class TransactionService extends NetworkService {
   Future<List<Transaction>> getAddressTransaction(
       String coin, String address) async {
     dynamic response =
-        await this.httpService.makeHttpGetRequest('/$coin/txs/$address');
+        await this.httpService.makeHttpGetRequest('/txs/$address', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -33,7 +33,7 @@ class TransactionService extends NetworkService {
     AddressesRequest request = AddressesRequest(addresses: addresses);
     dynamic response = await this
         .httpService
-        .makeHttpPostRequest('/v1/api/$coin/txs', request);
+        .makeHttpPostRequest('/txs', coin, request);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -54,7 +54,7 @@ class TransactionService extends NetworkService {
     AddressesRequest request = AddressesRequest(addresses: addresses);
     dynamic response = await this
         .httpService
-        .makeHttpPostRequest('/v1/api/$coin/unspent', request);
+        .makeHttpPostRequest('/unspent', coin, request);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -72,7 +72,7 @@ class TransactionService extends NetworkService {
 
   Future<Transaction> getWithTxId(String coin, String txId) async {
     dynamic response =
-        await this.httpService.makeHttpGetRequest('/v1/api/$coin/tx/id/$txId');
+        await this.httpService.makeHttpGetRequest('/tx/id/$txId', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -88,7 +88,7 @@ class TransactionService extends NetworkService {
   Future<List<Transaction>> getBlockTransactions(
       String coin, String blockId) async {
     dynamic response =
-        await this.httpService.makeHttpGetRequest('/$coin/tx/block/$blockId');
+        await this.httpService.makeHttpGetRequest('/tx/block/$blockId', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -107,7 +107,7 @@ class TransactionService extends NetworkService {
   Future<List<Transaction>> getTransactionsHeight(
       String coin, int height) async {
     dynamic response =
-        await this.httpService.makeHttpGetRequest('/$coin/tx/height/$height');
+        await this.httpService.makeHttpGetRequest('/tx/height/$height', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);

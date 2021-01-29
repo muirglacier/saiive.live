@@ -10,7 +10,7 @@ import 'package:defichainwallet/network/response/error_response.dart';
 class TokenService extends NetworkService
 {
   Future<List<Token>> getTokens(String coin) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/$coin/tokens');
+    dynamic response = await this.httpService.makeHttpGetRequest('/tokens', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -27,7 +27,7 @@ class TokenService extends NetworkService
   }
 
   Future<Token> getToken(String coin, String token) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/$coin/tokens/$token');
+    dynamic response = await this.httpService.makeHttpGetRequest('/tokens/$token', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);

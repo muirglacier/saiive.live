@@ -13,7 +13,7 @@ class AccountService extends NetworkService {
   Future<List<Account>> getAccount(String coin, String address) async {
     dynamic response = await this
         .httpService
-        .makeHttpGetRequest('/v1/api/$coin/account/$address');
+        .makeHttpGetRequest('/account/$address', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -34,7 +34,7 @@ class AccountService extends NetworkService {
     AddressesRequest request = AddressesRequest(addresses: addresses);
     dynamic response = await this
         .httpService
-        .makeHttpPostRequest('/v1/api/$coin/accounts', request);
+        .makeHttpPostRequest('/accounts', coin, request);
 
     if (response is ErrorResponse) {
       this.handleError(response);

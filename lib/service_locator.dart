@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/account_service.dart';
 import 'package:defichainwallet/network/balance_service.dart';
 import 'package:defichainwallet/network/http_service.dart';
@@ -38,4 +39,6 @@ void setupServiceLocator() {
     await db.open();
     return db;
   });
+
+  sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet());
 }

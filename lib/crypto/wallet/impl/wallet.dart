@@ -9,6 +9,9 @@ import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
+import 'package:defichainwallet/network/model/vault.dart';
+import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/foundation.dart';
 
 class Wallet extends IWallet {
@@ -16,18 +19,26 @@ class Wallet extends IWallet {
 
   int _account;
   final ChainType _chain;
-  final ChainNet _network;
+  ChainNet _network;
 
-  final String _password;
-  final String _seed;
-  final ApiService _apiService;
-  final IWalletDatabase _walletDatabase;
+  String _password;
+  String _seed;
+  ApiService _apiService;
+  IWalletDatabase _walletDatabase;
 
-  Wallet(this._password, this._account, this._chain, this._network, this._seed,
-      this._apiService, this._walletDatabase);
+  Wallet(this._chain) {
+    _apiService = sl.get<ApiService>();
+    _walletDatabase = sl.get<IWalletDatabase>();
+  }
 
   @override
   Future init() async {
+
+    _password = ""; // TODO
+    _seed = await sl.get<Vault>().getSeed();
+    _network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    _account = 0; //default account, for now only 0!
+
     final accounts = await _walletDatabase.getAccounts();
 
     for (var account in accounts) {
@@ -50,8 +61,10 @@ class Wallet extends IWallet {
 
   @override
   Future<String> getPublicKeyFromAccount(int account) async {
+    assert(_wallets.containsKey(account));
+
     if (_wallets.containsKey(account)) {
-      return await _wallets[account].nextFreePublicKey(_chain);
+      return await _wallets[account].nextFreePublicKey(_walletDatabase);
     }
     throw UnimplementedError();
   }

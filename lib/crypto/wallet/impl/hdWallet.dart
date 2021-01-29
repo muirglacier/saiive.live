@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
@@ -178,14 +179,13 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<String> nextFreePublicKey(ChainType chain) async {
-    // final nextIndex = await _walletDatabase.getNextFreeIndex(_account.account);
-    // final key = HEX.decode(_seed);
+  Future<String> nextFreePublicKey(IWalletDatabase database) async {
+    final nextIndex = await database.getNextFreeIndex(_account.account);
+    final key = HEX.decode(_seed);
 
-    // var publicKey = await HdWalletUtil.derivePublicKey(
-    //     key, _account.account, false, nextIndex, chain, _network);
+    var publicKey = await HdWalletUtil.derivePublicKey(
+        key, _account.account, false, nextIndex, this._chain, this._network);
 
-    // return publicKey;
-    throw new Error();
+    return publicKey;
   }
 }

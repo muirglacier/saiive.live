@@ -3,7 +3,6 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';

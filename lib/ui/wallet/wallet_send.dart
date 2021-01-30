@@ -4,6 +4,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:defichainwallet/network/api_service.dart';
 
 class WalletSendScreen extends StatefulWidget {
   final String token;
@@ -17,14 +18,19 @@ class WalletSendScreen extends StatefulWidget {
 
 class _WalletSendScreen extends State<WalletSendScreen> {
   var _addressController =
-      TextEditingController(text: 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
+      TextEditingController(text: 'tq9z2SHnJnvW7V58FnWUaBab9dEw1gxNj8');
   var _amountController = TextEditingController(text: '10');
 
   Future sendFunds() async {
     final amount = double.parse(_amountController.text);
     final totalAmount = (amount * 100000000).toInt();
     final tx = await sl.get<DeFiChainWallet>().createSendTransaction(totalAmount, widget.token, _addressController.text);
+
+    final apiService = sl.get<ApiService>();
+
+    await apiService.transactionService.sendRawTransaction("DFI", tx);
   }
+
 
   @override
   void initState() {

@@ -14,7 +14,6 @@ import 'package:defichainwallet/network/model/transaction.dart' as tx;
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hex/hex.dart';
 
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -187,7 +186,7 @@ class Wallet extends IWallet {
       final keyPair = HdWalletUtil.getKeyPair(
           key,
           _account,
-          false,
+          tx.isChangeAddress,
           tx.index,
           ChainHelper.chainFromString(tx.chain),
           ChainHelper.networkFromString(tx.network));
@@ -200,7 +199,7 @@ class Wallet extends IWallet {
     }
 
     final changeAddress = await getPublicKeyFromAccount(_account, true);
-    final txHex = HdWalletUtil.buildTransaction(
+    final txHex = await HdWalletUtil.buildTransaction(
         useTxs, keys, to, amount, fee, changeAddress, _chain, _network);
 
     return txHex;

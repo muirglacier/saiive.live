@@ -6,6 +6,7 @@ import 'package:defichainwallet/bus/transactions_loaded_event.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
+import 'package:defichainwallet/network/request/raw_tx_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
 class TransactionService extends NetworkService {
@@ -31,9 +32,8 @@ class TransactionService extends NetworkService {
   Future<List<Transaction>> getAddressesTransactions(
       String coin, List<String> addresses) async {
     AddressesRequest request = AddressesRequest(addresses: addresses);
-    dynamic response = await this
-        .httpService
-        .makeHttpPostRequest('/txs', coin, request);
+    dynamic response =
+        await this.httpService.makeHttpPostRequest('/txs', coin, request);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -52,9 +52,8 @@ class TransactionService extends NetworkService {
   Future<List<Transaction>> getUnspentTransactionOutputs(
       String coin, List<String> addresses) async {
     AddressesRequest request = AddressesRequest(addresses: addresses);
-    dynamic response = await this
-        .httpService
-        .makeHttpPostRequest('/unspent', coin, request);
+    dynamic response =
+        await this.httpService.makeHttpPostRequest('/unspent', coin, request);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -121,5 +120,18 @@ class TransactionService extends NetworkService {
     this.fireEvent(new TransactionsLoadedEvent(transactions: transactions));
 
     return transactions;
+  }
+
+  Future<String> sendRawTransaction(String coin, String rawTxHex) async {
+    final request = RawTxRequest(rawTx: rawTxHex);
+    dynamic response =
+        await this.httpService.makeHttpPostRequest('/tx/raw', coin, request);
+
+    if (response is ErrorResponse) {
+      this.handleError(response);
+    }
+
+    final decodedBody = json.decode(response.body);
+    return decodedBody["txId"];
   }
 }

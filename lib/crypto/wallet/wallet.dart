@@ -17,7 +17,9 @@ abstract class IWallet {
 
   void setWorkingAccount(int id);
   Future<String> getPublicKey();
-  Future<String> getPublicKeyFromAccount(int account);
+  Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress);
 
   Future<List<WalletAccount>> searchAccounts();
+
+  Future<String> createSendTransaction(int amount, String token, String to);
 }

@@ -1,14 +1,7 @@
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/wallet/wallet-sync.dart';
-import 'package:defichainwallet/network/api_service.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hex/hex.dart';
 
 void main() {
   group("test hd", () {

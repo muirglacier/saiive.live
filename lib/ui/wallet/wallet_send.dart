@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class WalletSendScreen extends StatefulWidget {
+  final String token;
+  WalletSendScreen(this.token);
+
   @override
   State<StatefulWidget> createState() {
     return _WalletSendScreen();
@@ -13,8 +16,15 @@ class WalletSendScreen extends StatefulWidget {
 }
 
 class _WalletSendScreen extends State<WalletSendScreen> {
-  var _addressController = TextEditingController(text: '');
-  var _amountController = TextEditingController(text: '');
+  var _addressController =
+      TextEditingController(text: 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
+  var _amountController = TextEditingController(text: '10');
+
+  Future sendFunds() async {
+    final amount = double.parse(_amountController.text);
+    final totalAmount = (amount * 100000000).toInt();
+    final tx = await sl.get<DeFiChainWallet>().createSendTransaction(totalAmount, widget.token, _addressController.text);
+  }
 
   @override
   void initState() {
@@ -51,13 +61,15 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                   )),
               TextField(
                 controller: _amountController,
-                decoration: InputDecoration(
-                    hintText: S.of(context).wallet_send_amount),
+                decoration:
+                    InputDecoration(hintText: S.of(context).wallet_send_amount),
               ),
               RaisedButton(
                 child: Text(S.of(context).wallet_send),
                 color: Theme.of(context).backgroundColor,
-                onPressed: () async {},
+                onPressed: () async {
+                  await sendFunds();
+                },
               )
             ])));
   }

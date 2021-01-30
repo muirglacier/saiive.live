@@ -12,10 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 
 class WalletRestore {
-
-  static Future<List<WalletAccount>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
+  static Future<List<WalletAccount>> restore(ChainType chain, ChainNet network,
+      String seed, String password, ApiService apiService,
       {List<int> existingAccounts}) async {
-
     assert(chain != null);
     assert(network != null);
     assert(seed != null);
@@ -29,7 +28,6 @@ class WalletRestore {
     final ret = List<WalletAccount>.empty(growable: true);
 
     final key = HEX.decode(mnemonicToSeedHex(seed));
-
     if (existingAccounts == null) {
       existingAccounts = [];
     }
@@ -63,10 +61,11 @@ class WalletRestore {
     var accountEmpty = true;
     var startDate = DateTime.now();
     do {
-      var publicKeys = await HdWalletUtil.derivePublicKeys(key, account, false,
-          IWallet.KeysPerQuery * i, chain, net, IWallet.KeysPerQuery);
-      var path = HdWalletUtil.derivePaths(
-          account, false, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+      var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key,
+          account, IWallet.KeysPerQuery * i, chain, net, IWallet.KeysPerQuery);
+      var path = HdWalletUtil.derivePathsWithChange(
+          account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+
       var transactions = await api.transactionService.getAddressesTransactions(
           ChainHelper.chainTypeString(chain), publicKeys);
 

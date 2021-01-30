@@ -1,5 +1,6 @@
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/vault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       color: Theme.of(context).backgroundColor,
                       onPressed: () async {
                         await sl.get<IWalletDatabase>().destroy();
-                        await sl.get<Vault>().setSeed(null);
+                        await sl.get<IVault>().setSeed(null);
 
                         
                         Navigator.of(context)

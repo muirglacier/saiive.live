@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/network/model/transaction.dart' as tx;
+import 'package:flutter/cupertino.dart';
 
 class PublicPrivateKeyPair {
   final String privateKey;
@@ -32,20 +34,23 @@ class HdWalletUtil {
 
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
     final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
+    final xMasterPrivWif = xMasterPriv.toWIF();
 
     final path = derivePath(account, changeAddress, index);
+
     final address = await _getPublicAddress(
         xMasterPriv.derivePath(path), chainType, network);
-
+    debugPrint(
+        "PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
     return address;
   }
 
-  static ECPair getKeyPair(Uint8List seed, int account,
-      bool isChangeAddress, int index, ChainType chainType, ChainNet network) {
+  static ECPair getKeyPair(Uint8List seed, int account, bool isChangeAddress,
+      int index, ChainType chainType, ChainNet network) {
     final networkType = _getNetwork(chainType, network);
 
     final path = derivePath(account, isChangeAddress, index);
-
+    debugPrint("getKeyPair for $path");
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
     final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
     return ECPair.fromPrivateKey(xMasterPriv.derivePath(path).privateKey,
@@ -54,6 +59,22 @@ class HdWalletUtil {
 
   static Future<String> _getPublicAddress(
       bip32.BIP32 keyPair, ChainType chainType, ChainNet network) async {
+    final net = getNetworkType(chainType, network);
+    final address = P2SH(
+            data: PaymentData(
+                redeem: P2WPKH(
+                        data: PaymentData(pubkey: keyPair.publicKey),
+                        network: net)
+                    .data),
+            network: net)
+        .data
+        .address;
+
+    return address;
+  }
+
+  static Future<String> _getPublicAddressFromKeyPair(
+      ECPair keyPair, ChainType chainType, ChainNet network) async {
     final net = getNetworkType(chainType, network);
     final address = P2SH(
             data: PaymentData(
@@ -79,50 +100,61 @@ class HdWalletUtil {
     throw new Exception("invalid chain..");
   }
 
-  // static Future<String> deriveKey(
-  //     Uint8List seed, int account, bool changeAddress, int index) {
-  //   var path = derivePath(account, changeAddress, index);
-  //   var key = ED25519_HD_KEY.derivePath(path, HEX.encode(seed));
+  static int getDecimalPlaces(ChainType type) {
+    return 9;
+  }
 
-  //   return Future<String>.value(base58.encode(key.key));
-  // }
+  static Future<String> buildTransaction(
+      List<tx.Transaction> inputTxs,
+      List<ECPair> keys,
+      String to,
+      int amount,
+      int fee,
+      String returnAddress,
+      ChainType chain,
+      ChainNet net) async {
+    var network = getNetworkType(chain, net);
 
-  // static Future<List<String>> deriveKeys(Uint8List seed, int account,
-  //     bool changeAddress, int index, int count) async {
-  //   final list = List<String>();
-  //   print("deriveKey");
-  //   for (int i = 0; i < count; i++) {
-  //     list.add(await deriveKey(seed, account, changeAddress, index + i));
-  //   }
-  //   return list;
-  // }
+    assert(inputTxs.length == keys.length);
 
-  // static Future<PublicPrivateKeyPair> derivePublicPrivateKey(
-  //     Uint8List seed, int account, bool changeAddress, int index) async {
-  //   var path = derivePath(account, changeAddress, index);
+    final txb = TransactionBuilder(network: network);
+    txb.setVersion(2);
+    txb.setLockTime(0);
 
-  //   var key = ED25519_HD_KEY.derivePath(path, HEX.encode(seed));
-  //   var pub = ED25519_HD_KEY.getBublickKey(key.key, false);
+    int totalInputValue = 0;
+    for (final tx in inputTxs) {
+      txb.addInput(tx.mintTxId, tx.mintIndex);
 
-  //   return Future<PublicPrivateKeyPair>.value(
-  //       PublicPrivateKeyPair(base58.encode(key.key), base58.encode(pub)));
-  // }
+      totalInputValue += tx.valueRaw;
+    }
 
-  // static Future<List<PublicPrivateKeyPair>> derivePublicPrivateKeys(
-  //     Uint8List seed,
-  //     int account,
-  //     bool changeAddress,
-  //     int index,
-  //     int count) async {
-  //   final list = List<PublicPrivateKeyPair>();
-  //   print("deriveKey");
-  //   for (int i = 0; i < count; i++) {
-  //     list.add(await derivePublicPrivateKey(
-  //         seed, account, changeAddress, index + i));
-  //   }
-  //   print("deriveKey...done");
-  //   return list;
-  // }
+    if (totalInputValue > (amount)) {
+      var changeAmount = totalInputValue - amount - fee;
+      txb.addOutput(returnAddress, changeAmount);
+    }
+    txb.addOutput(to, amount);
+
+    int index = 0;
+    for (final key in keys) {
+      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
+      final redeemScript = p2wpkh.output;
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final input = inputTxs[index].mintTxId;
+      debugPrint("sign tx $input with privateKey from $pubKey");
+
+      txb.sign(
+          vin: index,
+          keyPair: key,
+          witnessValue: inputTxs[index].valueRaw,
+          redeemScript: redeemScript);
+      index++;
+    }
+
+    final tx = txb.build();
+    final txhex = tx.toHex();
+
+    return txhex;
+  }
 
   static Future<String> derivePublicKey(
       Uint8List seed,
@@ -154,8 +186,51 @@ class HdWalletUtil {
     return list;
   }
 
+  static Future<List<String>> derivePublicKeysWithChange(
+      Uint8List seed,
+      int account,
+      int index,
+      ChainType chainType,
+      ChainNet network,
+      int count) async {
+    final list = List<String>.empty(growable: true);
+    print("derivePublicKeysWithChange");
+    for (int i = 0; i < count; i++) {
+      final key = await derivePublicKey(
+          seed, account, false, index + i, chainType, network);
+      list.add(key);
+    }
+    for (int i = 0; i < count; i++) {
+      final changeKey = await derivePublicKey(
+          seed, account, true, index + i, chainType, network);
+      list.add(changeKey);
+    }
+    print("derivePublicKeyderivePublicKeysWithChangedone");
+    return list;
+  }
+
   static String derivePath(int account, bool changeAddress, int index) {
     return "m/$account'/${changeAddress ? 1 : 0}'/$index'";
+  }
+
+  static bool isPathChangeAddress(String path) {
+    final regex = new RegExp(r"^(m\/)?(\d+'?\/)*\d+'?$");
+    if (!regex.hasMatch(path)) throw new ArgumentError("Expected BIP32 Path");
+
+    final splitted = path.split("/");
+    final changeIndex = splitted[2].replaceAll("'", "");
+
+    return changeIndex == "1";
+  }
+  
+  static int getIndexFromPath(String path) {
+    final regex = new RegExp(r"^(m\/)?(\d+'?\/)*\d+'?$");
+    if (!regex.hasMatch(path)) throw new ArgumentError("Expected BIP32 Path");
+
+    final splitted = path.split("/");
+    final addressIndex = splitted[3].replaceAll("'", "");
+
+    return int.parse(addressIndex);
   }
 
   static List<String> derivePaths(
@@ -164,6 +239,18 @@ class HdWalletUtil {
 
     for (int i = 0; i < count; i++) {
       list.add(derivePath(account, changeAddress, index + i));
+    }
+    return list;
+  }
+
+  static List<String> derivePathsWithChange(int account, int index, int count) {
+    final list = List<String>.empty(growable: true);
+
+    for (int i = 0; i < count; i++) {
+      list.add(derivePath(account, false, index + i));
+    }
+    for (int i = 0; i < count; i++) {
+      list.add(derivePath(account, true, index + i));
     }
     return list;
   }

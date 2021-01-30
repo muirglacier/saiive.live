@@ -23,4 +23,26 @@ class ChainHelper {
     }
     return null;
   }
+
+  static ChainType chainFromString(String chain) {
+    if (chain == null || chain.isEmpty) {
+      throw new ArgumentError();
+    }
+
+    if(chain.toLowerCase() == "dfi") {
+      return ChainType.DeFiChain;
+    }
+    return ChainType.Bitcoin;
+  }
+
+  static ChainNet networkFromString(String network) {
+    if (network == null || network.isEmpty) {
+      throw new ArgumentError();
+    }
+
+    if(network.toLowerCase() == "testnet") {
+      return ChainNet.Testnet;
+    }
+    return ChainNet.Mainnet;
+  }
 }

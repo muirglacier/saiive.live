@@ -148,7 +148,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   Future clearTransactions() async {
     final txs = await getTransactions();
-    final txIds = txs.map((e) => e.id);
+    final txIds = txs.map((e) => e.uniqueId);
 
     await _transactionStoreInstance.records(txIds).delete(await database);
   }
@@ -156,7 +156,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future addTransaction(tx.Transaction transaction) async {
     final db = await database;
     final obj = transaction.toJson();
-    await _transactionStoreInstance.record(transaction.id).put(db, obj);
+    await _transactionStoreInstance.record(transaction.uniqueId).put(db, obj);
   }
 
   Future<List<tx.Transaction>> getUnspentTransactions() async {
@@ -174,7 +174,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   Future clearUnspentTransactions() async {
     final txs = await getUnspentTransactions();
-    final txIds = txs.map((e) => e.id);
+    final txIds = txs.map((e) => e.uniqueId);
 
     await _unspentStoreInstance.records(txIds).delete(await database);
   }
@@ -182,7 +182,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future addUnspentTransaction(tx.Transaction transaction) async {
     final db = await database;
     final obj = transaction.toJson();
-    await _unspentStoreInstance.record(transaction.id).put(db, obj);
+    await _unspentStoreInstance.record(transaction.uniqueId).put(db, obj);
   }
 
   Future<bool> transactionExists(String txId) async {

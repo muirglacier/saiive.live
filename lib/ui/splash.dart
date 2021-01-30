@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:package_info/package_info.dart';
@@ -32,12 +33,12 @@ class _SplashScreenState extends State<SplashScreen>
       // iOS key store is persistent, so if this is first launch then we will clear the keystore
       bool firstLaunch = await sl.get<SharedPrefsUtil>().getFirstLaunch();
       if (firstLaunch) {
-        await sl.get<Vault>().deleteAll();
+        await sl.get<IVault>().deleteAll();
       }
       await sl.get<SharedPrefsUtil>().setFirstLaunch();
       // See if logged in already
       bool isLoggedIn = false;
-      var seed = await sl.get<Vault>().getSeed();
+      var seed = await sl.get<IVault>().getSeed();
 
       // If we have a seed set, but not a pin - or vice versa
       // Then delete the seed and pin from device and start over.
@@ -56,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen>
 
       Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {
-      await sl.get<Vault>().deleteAll();
+      await sl.get<IVault>().deleteAll();
       await sl.get<SharedPrefsUtil>().deleteAll();
       if (!_retried) {
         _retried = true;

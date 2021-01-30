@@ -233,19 +233,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
-                  onTap: () async {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => WalletSendScreen()));
-                  },
-                  child: Icon(
-                    Icons.arrow_upward,
-                    size: 26.0,
-                  ),
-                )
-            ),
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) => SettingsScreen()));

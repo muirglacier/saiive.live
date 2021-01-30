@@ -37,16 +37,15 @@ class HdWallet extends IHdWallet {
 
     do {
       try {
-        var keys = await HdWalletUtil.derivePublicKeys(
+        var keys = await HdWalletUtil.derivePublicKeysWithChange(
             key,
             _account.account,
-            false,
             IWallet.KeysPerQuery * i,
             _chain,
             _network,
             IWallet.KeysPerQuery);
-        var path = HdWalletUtil.derivePaths(_account.account, false,
-            IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+        var path = HdWalletUtil.derivePathsWithChange(
+            _account.account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
         var pubKeyList = keys.map((item) => item).toList();
         var accountBalance = await apiService.accountService
             .getAccounts(ChainHelper.chainTypeString(_chain), pubKeyList);
@@ -112,17 +111,18 @@ class HdWallet extends IHdWallet {
 
     do {
       try {
-        var keys = await HdWalletUtil.derivePublicKeys(
+        var keys = await HdWalletUtil.derivePublicKeysWithChange(
             key,
             _account.account,
-            false,
             IWallet.KeysPerQuery * i,
             _chain,
             _network,
             IWallet.KeysPerQuery);
-        var path = HdWalletUtil.derivePaths(_account.account, false,
-            IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+
+        var path = HdWalletUtil.derivePathsWithChange(
+            _account.account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
         var pubKeyList = keys.map((item) => item).toList();
+
         var txs = await apiService.transactionService.getAddressesTransactions(
             ChainHelper.chainTypeString(_chain), pubKeyList);
 
@@ -131,9 +131,11 @@ class HdWallet extends IHdWallet {
 
         for (final tx in txs) {
           final keyIndex = keys.indexWhere((item) => item == tx.address);
+          var pathString = path[keyIndex];
 
-          tx.index = keyIndex + (i * IWallet.KeysPerQuery);
+          tx.index = HdWalletUtil.getIndexFromPath(pathString);
           tx.account = _account.account;
+          tx.isChangeAddress = HdWalletUtil.isPathChangeAddress(pathString);
         }
         txList.addAll(txs);
         var anyBalanceFound = txs.length > 0;
@@ -179,12 +181,13 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<String> nextFreePublicKey(IWalletDatabase database) async {
+  Future<String> nextFreePublicKey(
+      IWalletDatabase database, bool isChangeAddress) async {
     final nextIndex = await database.getNextFreeIndex(_account.account);
     final key = HEX.decode(_seed);
 
-    var publicKey = await HdWalletUtil.derivePublicKey(
-        key, _account.account, false, nextIndex, this._chain, this._network);
+    var publicKey = await HdWalletUtil.derivePublicKey(key, _account.account,
+        isChangeAddress, nextIndex, this._chain, this._network);
 
     return publicKey;
   }

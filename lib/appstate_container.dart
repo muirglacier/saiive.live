@@ -7,6 +7,7 @@ import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/impl/wallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-sync.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
@@ -96,7 +97,7 @@ class StateContainerState extends State<StateContainer> {
         var dataMap = Map();
         dataMap["chain"] = ChainType.DeFiChain;
         dataMap["network"] = ChainNet.Testnet;
-        dataMap["seed"] = await sl.get<Vault>().getSeed();
+        dataMap["seed"] = await sl.get<IVault>().getSeed();
         dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
         dataMap["apiService"] = sl.get<ApiService>();
         dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();

@@ -183,7 +183,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                       icon: Icons.arrow_upward,
                       width: width / 2 - 20, onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => WalletSendScreen()));
+                        builder: (BuildContext context) => WalletSendScreen(widget.token)));
                   })),
               AppButton.buildAppButton(
                   context, AppButtonType.PRIMARY, S.of(context).receive,

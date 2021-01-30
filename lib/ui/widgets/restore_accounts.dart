@@ -4,6 +4,7 @@ import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/vault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/foundation.dart';
@@ -27,7 +28,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
     var dataMap = Map();
     dataMap["chain"] = chain;
     dataMap["network"] = network;
-    dataMap["seed"] = await sl.get<Vault>().getSeed();
+    dataMap["seed"] = await sl.get<IVault>().getSeed();
     dataMap["password"] = "";//await sl.get<Vault>().getSecret();
     dataMap["apiService"] = sl.get<ApiService>();
 

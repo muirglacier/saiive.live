@@ -1,10 +1,11 @@
 import 'dart:convert' as utf;
 
+import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:flutter/services.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class Vault {
+class Vault extends IVault {
   static const String seedKey = 'defichainwallet_seed';
   static const String encryptionKey = 'defichainwallet_secret_phrase';
 

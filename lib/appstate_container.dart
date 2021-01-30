@@ -104,6 +104,8 @@ class StateContainerState extends State<StateContainer> {
         var balances = await compute(StateContainerState.syncWallet, dataMap);
 
         var db = sl.get<IWalletDatabase>();
+        await db.clearAccountBalances();
+
         for (final balance in balances) {
           db.setAccountBalance(balance);
         }

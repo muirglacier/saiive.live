@@ -24,6 +24,7 @@ abstract class IWalletDatabase {
   Future<List<Transaction>> getUnspentTransactions();
   Future addUnspentTransaction(Transaction transaction);
 
+  Future clearAccountBalances();
   Future setAccountBalance(Account balance);
   Future<List<Account>> getAccountBalances();
   Future<double> getAccountBalance(String token);

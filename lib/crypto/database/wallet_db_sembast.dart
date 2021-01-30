@@ -191,6 +191,10 @@ class SembastWalletDatabase extends IWalletDatabase {
     return await dbStore.record(txId).exists(await database);
   }
 
+  Future clearAccountBalances() async {
+    await _balancesStoreInstance.delete(await database);
+  }
+
   Future setAccountBalance(Account balance) async {
     await _balancesStoreInstance
         .record(balance.key)

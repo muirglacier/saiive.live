@@ -18,17 +18,23 @@ class WalletSendScreen extends StatefulWidget {
 
 class _WalletSendScreen extends State<WalletSendScreen> {
   var _addressController =
-      TextEditingController(text: 'tq9z2SHnJnvW7V58FnWUaBab9dEw1gxNj8');
-  var _amountController = TextEditingController(text: '10');
+      TextEditingController(text: 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
+  var _amountController = TextEditingController(text: '5');
 
   Future sendFunds() async {
     final amount = double.parse(_amountController.text);
     final totalAmount = (amount * 100000000).toInt();
-    final tx = await sl.get<DeFiChainWallet>().createSendTransaction(totalAmount, widget.token, _addressController.text);
+    final tx = await sl.get<DeFiChainWallet>().createSendTransaction(
+        totalAmount, widget.token, _addressController.text);
 
     final apiService = sl.get<ApiService>();
 
-    await apiService.transactionService.sendRawTransaction("DFI", tx);
+    final txId =
+        await apiService.transactionService.sendRawTransaction("DFI", tx);
+
+    debugPrint("Commited: " + txId);
+
+    Navigator.of(context).pop();
   }
 
 

@@ -1,6 +1,7 @@
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
@@ -124,25 +125,27 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
     return Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              InkWell(
-                  child: new Text(S.of(context).wallet_token_show_in_explorer,
-                      style: TextStyle(color: Theme.of(context).primaryColor)),
-                  onTap: () => launch(DefiChainConstants.getExplorerUrl(
-                      _chainNet, tx.mintTxId))),
-              Text(tx.correctValue.toString())
-            ],
-          ),
-          SizedBox(height: 5),
-          Text(tx.mintTxId, style: TextStyle(fontSize: 8)),
-          Divider()
-        ]));
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                      child: new Text(
+                          S.of(context).wallet_token_show_in_explorer,
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor)),
+                      onTap: () => launch(DefiChainConstants.getExplorerUrl(
+                          _chainNet, tx.mintTxId))),
+                  Text(tx.correctValue.toString())
+                ],
+              ),
+              SizedBox(height: 5),
+              Text(tx.mintTxId, style: TextStyle(fontSize: 8)),
+              Divider()
+            ]));
   }
 
   buildTransactionsList(BuildContext context) {
@@ -181,15 +184,27 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                       context, AppButtonType.PRIMARY, S.of(context).send,
                       icon: Icons.arrow_upward,
                       width: width / 2 - 20, onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => WalletSendScreen(widget.token)));
+                    final token = widget.token;
+                    if (token != "\$DFI") {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "Sending funds for '$token' is currently not supported!"),
+                      ));
+                    } else {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              WalletSendScreen(widget.token)));
+                    }
                   })),
               AppButton.buildAppButton(
                   context, AppButtonType.PRIMARY, S.of(context).receive,
                   icon: Icons.arrow_downward,
-                  width: width / 2 - 20, onPressed: () {
+                  width: width / 2 - 20, onPressed: () async {
+                var wallet = sl.get<DeFiChainWallet>();
+                var pubKey = await wallet.getPublicKey();
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => WalletReceiveScreen()));
+                    builder: (BuildContext context) =>
+                        WalletReceiveScreen(pubKey: pubKey)));
               })
             ],
           ),

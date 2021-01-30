@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class WalletReceiveScreen extends StatefulWidget {
-  String pubKey;
+  final String pubKey;
 
   WalletReceiveScreen({this.pubKey});
 

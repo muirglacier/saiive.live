@@ -50,6 +50,7 @@ dependencies:
   auto_size_text: ^2.1.0
   qr_flutter: ^2.0.1
   flutter_qr_reader: ^1.0.3
+  flutter_launcher_icons: ^0.8.1
 
   # Dependency Injection
   get_it: ^5.0.6
@@ -91,3 +92,5 @@ flutter:
     - assets/logo_black.jpg
     - assets/logo_white.jpg
     - assets/logo.png
+    - assets/Logo_with_text.png
+

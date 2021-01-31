@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:package_info/package_info.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +39,6 @@ class DefiChainWalletApp extends StatefulWidget {
 }
 
 class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
-
   ChainNet _network;
 
   void init() async {
@@ -48,9 +48,11 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
     });
   }
 
+
   @override
   void initState() {
     super.initState();
+
 
     EventTaxiImpl.singleton().registerAll().listen((event) {
       final eventType = event.toString();
@@ -131,7 +133,8 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
               );
             case '/intro_accounts_restore':
               return NoTransitionRoute(
-                builder: (_) => RestoreAccountsScreen(ChainType.DeFiChain, _network),
+                builder: (_) =>
+                    RestoreAccountsScreen(ChainType.DeFiChain, _network),
                 settings: settings,
               );
             case '/intro_wallet_new':

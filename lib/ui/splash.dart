@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,7 +10,8 @@ import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
-import 'package:defichainwallet/network/model/vault.dart';
+
+enum EnvironmentType { Unknonw, Development, Staging, Production }
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -21,6 +23,8 @@ class _SplashScreenState extends State<SplashScreen>
   var _version = "";
   bool _hasCheckedLoggedIn;
   bool _retried;
+
+  EnvironmentType _currentEnvironment;
 
   Future checkLoggedIn() async {
     if (!_hasCheckedLoggedIn) {
@@ -55,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
 
       // await sl.get<IWalletDatabase>().open();
 
-      Navigator.of(context).pushReplacementNamed(route);
+      // Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {
       await sl.get<IVault>().deleteAll();
       await sl.get<SharedPrefsUtil>().deleteAll();
@@ -78,10 +82,30 @@ class _SplashScreenState extends State<SplashScreen>
     });
   }
 
+  void _initGetFlavor() async {
+    var currentEnvironment = EnvironmentType.Unknonw;
+    var packageInfo = await PackageInfo.fromPlatform();
+    switch (packageInfo.packageName) {
+      case "at.defichain.wallet.dev":
+        currentEnvironment = EnvironmentType.Development;
+        break;
+      case "at.defichain.wallet.staging":
+        currentEnvironment = EnvironmentType.Staging;
+        break;
+      case "at.defichain.wallet":
+        currentEnvironment = EnvironmentType.Production;
+        break;
+    }
+    setState(() {
+      _currentEnvironment = currentEnvironment;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _loadVersion();
+    _initGetFlavor();
 
     WidgetsBinding.instance.addObserver(this);
     _hasCheckedLoggedIn = false;
@@ -139,6 +163,21 @@ class _SplashScreenState extends State<SplashScreen>
                   margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                   child: AutoSizeText(
                     _version,
+                    style: AppStyles.textStyleParagraph(context),
+                    maxLines: 4,
+                    stepGranularity: 0.5,
+                  ),
+                ),
+              ]),
+          if(_currentEnvironment != EnvironmentType.Production)
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  child: AutoSizeText(
+                    _currentEnvironment.toString(),
                     style: AppStyles.textStyleParagraph(context),
                     maxLines: 4,
                     stepGranularity: 0.5,

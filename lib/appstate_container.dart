@@ -20,7 +20,6 @@ import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/network/model/available_themes.dart';
 
 import 'network/events/events.dart';
-import 'network/model/vault.dart';
 
 class _InheritedStateContainer extends InheritedWidget {
   // Data is your entire state. In our case just 'User'

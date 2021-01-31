@@ -62,6 +62,11 @@
   "cancel": "Abbrechen",
 
   "dex": "DEX",
+  "dex_from_amount": "Von",
+  "dex_to_amount": "Auf",
+  "dex_price": "Preis",
+  "dex_amount": "Erhaltender Betrag",
+  "dex_commision": "Komission",
 
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",

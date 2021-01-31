@@ -1,5 +1,6 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
@@ -80,7 +81,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<Map<String, double>> getTotalBalances() {
+  Future<List<AccountBalance>> getTotalBalances() {
     // TODO: implement getTotalBalances
     throw UnimplementedError();
   }

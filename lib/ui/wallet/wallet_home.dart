@@ -5,6 +5,7 @@ import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/events/events.dart';
+import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
@@ -30,7 +31,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   String _welcomeText = "";
   String _syncText = " ";
 
-  Map<String, double> _accountBalance;
+  List<AccountBalance> _accountBalance;
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
 
@@ -131,7 +132,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     }
   }
 
-  Widget _buildAccountEntry(String token, double balance) {
+  Widget _buildAccountEntry(AccountBalance balance) {
     return Card(
         child: ListTile(
       leading: Column(
@@ -142,20 +143,20 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(token,
+            Text(balance.token,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-            Text(token, style: TextStyle(fontSize: 12))
+            Text(balance.token, style: TextStyle(fontSize: 12))
           ]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(balance.toString(),
+            Text(balance.balance.toString(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
           ]),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) => WalletTokenScreen(token)));
+            builder: (BuildContext context) => WalletTokenScreen(balance.token)));
       },
     ));
   }
@@ -189,13 +190,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemExtent: 100.0,
-                          itemCount: _accountBalance.keys.length,
+                          itemCount: _accountBalance.length,
                           itemBuilder: (context, index) {
-                            final account =
-                                _accountBalance.keys.elementAt(index);
-                            return _buildAccountEntry(
-                                _accountBalance.keys.elementAt(index),
-                                _accountBalance[account]);
+                            final account = _accountBalance.elementAt(index);
+                            return _buildAccountEntry(account);
                           })))
             ]));
   }

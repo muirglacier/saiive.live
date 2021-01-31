@@ -625,6 +625,56 @@ class S {
     );
   }
 
+  /// `From`
+  String get dex_from_amount {
+    return Intl.message(
+      'From',
+      name: 'dex_from_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To`
+  String get dex_to_amount {
+    return Intl.message(
+      'To',
+      name: 'dex_to_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get dex_price {
+    return Intl.message(
+      'Price',
+      name: 'dex_price',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount`
+  String get dex_amount {
+    return Intl.message(
+      'Amount',
+      name: 'dex_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Commision`
+  String get dex_commision {
+    return Intl.message(
+      'Commision',
+      name: 'dex_commision',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(

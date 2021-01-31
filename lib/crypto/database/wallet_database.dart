@@ -1,6 +1,7 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/network/model/account.dart';
+import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -28,7 +29,7 @@ abstract class IWalletDatabase {
   Future setAccountBalance(Account balance);
   Future<List<Account>> getAccountBalances();
   Future<double> getAccountBalance(String token);
-  Future<Map<String, double>> getTotalBalances();
+  Future<List<AccountBalance>> getTotalBalances();
 
   Future open();
   Future close();

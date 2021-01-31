@@ -23,6 +23,11 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "dex" : MessageLookupByLibrary.simpleMessage("DEX"),
+    "dex_amount" : MessageLookupByLibrary.simpleMessage("Erhaltender Betrag"),
+    "dex_commision" : MessageLookupByLibrary.simpleMessage("Komission"),
+    "dex_from_amount" : MessageLookupByLibrary.simpleMessage("Von"),
+    "dex_price" : MessageLookupByLibrary.simpleMessage("Preis"),
+    "dex_to_amount" : MessageLookupByLibrary.simpleMessage("Auf"),
     "helloWorld" : MessageLookupByLibrary.simpleMessage("Hallo Welt!"),
     "home_dex" : MessageLookupByLibrary.simpleMessage("DEX"),
     "home_liquitiy" : MessageLookupByLibrary.simpleMessage("Liquidity"),

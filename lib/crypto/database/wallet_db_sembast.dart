@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/network/model/account.dart';
+import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
@@ -234,7 +235,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
-  Future<Map<String, double>> getTotalBalances() async {
+  Future<List<AccountBalance>> getTotalBalances() async {
     var dbStore = _balancesStoreInstance;
 
     final accounts = await dbStore.find(await database);
@@ -251,6 +252,9 @@ class SembastWalletDatabase extends IWalletDatabase {
       sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
     });
 
-    return sumMap;
+    List<AccountBalance> balances =
+      sumMap.entries.map( (entry) => AccountBalance(token: entry.key, balance: entry.value)).toList();
+
+    return balances;
   }
 }

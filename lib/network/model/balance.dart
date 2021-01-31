@@ -13,9 +13,9 @@ class Balance {
 
   factory Balance.fromJson(Map<String, dynamic> json) {
     return Balance(
-      confirmed: json['confirmed'],
-      unconfirmed: json['unconfirmed'],
-      balance: json['balance'],
+      confirmed: double.parse(json['confirmed'].toString()),
+      unconfirmed: double.parse(json['unconfirmed'].toString()),
+      balance: double.parse(json['balance'].toString()),
       address: json['address'],
     );
   }

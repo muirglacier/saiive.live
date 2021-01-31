@@ -6,6 +6,7 @@ import 'package:defichainwallet/network/model/error.dart';
 import 'package:defichainwallet/network/base_request.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +49,7 @@ class HttpService {
       String url, String coin, BaseRequest request) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
     final body = json.encode(request.toJson());
+
     http.Response response = await http.post(finalUrl,
         headers: {
           'Content-type': 'application/json',

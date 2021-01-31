@@ -5,7 +5,9 @@ import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/account_service.dart';
 import 'package:defichainwallet/network/balance_service.dart';
+import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/http_service.dart';
+import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
 import 'package:get_it/get_it.dart';
@@ -33,6 +35,8 @@ void setupServiceLocator() {
   sl.registerLazySingleton(() => TransactionService());
   sl.registerLazySingleton(() => BalanceService());
   sl.registerLazySingleton(() => TokenService());
+  sl.registerLazySingleton(() => PoolPairService());
+  sl.registerLazySingleton(() => DexService());
 
   sl.registerSingletonAsync<IWalletDatabase>(() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();

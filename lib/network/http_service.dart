@@ -15,8 +15,7 @@ class HttpService {
   String network;
   String baseUri = "/api/v1/";
 
-  HttpService() {
-  }
+  HttpService();
 
   Future init() async {
     final sharedPreferences = await SharedPreferences.getInstance();

@@ -1,11 +1,8 @@
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/token.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class TokensScreen extends StatefulWidget {
   @override
@@ -56,7 +53,6 @@ class _TokensScreen extends State<TokensScreen> {
     ));
   }
 
-  @override
   buildTokenScreen(BuildContext context) {
     if (_tokens == null) {
       return;

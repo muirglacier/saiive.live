@@ -1,10 +1,10 @@
-import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class WalletSendScreen extends StatefulWidget {
   final String token;
@@ -37,7 +37,6 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     Navigator.of(context).pop();
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -56,17 +55,19 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                     hintText: S.of(context).wallet_send_address,
                     suffixIcon: IconButton(
                       onPressed: () async {
-                        String barcodeScanRes =
-                            await FlutterBarcodeScanner.scanBarcode(
-                                StateContainer.of(context)
-                                    .curTheme
-                                    .primary
-                                    .toString(),
-                                S.of(context).cancel,
-                                true,
-                                ScanMode.QR);
+                        var status = await Permission.camera.status;
+                        if (status.isUndetermined) {
+                          final permission = await Permission.camera.request();
 
-                        _addressController.text = barcodeScanRes;
+                          if (!permission.isGranted) {
+                            return;
+                          }
+                        }
+                        final address = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    QrCodeScan()));
+                        _addressController.text = address;
                       },
                       icon: Icon(Icons.camera_alt),
                     ),

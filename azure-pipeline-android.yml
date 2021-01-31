@@ -38,6 +38,7 @@ stages:
           debugMode: true
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'dev'
+          buildNumber: $(Build.BuildNumber)
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -61,6 +62,7 @@ stages:
           buildName: '0.1'
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'dev'
+          buildNumber: $(Build.BuildNumber)
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -106,6 +108,7 @@ stages:
           buildName: '0.1'
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'staging'
+          buildNumber: $(Build.BuildNumber)
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -154,6 +157,7 @@ stages:
           buildName: '0.1'
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'prod'
+          buildNumber: $(Build.BuildNumber)
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"

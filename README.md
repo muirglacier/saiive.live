@@ -10,8 +10,8 @@ A mobile application for [DeFiChain](https://defichain.com/).
 # Donate
 [![Donate with Bitcoin](https://en.cryptobadges.io/badge/micro/18iSZjac28YeCeis8pzWxSqCTVw6d9UGCf)](https://en.cryptobadges.io/donate/18iSZjac28YeCeis8pzWxSqCTVw6d9UGCf)
 
-Donate $DFI to Patrik: dHRaGab9wDEaXeeAVjWK1Pgk1LCsZU2s7t
-Donate $DFI to Dominik: dJLbxzJLype9h8QnmckK1KSDEiM8kGbHqK
+ - Donate $DFI to Patrik: dHRaGab9wDEaXeeAVjWK1Pgk1LCsZU2s7t
+ - Donate $DFI to Dominik: dJLbxzJLype9h8QnmckK1KSDEiM8kGbHqK
 
 # Documentation
 - [Getting started](#getting-started)

@@ -18,8 +18,12 @@ import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/network/model/available_themes.dart';
+import 'package:logger/logger.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 import 'network/events/events.dart';
+
+enum EnvironmentType { Unknonw, Development, Staging, Production }
 
 class _InheritedStateContainer extends InheritedWidget {
   // Data is your entire state. In our case just 'User'
@@ -68,6 +72,7 @@ class StateContainerState extends State<StateContainer> {
   LanguageSetting curLanguage = LanguageSetting(AvailableLanguage.DEFAULT);
   Locale deviceLocale = Locale('en', 'US');
   AppCenterWrapper appCenter = AppCenterWrapper();
+  Logger get logger => LogHelper.instance;
 
   Wallet wallet;
 
@@ -93,6 +98,7 @@ class StateContainerState extends State<StateContainer> {
         .registerTo<WalletSyncStartEvent>()
         .listen((event) async {
       try {
+        logger.i("Start wallet sync....");
         var dataMap = Map();
         dataMap["chain"] = ChainType.DeFiChain;
         dataMap["network"] = ChainNet.Testnet;
@@ -108,6 +114,7 @@ class StateContainerState extends State<StateContainer> {
 
         for (final balance in balances) {
           db.setAccountBalance(balance);
+          logger.d(balance);
         }
 
         var txs = await compute(StateContainerState.syncTransactions, dataMap);
@@ -118,13 +125,18 @@ class StateContainerState extends State<StateContainer> {
             await db.addUnspentTransaction(tx);
           }
           await db.addTransaction(tx);
+          logger.d(tx);
         }
 
         EventTaxiImpl.singleton().fire(WalletSyncDoneEvent());
       } catch (e) {
         EventTaxiImpl.singleton()
             .fire(WalletSyncDoneEvent(hasError: true, error: e));
-      } finally {}
+
+        logger.e("wallet sync failed....", e);
+      } finally {
+        logger.i("Start wallet sync....done");
+      }
     });
   }
 

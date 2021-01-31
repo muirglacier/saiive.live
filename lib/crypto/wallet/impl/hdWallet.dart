@@ -8,8 +8,8 @@ import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hex/hex.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 class HdWallet extends IHdWallet {
   int _nextFreeIndex;
@@ -50,7 +50,7 @@ class HdWallet extends IHdWallet {
         var accountBalance = await apiService.accountService
             .getAccounts(ChainHelper.chainTypeString(_chain), pubKeyList);
 
-        debugPrint(
+        LogHelper.instance.d(
             "found ${accountBalance.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
 
         var anyBalanceFound = false;
@@ -65,7 +65,7 @@ class HdWallet extends IHdWallet {
           empty++;
         }
       } catch (e) {
-        debugPrint(e);
+        LogHelper.instance.e("Error syncBalance", e);
         continue;
       }
 
@@ -126,8 +126,8 @@ class HdWallet extends IHdWallet {
         var txs = await apiService.transactionService.getAddressesTransactions(
             ChainHelper.chainTypeString(_chain), pubKeyList);
 
-        debugPrint(
-            "found ${txs.length} transactions for path ${path.first} length ${IWallet.KeysPerQuery}");
+        LogHelper.instance.d(
+            "found ${txs.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
 
         for (final tx in txs) {
           final keyIndex = keys.indexWhere((item) => item == tx.address);
@@ -146,7 +146,7 @@ class HdWallet extends IHdWallet {
           empty++;
         }
       } catch (e) {
-        debugPrint(e);
+        LogHelper.instance.e("error sync txs", e);
         continue;
       }
 

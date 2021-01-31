@@ -32,8 +32,9 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     final txId =
         await apiService.transactionService.sendRawTransaction("DFI", tx);
 
-    debugPrint("Commited: " + txId);
-
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txId),
+    ));
     Navigator.of(context).pop();
   }
 

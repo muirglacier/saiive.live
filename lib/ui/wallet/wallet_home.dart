@@ -9,7 +9,6 @@ import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
-import 'package:defichainwallet/ui/wallet/wallet_send.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';

@@ -11,8 +11,6 @@ import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
-enum EnvironmentType { Unknonw, Development, Staging, Production }
-
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();

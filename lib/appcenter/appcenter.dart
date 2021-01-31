@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_appcenter_bundle/flutter_appcenter_bundle.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 class AppCenterWrapper {
   AndroidDeviceInfo _android;
@@ -105,7 +105,7 @@ class AppCenterWrapper {
       }
       await AppCenter.trackEventAsync(eventName, properties);
     } on Exception catch (e) {
-      debugPrint("error track event: " + e.toString());
+      LogHelper.instance.e("error track event", e);
     }
   }
 }

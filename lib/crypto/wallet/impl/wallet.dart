@@ -13,7 +13,8 @@ import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
-import 'package:flutter/foundation.dart';
+
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -102,7 +103,7 @@ class Wallet extends IWallet {
 
       print("wallet sync took ${diffTx / 1000} seconds");
     } on Exception catch (e) {
-      debugPrint(e.toString());
+      LogHelper.instance.e("error sync balance", e);
     }
     return ret;
   }

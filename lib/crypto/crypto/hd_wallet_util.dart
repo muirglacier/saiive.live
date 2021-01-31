@@ -3,7 +3,8 @@ import 'package:bip32/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
-import 'package:flutter/cupertino.dart';
+
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 class PublicPrivateKeyPair {
   final String privateKey;
@@ -40,8 +41,9 @@ class HdWalletUtil {
 
     final address = await _getPublicAddress(
         xMasterPriv.derivePath(path), chainType, network);
-    debugPrint(
-        "PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
+
+    LogHelper.instance.d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
+
     return address;
   }
 
@@ -50,7 +52,6 @@ class HdWalletUtil {
     final networkType = _getNetwork(chainType, network);
 
     final path = derivePath(account, isChangeAddress, index);
-    debugPrint("getKeyPair for $path");
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
     final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
     return ECPair.fromPrivateKey(xMasterPriv.derivePath(path).privateKey,
@@ -140,7 +141,7 @@ class HdWalletUtil {
       final redeemScript = p2wpkh.output;
       final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
       final input = inputTxs[index].mintTxId;
-      debugPrint("sign tx $input with privateKey from $pubKey");
+      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
 
       txb.sign(
           vin: index,
@@ -152,7 +153,7 @@ class HdWalletUtil {
 
     final tx = txb.build();
     final txhex = tx.toHex();
-
+    LogHelper.instance.d("txHex is $txhex");
     return txhex;
   }
 
@@ -222,7 +223,7 @@ class HdWalletUtil {
 
     return changeIndex == "1";
   }
-  
+
   static int getIndexFromPath(String path) {
     final regex = new RegExp(r"^(m\/)?(\d+'?\/)*\d+'?$");
     if (!regex.hasMatch(path)) throw new ArgumentError("Expected BIP32 Path");

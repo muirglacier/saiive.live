@@ -379,6 +379,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.2"
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0+2"
+  logger_flutter:
+    dependency: "direct main"
+    description:
+      name: logger_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.1"
   logging:
     dependency: transitive
     description:
@@ -575,6 +589,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.8+1"
+  sensors:
+    dependency: transitive
+    description:
+      name: sensors
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.2+6"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -820,4 +841,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
-  flutter: ">=1.22.0"
+  flutter: ">=1.22.0 <2.0.0"

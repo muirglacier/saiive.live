@@ -4,7 +4,8 @@ import 'package:defichainwallet/crypto/wallet/impl/hdWallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
-import 'package:flutter/foundation.dart';
+
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 import '../chain.dart';
 
@@ -33,7 +34,7 @@ class WalletSync {
 
       print("wallet sync took ${diffTx / 1000} seconds");
     } on Exception catch (e) {
-      debugPrint(e.toString());
+      LogHelper.instance.e("Error syncing wallet", e);
     }
     return ret;
   }
@@ -62,7 +63,7 @@ class WalletSync {
 
       print("wallet sync took ${diffTx / 1000} seconds");
     } on Exception catch (e) {
-      debugPrint(e.toString());
+      LogHelper.instance.e("Error syncing wallet", e);
     }
     return ret;
   }

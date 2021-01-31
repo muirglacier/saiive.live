@@ -5,7 +5,6 @@ import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
-import 'package:defichainwallet/network/model/vault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

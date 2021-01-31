@@ -1,10 +1,10 @@
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
-import 'package:defichainwallet/network/model/vault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger_flutter/logger_flutter.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen();
@@ -29,13 +29,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         await sl.get<IWalletDatabase>().destroy();
                         await sl.get<IVault>().setSeed(null);
 
-                        
                         Navigator.of(context)
                             .pushNamedAndRemoveUntil("/", (route) => false);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Removed saved seed"),
                         ));
+                      },
+                    ))),
+            Container(
+                child: SizedBox(
+                    width: 300,
+                    child: RaisedButton(
+                      child: Text("Show logs"),
+                      color: Theme.of(context).backgroundColor,
+                      onPressed: () async {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) => LogConsole()));
                       },
                     ))),
           ],

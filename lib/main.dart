@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:package_info/package_info.dart';
+import 'package:logger_flutter/logger_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,19 +46,18 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
     setState(() {
       _network = network;
     });
-  }
 
+    LogConsole.init();
+  }
 
   @override
   void initState() {
     super.initState();
 
-
     EventTaxiImpl.singleton().registerAll().listen((event) {
       final eventType = event.toString();
       StateContainer.of(context).appCenter.trackEvent(eventType, {});
-
-      debugPrint("Event " + eventType + " called...");
+      StateContainer.of(context).logger.d("Event " + eventType + " called...");
     });
 
     init();

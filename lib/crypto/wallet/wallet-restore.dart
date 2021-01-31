@@ -6,10 +6,8 @@ import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
-import 'package:flutter/foundation.dart';
-
-import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 class WalletRestore {
   static Future<List<WalletAccount>> restore(ChainType chain, ChainNet network,
@@ -68,9 +66,8 @@ class WalletRestore {
 
       var transactions = await api.transactionService.getAddressesTransactions(
           ChainHelper.chainTypeString(chain), publicKeys);
-
-      debugPrint(
-          "found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
+      LogHelper.instance.d("found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
+      
       if (transactions.length == 0) {
         maxEmpty--;
       } else {

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:defichainwallet/bus/token_loaded_event.dart';
 import 'package:defichainwallet/bus/tokens_loaded_event.dart';
 import 'package:defichainwallet/network/model/token.dart';

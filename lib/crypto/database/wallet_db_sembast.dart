@@ -60,13 +60,6 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   Future<Database> get database async {
     if (_database != null) return _database;
-    final file = File(_path);
-
-    if (await file.exists()) {
-      debugPrint("Use existing database...");
-    } else {
-      debugPrint("Create new database...");
-    }
     _database = await databaseFactoryIo.openDatabase(_path);
     return _database;
   }

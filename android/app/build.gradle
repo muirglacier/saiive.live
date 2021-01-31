@@ -66,24 +66,18 @@ android {
             getIsDefault().set(true)
             dimension "env"
             applicationId "at.defichain.wallet.dev"
-            versionCode 1
-            versionName "1.0"
             resValue "string", "build_config_package", "at.defichain.wallet"
         }
  
         staging {
             dimension "env"
             applicationId "at.defichain.wallet.staging"
-            versionCode 1
-            versionName "1.0"
             resValue "string", "build_config_package", "at.defichain.wallet"
         }
 
         prod {
             dimension "env"
             applicationId "at.defichain.wallet"
-            versionCode 1
-            versionName "1.0"
             resValue "string", "build_config_package", "at.defichain.wallet"
         }
     }

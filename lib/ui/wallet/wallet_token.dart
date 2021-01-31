@@ -173,42 +173,41 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
     final width = MediaQuery.of(context).size.width;
     return Padding(
         padding: EdgeInsets.only(right: 10, left: 10),
-        child: Flexible(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: AppButton.buildAppButton(
-                      context, AppButtonType.PRIMARY, S.of(context).send,
-                      icon: Icons.arrow_upward,
-                      width: width / 2 - 20, onPressed: () {
-                    final token = widget.token;
-                    if (token != "\$DFI") {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            "Sending funds for '$token' is currently not supported!"),
-                      ));
-                    } else {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              WalletSendScreen(widget.token)));
-                    }
-                  })),
-              AppButton.buildAppButton(
-                  context, AppButtonType.PRIMARY, S.of(context).receive,
-                  icon: Icons.arrow_downward,
-                  width: width / 2 - 20, onPressed: () async {
-                var wallet = sl.get<DeFiChainWallet>();
-                var pubKey = await wallet.getPublicKey();
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        WalletReceiveScreen(pubKey: pubKey)));
-              })
-            ],
-          ),
-        ));
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: AppButton.buildAppButton(
+                    context, AppButtonType.PRIMARY, S.of(context).send,
+                    icon: Icons.arrow_upward,
+                    width: width / 2 - 20, onPressed: () {
+                  final token = widget.token;
+                  if (token != "\$DFI") {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "Sending funds for '$token' is currently not supported!"),
+                    ));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            WalletSendScreen(widget.token)));
+                  }
+                })),
+            AppButton.buildAppButton(
+                context, AppButtonType.PRIMARY, S.of(context).receive,
+                icon: Icons.arrow_downward,
+                width: width / 2 - 20, onPressed: () async {
+              var wallet = sl.get<DeFiChainWallet>();
+              var pubKey = await wallet.getPublicKey();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      WalletReceiveScreen(pubKey: pubKey)));
+            })
+          ],
+        ),
+      );
   }
 
   buildView(BuildContext context) {

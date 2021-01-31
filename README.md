@@ -74,7 +74,7 @@ flutter build web //for web
 # Contributors
 
 * [Patrik](https://github.com/p3root)
-  * from p3-software (https://www.p3-software.eu)
+* [Dominik](https://github.com/dpfaffenbauer)
 
 
 # Screenshots

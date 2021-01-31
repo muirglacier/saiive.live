@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
 
       // await sl.get<IWalletDatabase>().open();
 
-      // Navigator.of(context).pushReplacementNamed(route);
+      Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {
       await sl.get<IVault>().deleteAll();
       await sl.get<SharedPrefsUtil>().deleteAll();

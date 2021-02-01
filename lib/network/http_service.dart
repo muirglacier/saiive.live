@@ -24,7 +24,7 @@ class HttpService {
 
     final chainNet = ChainNet.values[rawValue ?? ChainNet.Testnet.index];
     this.network = ChainHelper.chainNetworkString(chainNet);
-    this.serverAddress = FlutterConfig.get('API_URL');
+    this.serverAddress = FlutterConfig.get('API_URL') ?? 'https://dev-supernode.defichain-wallet.com';
   }
 
   Future<Map<String, dynamic>> makeHttpGetRequest(

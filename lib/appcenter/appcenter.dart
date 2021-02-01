@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_appcenter_bundle/flutter_appcenter_bundle.dart';
 import 'package:device_info/device_info.dart';
-import 'package:flutter_config/flutter_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 class AppCenterWrapper {
@@ -11,8 +11,8 @@ class AppCenterWrapper {
   IosDeviceInfo _ios;
 
   Future start() async {
-    final android = FlutterConfig.get("APPCENTER_ANDROID_ID");
-    final iOs = FlutterConfig.get("APPCENTER_IOS_ID");
+    final android = env["APPCENTER_ANDROID_ID"];
+    final iOs = env["APPCENTER_IOS_ID"];
     await AppCenter.startAsync(
       appSecretAndroid: android,
       appSecretIOS: iOs,

@@ -45,7 +45,6 @@ stages:
             #cd $(Build.SourcesDirectory)
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
-            export ENVFILE=.env-Staging
 
       - task: FlutterBuild@0
         displayName: "Build iOS staging"
@@ -53,6 +52,7 @@ stages:
           target: 'ios'
           projectDirectory: '$(Build.SourcesDirectory)'
           buildFlavour: 'staging'
+          entryPoint: 'lib/main_staging.dart'
           verboseMode: true
           debugMode: false
           buildName: '0.1'

@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo &quot;.env.Staging&quot; &gt; ${SRCROOT}/.envfile&#10;">
+               scriptText = "echo &quot;.env-Staging&quot; &gt; ${SRCROOT}/.envfile&#10;">
             </ActionContent>
          </ExecutionAction>
          <ExecutionAction

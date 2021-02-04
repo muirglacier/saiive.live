@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/model/error.dart';
 import 'package:defichainwallet/network/base_request.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HttpService {
+class HttpService extends IHttpService {
   String serverAddress;
   String network;
   String baseUri = "/api/v1/";
@@ -23,7 +24,9 @@ class HttpService {
 
     final chainNet = ChainNet.values[rawValue ?? ChainNet.Testnet.index];
     this.network = ChainHelper.chainNetworkString(chainNet);
-    this.serverAddress = env['API_URL'];
+    if (env.containsKey("API_URL")) {
+      this.serverAddress = env['API_URL'];
+    }
   }
 
   Future<Map<String, dynamic>> makeHttpGetRequest(

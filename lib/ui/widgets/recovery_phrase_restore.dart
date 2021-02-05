@@ -52,7 +52,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
     _selectedPhrases = [];
 
     var demoWords2 =
-        "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+        "woman come pride stamp wink egg dirt segment cradle shaft spawn brush always more agent visit crisp quantum spider chair power jeans shrug foam";
 
     var items = demoWords2.split(" ");
 

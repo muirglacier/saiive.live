@@ -6,7 +6,7 @@ We wanted to let the community to know about it. We are working hard on it, and 
 # DefiChain Wallet App
 ## Key Feautres
 * Ready to use right after installation. Blockchain is managed by a server (like Mycelium).
-* No custodian wallet - you still **OWN YOUR PRIVATE KEYS**
+* No custodial wallet - you still **OWN YOUR PRIVATE KEYS**
 * Send/Receive DFI+DAT Tokens
 * Liquidity Mining - Add & Remove Liquitidy shares
 * DEX - Swap pairs on the go

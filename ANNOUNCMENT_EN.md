@@ -4,7 +4,7 @@ The current implementation is still a work in progress.
 We wanted to let the community to know about it. We are working hard on it, and we want to release it as soon as possible. 
 
 # DefiChain Wallet App
-## Key Feautres
+## Key Features
 * Ready to use right after installation. Blockchain is managed by a server (like Mycelium).
 * No custodial wallet - you still **OWN YOUR PRIVATE KEYS**
 * Send/Receive DFI+DAT Tokens

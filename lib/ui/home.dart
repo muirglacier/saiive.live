@@ -1,5 +1,6 @@
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/dex/dex.dart';
+import 'package:defichainwallet/ui/liquidity/liquitiy.dart';
 import 'package:defichainwallet/ui/tokens/tokens.dart';
 import 'package:defichainwallet/ui/wallet/wallet_home.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,10 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
     WalletHomeScreen(),
-    Text(
-      'Liquidity - Work in Progress!',
-      style: optionStyle,
-    ),
+    LiquidityScreen(),
     DexScreen(),
     TokensScreen(),
   ];

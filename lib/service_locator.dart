@@ -10,7 +10,9 @@ import 'package:defichainwallet/network/defichain_service.dart';
 import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/gov_service.dart';
 import 'package:defichainwallet/network/http_service.dart';
+import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
+import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
 import 'package:get_it/get_it.dart';
@@ -44,6 +46,7 @@ void setupServiceLocator() {
   sl.registerLazySingleton(() => CoingeckoService());
   sl.registerLazySingleton(() => GovService());
   sl.registerLazySingleton(() => DefichainService());
+  sl.registerLazySingleton(() => PoolShareService());
 
   sl.registerSingletonAsync<IWalletDatabase>(() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();

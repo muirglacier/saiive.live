@@ -28,13 +28,13 @@ class PoolPairService extends NetworkService {
   Future<PoolPair> getPoolPair(String coin, String poolID) async {
     dynamic response = await this
         .httpService
-        .makeHttpGetRequest('/getpoolpairs/$poolID', coin);
+        .makeHttpGetRequest('/getpoolpair/$poolID', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    PoolPair poolPair = PoolPair.fromJson(response);
+    PoolPair poolPair = PoolPair.fromJson(response.values.first);
 
     this.fireEvent(new PoolPairLoadedEvent(poolPair: poolPair));
 

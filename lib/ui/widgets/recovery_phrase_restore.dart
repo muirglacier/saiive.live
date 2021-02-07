@@ -53,8 +53,10 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
 
     //var demoWords2 =
     //   "woman come pride stamp wink egg dirt segment cradle shaft spawn brush always more agent visit crisp quantum spider chair power jeans shrug foam";
-    var demoWords2 =
-        "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+    //var demoWords2 =
+        //"sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+
+    var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
 
     var items = demoWords2.split(" ");
 

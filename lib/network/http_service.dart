@@ -46,6 +46,20 @@ class HttpService extends IHttpService {
     }
     return decoded;
   }
+  Future<dynamic> makeDynamicHttpGetRequest(
+      String url, String coin) async {
+    final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
+    http.Response response = await http.get(
+      finalUrl,
+      headers: {'Content-type': 'application/json'},
+    );
+
+    if (response.statusCode != 200) {
+      return null;
+    }
+
+    return response;
+  }
 
   Future<dynamic> makeHttpPostRequest(
       String url, String coin, BaseRequest request) async {

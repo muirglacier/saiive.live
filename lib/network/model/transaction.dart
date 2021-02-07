@@ -14,7 +14,7 @@ class Transaction {
   final double value;
   final int confirmations;
 
-  int get valueRaw => (value).round();
+  int get valueRaw => (value * 100000000).round();
   String get uniqueId => mintTxId + "_" + mintIndex.toString();
 
   int index;

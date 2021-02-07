@@ -78,5 +78,7 @@
   "home_welcome_good_day": "Good day",
   "home_welcome_good_evening": "Good evening",
   "home_welcome_account_synced": "Your %s accounts are synced!",
-  "home_welcome_account_syncing": "Synchronizing..."
+  "home_welcome_account_syncing": "Synchronizing...",
+
+  "liquitiy": "Liquidity"
 }

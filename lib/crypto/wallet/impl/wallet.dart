@@ -72,6 +72,17 @@ class Wallet extends IWallet {
     return getPublicKeyFromAccount(_account, false);
   }
 
+  Future<List<String>> getPublicKeys() async {
+    _isInitialzed();
+    List<String> keys = [];
+
+    for (var wallet in _wallets.values) {
+      keys.addAll(await wallet.getPublicKeys());
+    }
+
+    return keys;
+  }
+
   @override
   Future<String> getPublicKeyFromAccount(
       int account, bool isChangeAddress) async {
@@ -165,7 +176,7 @@ class Wallet extends IWallet {
     _isInitialzed();
 
     final tokenBalance =
-        await _walletDatabase.getAccountBalance(token);
+        await _walletDatabase.getAccountBalance(token) * 100000000;
 
     if (amount > tokenBalance) {
       throw Error(); //insufficent funds

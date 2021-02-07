@@ -113,7 +113,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
   @override
   void initState() {
-
     super.initState();
 
     _wallet = sl.get<DeFiChainWallet>();
@@ -175,27 +174,24 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           padding: EdgeInsets.all(30),
           child: Row(children: [Text(S.of(context).wallet_empty)]));
     }
-    return Expanded(
-        child: Padding(
-            padding: EdgeInsets.all(30),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SingleChildScrollView(
-                      child: Flexible(
-                          child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemExtent: 100.0,
-                              itemCount: _accountBalance.length,
-                              itemBuilder: (context, index) {
-                                final account =
-                                    _accountBalance.elementAt(index);
-                                return _buildAccountEntry(account);
-                              })))
-                ])));
+    return Padding(
+        padding: EdgeInsets.all(30),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SingleChildScrollView(
+                  child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemExtent: 100.0,
+                      itemCount: _accountBalance.length,
+                      itemBuilder: (context, index) {
+                        final account = _accountBalance.elementAt(index);
+                        return _buildAccountEntry(account);
+                      }))
+            ]));
   }
 
   @override

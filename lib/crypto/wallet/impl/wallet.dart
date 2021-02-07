@@ -165,7 +165,7 @@ class Wallet extends IWallet {
     _isInitialzed();
 
     final tokenBalance =
-        await _walletDatabase.getAccountBalance(token) * 100000000;
+        await _walletDatabase.getAccountBalance(token);
 
     if (amount > tokenBalance) {
       throw Error(); //insufficent funds

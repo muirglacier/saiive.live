@@ -62,7 +62,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<double> getAccountBalance(String token) async {
-    return 279;
+    return 27900000000;
   }
 
   @override

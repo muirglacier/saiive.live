@@ -8,24 +8,13 @@ void main() {
       var privateKeyWif =
           "cNpueJjp8geQJut28fDyUD8e5zoyctHxj9GE8rTbQXwiEwLo1kq4";
       var keyPair = ECPair.fromWIF(privateKeyWif, network: defichain_testnet);
-     final address =
-          P2PKH(data: PaymentData(pubkey: keyPair.publicKey), network: defichain_testnet).data.address;
-
-      expect("", address);
-    });
-    test("test account 2 account", () {
-      //dMq6aiTKWyf2hRiDqcczkd7SE36rchn1kw
-      var eicd = ECPair.fromWIF(
-          "cPx3xUD441mriaUkA7t3Q4jSen7rHX5Za3942QrBVyCasknqy7YK",
-          network: defichain_testnet);
-
-      final address = P2SH(
-              data: PaymentData(pubkey: eicd.publicKey),
+      final address = P2PKH(
+              data: PaymentData(pubkey: keyPair.publicKey),
               network: defichain_testnet)
           .data
           .address;
 
-      final add = address;
+      expect("769pd87UohNtRVmo1NWewejJGvyKdynt9m", address);
     });
   });
 }

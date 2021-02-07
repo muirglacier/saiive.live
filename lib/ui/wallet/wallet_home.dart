@@ -4,6 +4,7 @@ import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/network/events/events.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/service_locator.dart';
@@ -58,7 +59,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
               "/intro_accounts_restore", (route) => false);
         }
 
-        var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
+        var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
 
         setState(() {
           _accountBalance = accountBalance;
@@ -82,7 +83,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
               "/intro_accounts_restore", (route) => false);
         }
 
-        var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
+        var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
 
         setState(() {
           _syncText = sprintf(S.of(context).home_welcome_account_synced,

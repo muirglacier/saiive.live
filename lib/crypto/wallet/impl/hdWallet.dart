@@ -33,7 +33,7 @@ class HdWallet extends IHdWallet {
     var startDate = DateTime.now();
     final key = HEX.decode(_seed);
     final apiService = _apiService;
-    var balanceList = List<Account>();
+    var balanceList = List<Account>.empty(growable: true);
 
     do {
       try {

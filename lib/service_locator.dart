@@ -20,6 +20,7 @@ import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:defichainwallet/network/model/vault.dart';
 import 'package:path_provider/path_provider.dart';
 import 'network/api_service.dart';
+import 'network/ihttp_service.dart';
 import 'network/model/ivault.dart';
 
 GetIt sl = GetIt.instance;
@@ -27,7 +28,7 @@ GetIt sl = GetIt.instance;
 void setupServiceLocator() {
   sl.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
   sl.registerLazySingleton<IVault>(() => Vault());
-  sl.registerSingletonAsync<HttpService>(() async {
+  sl.registerSingletonAsync<IHttpService>(() async {
     var service = HttpService();
     await service.init();
     return service;

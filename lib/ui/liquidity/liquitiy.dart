@@ -11,6 +11,7 @@ import 'package:defichainwallet/network/model/pool_pair_liqudity.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -40,32 +41,58 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   }
 
   Widget _buildMyLiquidityEntry(PoolPairLiquidity myLiquidity) {
-    return Card(
-        child: ListTile(
-          leading: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Icon(Icons.account_balance_wallet)]),
-          title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(myLiquidity.poolPair.symbol,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
-              ]),
-          trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text((myLiquidity.apy).toStringAsFixed(2) + '%',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
-              ]),
-        ));
+    return Card(child: Padding(
+        padding: EdgeInsets.all(30),
+        child: Column(children: <Widget>[
+          Container(
+            height: 50,
+            child: Center(
+                child: Text(myLiquidity.tokenA + ' - ' + myLiquidity.tokenB)),
+          ),
+          Container(
+            child: Row(children: [
+              Expanded(flex: 4, child: Text('APY')),
+              Expanded(
+                  flex: 6,
+                  child: Text(myLiquidity.apy.toStringAsFixed(2) + '%', textAlign: TextAlign.right))
+            ]),
+          ),
+          Container(
+            child: Row(children: [
+              Expanded(flex: 4, child: Text(myLiquidity.tokenA)),
+              Expanded(
+                  flex: 6,
+                  child: Text((myLiquidity.poolSharePercentage /
+                          100 *
+                          myLiquidity.poolPair.reserveA)
+                      .toStringAsFixed(8),textAlign: TextAlign.right))
+            ]),
+          ),
+          Container(
+            child: Row(children: [
+              Expanded(flex: 4, child: Text(myLiquidity.tokenA)),
+              Expanded(
+                  flex: 6,
+                  child: Text((myLiquidity.poolSharePercentage /
+                          100 *
+                          myLiquidity.poolPair.reserveB)
+                      .toStringAsFixed(8), textAlign: TextAlign.right))
+            ]),
+          ),
+          Container(
+              child: Row(children: [
+                Expanded(flex: 4, child: Text('Pool-Anteil')),
+                Expanded(
+                    flex: 6,
+                    child: Text(
+                        myLiquidity.poolSharePercentage.toStringAsFixed(8), textAlign: TextAlign.right))
+              ])),
+        ])));
   }
 
   buildMyLiqduitiyScreen(BuildContext context) {
     if (_liquidity == null) {
-      return;
+      return LoadingWidget(text: S.of(context).loading);
     }
 
     return Padding(
@@ -83,14 +110,10 @@ class _LiquidityScreen extends State<LiquidityScreen> {
         ]));
   }
 
-
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(title: Text(S
-            .of(context)
-            .liquitiy)),
-        body: Scaffold(body: buildMyLiqduitiyScreen(context))
-    );
+        appBar: AppBar(title: Text(S.of(context).liquitiy)),
+        body: Scaffold(body: buildMyLiqduitiyScreen(context)));
   }
 }

@@ -104,7 +104,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                 Text(S.of(context).wallet_token_available_balance,
                     style: TextStyle(fontSize: 12)),
                 SizedBox(height: 5),
-                Text(_balance.toString(),
+                Text((_balance / 100000000).toString(),
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
               ]),
           trailing: RotationTransition(

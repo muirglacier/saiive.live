@@ -2,6 +2,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/token.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
 class TokensScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _TokensScreen extends State<TokensScreen> {
 
   buildTokenScreen(BuildContext context) {
     if (_tokens == null) {
-      return;
+      return LoadingWidget(text: S.of(context).loading);
     }
 
     return Padding(

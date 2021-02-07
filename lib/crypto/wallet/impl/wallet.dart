@@ -30,10 +30,7 @@ class Wallet extends IWallet {
 
   bool _isInitialized = false;
 
-  Wallet(this._chain) {
-    _apiService = sl.get<ApiService>();
-    _walletDatabase = sl.get<IWalletDatabase>();
-  }
+  Wallet(this._chain);
 
   void _isInitialzed() {
     if (!_isInitialized) {
@@ -43,6 +40,9 @@ class Wallet extends IWallet {
 
   @override
   Future init() async {
+    _apiService = sl.get<ApiService>();
+    _walletDatabase = sl.get<IWalletDatabase>();
+
     _password = ""; // TODO
     _seed = await sl.get<IVault>().getSeed();
     _network = await sl.get<SharedPrefsUtil>().getChainNetwork();

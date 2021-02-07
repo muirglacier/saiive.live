@@ -34,6 +34,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
 
+  DeFiChainWallet _wallet;
+
   _refresh() async {
     EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
@@ -50,7 +52,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
       _walletInitDoneSubscription = EventTaxiImpl.singleton()
           .registerTo<WalletInitDoneEvent>()
           .listen((event) async {
-        final accounts = await StateContainer.of(context).wallet.getAccounts();
+        final accounts = await _wallet.getAccounts();
         if (accounts.length == 0) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               "/intro_accounts_restore", (route) => false);
@@ -74,7 +76,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
       _walletSyncDoneSubscription = EventTaxiImpl.singleton()
           .registerTo<WalletSyncDoneEvent>()
           .listen((event) async {
-        final accounts = await StateContainer.of(context).wallet.getAccounts();
+        final accounts = await _wallet.getAccounts();
         if (accounts.length == 0) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               "/intro_accounts_restore", (route) => false);
@@ -111,8 +113,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
   @override
   void initState() {
+
     super.initState();
 
+    _wallet = sl.get<DeFiChainWallet>();
     _syncEvents();
     _initWallet();
   }
@@ -150,12 +154,13 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(balance.balance.toString(),
+            Text(balance.balanceDisplay.toString(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
           ]),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) => WalletTokenScreen(balance.token)));
+            builder: (BuildContext context) =>
+                WalletTokenScreen(balance.token)));
       },
     ));
   }
@@ -168,33 +173,29 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     if (_accountBalance.isEmpty) {
       return Padding(
           padding: EdgeInsets.all(30),
-          child: Row(
-              children: [
-                Text(S.of(context).wallet_empty)
-              ]
-          )
-
-      );
+          child: Row(children: [Text(S.of(context).wallet_empty)]));
     }
-    return Padding(
-        padding: EdgeInsets.all(30),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SingleChildScrollView(
-                  child: Center(
-                      child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemExtent: 100.0,
-                          itemCount: _accountBalance.length,
-                          itemBuilder: (context, index) {
-                            final account = _accountBalance.elementAt(index);
-                            return _buildAccountEntry(account);
-                          })))
-            ]));
+    return Expanded(
+        child: Padding(
+            padding: EdgeInsets.all(30),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SingleChildScrollView(
+                      child: Flexible(
+                          child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemExtent: 100.0,
+                              itemCount: _accountBalance.length,
+                              itemBuilder: (context, index) {
+                                final account =
+                                    _accountBalance.elementAt(index);
+                                return _buildAccountEntry(account);
+                              })))
+                ])));
   }
 
   @override
@@ -219,14 +220,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                     var pubKey = await wallet.getPublicKey();
 
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
+                        builder: (BuildContext context) =>
+                            WalletReceiveScreen(pubKey: pubKey)));
                   },
                   child: Icon(
                     Icons.arrow_downward,
                     size: 26.0,
                   ),
-                )
-            ),
+                )),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(

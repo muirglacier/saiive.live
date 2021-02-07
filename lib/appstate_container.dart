@@ -4,7 +4,6 @@ import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/crypto/wallet/impl/wallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-sync.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
@@ -74,8 +73,6 @@ class StateContainerState extends State<StateContainer> {
   AppCenterWrapper appCenter = AppCenterWrapper();
   Logger get logger => LogHelper.instance;
 
-  Wallet wallet;
-
   StreamSubscription<WalletInitStartEvent> _walletInitSubscribe;
   StreamSubscription<WalletSyncStartEvent> _walletSyncSubscribe;
 
@@ -83,7 +80,7 @@ class StateContainerState extends State<StateContainer> {
     _walletInitSubscribe = EventTaxiImpl.singleton()
         .registerTo<WalletInitStartEvent>()
         .listen((event) async {
-      wallet = sl.get<DeFiChainWallet>();
+      var wallet = sl.get<DeFiChainWallet>();
 
       try {
         await wallet.init();
@@ -179,7 +176,8 @@ class StateContainerState extends State<StateContainer> {
       updateTheme(theme);
     });
 
-    wallet = sl.get<DeFiChainWallet>();
+  
+    
 
     appCenter.start();
   }

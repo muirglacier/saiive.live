@@ -7,8 +7,8 @@ class BalanceHelper {
   Future<List<AccountBalance>> getDisplayAccountBalance() async {
     var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
 
-    var dollarDFI = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: null);
-    var dfi = accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiTokenSymbol, orElse: null);
+    var dollarDFI = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiTokenSymbol, orElse: null);
+    var dfi = accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol, orElse: null);
 
     if (dfi != null && dollarDFI != null) {
       accountBalance.remove(dollarDFI);

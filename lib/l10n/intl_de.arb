@@ -74,5 +74,6 @@
   "home_welcome_account_synced": "Deine %s Konten sind aktualisiert!",
   "home_welcome_account_syncing": "Aktualisieren...",
 
-  "liquitiy": "Liquidity"
+  "liquitiy": "Liquidity",
+  "liquitiy_pool_share_percentage": "Pool-Anteil"
 }

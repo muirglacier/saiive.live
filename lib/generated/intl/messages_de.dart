@@ -40,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_welcome_good_morning" : MessageLookupByLibrary.simpleMessage("Guten Tag"),
     "later" : MessageLookupByLibrary.simpleMessage("Später"),
     "liquitiy" : MessageLookupByLibrary.simpleMessage("Liquidity"),
+    "liquitiy_pool_share_percentage" : MessageLookupByLibrary.simpleMessage("Pool-Anteil"),
     "loading" : MessageLookupByLibrary.simpleMessage("Laden..."),
     "next" : MessageLookupByLibrary.simpleMessage("Weiter"),
     "receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),

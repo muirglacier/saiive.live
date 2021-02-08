@@ -80,5 +80,6 @@
   "home_welcome_account_synced": "Your %s accounts are synced!",
   "home_welcome_account_syncing": "Synchronizing...",
 
-  "liquitiy": "Liquidity"
+  "liquitiy": "Liquidity",
+  "liquitiy_pool_share_percentage": "Pool-Share"
 }

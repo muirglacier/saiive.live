@@ -54,6 +54,7 @@ dependencies:
   qr_flutter: ^2.0.1
   flutter_qr_reader: ^1.0.3
   flutter_launcher_icons: ^0.8.1
+  flutter_svg: ^0.19.2+1
 
   # Dependency Injection
   get_it: ^5.0.6
@@ -99,3 +100,4 @@ flutter:
     - assets/env/.env-Debug
     - assets/env/.env-Prod
     - assets/env/.env-Staging
+    - assets/svg/

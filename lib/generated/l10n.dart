@@ -734,6 +734,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Pool-Share`
+  String get liquitiy_pool_share_percentage {
+    return Intl.message(
+      'Pool-Share',
+      name: 'liquitiy_pool_share_percentage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

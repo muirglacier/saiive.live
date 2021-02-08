@@ -9,14 +9,14 @@ class MockHttpService extends IHttpService {
 
   @override
   Future<Map<String, dynamic>> makeHttpGetRequest(
-      String url, String coin) async {
+      String url, String coin, {cached: false}) async {
     await Future.delayed(Duration(microseconds: 1));
     return null;
   }
 
   @override
   Future<Map<String, dynamic>> makeDynamicHttpGetRequest(
-      String url, String coin) async {
+      String url, String coin, {cached: false}) async {
     await Future.delayed(Duration(microseconds: 1));
     return null;
   }

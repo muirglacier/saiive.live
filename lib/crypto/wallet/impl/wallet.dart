@@ -221,4 +221,12 @@ class Wallet extends IWallet {
   Future<tx.Transaction> getTransaction(String id) {
     throw UnimplementedError();
   }
+
+  
+  Future prepareUtxo(int amount) async {
+    var tokenBalance = await _walletDatabase.getAccountBalance(DeFiConstants.DefiAccountSymbol);
+  }
+  Future prepareAccount(int amount){
+
+  }
 }

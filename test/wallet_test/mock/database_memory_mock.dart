@@ -15,7 +15,10 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<WalletAccount> addAccount(
-      {String name, int account, ChainType chain, bool isSelected = false}) async {
+      {String name,
+      int account,
+      ChainType chain,
+      bool isSelected = false}) async {
     var newAccount = WalletAccount();
     newAccount.name = name;
     newAccount.account = account;
@@ -62,7 +65,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<double> getAccountBalance(String token) async {
-    return 27900000000;
+    if (token == "\$DFI") return 27900000000;
   }
 
   @override

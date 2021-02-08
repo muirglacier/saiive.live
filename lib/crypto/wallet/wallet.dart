@@ -22,4 +22,5 @@ abstract class IWallet {
   Future<List<WalletAccount>> searchAccounts();
 
   Future<String> createSendTransaction(int amount, String token, String to);
+
 }

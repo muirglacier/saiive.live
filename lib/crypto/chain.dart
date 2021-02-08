@@ -2,6 +2,11 @@ enum ChainType { Bitcoin, DeFiChain }
 
 enum ChainNet { Mainnet, Testnet }
 
+class DeFiConstants {
+  static const String DefiAccountSymbol = "DFI";
+  static const String DefiTokenSymbol = "\$DFI";
+}
+
 class ChainHelper {
   static String chainTypeString(ChainType type) {
     switch (type) {

@@ -1,4 +1,5 @@
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
@@ -81,7 +82,7 @@ class _DexScreen extends State<DexScreen> {
     var popularSymbols = ['DFI', 'ETH', 'BTC'];
 
     if (null ==
-        accountBalance.firstWhere((element) => element.token == '\$DFI',
+        accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol,
             orElse: () => null)) {
       accountBalance.add(AccountBalance(token: '\$DFI', balance: 0));
     }

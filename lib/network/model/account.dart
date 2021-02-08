@@ -12,6 +12,7 @@ class Account {
   });
 
   String get key => token + "_" + address;
+  double get balanceDisplay => balance / 100000000;
 
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(

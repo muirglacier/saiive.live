@@ -1,19 +1,8 @@
-import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/poolshare.dart';
-import 'package:defichainwallet/network/balance_service.dart';
-import 'package:defichainwallet/network/dex_service.dart';
-import 'package:defichainwallet/network/model/account_balance.dart';
-import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/pool_pair_liqudity.dart';
-import 'package:defichainwallet/network/model/token_balance.dart';
-import 'package:defichainwallet/network/pool_pair_service.dart';
-import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class LiquidityScreen extends StatefulWidget {
   @override

@@ -5,10 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'wallet_test_base.dart';
 
 void main() async {
-  
+  SharedPreferences.setMockInitialValues({});
+
   setupTestServiceLocator();
 
   await sl.allReady();

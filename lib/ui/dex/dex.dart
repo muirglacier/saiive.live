@@ -84,7 +84,7 @@ class _DexScreen extends State<DexScreen> {
     if (null ==
         accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol,
             orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: '\$DFI', balance: 0));
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiTokenSymbol, balance: 0));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {

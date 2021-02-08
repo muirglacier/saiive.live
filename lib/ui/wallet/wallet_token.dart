@@ -45,9 +45,9 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
 
     final db = sl.get<IWalletDatabase>();
 
-    if (widget.token == "DFI") {
+    if (widget.token == DeFiConstants.DefiTokenSymbol) {
       _balance = await db.getAccountBalance(widget.token);
-      _balance += await db.getAccountBalance("\$DFI");
+      _balance += await db.getAccountBalance(DeFiConstants.DefiTokenSymbol);
     } else {
       _balance = await db.getAccountBalance(widget.token);
     }
@@ -189,7 +189,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                   icon: Icons.arrow_upward,
                   width: width / 2 - 20, onPressed: () {
                 final token = widget.token;
-                if (token != "\$DFI") {
+                if (token != DeFiConstants.DefiTokenSymbol) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(
                         "Sending funds for '$token' is currently not supported!"),

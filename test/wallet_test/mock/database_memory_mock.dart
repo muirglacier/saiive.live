@@ -65,7 +65,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<double> getAccountBalance(String token) async {
-    if (token == "\$DFI") return 27900000000;
+    if (token == DeFiConstants.DefiTokenSymbol) return 27900000000;
   }
 
   @override

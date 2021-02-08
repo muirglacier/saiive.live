@@ -27,7 +27,10 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter doctor -v
             $(FlutterToolPath)/flutter precache
-      
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
       - task: FlutterBuild@0
         displayName: Android Debug APK
         inputs:

@@ -2,9 +2,12 @@ import 'dart:typed_data';
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
+
+import 'from_account.dart';
 
 class PublicPrivateKeyPair {
   final String privateKey;
@@ -42,7 +45,8 @@ class HdWalletUtil {
     final address = await _getPublicAddress(
         xMasterPriv.derivePath(path), chainType, network);
 
-    LogHelper.instance.d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
+    LogHelper.instance
+        .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
 
     return address;
   }
@@ -105,7 +109,84 @@ class HdWalletUtil {
     return 9;
   }
 
-  static Future<String> buildTransaction(
+  static Future<TransactionBuilder> addAccountToUtxo(
+      TransactionBuilder txb,
+      int prevOutputs,
+      int token,
+      List<String> from,
+      List<int> amount,
+      ChainType chain,
+      ChainNet net) async {
+    var network = getNetworkType(chain, net);
+    assert(from.length == amount.length);
+
+    int mintingStartsAt = prevOutputs + from.length;
+
+    for (int i = 0; i > from.length; i++) {
+      txb.addAccountToUtxoOutput(
+          token, from[i], amount[i], mintingStartsAt, network);
+    }
+
+    return txb;
+  }
+
+  static Future<TransactionBuilder> buildAccountToAccountTransaction(
+      List<tx.Transaction> inputTxs,
+      List<FromAccount> authAddresses,
+      List<ECPair> keys,
+      int token,
+      String to,
+      int amount,
+      int fee,
+      String returnAddress,
+      ChainType chain,
+      ChainNet net) async {
+    var network = getNetworkType(chain, net);
+
+    assert(inputTxs.length == keys.length);
+
+    final txb = TransactionBuilder(network: network);
+    txb.setVersion(2);
+    txb.setLockTime(0);
+
+    int totalInputValue = 0;
+    for (final tx in inputTxs) {
+      txb.addInput(tx.mintTxId, tx.mintIndex);
+
+      totalInputValue += tx.valueRaw;
+    }
+
+    var changeAmount = totalInputValue - fee;
+    txb.addOutput(returnAddress, changeAmount);
+
+    for (final auth in authAddresses) {
+      txb.addAccountToAccountOutput(
+          token, auth.address, to, auth.amount, network);
+    }
+
+    int index = 0;
+    for (final key in keys) {
+      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
+      final redeemScript = p2wpkh.output;
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final input = inputTxs[index].mintTxId;
+      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
+
+      txb.sign(
+          vin: index,
+          keyPair: key,
+          witnessValue: inputTxs[index].valueRaw,
+          redeemScript: redeemScript);
+      index++;
+    }
+
+    final tx = txb.build();
+    final txhex = tx.toHex();
+    LogHelper.instance.d("txHex is $txhex");
+    return txb;
+  }
+
+  static Future<TransactionBuilder> buildTransaction(
       List<tx.Transaction> inputTxs,
       List<ECPair> keys,
       String to,
@@ -133,7 +214,9 @@ class HdWalletUtil {
       var changeAmount = totalInputValue - amount - fee;
       txb.addOutput(returnAddress, changeAmount);
     }
-    txb.addOutput(to, amount);
+    if (amount > 0) {
+      txb.addOutput(to, amount);
+    }
 
     int index = 0;
     for (final key in keys) {
@@ -154,7 +237,58 @@ class HdWalletUtil {
     final tx = txb.build();
     final txhex = tx.toHex();
     LogHelper.instance.d("txHex is $txhex");
-    return txhex;
+    return txb;
+  }
+
+  static Future<TransactionBuilder> buildAccountToUtxosTransaction(
+      List<tx.Transaction> inputTxs,
+      List<ECPair> keys,
+      String to,
+      int amount,
+      int fee,
+      String returnAddress,
+      ChainType chain,
+      ChainNet net) async {
+    var network = getNetworkType(chain, net);
+
+    assert(inputTxs.length == keys.length);
+
+    final txb = TransactionBuilder(network: network);
+    txb.setVersion(2);
+    txb.setLockTime(0);
+
+    int totalInputValue = 0;
+    for (final tx in inputTxs) {
+      txb.addInput(tx.mintTxId, tx.mintIndex);
+
+      totalInputValue += tx.valueRaw;
+    }
+
+    if (totalInputValue > (amount)) {
+      var changeAmount = totalInputValue - amount - fee;
+      txb.addOutput(returnAddress, changeAmount);
+    }
+
+    int index = 0;
+    for (final key in keys) {
+      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
+      final redeemScript = p2wpkh.output;
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final input = inputTxs[index].mintTxId;
+      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
+
+      txb.sign(
+          vin: index,
+          keyPair: key,
+          witnessValue: inputTxs[index].valueRaw,
+          redeemScript: redeemScript);
+      index++;
+    }
+
+    final tx = txb.build();
+    final txhex = tx.toHex();
+    LogHelper.instance.d("txHex is $txhex");
+    return txb;
   }
 
   static Future<String> derivePublicKey(

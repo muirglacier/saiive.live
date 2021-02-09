@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:defichainwallet/network/base_request.dart';
 import 'package:defichainwallet/network/ihttp_service.dart';
+import 'package:http/http.dart' as http;
 
 class MockHttpService extends IHttpService {
+  
+  String baseUri = "/api/v1/";
+
   @override
   Future init() {
     return Future.delayed(Duration(microseconds: 1));
@@ -10,8 +16,20 @@ class MockHttpService extends IHttpService {
   @override
   Future<Map<String, dynamic>> makeHttpGetRequest(
       String url, String coin) async {
-    await Future.delayed(Duration(microseconds: 1));
-    return null;
+    final finalUrl = "https://dev-supernode.defichain-wallet.com" + baseUri + "testnet" + "/" + coin + url;
+    var response = await http.get(
+      finalUrl,
+      headers: {'Content-type': 'application/json'},
+    );
+
+    if (response.statusCode != 200) {
+      return null;
+    }
+    Map decoded = json.decode(response.body);
+    if (decoded.containsKey("error")) {
+      throw Error();
+    }
+    return decoded;
   }
 
   @override

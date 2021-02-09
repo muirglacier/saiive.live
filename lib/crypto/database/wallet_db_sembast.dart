@@ -166,6 +166,21 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
+  @override
+  Future<List<tx.Transaction>> getUnspentTransactionsForPubKey(
+      String pubKey, int minAmount) async {
+    var dbStore = _unspentStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('address', pubKey) & Filter.greaterThanOrEquals("value", minAmount));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
+        ?.toList();
+        
+    return data;
+  }
+
   Future clearUnspentTransactions() async {
     final txs = await getUnspentTransactions();
     final txIds = txs.map((e) => e.uniqueId);
@@ -216,6 +231,43 @@ class SembastWalletDatabase extends IWalletDatabase {
     return sumMap[token];
   }
 
+  @override
+  Future<Account> getAccountBalanceForPubKey(
+      String pubKey, String token) async {
+    var dbStore = _balancesStoreInstance;
+
+    var finder = Finder(
+        filter:
+            Filter.equals('token', token) & Filter.equals('address', pubKey));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : Account.fromJson(e.value))
+        ?.toList();
+
+    if (data.isEmpty) {
+      return null;
+    }
+
+    return data.first;
+  }
+
+  @override
+  Future<List<Account>> getAccountBalancesForToken(String token) async {
+    var dbStore = _balancesStoreInstance;
+
+    var finder = Finder(
+        filter: Filter.equals('token', token),
+        sortOrders: [SortOrder("balance", false)]);
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : Account.fromJson(e.value))
+        ?.toList();
+
+    return data;
+  }
+
   Future<List<Account>> getAccountBalances() async {
     var dbStore = _balancesStoreInstance;
 
@@ -245,8 +297,9 @@ class SembastWalletDatabase extends IWalletDatabase {
       sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
     });
 
-    List<AccountBalance> balances =
-      sumMap.entries.map( (entry) => AccountBalance(token: entry.key, balance: entry.value)).toList();
+    List<AccountBalance> balances = sumMap.entries
+        .map((entry) => AccountBalance(token: entry.key, balance: entry.value))
+        .toList();
 
     return balances;
   }

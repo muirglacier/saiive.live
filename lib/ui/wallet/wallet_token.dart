@@ -188,17 +188,9 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                   context, AppButtonType.PRIMARY, S.of(context).send,
                   icon: Icons.arrow_upward,
                   width: width / 2 - 20, onPressed: () {
-                final token = widget.token;
-                if (token != DeFiConstants.DefiTokenSymbol) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "Sending funds for '$token' is currently not supported!"),
-                  ));
-                } else {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          WalletSendScreen(widget.token)));
-                }
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        WalletSendScreen(widget.token)));
               })),
           AppButton.buildAppButton(
               context, AppButtonType.PRIMARY, S.of(context).receive,

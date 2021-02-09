@@ -1,6 +1,7 @@
 class Token {
   final String symbol;
   final String symbolKey;
+  final int id;
   final String name;
   final int decimal;
   final bool mintable;
@@ -18,6 +19,7 @@ class Token {
   Token({
     this.symbol,
     this.symbolKey,
+    this.id,
     this.name,
     this.decimal,
     this.mintable,
@@ -37,6 +39,7 @@ class Token {
     return Token(
       symbol: json['symbol'],
       symbolKey: json['symbolKey'],
+      id: json['id'],
       name: json['name'],
       decimal: json['decimal'],
       mintable: json['mintable'],
@@ -57,6 +60,7 @@ class Token {
     return Token(
       symbol: json['symbol'],
       symbolKey: json['symbolKey'],
+      id: json["id"],
       name: json['name'],
       decimal: json['decimal'],
       mintable: json['mintable'],

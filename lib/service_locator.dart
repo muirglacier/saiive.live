@@ -40,7 +40,7 @@ void setupServiceLocator() {
   sl.registerLazySingleton(() => AccountService());
   sl.registerLazySingleton(() => TransactionService());
   sl.registerLazySingleton(() => BalanceService());
-  sl.registerLazySingleton(() => TokenService());
+  sl.registerLazySingleton<ITokenService>(() => TokenService());
   sl.registerLazySingleton(() => PoolPairService());
   sl.registerLazySingleton(() => DexService());
   sl.registerLazySingleton(() => CoingeckoService());

@@ -47,7 +47,7 @@ class WalletSync {
       ApiService apiService,
       List<WalletAccount> wallets) async {
     var startDate = DateTime.now();
-    var ret = List<Account>();
+    var ret = List<Account>.empty(growable: true);
     try {
       for (final wallet in wallets) {
         var hdWallet = HdWallet(password, wallet, chain, network,

@@ -1,5 +1,6 @@
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/crypto/from_account.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
@@ -175,18 +176,98 @@ class Wallet extends IWallet {
       int amount, String token, String to) async {
     _isInitialzed();
 
-    final tokenBalance =
-        await _walletDatabase.getAccountBalance(token);
+    if (token == DeFiConstants.DefiTokenSymbol) {
+      await prepareUtxo(amount);
+      return await _createUtxoTransaction(amount, to);
+    }
+    return await _createAccountTransaction(token, amount, to);
+  }
+
+  Future<String> _createAccountTransaction(
+      String token, int amount, String to) async {
+    if (token == DeFiConstants.DefiAccountSymbol ||
+        token == DeFiConstants.DefiTokenSymbol) {
+      throw new ArgumentError(
+          "$token not supported for account transactions...");
+    }
+
+    final tokenBalance = await _walletDatabase.getAccountBalance(token);
 
     if (amount > tokenBalance) {
-      throw Error(); //insufficent funds
+      throw ArgumentError("Insufficent funds"); //insufficent funds
+    }
+
+    final tokenType = await _apiService.tokenService.getToken("DFI", token);
+    final key = mnemonicToSeed(_seed);
+
+    final accounts = await _walletDatabase.getAccountBalancesForToken(token);
+    final useAccounts = List<FromAccount>.empty(growable: true);
+    final keys = List<ECPair>.empty(growable: true);
+    final fee = await getTxFee();
+
+    final inputTxs = List<tx.Transaction>.empty(growable: true);
+
+    var curAmount = 0;
+    for (final tx in accounts) {
+      final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
+      useAccounts.add(fromAccount);
+
+      inputTxs.add(await _getAuthInputsSmart(
+          tx.address, tx.account, tx.isChangeAddress, tx.index));
+
+      final keyPair = HdWalletUtil.getKeyPair(
+          key,
+          _account,
+          tx.isChangeAddress,
+          tx.index,
+          ChainHelper.chainFromString(tx.chain),
+          ChainHelper.networkFromString(tx.network));
+
+      keys.add(keyPair);
+
+      if ((curAmount + tx.balance) >= amount) {
+        fromAccount.amount = tx.balance - curAmount;
+        break;
+      }
+      curAmount += tx.balance;
+    }
+
+    final changeAddress = await getPublicKeyFromAccount(_account, true);
+    final txb = await HdWalletUtil.buildAccountToAccountTransaction(
+        inputTxs,
+        useAccounts,
+        keys,
+        tokenType.id,
+        to,
+        amount,
+        fee,
+        changeAddress,
+        _chain,
+        _network);
+
+    return txb.build().toHex();
+  }
+
+  Future<tx.Transaction> _createAuthTx(
+      int account, bool isChangeAddress, int index) {
+    //TODO
+    throw ArgumentError("NOT IMPLEMENTED RIGHT NOW!");
+  }
+
+  Future<String> _createUtxoTransaction(int amount, String to) async {
+    final changeAddress = await getPublicKeyFromAccount(_account, true);
+    final tokenBalance =
+        await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
+
+    if (amount > tokenBalance) {
+      throw ArgumentError("Insufficent funds"); //insufficent funds
     }
     final key = mnemonicToSeed(_seed);
 
     final unspentTxs = await _walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
-    final fee = 1000;
+    final fee = await getTxFee();
 
     final checkAmount = amount + fee;
 
@@ -210,11 +291,22 @@ class Wallet extends IWallet {
       }
     }
 
-    final changeAddress = await getPublicKeyFromAccount(_account, true);
-    final txHex = await HdWalletUtil.buildTransaction(
+    final txb = await HdWalletUtil.buildTransaction(
         useTxs, keys, to, amount, fee, changeAddress, _chain, _network);
 
-    return txHex;
+    return txb.build().toHex();
+  }
+
+  Future<tx.Transaction> _getAuthInputsSmart(
+      String pubKey, int account, bool isChangeAddress, int index) async {
+    var authTxs =
+        await _walletDatabase.getUnspentTransactionsForPubKey(pubKey, 1);
+
+    if (authTxs.isNotEmpty) {
+      return authTxs.first;
+    }
+
+    return await _createAuthTx(account, isChangeAddress, index);
   }
 
   @override
@@ -222,11 +314,53 @@ class Wallet extends IWallet {
     throw UnimplementedError();
   }
 
-  
-  Future prepareUtxo(int amount) async {
-    var tokenBalance = await _walletDatabase.getAccountBalance(DeFiConstants.DefiAccountSymbol);
+  Future<int> getTxFee() async {
+    return 1000;
   }
-  Future prepareAccount(int amount){
 
+  Future prepareUtxo(int amount) async {
+    var tokenBalance =
+        await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
+
+    if (tokenBalance == 0) {
+      throw new ArgumentError(
+          "Token balance must be greater than 0 to create any tx!");
+    }
+    // we have currently enough utxo
+    if (tokenBalance > amount) {
+      return;
+    }
+
+    var accountBalance = await _walletDatabase
+        .getAccountBalance(DeFiConstants.DefiAccountSymbol);
+    var totalBalance = accountBalance + tokenBalance;
+
+    if (totalBalance < amount) {
+      throw new ArgumentError("Balance $totalBalance is less than $amount");
+    }
+
+    final neededUtxo = amount - tokenBalance;
+
+    final accounts = await _walletDatabase
+        .getAccountBalancesForToken(DeFiConstants.DefiAccountSymbol);
+
+    if (accounts.length == 0) {
+      throw new ArgumentError("No accounts found..");
+    }
+
+    final neededAccounts = List<Account>.empty(growable: true);
+    var accBalance = 0;
+    for (final acc in accounts) {
+      neededAccounts.add(acc);
+
+      if ((accBalance + acc.balance) >= neededUtxo) {
+        break;
+
+        
+      }
+      accBalance += acc.balance;
+    }
   }
+
+  Future prepareAccount(int amount) {}
 }

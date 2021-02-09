@@ -23,13 +23,16 @@ abstract class IWalletDatabase {
   
   Future clearUnspentTransactions();
   Future<List<Transaction>> getUnspentTransactions();
+  Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount);
   Future addUnspentTransaction(Transaction transaction);
 
   Future clearAccountBalances();
   Future setAccountBalance(Account balance);
   Future<List<Account>> getAccountBalances();
   Future<double> getAccountBalance(String token);
+  Future<List<Account>> getAccountBalancesForToken(String token);
   Future<List<AccountBalance>> getTotalBalances();
+  Future<Account> getAccountBalanceForPubKey(String pubKey, String token);
 
   Future open();
   Future close();

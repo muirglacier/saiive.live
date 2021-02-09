@@ -65,7 +65,21 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<double> getAccountBalance(String token) async {
-    if (token == DeFiConstants.DefiTokenSymbol) return 27900000000;
+    var balance = 0.0;
+
+    if (token == DeFiConstants.DefiTokenSymbol) {
+      for (var tx in _unspentTransactions) {
+        balance += tx.value;
+      }
+    } else {
+      for (var acc in _accounts) {
+        if (acc.token == token) {
+          balance += acc.balance;
+        }
+      }
+    }
+
+    return balance;
   }
 
   @override
@@ -90,9 +104,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<Transaction>> getTransactions() {
-    // TODO: implement getTransactions
-    throw UnimplementedError();
+  Future<List<Transaction>> getTransactions() async {
+    return _transactions;
   }
 
   @override
@@ -101,13 +114,52 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
+  Future<List<Transaction>> getUnspentTransactionsForPubKey(
+      String pubKey, int minAmount) async {
+    var ret = List<Transaction>.empty(growable: true);
+
+    for (final tx in _unspentTransactions) {
+      if (tx.address == pubKey && tx.value >= minAmount) {
+        ret.add(tx);
+      }
+    }
+
+    return ret;
+  }
+
+  @override
   Future open() async {}
 
   @override
-  Future setAccountBalance(Account balance) async {}
+  Future setAccountBalance(Account balance) async {
+    _accounts.add(balance);
+  }
 
   @override
   Future<WalletAccount> updateAccount(WalletAccount account) async {
     return null;
+  }
+
+  @override
+  Future<Account> getAccountBalanceForPubKey(
+      String pubKey, String token) async {
+    for (final acc in _accounts) {
+      if (acc.address == pubKey && acc.token == token) {
+        return acc;
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<List<Account>> getAccountBalancesForToken(String token) async {
+    var ret = List<Account>.empty(growable: true);
+
+    for (final acc in _accounts) {
+      if (acc.token == token) {
+        ret.add(acc);
+      }
+    }
+    return ret;
   }
 }

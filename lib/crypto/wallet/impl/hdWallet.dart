@@ -27,12 +27,7 @@ class HdWallet extends IHdWallet {
   Future<List<String>> getPublicKeys() async {
     final key = HEX.decode(_seed);
     var keys = await HdWalletUtil.derivePublicKeysWithChange(
-        key,
-        _account.account,
-        0,
-        _chain,
-        _network,
-        IWallet.KeysPerQuery);
+        key, _account.account, 0, _chain, _network, IWallet.KeysPerQuery);
     var pubKeyList = keys.map((item) => item).toList();
 
     return pubKeyList;
@@ -71,6 +66,17 @@ class HdWallet extends IHdWallet {
         for (final balance in accountBalance) {
           anyBalanceFound = true;
           balanceList.addAll(balance.accounts);
+
+          final keyIndex = keys.indexWhere((item) => item == balance.address);
+          var pathString = path[keyIndex];
+
+          for (final acc in balance.accounts) {
+            acc.index = HdWalletUtil.getIndexFromPath(pathString);
+            acc.account = _account.account;
+            acc.isChangeAddress = HdWalletUtil.isPathChangeAddress(pathString);
+            acc.chain = ChainHelper.chainTypeString(_chain);
+            acc.network = ChainHelper.chainNetworkString(_network);
+          }
         }
 
         if (anyBalanceFound) {

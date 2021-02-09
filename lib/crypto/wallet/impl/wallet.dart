@@ -212,8 +212,7 @@ class Wallet extends IWallet {
       final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
       useAccounts.add(fromAccount);
 
-      inputTxs.add(await _getAuthInputsSmart(
-          tx.address, tx.account, tx.isChangeAddress, tx.index));
+      inputTxs.add(await _getAuthInputsSmart(tx.address));
 
       final keyPair = HdWalletUtil.getKeyPair(
           key,
@@ -248,13 +247,22 @@ class Wallet extends IWallet {
     return txb.build().toHex();
   }
 
-  Future<tx.Transaction> _createAuthTx(
-      int account, bool isChangeAddress, int index) {
-    //TODO
-    throw ArgumentError("NOT IMPLEMENTED RIGHT NOW!");
+  Future<String> createAuthTx(String pubKey) async {
+    var baseTx = await _createBaseTransaction(await getTxFee(), pubKey);
+    baseTx.addAuthOutput();
+
+    var txHex = baseTx.build().toHex();
+
+    return txHex;
   }
 
   Future<String> _createUtxoTransaction(int amount, String to) async {
+    final txb = await _createBaseTransaction(amount, to);
+    return txb.build().toHex();
+  }
+
+  Future<TransactionBuilder> _createBaseTransaction(
+      int amount, String to) async {
     final changeAddress = await getPublicKeyFromAccount(_account, true);
     final tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
@@ -293,12 +301,10 @@ class Wallet extends IWallet {
 
     final txb = await HdWalletUtil.buildTransaction(
         useTxs, keys, to, amount, fee, changeAddress, _chain, _network);
-
-    return txb.build().toHex();
+    return txb;
   }
 
-  Future<tx.Transaction> _getAuthInputsSmart(
-      String pubKey, int account, bool isChangeAddress, int index) async {
+  Future<tx.Transaction> _getAuthInputsSmart(String pubKey) async {
     var authTxs =
         await _walletDatabase.getUnspentTransactionsForPubKey(pubKey, 1);
 
@@ -306,7 +312,12 @@ class Wallet extends IWallet {
       return authTxs.first;
     }
 
-    return await _createAuthTx(account, isChangeAddress, index);
+    var txHex = await createAuthTx(pubKey);
+
+    final txId =
+        await _apiService.transactionService.sendRawTransaction("DFI", txHex);
+
+    return await _apiService.transactionService.getWithTxId("DFI", txId);
   }
 
   @override
@@ -355,8 +366,6 @@ class Wallet extends IWallet {
 
       if ((accBalance + acc.balance) >= neededUtxo) {
         break;
-
-        
       }
       accBalance += acc.balance;
     }

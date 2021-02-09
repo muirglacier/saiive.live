@@ -6,6 +6,7 @@ import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class LiquidityScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class LiquidityScreen extends StatefulWidget {
 class _LiquidityScreen extends State<LiquidityScreen> {
   List<PoolShareLiquidity> _liquidity;
   List<PoolPairLiquidity> _poolPairLiquidity;
+  final formatCurrency = new NumberFormat.simpleCurrency();
 
   @override
   void initState() {
@@ -131,14 +133,14 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   Expanded(
                       flex: 6,
                       child: Text(
-                          liquidity.totalLiquidityInUSDT.toStringAsFixed(8),
+                          formatCurrency.format(liquidity.totalLiquidityInUSDT),
                           textAlign: TextAlign.right))
                 ]),
               ),
             ])));
   }
 
-  buildMyLiqduitiyScreen(BuildContext context) {
+  buildAllLiqduitiyScreen(BuildContext context) {
     if (_liquidity == null) {
       return LoadingWidget(text: S.of(context).loading);
     }
@@ -185,6 +187,6 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(title: Text(S.of(context).liquitiy)),
-        body: Container(child: buildMyLiqduitiyScreen(context)));
+        body: Container(child: buildAllLiqduitiyScreen(context)));
   }
 }

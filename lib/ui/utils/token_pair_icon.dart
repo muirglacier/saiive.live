@@ -3,9 +3,6 @@ import 'dart:math';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_qr_reader/qrcode_reader_view.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class TokenPairIcon extends StatefulWidget {
   String _tokenA;

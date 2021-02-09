@@ -1,12 +1,8 @@
 import 'dart:math';
 
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class TokenIcon extends StatefulWidget {
   String _token;
@@ -33,7 +29,7 @@ class _TokenIconState extends State<TokenIcon> {
   }
 
   _init() async {
-    var path = 'assets/svg/' + _token.toLowerCase() + '-icon.svg';
+    var path = 'assets/image/' + _token.toLowerCase() + '-icon.png';
 
     try {
       await rootBundle.load(path);
@@ -75,7 +71,7 @@ class _TokenIconState extends State<TokenIcon> {
     return SizedBox(
         width: 32,
         height: 32,
-        child: SvgPicture.asset(
+        child: Image.asset(
           _path,
           height: 32,
         ));

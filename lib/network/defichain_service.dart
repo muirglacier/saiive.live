@@ -8,7 +8,7 @@ import 'package:defichainwallet/network/response/error_response.dart';
 class DefichainService extends NetworkService {
   Future<List<YieldFarming>> getStatsYieldFarming(String coin) async {
     dynamic response =
-        await this.httpService.makeDynamicHttpGetRequest('/list-yield-farming', coin);
+        await this.httpService.makeDynamicHttpGetRequest('/list-yield-farming', coin, cached: true);
 
     if (response is ErrorResponse) {
       this.handleError(response);

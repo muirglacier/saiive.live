@@ -2,6 +2,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/token.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
@@ -33,10 +34,7 @@ class _TokensScreen extends State<TokensScreen> {
   Widget _buildTokenEntry(Token token) {
     return Card(
         child: ListTile(
-      leading: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Icon(Icons.account_balance_wallet)]),
+      leading: TokenIcon(token.symbol),
       title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,

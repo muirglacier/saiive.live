@@ -99,3 +99,4 @@ flutter:
     - assets/env/.env-Debug
     - assets/env/.env-Prod
     - assets/env/.env-Staging
+    - assets/image/

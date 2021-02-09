@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/network/cache_response.dart';
 import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/model/error.dart';
 import 'package:defichainwallet/network/base_request.dart';
@@ -15,6 +16,7 @@ class HttpService extends IHttpService {
   String serverAddress;
   String network;
   String baseUri = "/api/v1/";
+  Map<String, CachedResponse> cachedResults = new Map<String, CachedResponse>();
 
   HttpService();
 
@@ -29,9 +31,21 @@ class HttpService extends IHttpService {
     }
   }
 
-  Future<Map<String, dynamic>> makeHttpGetRequest(
-      String url, String coin) async {
+  Future<Map<String, dynamic>> makeHttpGetRequest(String url, String coin,
+      {cached: false}) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
+
+    if (cached && cachedResults.containsKey(finalUrl)) {
+      var cachedResult = cachedResults[finalUrl];
+
+      if (cachedResult.created + cachedResult.lifetime >
+          DateTime.now().millisecondsSinceEpoch) {
+        cachedResults.remove(finalUrl);
+      } else {
+        return cachedResult.data;
+      }
+    }
+
     http.Response response = await http.get(
       finalUrl,
       headers: {'Content-type': 'application/json'},
@@ -44,11 +58,30 @@ class HttpService extends IHttpService {
     if (decoded.containsKey("error")) {
       throw Error.fromJson(decoded);
     }
+
+    if (cached) {
+      cachedResults[finalUrl] = new CachedResponse(60 * 60, DateTime.now().millisecondsSinceEpoch, decoded);
+    }
+
     return decoded;
   }
-  Future<dynamic> makeDynamicHttpGetRequest(
-      String url, String coin) async {
+
+  Future<dynamic> makeDynamicHttpGetRequest(String url, String coin, {cached: false}) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
+
+    if (cached && cachedResults.containsKey(finalUrl)) {
+      var cachedResult = cachedResults[finalUrl];
+
+      if (cachedResult.created + cachedResult.lifetime > DateTime
+          .now()
+          .millisecondsSinceEpoch) {
+        cachedResults.remove(finalUrl);
+      }
+      else {
+        return cachedResult.data;
+      }
+    }
+
     http.Response response = await http.get(
       finalUrl,
       headers: {'Content-type': 'application/json'},
@@ -56,6 +89,11 @@ class HttpService extends IHttpService {
 
     if (response.statusCode != 200) {
       return null;
+    }
+
+    if (cached) {
+      cachedResults[finalUrl] = new CachedResponse(
+          60 * 60, DateTime.now().millisecondsSinceEpoch, response);
     }
 
     return response;

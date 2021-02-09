@@ -9,6 +9,7 @@ import 'package:defichainwallet/network/events/events.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
+import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:event_taxi/event_taxi.dart';
@@ -141,7 +142,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
       leading: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Icon(Icons.account_balance_wallet)]),
+          children: [TokenIcon(balance.token)]),
       title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,

@@ -3,6 +3,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
+import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/network/balance_service.dart';
 import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
@@ -78,18 +79,16 @@ class _DexScreen extends State<DexScreen> {
       }
     }
 
-    var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
-    var popularSymbols = ['DFI', 'ETH', 'BTC'];
+    var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+    var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
-    if (null ==
-        accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol,
-            orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiTokenSymbol, balance: 0));
+    if (null == accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
       var account = accountBalance.firstWhere(
-          (element) => element.token == '\$' + tokenId,
+          (element) => element.token == tokenId,
           orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
 
@@ -284,12 +283,12 @@ class _DexScreen extends State<DexScreen> {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               DropdownButton<TokenBalance>(
                 isExpanded: true,
-                hint: Text("Status"),
+                hint: Text(S.of(context).dex_from_token),
                 value: _selectedValueFrom,
                 items: _fromTokens.map((e) {
                   return new DropdownMenuItem<TokenBalance>(
                     value: e,
-                    child: new Text(e.hash + ' ' + e.balance.toString()),
+                    child: new Text(e.hash + ' ' + e.balanceDisplayRounded),
                   );
                 }).toList(),
                 onChanged: (TokenBalance val) {
@@ -323,12 +322,12 @@ class _DexScreen extends State<DexScreen> {
                   }),
               DropdownButton<TokenBalance>(
                 isExpanded: true,
-                hint: Text("Status"),
+                hint: Text(S.of(context).dex_to_token),
                 value: _selectedValueTo,
                 items: _toTokens.map((e) {
                   return new DropdownMenuItem<TokenBalance>(
                     value: e,
-                    child: new Text(e.hash + ' ' + e.balance.toString()),
+                    child: new Text(e.hash + ' ' + e.balanceDisplayRounded),
                   );
                 }).toList(),
                 onChanged: (TokenBalance val) {
@@ -394,16 +393,25 @@ class _DexScreen extends State<DexScreen> {
                   ]),
                   Divider(color: Colors.black),
                   Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).dex_commision)),
+                    Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
                     Expanded(
                         flex: 6,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(_selectedPoolPair.commision.toString()),
+                            Text(_selectedPoolPair.commission.toString()),
                           ],
                         )),
-                  ])
+                  ]),
+                  RaisedButton(
+                    child: Text(S.of(context).dex_swap),
+                    color: Theme.of(context).backgroundColor,
+                    onPressed: () async {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('TODO: Do Swap'),
+                      ));
+                    },
+                  )
                 ])
             ])));
   }

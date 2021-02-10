@@ -43,5 +43,5 @@ void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<IBalanceService>(() => BalanceService());
   sl.registerLazySingleton<ITokenService>(() => TokenService());
 
-  sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet());
+  sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(false));
 }

@@ -58,5 +58,5 @@ void setupServiceLocator() {
   });
 
 
-  sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet());
+  sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(true));
 }

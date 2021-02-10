@@ -20,6 +20,7 @@ import 'package:defichainwallet/network/model/available_themes.dart';
 import 'package:logger/logger.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
+import 'crypto/wallet/impl/wallet.dart';
 import 'network/events/events.dart';
 
 enum EnvironmentType { Unknonw, Development, Staging, Production }
@@ -73,6 +74,8 @@ class StateContainerState extends State<StateContainer> {
   AppCenterWrapper appCenter = AppCenterWrapper();
   Logger get logger => LogHelper.instance;
 
+  bool _walletSyncing = false;
+
   StreamSubscription<WalletInitStartEvent> _walletInitSubscribe;
   StreamSubscription<WalletSyncStartEvent> _walletSyncSubscribe;
 
@@ -95,35 +98,14 @@ class StateContainerState extends State<StateContainer> {
         .registerTo<WalletSyncStartEvent>()
         .listen((event) async {
       try {
+        if(_walletSyncing) {
+          return;
+        }
+        var wallet = sl.get<DeFiChainWallet>();
         logger.i("Start wallet sync....");
-        var dataMap = Map();
-        dataMap["chain"] = ChainType.DeFiChain;
-        dataMap["network"] = ChainNet.Testnet;
-        dataMap["seed"] = await sl.get<IVault>().getSeed();
-        dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
-        dataMap["apiService"] = sl.get<ApiService>();
-        dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
-
-        var balances = await compute(StateContainerState.syncWallet, dataMap);
-
-        var db = sl.get<IWalletDatabase>();
-        await db.clearAccountBalances();
-
-        for (final balance in balances) {
-          db.setAccountBalance(balance);
-          logger.d(balance);
-        }
-
-        var txs = await compute(StateContainerState.syncTransactions, dataMap);
-        await db.clearUnspentTransactions();
-
-        for (Transaction tx in txs) {
-          if (tx.spentTxId == null || tx.spentTxId.isEmpty) {
-            await db.addUnspentTransaction(tx);
-          }
-          await db.addTransaction(tx);
-          logger.d(tx);
-        }
+        _walletSyncing = true;
+        await wallet.init();
+        await wallet.syncAll();
 
         EventTaxiImpl.singleton().fire(WalletSyncDoneEvent());
       } catch (e) {
@@ -133,6 +115,7 @@ class StateContainerState extends State<StateContainer> {
         logger.e("wallet sync failed....", e);
       } finally {
         logger.i("Start wallet sync....done");
+        _walletSyncing = false;
       }
     });
   }
@@ -175,9 +158,6 @@ class StateContainerState extends State<StateContainer> {
     sl.get<SharedPrefsUtil>().getTheme().then((theme) {
       updateTheme(theme);
     });
-
-  
-    
 
     appCenter.start();
   }

@@ -27,7 +27,7 @@ class Account {
     return Account(
         token: json['token'],
         address: json['address'] ?? '',
-        balance: int.parse(json['balance'].toString()),
+        balance: double.parse(json['balance'].toString()).round(),
         raw: json['raw'] ?? '',
         index: json['index'],
         account: json['account'],

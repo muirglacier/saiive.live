@@ -24,7 +24,7 @@ class _IntroWalletNewScreenState extends State<IntroWalletNewScreen> {
 
   @override
   Widget build(BuildContext context) {
-     if (recoveryPhrase == "" || recoveryPhrase == null) {
+    if (recoveryPhrase == "" || recoveryPhrase == null) {
       return LoadingWidget(text: S.of(context).loading);
     }
     return RecoveryPhraseInfoWidget(mnemonic: recoveryPhrase);

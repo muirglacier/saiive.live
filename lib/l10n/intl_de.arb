@@ -50,8 +50,14 @@
   "wallet_send_address": "Adresse",
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Menge",
+
   "settings": "Einstellungen",
-  
+  "settings_remove_seed": "Seed löschen",
+  "settings_show_seed": "Seed anzeigen",
+  "settings_removed_seed": "Seed gelöscht",
+  "settings_donate": "Wenn du uns helfen willst die App nocht besser machen, kannst du uns gerne DFI spenden:",
+  "settings_disclaimer": "No one who is contributing to this project is taking any responsibility of what happens to your funds.",
+
   "wallet_token_available_balance": "Verfügbar",
   "wallet_token_transactions": "Transaktionen",
   "wallet_token_show_in_explorer": "Im Explorer anzeigen",

@@ -111,6 +111,17 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
+  Future<Transaction> getTransaction(String id) async {
+    for (final tx in _transactions) {
+      if (tx.id == id) {
+        return tx;
+      }
+    }
+
+    return null;
+  }
+
+  @override
   Future<List<Transaction>> getUnspentTransactions() {
     return Future.value(_transactions);
   }

@@ -140,6 +140,26 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
+  @override
+  Future<tx.Transaction> getTransaction(String id) async {
+    var dbStore = _transactionStoreInstance;
+
+    var finder = Finder(
+        filter:
+            Filter.equals('id', id));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
+        ?.toList();
+
+    if (data.isEmpty) {
+      return null;
+    }
+
+    return data.first;
+  }
+
   Future clearTransactions() async {
     final txs = await getTransactions();
     final txIds = txs.map((e) => e.uniqueId);
@@ -171,13 +191,15 @@ class SembastWalletDatabase extends IWalletDatabase {
       String pubKey, int minAmount) async {
     var dbStore = _unspentStoreInstance;
 
-    var finder = Finder(filter: Filter.equals('address', pubKey) & Filter.greaterThanOrEquals("value", minAmount));
+    var finder = Finder(
+        filter: Filter.equals('address', pubKey) &
+            Filter.greaterThanOrEquals("value", minAmount));
     final accounts = await dbStore.find(await database, finder: finder);
 
     final data = accounts
         .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
         ?.toList();
-        
+
     return data;
   }
 

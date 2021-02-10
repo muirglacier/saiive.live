@@ -18,6 +18,7 @@ abstract class IWalletDatabase {
 
   Future clearTransactions();
   Future<List<Transaction>> getTransactions();
+  Future<Transaction> getTransaction(String id);
   Future addTransaction(Transaction transaction);
 
   

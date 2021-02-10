@@ -324,8 +324,8 @@ class Wallet extends IWallet {
   }
 
   @override
-  Future<tx.Transaction> getTransaction(String id) {
-    throw UnimplementedError();
+  Future<tx.Transaction> getTransaction(String id) async {
+    return await _walletDatabase.getTransaction(id);
   }
 
   Future<int> getTxFee() async {

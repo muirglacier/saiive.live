@@ -1,4 +1,5 @@
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/ui/model/authentication_method.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/network/model/available_themes.dart';
@@ -10,6 +11,7 @@ class SharedPrefsUtil {
   static const String cur_language = 'defi_language_pref';
   static const String cur_theme = 'defi_theme_pref';
   static const String cur_net = 'cur_net';
+  static const String auth_method = 'defi_auth_method';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -37,6 +39,14 @@ class SharedPrefsUtil {
 
   Future<bool> getSeedBackedUp() async {
     return await get(seed_backed_up_key, defaultValue: false);
+  }
+
+  Future<void> setAuthMethod(AuthenticationMethod method) async {
+    return await set(auth_method, method.getIndex());
+  }
+
+  Future<AuthenticationMethod> getAuthMethod() async {
+    return AuthenticationMethod(AuthMethod.values[await get(auth_method, defaultValue: AuthMethod.BIOMETRICS.index)]);
   }
 
   Future<void> setFirstLaunch() async {

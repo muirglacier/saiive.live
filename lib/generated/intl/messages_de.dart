@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "dex" : MessageLookupByLibrary.simpleMessage("DEX"),
     "dex_amount" : MessageLookupByLibrary.simpleMessage("Erhaltender Betrag"),
@@ -49,6 +50,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
     "send" : MessageLookupByLibrary.simpleMessage("Senden"),
     "settings" : MessageLookupByLibrary.simpleMessage("Einstellungen"),
+    "settings_auth_biometric" : MessageLookupByLibrary.simpleMessage("Biometrisch"),
+    "settings_auth_none" : MessageLookupByLibrary.simpleMessage("Keine"),
     "settings_disclaimer" : MessageLookupByLibrary.simpleMessage("No one who is contributing to this project is taking any responsibility of what happens to your funds."),
     "settings_donate" : MessageLookupByLibrary.simpleMessage("Wenn du uns helfen willst die App nocht besser machen, kannst du uns gerne DFI spenden:"),
     "settings_remove_seed" : MessageLookupByLibrary.simpleMessage("Seed löschen"),

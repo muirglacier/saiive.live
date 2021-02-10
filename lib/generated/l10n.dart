@@ -605,6 +605,26 @@ class S {
     );
   }
 
+  /// `Biometric`
+  String get settings_auth_biometric {
+    return Intl.message(
+      'Biometric',
+      name: 'settings_auth_biometric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `None`
+  String get settings_auth_none {
+    return Intl.message(
+      'None',
+      name: 'settings_auth_none',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Available balance`
   String get wallet_token_available_balance {
     return Intl.message(
@@ -820,6 +840,16 @@ class S {
     return Intl.message(
       'Pool-Share',
       name: 'liquitiy_pool_share_percentage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Biometric Authentification Error`
+  String get biometric_auth_error {
+    return Intl.message(
+      'Biometric Authentification Error',
+      name: 'biometric_auth_error',
       desc: '',
       args: [],
     );

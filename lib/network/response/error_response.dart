@@ -1,7 +1,10 @@
+import 'package:http/http.dart';
+
 class ErrorResponse {
   String error;
+  Response response;
 
-  ErrorResponse({String error}) {
+  ErrorResponse({String error, Response response}) {
     this.error = error;
   }
 

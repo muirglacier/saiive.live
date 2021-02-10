@@ -1,5 +1,6 @@
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
@@ -34,11 +35,11 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
     final txId =
         await apiService.transactionService.sendRawTransaction("DFI", tx);
-
+    LogHelper.instance.d("sent tx $txId");
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(txId),
     ));
-    Navigator.of(context).pop();
+    Navigator.of(context).popUntil(ModalRoute.withName("/home"));
   }
 
   @override

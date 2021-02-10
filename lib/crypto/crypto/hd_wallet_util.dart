@@ -155,14 +155,13 @@ class HdWalletUtil {
 
       totalInputValue += tx.valueRaw;
     }
-
-    var changeAmount = totalInputValue - fee;
-    txb.addOutput(returnAddress, changeAmount);
-
     for (final auth in authAddresses) {
       txb.addAccountToAccountOutput(
           token, auth.address, to, auth.amount, network);
     }
+
+    var changeAmount = totalInputValue - fee;
+    txb.addOutput(returnAddress, changeAmount);
 
     int index = 0;
     for (final key in keys) {
@@ -211,7 +210,8 @@ class HdWalletUtil {
       final mintTxId = tx.mintTxId;
       final mintIndex = tx.mintIndex;
       final inValue = tx.value;
-      LogHelper.instance.d("set tx input $mintTxId@$mintIndex input value is $inValue");
+      LogHelper.instance
+          .d("set tx input $mintTxId@$mintIndex input value is $inValue");
 
       totalInputValue += tx.valueRaw;
     }
@@ -219,7 +219,8 @@ class HdWalletUtil {
     if (totalInputValue > (amount)) {
       var changeAmount = totalInputValue - amount - fee;
       txb.addOutput(returnAddress, changeAmount);
-      LogHelper.instance.d("set tx output (change) $returnAddress value is $changeAmount");
+      LogHelper.instance
+          .d("set tx output (change) $returnAddress value is $changeAmount");
     }
     if (amount > 0) {
       txb.addOutput(to, amount);
@@ -235,7 +236,8 @@ class HdWalletUtil {
       final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
       final input = inputTxs[index].mintTxId;
       final witnessValue = inputTxs[index].valueRaw;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey withnessValue. $witnessValue");
+      LogHelper.instance.d(
+          "sign tx $input with privateKey from $pubKey withnessValue. $witnessValue");
 
       txb.sign(
           vin: index,
@@ -244,7 +246,6 @@ class HdWalletUtil {
           redeemScript: redeemScript);
       index++;
     }
-
 
     return txb.build().toHex();
   }

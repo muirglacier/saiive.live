@@ -228,8 +228,10 @@ class Wallet extends IWallet {
       keys.add(keyPair);
 
       if ((curAmount + tx.balance) >= amount) {
-        fromAccount.amount = tx.balance - curAmount;
+        fromAccount.amount = amount;
         break;
+      } else {
+        fromAccount.amount = tx.balance - curAmount;
       }
       curAmount += tx.balance;
     }
@@ -251,7 +253,8 @@ class Wallet extends IWallet {
   }
 
   Future<String> createAuthTx(String pubKey) async {
-    var baseTx = await _createBaseTransaction(200000, pubKey, pubKey, (txb) {
+    final changeAddress = await getPublicKeyFromAccount(_account, true);
+    var baseTx = await _createBaseTransaction(200000, pubKey, changeAddress, (txb) {
       txb.addAuthOutput(outputIndex: 0);
     });
 

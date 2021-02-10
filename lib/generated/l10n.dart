@@ -824,6 +824,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Biometric Authentification Error`
+  String get biometric_auth_error {
+    return Intl.message(
+      'Biometric Authentification Error',
+      name: 'biometric_auth_error',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

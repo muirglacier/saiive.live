@@ -74,10 +74,15 @@ dependencies:
   # Eventbus
   event_taxi: ^0.1.5
 
+  #Flutter Vibrate
+  flutter_vibrate: ^1.0.0
+
   #appcenter
   flutter_appcenter_bundle: ^3.2.0+2
   device_info: 1.0.0
 
+  # TouchID/FaceID
+  local_auth: ^1.0.0-nullsafety.4
   
 dev_dependencies:
   flutter_test:

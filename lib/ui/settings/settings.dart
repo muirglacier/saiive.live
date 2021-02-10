@@ -9,6 +9,11 @@ import 'package:defichainwallet/ui/settings/settings_seed.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/ui/wallet/wallet_send.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
+import 'package:defichainwallet/util/authentication_helper.dart';
+import 'package:defichainwallet/util/authentication_method.dart';
+import 'package:defichainwallet/util/biometrics.dart';
+import 'package:defichainwallet/util/hapticutil.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger_flutter/logger_flutter.dart';
@@ -23,6 +28,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   var _version = "";
   EnvironmentType _currentEnvironment;
+  AuthMethod _authMethod = AuthMethod.NONE;
 
   @override
   void initState() {
@@ -32,8 +38,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _init() async {
-    _currentEnvironment = new EnvHelper().getEnvironment();
-    _version = await new VersionHelper().getVersion();
+    var currentEnvironment = new EnvHelper().getEnvironment();
+    var version = await new VersionHelper().getVersion();
+    var authMethod = await sl.get<SharedPrefsUtil>().getAuthMethod();
+
+    setState(() {
+      _currentEnvironment = currentEnvironment;
+      _version = version;
+      _authMethod = authMethod;
+    });
+  }
+
+  void doDeleteSeed() async {
+    await sl.get<IWalletDatabase>().destroy();
+    await sl.get<IVault>().setSeed(null);
+
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil("/", (route) => false);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(S.of(context).settings_removed_seed),
+    ));
   }
 
   @override
@@ -47,6 +72,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Container(
+                      child: DropdownButton<AuthMethod>(
+                    isExpanded: true,
+                    disabledHint: Text('testnet'),
+                    value: _authMethod,
+                    items: AuthMethod.values.map((e) {
+                      return new DropdownMenuItem<AuthMethod>(
+                        value: e,
+                        child: Text(e.toString()),
+                      );
+                    }).toList(),
+                      onChanged: (AuthMethod val) {
+                        setState(() {
+                          _authMethod = val;
+                        });
+
+                        sl.get<SharedPrefsUtil>().setAuthMethod(val);
+                      },
+                  )),
                   Container(
                       child: DropdownButton<String>(
                     isExpanded: true,
@@ -64,15 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Text(S.of(context).settings_remove_seed),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
-                      await sl.get<IWalletDatabase>().destroy();
-                      await sl.get<IVault>().setSeed(null);
-
-                      Navigator.of(context)
-                          .pushNamedAndRemoveUntil("/", (route) => false);
-
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(S.of(context).settings_removed_seed),
-                      ));
+                      sl.get<AuthenticationHelper>().forceAuth(context, () => doDeleteSeed);
                     },
                   )),
                   Container(
@@ -80,9 +116,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Text(S.of(context).settings_show_seed),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              SettingsSeedScreen()));
+                      sl.get<AuthenticationHelper>().forceAuth(context, () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                SettingsSeedScreen()));
+                      });
                     },
                   )),
                   if (_currentEnvironment != EnvironmentType.Production)

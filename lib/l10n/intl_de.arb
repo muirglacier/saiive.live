@@ -84,5 +84,7 @@
   "home_welcome_account_syncing": "Aktualisieren...",
 
   "liquitiy": "Liquidity",
-  "liquitiy_pool_share_percentage": "Pool-Anteil"
+  "liquitiy_pool_share_percentage": "Pool-Anteil",
+
+  "biometric_auth_error": "Biometric Authentification Error"
 }

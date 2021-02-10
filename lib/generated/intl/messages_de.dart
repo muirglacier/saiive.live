@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "dex" : MessageLookupByLibrary.simpleMessage("DEX"),
     "dex_amount" : MessageLookupByLibrary.simpleMessage("Erhaltender Betrag"),

@@ -15,6 +15,9 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
+import 'package:defichainwallet/util/authentication_helper.dart';
+import 'package:defichainwallet/util/biometrics.dart';
+import 'package:defichainwallet/util/hapticutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
 
@@ -47,6 +50,9 @@ void setupServiceLocator() {
   sl.registerLazySingleton<IGovService>(() => GovService());
   sl.registerLazySingleton<IDefichainService>(() => DefichainService());
   sl.registerLazySingleton<IPoolShareService>(() => PoolShareService());
+  sl.registerLazySingleton<BiometricUtil>(() => BiometricUtil());
+  sl.registerLazySingleton<HapticUtil>(() => HapticUtil());
+  sl.registerLazySingleton<AuthenticationHelper>(() => AuthenticationHelper());
 
   sl.registerSingletonAsync<IWalletDatabase>(() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();

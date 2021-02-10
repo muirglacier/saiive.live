@@ -16,6 +16,9 @@ import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:flutter/foundation.dart';
+
+import '../wallet-sync.dart';
 
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -175,6 +178,7 @@ class Wallet extends IWallet {
   Future<String> createSendTransaction(
       int amount, String token, String to) async {
     _isInitialzed();
+    await _ensureUtxo();
 
     final changeAddress = await getPublicKeyFromAccount(_account, true);
 
@@ -215,7 +219,7 @@ class Wallet extends IWallet {
       final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
       useAccounts.add(fromAccount);
 
-      inputTxs.add(await _getAuthInputsSmart(tx.address));
+      inputTxs.add(await _getAuthInputsSmart(tx.address, fee));
 
       final keyPair = HdWalletUtil.getKeyPair(
           key,
@@ -254,7 +258,8 @@ class Wallet extends IWallet {
 
   Future<String> createAuthTx(String pubKey) async {
     final changeAddress = await getPublicKeyFromAccount(_account, true);
-    var baseTx = await _createBaseTransaction(200000, pubKey, changeAddress, (txb) {
+    var baseTx =
+        await _createBaseTransaction(200000, pubKey, changeAddress, (txb) {
       txb.addAuthOutput(outputIndex: 0);
     });
 
@@ -310,9 +315,9 @@ class Wallet extends IWallet {
     return txb;
   }
 
-  Future<tx.Transaction> _getAuthInputsSmart(String pubKey) async {
+  Future<tx.Transaction> _getAuthInputsSmart(String pubKey, int minFee) async {
     var authTxs =
-        await _walletDatabase.getUnspentTransactionsForPubKey(pubKey, 1);
+        await _walletDatabase.getUnspentTransactionsForPubKey(pubKey, minFee);
 
     if (authTxs.isNotEmpty) {
       return authTxs.first;
@@ -378,4 +383,40 @@ class Wallet extends IWallet {
   }
 
   Future prepareAccount(int amount) {}
+
+  Future _ensureUtxo() async {
+    await _syncUnspentTransactionOutputs();
+  }
+
+  Future _syncUnspentTransactionOutputs() async {
+    _isInitialzed();
+
+    var dataMap = Map();
+    dataMap["chain"] = _chain;
+    dataMap["network"] = _network;
+    dataMap["seed"] = await sl.get<IVault>().getSeed();
+    dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
+    dataMap["apiService"] = sl.get<ApiService>();
+    dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
+
+    var utxos = await compute(Wallet._syncUtxo, dataMap);
+
+    await _walletDatabase.clearUnspentTransactions();
+
+    for (final tx in utxos) {
+      if (tx.spentTxId == null || tx.spentTxId.isEmpty) {
+        await _walletDatabase.addUnspentTransaction(tx);
+      }
+    }
+  }
+
+  static Future _syncUtxo(Map dataMap) async {
+    return await WalletSync.syncUTXO(
+        dataMap["chain"],
+        dataMap["network"],
+        dataMap["seed"],
+        dataMap["password"],
+        dataMap["apiService"],
+        dataMap["accounts"]);
+  }
 }

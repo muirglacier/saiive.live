@@ -53,7 +53,8 @@ class HttpService extends IHttpService {
     );
 
     if (response.statusCode != 200) {
-      return null;
+      var error = ErrorResponse(response: response, error: response.body);
+      throw error;
     }
     Map decoded = json.decode(response.body);
     if (decoded.containsKey("error")) {
@@ -89,7 +90,7 @@ class HttpService extends IHttpService {
     );
 
     if (response.statusCode != 200) {
-      return null;
+      return ErrorResponse(response: response, error: response.body);
     }
 
     if (cached) {

@@ -200,6 +200,88 @@ class HdWallet extends IHdWallet {
     return txList;
   }
 
+
+  Future<List<Transaction>> syncUnspentTransactions() async {
+    int empty = 0;
+    int i = 0;
+    _nextFreeIndex = 0;
+
+    var startDate = DateTime.now();
+    final key = HEX.decode(_seed);
+    final apiService = _apiService;
+    var txList = List<Transaction>();
+
+    do {
+      try {
+        var keys = await HdWalletUtil.derivePublicKeysWithChange(
+            key,
+            _account.account,
+            IWallet.KeysPerQuery * i,
+            _chain,
+            _network,
+            IWallet.KeysPerQuery);
+
+        var path = HdWalletUtil.derivePathsWithChange(
+            _account.account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+        var pubKeyList = keys.map((item) => item).toList();
+
+        var txs = await apiService.transactionService.getUnspentTransactionOutputs(
+            ChainHelper.chainTypeString(_chain), pubKeyList);
+
+        LogHelper.instance.d(
+            "found ${txs.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
+
+        for (final tx in txs) {
+          final keyIndex = keys.indexWhere((item) => item == tx.address);
+          var pathString = path[keyIndex];
+
+          tx.index = HdWalletUtil.getIndexFromPath(pathString);
+          tx.account = _account.account;
+          tx.isChangeAddress = HdWalletUtil.isPathChangeAddress(pathString);
+        }
+        txList.addAll(txs);
+        var anyBalanceFound = txs.length > 0;
+
+        if (anyBalanceFound) {
+          _nextFreeIndex++;
+        } else {
+          empty++;
+        }
+      } catch (e) {
+        LogHelper.instance.e("error sync txs", e);
+        continue;
+      }
+
+      if (empty >= IWallet.MaxUnusedIndexScan) {
+        break;
+      }
+
+      i++;
+      _nextFreeIndex++;
+    } while (true);
+
+    var endTxDate = DateTime.now();
+
+    var diffTx =
+        endTxDate.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch;
+
+    print("tx sync took ${diffTx / 1000} seconds");
+
+    startDate = DateTime.now();
+
+    i = 1;
+
+    var endDate = DateTime.now();
+
+    var diff =
+        endDate.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch;
+
+    print("sync took ${diff / 1000} seconds");
+
+    _nextFreeIndex++;
+    return txList;
+  }
+
   @override
   Future<String> nextFreePublicKey(
       IWalletDatabase database, bool isChangeAddress) async {

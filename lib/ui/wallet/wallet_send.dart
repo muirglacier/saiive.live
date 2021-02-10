@@ -39,7 +39,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(txId),
     ));
-    Navigator.of(context).popUntil(ModalRoute.withName("/home"));
+    Navigator.of(context).pop();
   }
 
   @override

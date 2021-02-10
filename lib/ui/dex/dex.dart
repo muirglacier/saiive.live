@@ -63,7 +63,7 @@ class _DexScreen extends State<DexScreen> {
 
   _init() async {
     var tokenMap = List<TokenBalance>();
-    var pairs = await sl.get<PoolPairService>().getPoolPairs('DFI');
+    var pairs = await sl.get<IPoolPairService>().getPoolPairs('DFI');
     var uniqueTokenList = Map<String, String>();
 
     for (var i = 0; i < pairs.length; i++) {
@@ -219,7 +219,7 @@ class _DexScreen extends State<DexScreen> {
       var wallet = sl.get<DeFiChainWallet>();
       var pubKey = await wallet.getPublicKey();
 
-      var swapResult = await sl.get<DexService>().testPoolSwap('DFI', pubKey,
+      var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
           _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
 
       _testSwapLoading = false;
@@ -262,7 +262,7 @@ class _DexScreen extends State<DexScreen> {
       var wallet = sl.get<DeFiChainWallet>();
       var pubKey = await wallet.getPublicKey();
 
-      var swapResult = await sl.get<DexService>().testPoolSwap('DFI', pubKey,
+      var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
           _selectedValueFrom.hash, amount, pubKey, _selectedValueFrom.hash);
 
       setState(() {

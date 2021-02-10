@@ -9,7 +9,12 @@ import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/testpoolswap_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
-class DexService extends NetworkService {
+abstract class IDexService {
+  Future<TestPoolSwapResult> testPoolSwap(String coin, String from, String tokenFrom, double amountFrom, String to, String tokenTo);
+  Future<PoolPair> getPoolPair(String coin, String poolID);
+}
+
+class DexService extends NetworkService implements IDexService {
   Future<TestPoolSwapResult> testPoolSwap(String coin, String from, String tokenFrom, double amountFrom, String to, String tokenTo) async {
     var request = TestPoolSwapRequest(
       from: from,

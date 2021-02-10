@@ -9,7 +9,12 @@ import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
-class AccountService extends NetworkService {
+abstract class IAccountService {
+  Future<List<Account>> getAccount(String coin, String address);
+  Future<List<KeyAccountWrapper>> getAccounts(String coin, List<String> addresses);
+}
+
+class AccountService extends NetworkService implements IAccountService {
   Future<List<Account>> getAccount(String coin, String address) async {
     dynamic response = await this
         .httpService

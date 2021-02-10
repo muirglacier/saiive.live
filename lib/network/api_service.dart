@@ -17,9 +17,9 @@ class ApiService {
   ITokenService get tokenService => _tokenService;
 
   ApiService() {
-    _accountService = sl.get<AccountService>();
-    _transactionService = sl.get<TransactionService>();
-    _balanceService = sl.get<BalanceService>();
+    _accountService = sl.get<IAccountService>();
+    _transactionService = sl.get<ITransactionService>();
+    _balanceService = sl.get<IBalanceService>();
     _tokenService = sl.get<ITokenService>();
   }
 }

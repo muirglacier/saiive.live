@@ -37,16 +37,16 @@ void setupServiceLocator() {
   });
 
   sl.registerLazySingleton(() => ApiService());
-  sl.registerLazySingleton(() => AccountService());
-  sl.registerLazySingleton(() => TransactionService());
-  sl.registerLazySingleton(() => BalanceService());
+  sl.registerLazySingleton<IAccountService>(() => AccountService());
+  sl.registerLazySingleton<ITransactionService>(() => TransactionService());
+  sl.registerLazySingleton<IBalanceService>(() => BalanceService());
   sl.registerLazySingleton<ITokenService>(() => TokenService());
-  sl.registerLazySingleton(() => PoolPairService());
-  sl.registerLazySingleton(() => DexService());
-  sl.registerLazySingleton(() => CoingeckoService());
-  sl.registerLazySingleton(() => GovService());
-  sl.registerLazySingleton(() => DefichainService());
-  sl.registerLazySingleton(() => PoolShareService());
+  sl.registerLazySingleton<IPoolPairService>(() => PoolPairService());
+  sl.registerLazySingleton<IDexService>(() => DexService());
+  sl.registerLazySingleton<ICoingeckoService>(() => CoingeckoService());
+  sl.registerLazySingleton<IGovService>(() => GovService());
+  sl.registerLazySingleton<IDefichainService>(() => DefichainService());
+  sl.registerLazySingleton<IPoolShareService>(() => PoolShareService());
 
   sl.registerSingletonAsync<IWalletDatabase>(() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();

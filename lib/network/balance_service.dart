@@ -13,7 +13,14 @@ Map decodeJson(dynamic src) {
   return json.decode(src);
 }
 
-class BalanceService extends NetworkService
+abstract class IBalanceService {
+  Future<List<Balance>> getAllBalances(String coin, String address);
+  Future<List<Balance>> getAllBalancesAddresses(String coin, List<String> addresses);
+  Future<Balance> getBalance(String coin, String address);
+  Future<List<Balance>> getBalancesAddresses(String coin, List<String> addresses);
+}
+
+class BalanceService extends NetworkService implements IBalanceService
 {
   Future<List<Balance>> getAllBalances(String coin, String address) async {
     dynamic response = await this.httpService.makeHttpGetRequest('/balance-all/$address', coin);

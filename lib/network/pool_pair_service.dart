@@ -7,7 +7,12 @@ import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
-class PoolPairService extends NetworkService {
+abstract class IPoolPairService {
+  Future<List<PoolPair>> getPoolPairs(String coin);
+  Future<PoolPair> getPoolPair(String coin, String poolID);
+}
+
+class PoolPairService extends NetworkService implements IPoolPairService {
   Future<List<PoolPair>> getPoolPairs(String coin) async {
     dynamic response =
         await this.httpService.makeHttpGetRequest('/listpoolpairs', coin);

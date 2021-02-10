@@ -12,24 +12,24 @@ import 'package:defichainwallet/service_locator.dart';
 
 class PoolShareHelper {
   Future<List<PoolShareLiquidity>> getPoolShares(String coin, String currency) async {
-    var poolShares = await sl.get<PoolShareService>().getPoolShares(coin);
+    var poolShares = await sl.get<IPoolShareService>().getPoolShares(coin);
 
     return handleFetchPoolShares(coin, currency, poolShares);
   }
 
   Future<List<PoolShareLiquidity>> getMyPoolShares(String coin, String currency) async {
     var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
-    var poolShares = await sl.get<PoolShareService>().getMyPoolShare(coin, pubKeyList);
+    var poolShares = await sl.get<IPoolShareService>().getMyPoolShare(coin, pubKeyList);
 
     return handleFetchPoolShares(coin, currency, poolShares);
   }
 
   Future<List<PoolShareLiquidity>> handleFetchPoolShares(String coin, String currency, List<PoolShare> poolShares) async {
-    var gov = await sl.get<GovService>().getGov(coin);
+    var gov = await sl.get<IGovService>().getGov(coin);
     var lpDailyDfiReward = gov['LP_DAILY_DFI_REWARD'];
-    var poolStatsTmp = await sl.get<DefichainService>().getStatsYieldFarming(coin);
+    var poolStatsTmp = await sl.get<IDefichainService>().getStatsYieldFarming(coin);
     var poolStats = new Map<String, YieldFarming>();
-    var priceData = await sl.get<CoingeckoService>().getCoins(coin, currency);
+    var priceData = await sl.get<ICoingeckoService>().getCoins(coin, currency);
 
     poolStatsTmp.forEach((value) {
       poolStats[value.idTokenA + '_' + value.idTokenB] = value;
@@ -37,7 +37,7 @@ class PoolShareHelper {
 
     List<PoolShareLiquidity> waitResult = [];
     Iterable<Future<PoolShareLiquidity>> result = poolShares.map((poolShare) async {
-      var poolPair = await sl.get<PoolPairService>().getPoolPair(coin, poolShare.poolID);
+      var poolPair = await sl.get<IPoolPairService>().getPoolPair(coin, poolShare.poolID);
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;
 

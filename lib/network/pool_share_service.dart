@@ -10,7 +10,13 @@ import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
-class PoolShareService extends NetworkService {
+abstract class IPoolShareService {
+  Future<List<PoolShare>> getMyPoolShare(
+      String coin, List<String> addresses);
+  Future<List<PoolShare>> getPoolShares(String coin);
+}
+
+class PoolShareService extends NetworkService implements IPoolShareService {
   Future<List<PoolShare>> getMyPoolShare(
       String coin, List<String> addresses) async {
     AddressesRequest request = AddressesRequest(addresses: addresses);

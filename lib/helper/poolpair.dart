@@ -11,13 +11,13 @@ import 'package:defichainwallet/service_locator.dart';
 class PoolPairHelper
 {
   Future<List<PoolPairLiquidity>> getPoolPairs(String coin, String currency) async {
-    var gov = await sl.get<GovService>().getGov(coin);
+    var gov = await sl.get<IGovService>().getGov(coin);
     var lpDailyDfiReward = gov['LP_DAILY_DFI_REWARD'];
-    var poolShares = await sl.get<PoolShareService>().getPoolShares(coin);
-    var poolStatsTmp = await sl.get<DefichainService>().getStatsYieldFarming(coin);
+    var poolShares = await sl.get<IPoolShareService>().getPoolShares(coin);
+    var poolStatsTmp = await sl.get<IDefichainService>().getStatsYieldFarming(coin);
     var poolStats = new Map<String, YieldFarming>();
-    var priceData = await sl.get<CoingeckoService>().getCoins(coin, currency);
-    var poolPairs = await sl.get<PoolPairService>().getPoolPairs(coin);
+    var priceData = await sl.get<ICoingeckoService>().getCoins(coin, currency);
+    var poolPairs = await sl.get<IPoolPairService>().getPoolPairs(coin);
 
     poolStatsTmp.forEach((value) {
       poolStats[value.idTokenA + '_' + value.idTokenB] = value;

@@ -9,7 +9,17 @@ import 'package:defichainwallet/network/request/addresses_request.dart';
 import 'package:defichainwallet/network/request/raw_tx_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
-class TransactionService extends NetworkService {
+abstract class ITransactionService {
+  Future<List<Transaction>> getAddressTransaction(
+      String coin, String address);
+  Future<List<Transaction>> getAddressesTransactions(
+      String coin, List<String> addresses);
+  Future<List<Transaction>> getUnspentTransactionOutputs(
+      String coin, List<String> addresses);
+  Future<Transaction> getWithTxId(String coin, String txId);
+}
+
+class TransactionService extends NetworkService implements ITransactionService {
   Future<List<Transaction>> getAddressTransaction(
       String coin, String address) async {
     dynamic response =

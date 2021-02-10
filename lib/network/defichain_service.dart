@@ -5,7 +5,11 @@ import 'package:defichainwallet/network/model/yield_farming.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
-class DefichainService extends NetworkService {
+abstract class IDefichainService {
+  Future<List<YieldFarming>> getStatsYieldFarming(String coin);
+}
+
+class DefichainService extends NetworkService implements IDefichainService {
   Future<List<YieldFarming>> getStatsYieldFarming(String coin) async {
     dynamic response =
         await this.httpService.makeDynamicHttpGetRequest('/list-yield-farming', coin, cached: true);

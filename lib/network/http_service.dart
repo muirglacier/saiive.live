@@ -6,6 +6,7 @@ import 'package:defichainwallet/network/cache_response.dart';
 import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/model/error.dart';
 import 'package:defichainwallet/network/base_request.dart';
+import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -60,24 +61,24 @@ class HttpService extends IHttpService {
     }
 
     if (cached) {
-      cachedResults[finalUrl] = new CachedResponse(60 * 60, DateTime.now().millisecondsSinceEpoch, decoded);
+      cachedResults[finalUrl] = new CachedResponse(
+          60 * 60, DateTime.now().millisecondsSinceEpoch, decoded);
     }
 
     return decoded;
   }
 
-  Future<dynamic> makeDynamicHttpGetRequest(String url, String coin, {cached: false}) async {
+  Future<dynamic> makeDynamicHttpGetRequest(String url, String coin,
+      {cached: false}) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
 
     if (cached && cachedResults.containsKey(finalUrl)) {
       var cachedResult = cachedResults[finalUrl];
 
-      if (cachedResult.created + cachedResult.lifetime > DateTime
-          .now()
-          .millisecondsSinceEpoch) {
+      if (cachedResult.created + cachedResult.lifetime >
+          DateTime.now().millisecondsSinceEpoch) {
         cachedResults.remove(finalUrl);
-      }
-      else {
+      } else {
         return cachedResult.data;
       }
     }
@@ -111,7 +112,7 @@ class HttpService extends IHttpService {
         },
         body: body);
     if (response.statusCode != 200) {
-      return null;
+      return ErrorResponse(response: response, error: response.body);
     }
     return response;
   }

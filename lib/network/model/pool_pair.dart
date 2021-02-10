@@ -7,7 +7,7 @@ class PoolPair {
   final String idTokenB;
   final double reserveA;
   final double reserveB;
-  final double commision;
+  final double commission;
   final double totalLiquidity;
   final double reserveADivReserveB;
   final double reserveBDivReserveA;
@@ -29,7 +29,7 @@ class PoolPair {
     this.idTokenB,
     this.reserveA,
     this.reserveB,
-    this.commision,
+    this.commission,
     this.totalLiquidity,
     this.reserveADivReserveB,
     this.reserveBDivReserveA,
@@ -53,7 +53,7 @@ class PoolPair {
       idTokenB: json['idTokenB'],
       reserveA: json['reserveA'],
       reserveB: json['reserveB'],
-      commision: double.tryParse(json['commision'].toString()),
+      commission: double.tryParse(json['commission'].toString()),
       totalLiquidity: json['totalLiquidity'],
       reserveADivReserveB: json['reserveADivReserveB'],
       reserveBDivReserveA: json['reserveBDivReserveA'],

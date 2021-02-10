@@ -62,11 +62,14 @@
   "cancel": "Abbrechen",
 
   "dex": "DEX",
-  "dex_from_amount": "Von",
-  "dex_to_amount": "Auf",
+  "dex_from_token": "Von Token",
+  "dex_from_amount": "Menge Von",
+  "dex_to_token": "Auf Token",
+  "dex_to_amount": "Menge Auf",
   "dex_price": "Preis",
   "dex_amount": "Erhaltender Betrag",
-  "dex_commision": "Komission",
+  "dex_commission": "Komission",
+  "dex_swap": "Swap",
 
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",

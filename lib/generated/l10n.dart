@@ -625,20 +625,40 @@ class S {
     );
   }
 
-  /// `From`
+  /// `From Token`
+  String get dex_from_token {
+    return Intl.message(
+      'From Token',
+      name: 'dex_from_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From Amount`
   String get dex_from_amount {
     return Intl.message(
-      'From',
+      'From Amount',
       name: 'dex_from_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `To`
+  /// `To Token`
+  String get dex_to_token {
+    return Intl.message(
+      'To Token',
+      name: 'dex_to_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To Amount`
   String get dex_to_amount {
     return Intl.message(
-      'To',
+      'To Amount',
       name: 'dex_to_amount',
       desc: '',
       args: [],
@@ -666,10 +686,20 @@ class S {
   }
 
   /// `Commision`
-  String get dex_commision {
+  String get dex_commission {
     return Intl.message(
       'Commision',
-      name: 'dex_commision',
+      name: 'dex_commission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swap`
+  String get dex_swap {
+    return Intl.message(
+      'Swap',
+      name: 'dex_swap',
       desc: '',
       args: [],
     );

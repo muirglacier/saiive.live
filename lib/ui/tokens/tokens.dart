@@ -24,7 +24,7 @@ class _TokensScreen extends State<TokensScreen> {
   }
 
   _initTokens() async {
-    var tokens = await sl.get<TokenService>().getTokens('DFI');
+    var tokens = await sl.get<ITokenService>().getTokens('DFI');
 
     setState(() {
       _tokens = tokens;

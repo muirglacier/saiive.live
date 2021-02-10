@@ -3,6 +3,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
+import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/network/balance_service.dart';
 import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
@@ -10,6 +11,8 @@ import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/utils/token_icon.dart';
+import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -78,18 +81,16 @@ class _DexScreen extends State<DexScreen> {
       }
     }
 
-    var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
-    var popularSymbols = ['DFI', 'ETH', 'BTC'];
+    var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+    var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
-    if (null ==
-        accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol,
-            orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiTokenSymbol, balance: 0));
+    if (null == accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
       var account = accountBalance.firstWhere(
-          (element) => element.token == '\$' + tokenId,
+          (element) => element.token == tokenId,
           orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
 
@@ -275,6 +276,27 @@ class _DexScreen extends State<DexScreen> {
     _testSwapTo = false;
   }
 
+  _buildDropdownListItem(TokenBalance e) {
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: TokenIcon(e.hash),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(e.hash),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(e.balanceDisplayRounded, textAlign: TextAlign.right),
+        )
+      ],
+    );
+
+    return Text(e.hash + ' ' + e.balanceDisplayRounded);
+  }
+
   @override
   Widget build(Object context) {
     return Scaffold(
@@ -284,12 +306,12 @@ class _DexScreen extends State<DexScreen> {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               DropdownButton<TokenBalance>(
                 isExpanded: true,
-                hint: Text("Status"),
+                hint: Text(S.of(context).dex_from_token),
                 value: _selectedValueFrom,
                 items: _fromTokens.map((e) {
                   return new DropdownMenuItem<TokenBalance>(
                     value: e,
-                    child: new Text(e.hash + ' ' + e.balance.toString()),
+                    child: _buildDropdownListItem(e),
                   );
                 }).toList(),
                 onChanged: (TokenBalance val) {
@@ -323,12 +345,12 @@ class _DexScreen extends State<DexScreen> {
                   }),
               DropdownButton<TokenBalance>(
                 isExpanded: true,
-                hint: Text("Status"),
+                hint: Text(S.of(context).dex_to_token),
                 value: _selectedValueTo,
                 items: _toTokens.map((e) {
                   return new DropdownMenuItem<TokenBalance>(
                     value: e,
-                    child: new Text(e.hash + ' ' + e.balance.toString()),
+                    child: _buildDropdownListItem(e),
                   );
                 }).toList(),
                 onChanged: (TokenBalance val) {
@@ -394,16 +416,28 @@ class _DexScreen extends State<DexScreen> {
                   ]),
                   Divider(color: Colors.black),
                   Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).dex_commision)),
+                    Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
                     Expanded(
                         flex: 6,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(_selectedPoolPair.commision.toString()),
+                            Text(_selectedPoolPair.commission.toString()),
                           ],
                         )),
-                  ])
+                  ]),
+                  RaisedButton(
+                    child: Text(S.of(context).dex_swap),
+                    color: Theme.of(context).backgroundColor,
+                    onPressed: () async {
+                      final overlay = LoadingOverlay.of(context);
+                      await overlay.during(Future.delayed(const Duration(seconds: 2)));
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('TODO: Do Swap'),
+                      ));
+                    },
+                  )
                 ])
             ])));
   }

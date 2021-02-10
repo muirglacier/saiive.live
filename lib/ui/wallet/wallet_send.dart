@@ -2,6 +2,7 @@ import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
+import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -82,7 +83,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                 child: Text(S.of(context).wallet_send),
                 color: Theme.of(context).backgroundColor,
                 onPressed: () async {
-                  await sendFunds();
+                  final overlay = LoadingOverlay.of(context);
+                  await overlay.during(sendFunds());
                 },
               )
             ])));

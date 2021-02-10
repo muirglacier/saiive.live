@@ -41,8 +41,8 @@ class PoolShareHelper {
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;
 
-      var tokenA = await sl.get<TokenService>().getToken(coin, idTokenA);
-      var tokenB = await sl.get<TokenService>().getToken(coin, idTokenB);
+      var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
+      var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
 
       var poolSharePercentage =
           (poolShare.amount / poolShare.totalLiquidity) * 100;

@@ -1,5 +1,5 @@
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/util/authentication_method.dart';
+import 'package:defichainwallet/ui/model/authentication_method.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:defichainwallet/network/model/available_language.dart';
 import 'package:defichainwallet/network/model/available_themes.dart';
@@ -41,14 +41,12 @@ class SharedPrefsUtil {
     return await get(seed_backed_up_key, defaultValue: false);
   }
 
-  Future<void> setAuthMethod(AuthMethod method) async {
-    return await set(auth_method, method.index);
+  Future<void> setAuthMethod(AuthenticationMethod method) async {
+    return await set(auth_method, method.getIndex());
   }
 
-  Future<AuthMethod> getAuthMethod() async {
-    var index = await get(auth_method, defaultValue: AuthMethod.BIOMETRICS.index);
-
-    return AuthMethod.values[index];
+  Future<AuthenticationMethod> getAuthMethod() async {
+    return AuthenticationMethod(AuthMethod.values[await get(auth_method, defaultValue: AuthMethod.BIOMETRICS.index)]);
   }
 
   Future<void> setFirstLaunch() async {

@@ -15,9 +15,9 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
-import 'package:defichainwallet/util/authentication_helper.dart';
-import 'package:defichainwallet/util/biometrics.dart';
-import 'package:defichainwallet/util/hapticutil.dart';
+import 'package:defichainwallet/ui/utils/authentication_helper.dart';
+import 'package:defichainwallet/ui/utils/biometrics.dart';
+import 'package:defichainwallet/ui/utils/hapticutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
 

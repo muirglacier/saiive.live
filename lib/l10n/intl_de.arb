@@ -57,6 +57,8 @@
   "settings_removed_seed": "Seed gelöscht",
   "settings_donate": "Wenn du uns helfen willst die App nocht besser machen, kannst du uns gerne DFI spenden:",
   "settings_disclaimer": "No one who is contributing to this project is taking any responsibility of what happens to your funds.",
+  "settings_auth_biometric": "Biometrisch",
+  "settings_auth_none": "Keine",
 
   "wallet_token_available_balance": "Verfügbar",
   "wallet_token_transactions": "Transaktionen",

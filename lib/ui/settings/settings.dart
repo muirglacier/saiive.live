@@ -9,10 +9,10 @@ import 'package:defichainwallet/ui/settings/settings_seed.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/ui/wallet/wallet_send.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
-import 'package:defichainwallet/util/authentication_helper.dart';
-import 'package:defichainwallet/util/authentication_method.dart';
-import 'package:defichainwallet/util/biometrics.dart';
-import 'package:defichainwallet/util/hapticutil.dart';
+import 'package:defichainwallet/ui/utils/authentication_helper.dart';
+import 'package:defichainwallet/ui/model/authentication_method.dart';
+import 'package:defichainwallet/ui/utils/biometrics.dart';
+import 'package:defichainwallet/ui/utils/hapticutil.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   var _version = "";
   EnvironmentType _currentEnvironment;
-  AuthMethod _authMethod = AuthMethod.NONE;
+  int _authMethod;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       _currentEnvironment = currentEnvironment;
       _version = version;
-      _authMethod = authMethod;
+      _authMethod = authMethod.getIndex();
     });
   }
 
@@ -73,22 +73,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                      child: DropdownButton<AuthMethod>(
+                      child: DropdownButton<int>(
                     isExpanded: true,
-                    disabledHint: Text('testnet'),
                     value: _authMethod,
-                    items: AuthMethod.values.map((e) {
-                      return new DropdownMenuItem<AuthMethod>(
-                        value: e,
-                        child: Text(e.toString()),
+                    items: AuthenticationMethod.all().map((e) {
+                      return new DropdownMenuItem<int>(
+                        value: e.getIndex(),
+                        child: Text(e.getDisplayName(context)),
                       );
                     }).toList(),
-                      onChanged: (AuthMethod val) {
+                      onChanged: (int val) {
                         setState(() {
                           _authMethod = val;
                         });
 
-                        sl.get<SharedPrefsUtil>().setAuthMethod(val);
+                        sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
                       },
                   )),
                   Container(

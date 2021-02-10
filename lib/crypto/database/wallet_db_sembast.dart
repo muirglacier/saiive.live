@@ -210,7 +210,7 @@ class SembastWalletDatabase extends IWalletDatabase {
         .put(await database, balance.toJson());
   }
 
-  Future<double> getAccountBalance(String token) async {
+  Future<AccountBalance> getAccountBalance(String token) async {
     var dbStore = _balancesStoreInstance;
 
     var finder = Finder(filter: Filter.equals('token', token));
@@ -222,13 +222,13 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     final ret = groupBy(data, (e) => e.token);
 
-    Map sumMap = Map<String, double>();
+    Map sumMap = Map<String, int>();
 
     ret.forEach((k, v) {
-      sumMap[k] = v.fold(0, (prev, element) => prev + element.balanceDisplay);
+      sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
     });
 
-    return sumMap[token];
+    return AccountBalance(balance: sumMap[token], token: token);
   }
 
   @override

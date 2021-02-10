@@ -29,7 +29,7 @@ abstract class IWalletDatabase {
   Future clearAccountBalances();
   Future setAccountBalance(Account balance);
   Future<List<Account>> getAccountBalances();
-  Future<double> getAccountBalance(String token);
+  Future<AccountBalance> getAccountBalance(String token);
   Future<List<Account>> getAccountBalancesForToken(String token);
   Future<List<AccountBalance>> getTotalBalances();
   Future<Account> getAccountBalanceForPubKey(String pubKey, String token);

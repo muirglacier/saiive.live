@@ -27,6 +27,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
     newAccount.selected = isSelected;
 
     _walletAccounts.add(newAccount);
+
+    return newAccount;
   }
 
   @override
@@ -64,8 +66,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<double> getAccountBalance(String token) async {
-    var balance = 0.0;
+  Future<AccountBalance> getAccountBalance(String token) async {
+    var balance = 0;
 
     if (token == DeFiConstants.DefiTokenSymbol) {
       for (var tx in _unspentTransactions) {
@@ -79,7 +81,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
       }
     }
 
-    return balance;
+    return AccountBalance(balance: balance, token: token);
   }
 
   @override

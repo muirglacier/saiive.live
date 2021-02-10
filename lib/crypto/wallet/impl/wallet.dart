@@ -176,9 +176,12 @@ class Wallet extends IWallet {
       int amount, String token, String to) async {
     _isInitialzed();
 
-    if (token == DeFiConstants.DefiTokenSymbol) {
+    final changeAddress = await getPublicKeyFromAccount(_account, true);
+
+    if (token == DeFiConstants.DefiTokenSymbol ||
+        token == DeFiConstants.DefiAccountSymbol) {
       await prepareUtxo(amount);
-      return await _createUtxoTransaction(amount, to);
+      return await _createUtxoTransaction(amount, to, changeAddress);
     }
     return await _createAccountTransaction(token, amount, to);
   }
@@ -193,7 +196,7 @@ class Wallet extends IWallet {
 
     final tokenBalance = await _walletDatabase.getAccountBalance(token);
 
-    if (amount > tokenBalance) {
+    if (amount > tokenBalance.balance) {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
 
@@ -248,26 +251,26 @@ class Wallet extends IWallet {
   }
 
   Future<String> createAuthTx(String pubKey) async {
-    var baseTx = await _createBaseTransaction(await getTxFee(), pubKey);
-    baseTx.addAuthOutput();
+    var baseTx = await _createBaseTransaction(200000, pubKey, pubKey, (txb) {
+      txb.addAuthOutput(outputIndex: 0);
+    });
 
-    var txHex = baseTx.build().toHex();
-
-    return txHex;
+    return baseTx;
   }
 
-  Future<String> _createUtxoTransaction(int amount, String to) async {
-    final txb = await _createBaseTransaction(amount, to);
-    return txb.build().toHex();
+  Future<String> _createUtxoTransaction(
+      int amount, String to, String changeAddress) async {
+    final txb =
+        await _createBaseTransaction(amount, to, changeAddress, (txb) => {});
+    return txb;
   }
 
-  Future<TransactionBuilder> _createBaseTransaction(
-      int amount, String to) async {
-    final changeAddress = await getPublicKeyFromAccount(_account, true);
+  Future<String> _createBaseTransaction(int amount, String to,
+      String changeAddress, Function(TransactionBuilder) additional) async {
     final tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
-    if (amount > tokenBalance) {
+    if (amount > tokenBalance.balance) {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
     final key = mnemonicToSeed(_seed);
@@ -299,8 +302,8 @@ class Wallet extends IWallet {
       }
     }
 
-    final txb = await HdWalletUtil.buildTransaction(
-        useTxs, keys, to, amount, fee, changeAddress, _chain, _network);
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, to, amount,
+        fee, changeAddress, additional, _chain, _network);
     return txb;
   }
 
@@ -321,8 +324,8 @@ class Wallet extends IWallet {
   }
 
   @override
-  Future<tx.Transaction> getTransaction(String id) {
-    throw UnimplementedError();
+  Future<tx.Transaction> getTransaction(String id) async {
+    return await _walletDatabase.getTransaction(id);
   }
 
   Future<int> getTxFee() async {
@@ -333,24 +336,24 @@ class Wallet extends IWallet {
     var tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
-    if (tokenBalance == 0) {
+    if (tokenBalance == null || tokenBalance.balance == 0) {
       throw new ArgumentError(
           "Token balance must be greater than 0 to create any tx!");
     }
     // we have currently enough utxo
-    if (tokenBalance > amount) {
+    if (tokenBalance.balance > amount) {
       return;
     }
 
     var accountBalance = await _walletDatabase
         .getAccountBalance(DeFiConstants.DefiAccountSymbol);
-    var totalBalance = accountBalance + tokenBalance;
+    var totalBalance = accountBalance.balance + tokenBalance.balance;
 
     if (totalBalance < amount) {
       throw new ArgumentError("Balance $totalBalance is less than $amount");
     }
 
-    final neededUtxo = amount - tokenBalance;
+    final neededUtxo = amount - tokenBalance.balance;
 
     final accounts = await _walletDatabase
         .getAccountBalancesForToken(DeFiConstants.DefiAccountSymbol);

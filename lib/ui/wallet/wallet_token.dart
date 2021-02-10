@@ -4,6 +4,7 @@ import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
@@ -27,7 +28,7 @@ class WalletTokenScreen extends StatefulWidget {
 
 class _WalletTokenScreen extends State<WalletTokenScreen>
     with TickerProviderStateMixin {
-  dynamic _balance;
+  AccountBalance _balance;
   bool _balanceLoaded = false;
   bool _balanceRefreshing = false;
   AnimationController _controller;
@@ -47,7 +48,8 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
 
     if (widget.token == DeFiConstants.DefiTokenSymbol) {
       _balance = await db.getAccountBalance(widget.token);
-      _balance += await db.getAccountBalance(DeFiConstants.DefiTokenSymbol);
+      var dfi = await db.getAccountBalance(DeFiConstants.DefiTokenSymbol);
+      _balance.balance += dfi.balance;
     } else {
       _balance = await db.getAccountBalance(widget.token);
     }
@@ -109,7 +111,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                 Text(S.of(context).wallet_token_available_balance,
                     style: TextStyle(fontSize: 12)),
                 SizedBox(height: 5),
-                Text((_balance).toStringAsFixed(8),
+                Text((_balance.balanceDisplay).toStringAsFixed(8),
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
               ]),
           trailing: RotationTransition(

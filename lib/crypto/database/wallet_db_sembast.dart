@@ -140,6 +140,26 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
+  @override
+  Future<tx.Transaction> getTransaction(String id) async {
+    var dbStore = _transactionStoreInstance;
+
+    var finder = Finder(
+        filter:
+            Filter.equals('id', id));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
+        ?.toList();
+
+    if (data.isEmpty) {
+      return null;
+    }
+
+    return data.first;
+  }
+
   Future clearTransactions() async {
     final txs = await getTransactions();
     final txIds = txs.map((e) => e.uniqueId);
@@ -171,13 +191,15 @@ class SembastWalletDatabase extends IWalletDatabase {
       String pubKey, int minAmount) async {
     var dbStore = _unspentStoreInstance;
 
-    var finder = Finder(filter: Filter.equals('address', pubKey) & Filter.greaterThanOrEquals("value", minAmount));
+    var finder = Finder(
+        filter: Filter.equals('address', pubKey) &
+            Filter.greaterThanOrEquals("value", minAmount));
     final accounts = await dbStore.find(await database, finder: finder);
 
     final data = accounts
         .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
         ?.toList();
-        
+
     return data;
   }
 
@@ -210,7 +232,7 @@ class SembastWalletDatabase extends IWalletDatabase {
         .put(await database, balance.toJson());
   }
 
-  Future<double> getAccountBalance(String token) async {
+  Future<AccountBalance> getAccountBalance(String token) async {
     var dbStore = _balancesStoreInstance;
 
     var finder = Finder(filter: Filter.equals('token', token));
@@ -222,13 +244,13 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     final ret = groupBy(data, (e) => e.token);
 
-    Map sumMap = Map<String, double>();
+    Map sumMap = Map<String, int>();
 
     ret.forEach((k, v) {
-      sumMap[k] = v.fold(0, (prev, element) => prev + element.balanceDisplay);
+      sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
     });
 
-    return sumMap[token];
+    return AccountBalance(balance: sumMap[token], token: token);
   }
 
   @override

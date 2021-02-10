@@ -11,7 +11,7 @@ class Transaction {
   final int mintHeight;
   final int spentHeight;
   final String address;
-  final double value;
+  final int value;
   final int confirmations;
 
   int get valueRaw => (value).round();
@@ -21,7 +21,7 @@ class Transaction {
   int account;
   bool isChangeAddress;
 
-  double get correctValue => (spentHeight <= 0) ? value : (value * -1);
+  int get correctValue => (spentHeight <= 0) ? value : (value * -1);
   String get correctValueRounded => (correctValue / 100000000).toStringAsFixed(8);
 
   Transaction(
@@ -53,7 +53,7 @@ class Transaction {
         mintHeight: json['mintHeight'],
         spentHeight: json['spentHeight'],
         address: json['address'],
-        value: double.parse(json['value'].toString()),
+        value: int.parse(json['value'].toString()),
         confirmations: json['confirmations'],
         index: json['index'],
         account: json['account'],

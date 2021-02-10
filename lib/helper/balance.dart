@@ -9,7 +9,7 @@ class BalanceHelper {
     if (accountBalance.isNotEmpty) {
       var dollarDFI = accountBalance.firstWhere(
           (element) => element.token == DeFiConstants.DefiTokenSymbol,
-          orElse: null);
+          orElse:() => AccountBalance(balance: 0, token: DeFiConstants.DefiTokenSymbol));
       var dfi = accountBalance.firstWhere(
           (element) => element.token == DeFiConstants.DefiAccountSymbol,
           orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiAccountSymbol));

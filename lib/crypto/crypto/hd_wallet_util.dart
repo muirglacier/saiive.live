@@ -186,13 +186,14 @@ class HdWalletUtil {
     return txb;
   }
 
-  static Future<TransactionBuilder> buildTransaction(
+  static Future<String> buildTransaction(
       List<tx.Transaction> inputTxs,
       List<ECPair> keys,
       String to,
       int amount,
       int fee,
       String returnAddress,
+      Function(TransactionBuilder) additional,
       ChainType chain,
       ChainNet net) async {
     var network = getNetworkType(chain, net);
@@ -207,16 +208,25 @@ class HdWalletUtil {
     for (final tx in inputTxs) {
       txb.addInput(tx.mintTxId, tx.mintIndex);
 
+      final mintTxId = tx.mintTxId;
+      final mintIndex = tx.mintIndex;
+      final inValue = tx.value;
+      LogHelper.instance.d("set tx input $mintTxId@$mintIndex input value is $inValue");
+
       totalInputValue += tx.valueRaw;
     }
 
     if (totalInputValue > (amount)) {
       var changeAmount = totalInputValue - amount - fee;
       txb.addOutput(returnAddress, changeAmount);
+      LogHelper.instance.d("set tx output (change) $returnAddress value is $changeAmount");
     }
     if (amount > 0) {
       txb.addOutput(to, amount);
+      LogHelper.instance.d("set tx output $to value is $amount");
     }
+
+    additional(txb);
 
     int index = 0;
     for (final key in keys) {
@@ -224,20 +234,19 @@ class HdWalletUtil {
       final redeemScript = p2wpkh.output;
       final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
       final input = inputTxs[index].mintTxId;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
+      final witnessValue = inputTxs[index].valueRaw;
+      LogHelper.instance.d("sign tx $input with privateKey from $pubKey withnessValue. $witnessValue");
 
       txb.sign(
           vin: index,
           keyPair: key,
-          witnessValue: inputTxs[index].valueRaw,
+          witnessValue: witnessValue,
           redeemScript: redeemScript);
       index++;
     }
 
-    final tx = txb.build();
-    final txhex = tx.toHex();
-    LogHelper.instance.d("txHex is $txhex");
-    return txb;
+
+    return txb.build().toHex();
   }
 
   static Future<TransactionBuilder> buildAccountToUtxosTransaction(

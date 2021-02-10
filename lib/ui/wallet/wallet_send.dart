@@ -9,7 +9,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class WalletSendScreen extends StatefulWidget {
   final String token;
-  WalletSendScreen(this.token);
+  final String toAddress;
+
+  WalletSendScreen(this.token, {this.toAddress});
 
   @override
   State<StatefulWidget> createState() {
@@ -18,8 +20,7 @@ class WalletSendScreen extends StatefulWidget {
 }
 
 class _WalletSendScreen extends State<WalletSendScreen> {
-  var _addressController =
-      TextEditingController(text: 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
+  var _addressController;
   var _amountController = TextEditingController(text: '5');
 
   Future sendFunds() async {
@@ -42,6 +43,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   @override
   void initState() {
     super.initState();
+
+    _addressController = TextEditingController(text: widget.toAddress ?? '');
   }
 
   @override

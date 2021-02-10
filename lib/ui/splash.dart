@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/helper/env.dart';
+import 'package:defichainwallet/helper/version.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -69,41 +71,16 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
-  void _loadVersion() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-
-    final version = packageInfo.version;
-    final buildNumber = packageInfo.buildNumber;
-
-    setState(() {
-      _version = version + "." + buildNumber;
-    });
-  }
-
-  void _initGetFlavor() async {
-    var currentEnvironment = EnvironmentType.Unknonw;
-    var packageInfo = await PackageInfo.fromPlatform();
-    switch (packageInfo.packageName) {
-      case "at.defichain.wallet.dev":
-        currentEnvironment = EnvironmentType.Development;
-        break;
-      case "at.defichain.wallet.staging":
-        currentEnvironment = EnvironmentType.Staging;
-        break;
-      case "at.defichain.wallet":
-        currentEnvironment = EnvironmentType.Production;
-        break;
-    }
-    setState(() {
-      _currentEnvironment = currentEnvironment;
-    });
+  void _init() async {
+    _currentEnvironment = new EnvHelper().getEnvironment();
+    _version = await new VersionHelper().getVersion();
   }
 
   @override
   void initState() {
     super.initState();
-    _loadVersion();
-    _initGetFlavor();
+
+    _init();
 
     WidgetsBinding.instance.addObserver(this);
     _hasCheckedLoggedIn = false;

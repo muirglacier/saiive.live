@@ -555,6 +555,56 @@ class S {
     );
   }
 
+  /// `Remove Seed`
+  String get settings_remove_seed {
+    return Intl.message(
+      'Remove Seed',
+      name: 'settings_remove_seed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show Seed`
+  String get settings_show_seed {
+    return Intl.message(
+      'Show Seed',
+      name: 'settings_show_seed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Removed saved seed`
+  String get settings_removed_seed {
+    return Intl.message(
+      'Removed saved seed',
+      name: 'settings_removed_seed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you want to help making the App even better, you can donate $DFI here:`
+  String get settings_donate {
+    return Intl.message(
+      'If you want to help making the App even better, you can donate \$DFI here:',
+      name: 'settings_donate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No one who is contributing to this project is taking any responsibility of what happens to your funds.`
+  String get settings_disclaimer {
+    return Intl.message(
+      'No one who is contributing to this project is taking any responsibility of what happens to your funds.',
+      name: 'settings_disclaimer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Available balance`
   String get wallet_token_available_balance {
     return Intl.message(

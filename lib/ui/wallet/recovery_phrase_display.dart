@@ -45,7 +45,7 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
             backgroundColor: Theme.of(context).primaryColor,
             title: Text(S.of(context).wallet_recovery_phrase_title)),
         body: Padding(
-            padding: EdgeInsets.only(top: 0),
+            padding: EdgeInsets.all(10),
             child: Container(
                 child: Column(children: [
               Padding(

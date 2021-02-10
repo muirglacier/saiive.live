@@ -11,6 +11,7 @@ import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -407,6 +408,9 @@ class _DexScreen extends State<DexScreen> {
                     child: Text(S.of(context).dex_swap),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
+                      final overlay = LoadingOverlay.of(context);
+                      await overlay.during(Future.delayed(const Duration(seconds: 2)));
+
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text('TODO: Do Swap'),
                       ));

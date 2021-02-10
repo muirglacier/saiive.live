@@ -11,6 +11,7 @@ import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -275,6 +276,27 @@ class _DexScreen extends State<DexScreen> {
     _testSwapTo = false;
   }
 
+  _buildDropdownListItem(TokenBalance e) {
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: TokenIcon(e.hash),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(e.hash),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(e.balanceDisplayRounded, textAlign: TextAlign.right),
+        )
+      ],
+    );
+
+    return Text(e.hash + ' ' + e.balanceDisplayRounded);
+  }
+
   @override
   Widget build(Object context) {
     return Scaffold(
@@ -289,7 +311,7 @@ class _DexScreen extends State<DexScreen> {
                 items: _fromTokens.map((e) {
                   return new DropdownMenuItem<TokenBalance>(
                     value: e,
-                    child: new Text(e.hash + ' ' + e.balanceDisplayRounded),
+                    child: _buildDropdownListItem(e),
                   );
                 }).toList(),
                 onChanged: (TokenBalance val) {
@@ -328,7 +350,7 @@ class _DexScreen extends State<DexScreen> {
                 items: _toTokens.map((e) {
                   return new DropdownMenuItem<TokenBalance>(
                     value: e,
-                    child: new Text(e.hash + ' ' + e.balanceDisplayRounded),
+                    child: _buildDropdownListItem(e),
                   );
                 }).toList(),
                 onChanged: (TokenBalance val) {

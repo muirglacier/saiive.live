@@ -22,6 +22,7 @@ class Transaction {
   bool isChangeAddress;
 
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
+  String get correctValueRounded => (correctValue / 100000000).toStringAsFixed(8);
 
   Transaction(
       {this.id,

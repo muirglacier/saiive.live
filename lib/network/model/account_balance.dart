@@ -1,6 +1,6 @@
 class AccountBalance {
   final String token;
-  double balance;
+  int balance;
 
   double get balanceDisplay => balance / 100000000;
   String get balanceDisplayRounded => (balance / 100000000).toStringAsFixed(8);

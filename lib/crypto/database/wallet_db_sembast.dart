@@ -291,7 +291,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     final ret = groupBy(data, (e) => e.token);
 
-    Map sumMap = Map<String, double>();
+    Map sumMap = Map<String, int>();
 
     ret.forEach((k, v) {
       sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);

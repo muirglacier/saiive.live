@@ -155,7 +155,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(balance.balanceDisplay.toString(),
+            Text(balance.balanceDisplayRounded.toString(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
           ]),
       onTap: () {

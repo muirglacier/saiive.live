@@ -144,7 +144,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                               TextStyle(color: Theme.of(context).primaryColor)),
                       onTap: () => launch(DefiChainConstants.getExplorerUrl(
                           _chainNet, tx.mintTxId))),
-                  Text(tx.correctValue.toString())
+                  Text(tx.correctValueRounded)
                 ],
               ),
               SizedBox(height: 5),

@@ -46,7 +46,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   void initState() {
     super.initState();
 
-    _addressController = TextEditingController(text: widget.toAddress ?? '');
+    _addressController = TextEditingController(text: widget.toAddress ?? 'tazZryUYYMX8jJLkZ66S7JKcV5EbqdKATZ');
   }
 
   @override

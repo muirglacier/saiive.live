@@ -1,11 +1,29 @@
 import 'dart:core';
 
-class Transaction {
+import 'package:defichainwallet/network/model/transaction.dart';
+
+class TransactionDetail {
+  final List<Transaction> inputs;
+  final List<Transaction> outputs;
+
+  TransactionDetail({this.inputs, this.outputs});
+
+  factory TransactionDetail.fromJson(Map<String, dynamic> json) {
+    final inputs = (json['inputs'] as List);
+    final outputs = (json['outputs'] as List);
+
+    final txInputs = inputs?.map((e) => Transaction.fromJson(e))?.toList();
+    final txOutputs = outputs?.map((e) => Transaction.fromJson(e))?.toList();
+    return TransactionDetail(inputs: txInputs, outputs: txOutputs);
+  }
+}
+
+class TransactionData {
   final String id;
   final String chain;
   final String network;
   final bool coinbase;
-  int mintIndex;
+  final int mintIndex;
   final String spentTxId;
   final String mintTxId;
   final int mintHeight;
@@ -13,6 +31,7 @@ class Transaction {
   final String address;
   final int value;
   final int confirmations;
+  final TransactionDetail details;
 
   int get valueRaw => (value).round();
   String get uniqueId => mintTxId + "_" + mintIndex.toString();
@@ -22,9 +41,10 @@ class Transaction {
   bool isChangeAddress;
 
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
-  String get correctValueRounded => (correctValue / 100000000).toStringAsFixed(8);
+  String get correctValueRounded =>
+      (correctValue / 100000000).toStringAsFixed(8);
 
-  Transaction(
+  TransactionData(
       {this.id,
       this.chain,
       this.network,
@@ -39,10 +59,11 @@ class Transaction {
       this.confirmations,
       this.index,
       this.account,
-      this.isChangeAddress});
+      this.isChangeAddress,
+      this.details});
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
+  factory TransactionData.fromJson(Map<String, dynamic> json) {
+    return TransactionData(
         id: json['id'],
         chain: json['chain'],
         network: json['network'],
@@ -57,7 +78,8 @@ class Transaction {
         confirmations: json['confirmations'],
         index: json['index'],
         account: json['account'],
-        isChangeAddress: json['isChangeAddress']);
+        isChangeAddress: json['isChangeAddress'],
+        details: TransactionDetail.fromJson(json["details"]));
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{

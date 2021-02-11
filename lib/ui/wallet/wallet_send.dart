@@ -24,7 +24,7 @@ class WalletSendScreen extends StatefulWidget {
 
 class _WalletSendScreen extends State<WalletSendScreen> {
   var _addressController;
-  var _amountController = TextEditingController(text: '5');
+  var _amountController = TextEditingController(text: '1');
 
   Future sendFunds() async {
     try {

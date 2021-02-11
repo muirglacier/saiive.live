@@ -5,7 +5,7 @@ import 'package:defichainwallet/network/model/transaction.dart';
 abstract class IWallet {
   static const int MaxUnusedAccountScan = 3;
   static const int MaxUnusedIndexScan = 2;
-  static const int KeysPerQuery = 20;
+  static const int KeysPerQuery = 30;
 
   Future init();
   Future<List<Account>> syncBalance();

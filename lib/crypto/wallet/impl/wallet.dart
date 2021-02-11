@@ -13,13 +13,14 @@ import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
+import 'package:defichainwallet/network/network_service.dart';
+import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:flutter/foundation.dart';
-
-import '../wallet-sync.dart';
+import 'package:retry/retry.dart';
 
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -330,8 +331,18 @@ class Wallet extends IWallet {
     final txId =
         await _apiService.transactionService.sendRawTransaction("DFI", txHex);
 
-    await Future.delayed(Duration(seconds: 2));
-    return await _apiService.transactionService.getWithTxId("DFI", txId);
+    final r = RetryOptions(maxAttempts: 8, maxDelay: Duration(seconds: 2));
+    final response = await r.retry(
+        () async {
+          return await _apiService.transactionService.getWithTxId("DFI", txId);
+        },
+        retryIf: (e) => e is HttpException || e is ErrorResponse,
+        onRetry: (e) {
+          LogHelper.instance.e("error get tx", e);
+        });
+
+    final retOut = response.details.outputs.firstWhere((element) => element.spentHeight <= 0 && element.address == pubKey);
+    return retOut;
   }
 
   @override

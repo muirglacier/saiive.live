@@ -330,6 +330,7 @@ class Wallet extends IWallet {
     final txId =
         await _apiService.transactionService.sendRawTransaction("DFI", txHex);
 
+    await Future.delayed(Duration(seconds: 2));
     return await _apiService.transactionService.getWithTxId("DFI", txId);
   }
 

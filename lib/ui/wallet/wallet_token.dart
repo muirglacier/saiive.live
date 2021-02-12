@@ -46,8 +46,9 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
 
     final db = sl.get<IWalletDatabase>();
 
-    if (widget.token == DeFiConstants.DefiTokenSymbol) {
-      _balance = await db.getAccountBalance(widget.token);
+    if (widget.token == DeFiConstants.DefiTokenSymbol ||
+        widget.token == DeFiConstants.DefiAccountSymbol) {
+      _balance = await db.getAccountBalance(DeFiConstants.DefiAccountSymbol);
       var dfi = await db.getAccountBalance(DeFiConstants.DefiTokenSymbol);
       _balance.balance += dfi.balance;
     } else {

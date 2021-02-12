@@ -100,14 +100,14 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
             deleteIconColor: Colors.white);
       },
       onChanged: () {
-        // _tagBoxFocus.requestFocus();
+        //  _tagBoxFocus.requestFocus();
         setState(() {
           _inputEnabled = _selectedPhrases.length < 24;
           _phrase = _selectedPhrases.map((e) => e.name).join(" ");
         });
 
         if (_inputEnabled) {
-          Future.delayed(Duration(milliseconds: 10), () => _tagBoxFocus.requestFocus());
+          // Future.delayed(Duration(milliseconds: 10), () => _tagBoxFocus.requestFocus());
         }
       },
     );

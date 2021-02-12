@@ -9,14 +9,15 @@ import 'package:defichainwallet/network/request/addresses_request.dart';
 import 'package:defichainwallet/network/request/raw_tx_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
+import 'model/transaction_data.dart';
+
 abstract class ITransactionService {
-  Future<List<Transaction>> getAddressTransaction(
-      String coin, String address);
+  Future<List<Transaction>> getAddressTransaction(String coin, String address);
   Future<List<Transaction>> getAddressesTransactions(
       String coin, List<String> addresses);
   Future<List<Transaction>> getUnspentTransactionOutputs(
       String coin, List<String> addresses);
-  Future<Transaction> getWithTxId(String coin, String txId);
+  Future<TransactionData> getWithTxId(String coin, String txId);
 }
 
 class TransactionService extends NetworkService implements ITransactionService {
@@ -79,18 +80,15 @@ class TransactionService extends NetworkService implements ITransactionService {
     return transactions;
   }
 
-  Future<Transaction> getWithTxId(String coin, String txId) async {
+  Future<TransactionData> getWithTxId(String coin, String txId) async {
     dynamic response =
-        await this.httpService.makeHttpGetRequest('/tx/id/$txId', coin);
+        await this.httpService.makeDynamicHttpGetRequest('/tx/id/$txId', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
-
-    Transaction transaction = Transaction.fromJson(response);
-
-    this.fireEvent(new TransactionLoadedEvent(transaction: transaction));
-
+    Map decoded = json.decode(response.body);
+    final transaction = TransactionData.fromJson(decoded);
     return transaction;
   }
 

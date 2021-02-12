@@ -1,6 +1,7 @@
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
@@ -23,30 +24,40 @@ class WalletSendScreen extends StatefulWidget {
 
 class _WalletSendScreen extends State<WalletSendScreen> {
   var _addressController;
-  var _amountController = TextEditingController(text: '5');
+  var _amountController = TextEditingController(text: '1');
 
   Future sendFunds() async {
-    final amount = double.parse(_amountController.text);
-    final totalAmount = (amount * 100000000).toInt();
-    final tx = await sl.get<DeFiChainWallet>().createSendTransaction(
-        totalAmount, widget.token, _addressController.text);
+    try {
+      final amount = double.parse(_amountController.text);
+      final totalAmount = (amount * 100000000).toInt();
+      final tx = await sl.get<DeFiChainWallet>().createSendTransaction(
+          totalAmount, widget.token, _addressController.text);
 
-    final apiService = sl.get<ApiService>();
+      final apiService = sl.get<ApiService>();
 
-    final txId =
-        await apiService.transactionService.sendRawTransaction("DFI", tx);
-    LogHelper.instance.d("sent tx $txId");
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txId),
-    ));
-    Navigator.of(context).popUntil(ModalRoute.withName("/home"));
+      final txId =
+          await apiService.transactionService.sendRawTransaction("DFI", tx);
+      LogHelper.instance.d("sent tx $txId");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(txId),
+      ));
+    } catch (e) {
+      LogHelper.instance.e("Error creating tx", e);
+      if (e is ErrorResponse) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.error),
+        ));
+      }
+    }
+    Navigator.of(context).pop();
   }
 
   @override
   void initState() {
     super.initState();
 
-    _addressController = TextEditingController(text: widget.toAddress ?? 'tazZryUYYMX8jJLkZ66S7JKcV5EbqdKATZ');
+    _addressController = TextEditingController(
+        text: widget.toAddress ?? 'tazZryUYYMX8jJLkZ66S7JKcV5EbqdKATZ');
   }
 
   @override

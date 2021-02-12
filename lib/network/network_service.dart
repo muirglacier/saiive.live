@@ -10,6 +10,11 @@ Map decodeJson(dynamic src) {
   return json.decode(src);
 }
 
+class HttpException implements Exception {
+  final ErrorResponse error;
+  HttpException(this.error);
+}
+
 abstract class NetworkService {
   IHttpService httpService;
 
@@ -22,6 +27,6 @@ abstract class NetworkService {
   }
 
   void handleError(ErrorResponse response) {
-    throw Exception("Received error ${response.error}");
+    throw HttpException(response);
   }
 }

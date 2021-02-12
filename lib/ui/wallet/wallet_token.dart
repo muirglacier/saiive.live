@@ -189,10 +189,12 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
               child: AppButton.buildAppButton(
                   context, AppButtonType.PRIMARY, S.of(context).send,
                   icon: Icons.arrow_upward,
-                  width: width / 2 - 20, onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
+                  width: width / 2 - 20, onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) =>
                         WalletSendScreen(widget.token)));
+
+                await loadAccountBalance();
               })),
           AppButton.buildAppButton(
               context, AppButtonType.PRIMARY, S.of(context).receive,
@@ -200,7 +202,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
               width: width / 2 - 20, onPressed: () async {
             var wallet = sl.get<DeFiChainWallet>();
             var pubKey = await wallet.getPublicKey();
-            Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) =>
                     WalletReceiveScreen(pubKey: pubKey)));
           })

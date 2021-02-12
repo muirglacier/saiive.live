@@ -6,19 +6,21 @@ import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/impl/hdWallet.dart';
+import 'package:defichainwallet/crypto/wallet/impl/wallet_static.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
+import 'package:defichainwallet/network/network_service.dart';
+import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:flutter/foundation.dart';
-
-import '../wallet-sync.dart';
+import 'package:retry/retry.dart';
 
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -33,12 +35,13 @@ class Wallet extends IWallet {
   IWalletDatabase _walletDatabase;
 
   bool _isInitialized = false;
+  bool checkUtxo;
 
-  Wallet(this._chain);
+  Wallet(this._chain, this.checkUtxo);
 
   void _isInitialzed() {
     if (!_isInitialized) {
-      throw Error();
+      throw ArgumentError("Wallet is not initialized!");
     }
   }
 
@@ -328,7 +331,18 @@ class Wallet extends IWallet {
     final txId =
         await _apiService.transactionService.sendRawTransaction("DFI", txHex);
 
-    return await _apiService.transactionService.getWithTxId("DFI", txId);
+    final r = RetryOptions(maxAttempts: 8, maxDelay: Duration(seconds: 2));
+    final response = await r.retry(
+        () async {
+          return await _apiService.transactionService.getWithTxId("DFI", txId);
+        },
+        retryIf: (e) => e is HttpException || e is ErrorResponse,
+        onRetry: (e) {
+          LogHelper.instance.e("error get tx", e);
+        });
+
+    final retOut = response.details.outputs.firstWhere((element) => element.spentHeight <= 0 && element.address == pubKey);
+    return retOut;
   }
 
   @override
@@ -385,6 +399,9 @@ class Wallet extends IWallet {
   Future prepareAccount(int amount) {}
 
   Future _ensureUtxo() async {
+    if (!checkUtxo) {
+      return;
+    }
     await _syncUnspentTransactionOutputs();
   }
 
@@ -399,7 +416,7 @@ class Wallet extends IWallet {
     dataMap["apiService"] = sl.get<ApiService>();
     dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
 
-    var utxos = await compute(Wallet._syncUtxo, dataMap);
+    var utxos = await compute(WalletStaticHelper.syncUtxo, dataMap);
 
     await _walletDatabase.clearUnspentTransactions();
 
@@ -408,15 +425,35 @@ class Wallet extends IWallet {
         await _walletDatabase.addUnspentTransaction(tx);
       }
     }
+
+    var balances = await compute(WalletStaticHelper.syncWallet, dataMap);
+
+    await _walletDatabase.clearAccountBalances();
+
+    for (final balance in balances) {
+      _walletDatabase.setAccountBalance(balance);
+    }
   }
 
-  static Future _syncUtxo(Map dataMap) async {
-    return await WalletSync.syncUTXO(
-        dataMap["chain"],
-        dataMap["network"],
-        dataMap["seed"],
-        dataMap["password"],
-        dataMap["apiService"],
-        dataMap["accounts"]);
+  Future _syncTransactions() async {
+    var dataMap = Map();
+    dataMap["chain"] = _chain;
+    dataMap["network"] = _network;
+    dataMap["seed"] = await sl.get<IVault>().getSeed();
+    dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
+    dataMap["apiService"] = sl.get<ApiService>();
+    dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
+
+    var txs = await compute(WalletStaticHelper.syncTransactions, dataMap);
+    await _walletDatabase.clearUnspentTransactions();
+
+    for (tx.Transaction transaction in txs) {
+      await _walletDatabase.addTransaction(transaction);
+    }
+  }
+
+  Future syncAll() async {
+    await _ensureUtxo();
+    await _syncTransactions();
   }
 }

@@ -45,8 +45,8 @@ class HdWalletUtil {
     final address = await _getPublicAddress(
         xMasterPriv.derivePath(path), chainType, network);
 
-    LogHelper.instance
-        .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
+ //   LogHelper.instance
+   //     .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
 
     return address;
   }

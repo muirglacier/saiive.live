@@ -29,7 +29,7 @@ stages:
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.appstore.mobileprovision'
+          provProfileSecureFile: 'com.defichain.wallet.adhoc.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -103,7 +103,7 @@ stages:
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc.mobileprovision'
+          provProfileSecureFile: 'com.defichain.wallet.appstore.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -130,7 +130,7 @@ stages:
           target: 'ios'
           projectDirectory: '$(Build.SourcesDirectory)'
           buildFlavour: 'production'
-          entryPoint: 'lib/main_production.dart'
+          entryPoint: 'lib/main_prod.dart'
           verboseMode: false
           debugMode: false
           buildName: '0.1'

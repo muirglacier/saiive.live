@@ -50,8 +50,8 @@ dependencies:
   
   #ui libs
   carousel_slider: ^2.1.0
-  flutter_tagging: ^2.2.0+3
-  pull_to_refresh: ^1.6.4 
+  flutter_typeahead: ^2.0.0
+  pull_to_refresh: ^1.6.4
   auto_size_text: ^2.1.0
   qr_flutter: ^2.0.1
   flutter_qr_reader: ^1.0.3

@@ -6,6 +6,8 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/utils/token_icon.dart';
+import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +30,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
     dataMap["chain"] = chain;
     dataMap["network"] = network;
     dataMap["seed"] = await sl.get<IVault>().getSeed();
-    dataMap["password"] = "";//await sl.get<Vault>().getSecret();
+    dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
     dataMap["apiService"] = sl.get<ApiService>();
 
     var result = await compute(_searchAccounts, dataMap);
@@ -65,7 +67,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
   }
 
   Widget _buildAccountEntry(WalletAccount account) {
-    return Row(children: <Widget>[
+    return Center(child: Row(children: <Widget>[
       Icon(
         Icons.arrow_right,
         size: 19.0,
@@ -76,7 +78,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
           child: Text(account.name,
               style: TextStyle(
                   color: Theme.of(context).accentColor, fontSize: 15)))
-    ]);
+    ]));
   }
 
   Widget _buildAccountListWrap(
@@ -87,44 +89,39 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 15),
       ),
-      SizedBox(height: 20),
-      _buildAccountListEntry(accounts),
-      SizedBox(height: 20),
-      Text(
-        S.of(context).wallet_restore_accountsAdded,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 15),
-      ),
-      SizedBox(height: 20),
-      Padding(
-          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 0),
-          child: Expanded(
-              child: RaisedButton(
-            child: Text(S.of(context).next),
-            onPressed: () async {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("/home", (_) => false);
-            },
-          )))
+      Expanded(
+          flex: 1,
+          child: Column(children: [
+            Expanded(flex: 1, child: Padding(padding: EdgeInsets.only(top: 10), child: _buildAccountListEntry(accounts))),
+            RaisedButton(
+              child: Text(S.of(context).next),
+              onPressed: () async {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil("/home", (_) => false);
+              },
+            ),
+            Text(
+              S.of(context).wallet_restore_accountsAdded,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15),
+            )
+          ]))
     ]);
   }
 
   Widget _buildAccountListEntry(List<WalletAccount> accounts) {
     if (accounts.isEmpty) {
-      return Text(S.of(context).wallet_restore_noAccountFound);
+      return Center(child: Text(S.of(context).wallet_restore_noAccountFound, textAlign: TextAlign.center, style: TextStyle(color: Colors.red)));
     } else {
-      final height = MediaQuery.of(context).size.height;
       return SingleChildScrollView(
-          child: SizedBox(
-              height: height * 0.3,
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: accounts.length,
-                  itemBuilder: (context, index) {
-                    final account = accounts[index];
-                    return _buildAccountEntry(account);
-                  })));
+          child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: accounts.length,
+              itemBuilder: (context, index) {
+                final account = accounts[index];
+                return _buildAccountEntry(account);
+              }));
     }
   }
 
@@ -134,11 +131,11 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<WalletAccount> data = snapshot.data;
-          return Container(child: _buildAccountListWrap(context, data));
+          return _buildAccountListWrap(context, data);
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-        return CircularProgressIndicator();
+        return LoadingWidget(text: S.of(context).loading);
       },
     );
   }
@@ -146,32 +143,22 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(title: Text(S.of(context).welcome_wallet_restore)),
         backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Theme.of(context).accentColor, //change your color here
-          ),
-          backgroundColor: Theme.of(context).backgroundColor,
-          brightness: Brightness.light,
-          elevation: 0,
-        ),
         body: Column(children: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(top: 0),
-              child: Container(
-                  child: Column(children: [
-                SizedBox(height: 20),
-                Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      S.of(context).wallet_restore_loading,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
-                    )),
-                Padding(
-                    padding: EdgeInsets.all(20),
-                    child: _buildRestoreRunner(context))
-              ])))
+          Container(
+              child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    S.of(context).wallet_restore_loading,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20),
+                  ))),
+          Expanded(
+              flex: 1,
+              child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: _buildRestoreRunner(context)))
         ]));
   }
 }

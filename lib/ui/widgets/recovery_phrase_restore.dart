@@ -3,9 +3,12 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/bip39/english.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/widgets/tagging/configurations.dart';
+import 'package:defichainwallet/ui/widgets/tagging/taggable.dart';
+import 'package:defichainwallet/ui/widgets/tagging/tagging.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class RestoreRecoveryPhraseScreen extends StatefulWidget {
   @override
@@ -43,7 +46,6 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
   bool _inputEnabled = true;
 
   String _phrase;
-  bool _autoFocus = true;
 
   FocusNode _tagBoxFocus = FocusNode();
 
@@ -60,10 +62,10 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
     //var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
 
     var items = demoWords2.split(" ");
-
-    items.forEach((element) {
-      _selectedPhrases.add(new PhraseTaggable(name: element));
-    });
+    //
+    // items.forEach((element) {
+    //   _selectedPhrases.add(new PhraseTaggable(name: element));
+    // });
 
     _phrase = demoWords2;
 
@@ -80,12 +82,9 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
     return FlutterTagging<PhraseTaggable>(
       initialItems: _selectedPhrases,
       textFieldConfiguration: TextFieldConfiguration(
-        autofocus: _autoFocus,
         focusNode: _tagBoxFocus,
+        enabled: _inputEnabled,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            filled: true,
-            fillColor: Theme.of(context).hintColor,
             labelText: S.of(context).wallet_restore_enterWords,
             enabled: _inputEnabled),
       ),
@@ -103,10 +102,13 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
       onChanged: () {
         // _tagBoxFocus.requestFocus();
         setState(() {
-          _inputEnabled = _selectedPhrases.length <= 12;
+          _inputEnabled = _selectedPhrases.length < 24;
           _phrase = _selectedPhrases.map((e) => e.name).join(" ");
-          _autoFocus = true;
         });
+
+        if (_inputEnabled) {
+          Future.delayed(Duration(milliseconds: 10), () => _tagBoxFocus.requestFocus());
+        }
       },
     );
   }
@@ -119,14 +121,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          backgroundColor: Theme.of(context).backgroundColor,
-          brightness: Brightness.light,
-          elevation: 0,
-        ),
+        appBar: AppBar(title: Text(S.of(context).welcome_wallet_restore)),
         body: SingleChildScrollView(
             child: Column(children: <Widget>[
           Padding(

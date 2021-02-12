@@ -51,7 +51,7 @@ stages:
           generateCodeCoverageReport: true
           
       - task: FlutterBuild@0
-        displayName: "Build iOS staging"
+        displayName: "Build iOS AdHoc"
         inputs:
           target: 'ios'
           projectDirectory: '$(Build.SourcesDirectory)'
@@ -125,7 +125,7 @@ stages:
           generateCodeCoverageReport: true
 
       - task: FlutterBuild@0
-        displayName: "Build iOS staging"
+        displayName: "Build iOS AppStore"
         inputs:
           target: 'ios'
           projectDirectory: '$(Build.SourcesDirectory)'

@@ -54,6 +54,7 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
 
       - task: FlutterTest@0
         inputs:
@@ -143,6 +144,7 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-prod.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
 
       - task: FlutterBuild@0
         displayName: "Build iOS AppStore"

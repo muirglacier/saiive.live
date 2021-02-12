@@ -81,7 +81,7 @@ stages:
         inputs:
           ArtifactName: 'staging-ios'
 
-- job: BuildiOSAppStore
+  - job: BuildiOSAppStore
     displayName: "Build iOS AppStore"
     pool:
       vmImage: 'macOS-latest'

@@ -45,6 +45,15 @@ stages:
             #cd $(Build.SourcesDirectory)
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+
       - task: FlutterTest@0
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
@@ -119,10 +128,19 @@ stages:
             #cd $(Build.SourcesDirectory)
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
+
       - task: FlutterTest@0
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
           generateCodeCoverageReport: true
+            
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
 
       - task: FlutterBuild@0
         displayName: "Build iOS AppStore"

@@ -107,7 +107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Text(S.of(context).settings_remove_seed),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
-                      sl.get<AuthenticationHelper>().forceAuth(context, () => doDeleteSeed);
+                      sl.get<AuthenticationHelper>().forceAuth(context, () { doDeleteSeed(); });
                     },
                   )),
                   Container(

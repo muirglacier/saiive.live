@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>method</key>
-    <string>ad-hoc</string>
+    <string>app-store</string>
     <key>teamID</key>
     <string>5QAM4Z73EV</string>
     <key>provisioningProfiles</key>
     <dict>
     	<key>com.defichain.wallet</key>
-    	<string>com.defichain.wallet AdHoc Distribution</string>
+    	<string>com.defichain.wallet AppStore Distribution</string>
     </dict>
     <key>signingCertificate</key>
     <string>Apple Distribution</string>

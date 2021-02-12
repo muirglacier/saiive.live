@@ -7,8 +7,8 @@ stages:
   displayName: iOS
   
   jobs:
-  - job: BuildiOSTestflight
-    displayName: "Build iOS Testflight"
+  - job: BuildiOSAdHoc
+    displayName: "Build iOS AdHoc"
     pool:
       vmImage: 'macOS-latest'
     
@@ -29,7 +29,7 @@ stages:
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'DefiChainWalletAdHoc.mobileprovision'
+          provProfileSecureFile: 'com.defichain.wallet.appstore.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -60,6 +60,7 @@ stages:
           verboseMode: true
           debugMode: false
           buildName: '0.1'
+          buildNumber: $(Build.BuildNumber)
 
       - task: Bash@3
         displayName: 'Create ipa package'
@@ -79,3 +80,77 @@ stages:
         displayName: "Publish artifacts"
         inputs:
           ArtifactName: 'staging-ios'
+
+- job: BuildiOSAppStore
+    displayName: "Build iOS AppStore"
+    pool:
+      vmImage: 'macOS-latest'
+
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
+          KeyVaultName: 'defichain-wallet'
+          SecretsFilter: 'apple-adhoc-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DefiChainWalletAdHoc.p12'
+          certPwd: '$(apple-adhoc-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'com.defichain.wallet.adhoc.mobileprovision'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'beta'
+          version: 'latest'
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: FlutterBuild@0
+        displayName: "Build iOS staging"
+        inputs:
+          target: 'ios'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildFlavour: 'production'
+          entryPoint: 'lib/main_production.dart'
+          verboseMode: false
+          debugMode: false
+          buildName: '0.1'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: Bash@3
+        displayName: 'Create ipa package'
+        inputs:
+          targetType: 'inline'
+          script: |
+            xcodebuild -workspace ios/Runner.xcworkspace -scheme production -sdk iphoneos -configuration Release-production archive -archivePath build/ios/Runner.xcarchive
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist .devops/AppStoreExportOptions.plist -exportPath build/ios
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'build/ios/*.ipa'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/production'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'production-ios'

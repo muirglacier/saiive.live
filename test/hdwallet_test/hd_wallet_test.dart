@@ -1,6 +1,7 @@
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart' as defichain;
@@ -51,6 +52,16 @@ void main() {
 
       var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, 20);
       var changeKeys = await HdWalletUtil.derivePublicKeys(seed, 0, true, 0, ChainType.DeFiChain, ChainNet.Testnet, 20);
+      int i = 0;
+      for(var key in keys) {
+        LogHelper.instance.d("$key at $i");
+        i++;
+      }
+       i = 0;
+      for(var key in changeKeys) {
+        LogHelper.instance.d("ret $key at $i");
+        i++;
+      }
     });
   });
 }

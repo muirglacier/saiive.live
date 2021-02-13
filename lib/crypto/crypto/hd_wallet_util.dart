@@ -192,7 +192,7 @@ class HdWalletUtil {
       int amount,
       int fee,
       String returnAddress,
-      Function(TransactionBuilder) additional,
+      Function(TransactionBuilder, NetworkType) additional,
       ChainType chain,
       ChainNet net) async {
     var network = getNetworkType(chain, net);
@@ -227,7 +227,7 @@ class HdWalletUtil {
       LogHelper.instance.d("set tx output $to value is $amount");
     }
 
-    additional(txb);
+    additional(txb, network);
 
     int index = 0;
     for (final key in keys) {

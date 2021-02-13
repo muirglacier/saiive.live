@@ -8,6 +8,7 @@ import 'package:defichainwallet/ui/widgets/tagging/taggable.dart';
 import 'package:defichainwallet/ui/widgets/tagging/tagging.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class RestoreRecoveryPhraseScreen extends StatefulWidget {
@@ -53,21 +54,23 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
   void initState() {
     _selectedPhrases = [];
 
-    var demoWords2 =
-       "woman come pride stamp wink egg dirt segment cradle shaft spawn brush always more agent visit crisp quantum spider chair power jeans shrug foam";
-     demoWords2 =
-        "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+    if (env["ENV"] == "dev") {
+      var demoWords2 =
+          "woman come pride stamp wink egg dirt segment cradle shaft spawn brush always more agent visit crisp quantum spider chair power jeans shrug foam";
+      demoWords2 =
+          "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
 
-    //Dominik test
-    //var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
+      //Dominik test
+      //var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
 
-    var items = demoWords2.split(" ");
-    //
-    // items.forEach((element) {
-    //   _selectedPhrases.add(new PhraseTaggable(name: element));
-    // });
+      var items = demoWords2.split(" ");
 
-    _phrase = demoWords2;
+      items.forEach((element) {
+        _selectedPhrases.add(new PhraseTaggable(name: element));
+      });
+
+      _phrase = demoWords2;
+    }
 
     super.initState();
   }

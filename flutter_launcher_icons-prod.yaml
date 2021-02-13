@@ -3,4 +3,4 @@ flutter_icons:
   ios: true  
   image_path_ios: "assets/ios/icon_prod.png"
   image_path_android: "assets/android/icon_prod.png"
-  adaptive_icon_background: #FF00AF
+  adaptive_icon_background: "#FF00AF"

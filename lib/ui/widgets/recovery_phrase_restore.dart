@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/bip39/english.dart';
@@ -56,12 +58,12 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
 
     if (env["ENV"] == "dev") {
       var demoWords2 =
-          "woman come pride stamp wink egg dirt segment cradle shaft spawn brush always more agent visit crisp quantum spider chair power jeans shrug foam";
-      demoWords2 =
-          "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
-
-      //Dominik test
-      //var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
+          "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
+          
+      if (Platform.isAndroid) {
+        demoWords2 =
+            "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+      }
 
       var items = demoWords2.split(" ");
 

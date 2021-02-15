@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/from_account.dart';
@@ -11,6 +13,7 @@ import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
+import 'package:defichainwallet/network/model/balance.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
 import 'package:defichainwallet/network/model/transaction_data.dart';
@@ -23,6 +26,8 @@ import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:retry/retry.dart';
 import 'dart:math';
+
+import 'package:tuple/tuple.dart';
 
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -180,22 +185,63 @@ class Wallet extends IWallet {
   }
 
   @override
-  Future<String> createSendTransaction(
+  Future<TransactionData> createAndSend(
+      int amount, String token, String to) async {
+
+    var txData = await createSendTransaction(amount, token, to);
+
+    try {
+      var tx = await createTxAndWait(txData.item1);
+
+      await _walletDatabase.removeUnspentTransactions(txData.item2);
+      return tx;
+    } catch (error) {
+      LogHelper.instance.e("Error creating tx...", error);
+      throw error;
+    }
+  }
+
+  Future<Tuple2<String, List<tx.Transaction>>> createSendTransaction(
       int amount, String token, String to) async {
     _isInitialzed();
     await _ensureUtxo();
 
-    final changeAddress = await getPublicKeyFromAccount(_account, true);
+    final changeAddressRaw =
+        await _wallets[_account].nextFreePublicKeyRaw(_walletDatabase, true);
+
+    var changeAddress = await HdWalletUtil.getPublicKey(
+        mnemonicToSeed(_seed),
+        changeAddressRaw.item1,
+        changeAddressRaw.item2,
+        changeAddressRaw.item3,
+        _chain,
+        _network);
 
     if (token == DeFiConstants.DefiTokenSymbol ||
         token == DeFiConstants.DefiAccountSymbol) {
-      await prepareUtxo(amount);
+      var txHex =
+          await prepareAccountToUtxosTransactions(changeAddress, amount);
+      if (txHex != null) {
+        final tx = await createTxAndWait(txHex.item1);
+
+        await _walletDatabase.removeUnspentTransactions(txHex.item2);
+
+        for (final unspentTx in tx.details.outputs
+            .where((element) => element.address == changeAddress)) {
+          unspentTx.account = changeAddressRaw.item1;
+          unspentTx.isChangeAddress = true;
+          unspentTx.index = changeAddressRaw.item3;
+
+          await _walletDatabase.addUnspentTransaction(unspentTx);
+        }
+      }
+
       return await _createUtxoTransaction(amount, to, changeAddress);
     }
     return await _createAccountTransaction(token, amount, to);
   }
 
-  Future<String> _createAccountTransaction(
+  Future<Tuple2<String, List<tx.Transaction>>> _createAccountTransaction(
       String token, int amount, String to) async {
     if (token == DeFiConstants.DefiAccountSymbol ||
         token == DeFiConstants.DefiTokenSymbol) {
@@ -224,7 +270,8 @@ class Wallet extends IWallet {
       final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
       useAccounts.add(fromAccount);
 
-      inputTxs.add(await _getAuthInputsSmart(tx.address, fee));
+      inputTxs.add(await _getAuthInputsSmart(
+          key, tx.index, tx.isChangeAddress, tx.index, fee));
 
       final keyPair = HdWalletUtil.getKeyPair(
           key,
@@ -258,10 +305,11 @@ class Wallet extends IWallet {
         _chain,
         _network);
 
-    return txb.build().toHex();
+    return Tuple2<String, List<tx.Transaction>>(txb.build().toHex(), inputTxs);
   }
 
-  Future<String> createAuthTx(String pubKey) async {
+  Future<Tuple2<String, List<tx.Transaction>>> createAuthTx(
+      String pubKey) async {
     final changeAddress = await getPublicKeyFromAccount(_account, true);
     final fee = await getTxFee();
     var baseTx = await _createBaseTransaction(
@@ -272,7 +320,7 @@ class Wallet extends IWallet {
     return baseTx;
   }
 
-  Future<String> _createUtxoTransaction(
+  Future<Tuple2<String, List<tx.Transaction>>> _createUtxoTransaction(
       int amount, String to, String changeAddress) async {
     final fee = await getTxFee();
     final txb = await _createBaseTransaction(
@@ -280,7 +328,7 @@ class Wallet extends IWallet {
     return txb;
   }
 
-  Future<String> _createBaseTransaction(
+  Future<Tuple2<String, List<tx.Transaction>>> _createBaseTransaction(
       int amount,
       String to,
       String changeAddress,
@@ -289,7 +337,7 @@ class Wallet extends IWallet {
     final tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
-    if (amount > tokenBalance.balance) {
+    if (amount > tokenBalance?.balance) {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
     final key = mnemonicToSeed(_seed);
@@ -302,6 +350,10 @@ class Wallet extends IWallet {
 
     var curAmount = 0.0;
     for (final tx in unspentTxs) {
+      if (tx.value <= 0) {
+        //ignore auth txs
+        continue;
+      }
       useTxs.add(tx);
       curAmount += tx.valueRaw;
 
@@ -322,10 +374,13 @@ class Wallet extends IWallet {
 
     final txb = await HdWalletUtil.buildTransaction(useTxs, keys, to, amount,
         fees, changeAddress, additional, _chain, _network);
-    return txb;
+    return Tuple2<String, List<tx.Transaction>>(txb, useTxs);
   }
 
-  Future<tx.Transaction> _getAuthInputsSmart(String pubKey, int minFee) async {
+  Future<tx.Transaction> _getAuthInputsSmart(Uint8List seed, int account,
+      bool isChangeAddress, int index, int minFee) async {
+    var pubKey = await HdWalletUtil.getPublicKey(
+        seed, account, isChangeAddress, index, _chain, _network);
     var authTxs =
         await _walletDatabase.getUnspentTransactionsForPubKey(pubKey, minFee);
 
@@ -335,9 +390,17 @@ class Wallet extends IWallet {
 
     var txHex = await createAuthTx(pubKey);
 
-    var txData = await createTxAndWait(txHex);
+    var txData = await createTxAndWait(txHex.item1);
     final retOut = txData.details.outputs.firstWhere(
         (element) => element.spentHeight <= 0 && element.address == pubKey);
+
+    if (retOut != null) {
+      retOut.account = account;
+      retOut.index = index;
+      retOut.isChangeAddress = isChangeAddress;
+
+      _walletDatabase.removeUnspentTransactions(txHex.item2);
+    }
     return retOut;
   }
 
@@ -345,7 +408,7 @@ class Wallet extends IWallet {
     final txId =
         await _apiService.transactionService.sendRawTransaction("DFI", txHex);
 
-    final r = RetryOptions(maxAttempts: 8, maxDelay: Duration(seconds: 2));
+    final r = RetryOptions(maxAttempts: 15, maxDelay: Duration(seconds: 5));
     final response = await r.retry(
         () async {
           return await _apiService.transactionService.getWithTxId("DFI", txId);
@@ -367,7 +430,8 @@ class Wallet extends IWallet {
     return 1000;
   }
 
-  Future prepareUtxo(int amount) async {
+  Future<Tuple2<String, List<tx.Transaction>>>
+      prepareAccountToUtxosTransactions(String pubKey, int amount) async {
     var tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
@@ -377,7 +441,7 @@ class Wallet extends IWallet {
     }
     // we have currently enough utxo
     if (tokenBalance.balance > amount) {
-      return;
+      return null;
     }
 
     var accountBalance = await _walletDatabase
@@ -388,7 +452,7 @@ class Wallet extends IWallet {
       throw new ArgumentError("Balance $totalBalance is less than $amount");
     }
 
-    final neededUtxo = amount - tokenBalance.balance;
+    var neededUtxo = amount - tokenBalance.balance;
 
     final accounts = await _walletDatabase
         .getAccountBalancesForToken(DeFiConstants.DefiAccountSymbol);
@@ -396,25 +460,78 @@ class Wallet extends IWallet {
     if (accounts.length == 0) {
       throw new ArgumentError("No accounts found..");
     }
+    final key = mnemonicToSeed(_seed);
 
     final neededAccounts = List<Account>.empty(growable: true);
+    final fees = await getTxFee();
+    final useInputs = List<tx.Transaction>.empty(growable: true);
     var accBalance = 0;
+
+    final keys = List<ECPair>.empty(growable: true);
+
     for (final acc in accounts) {
       neededAccounts.add(acc);
+
+      final tx = await _getAuthInputsSmart(
+          key, acc.index, acc.isChangeAddress, acc.index, fees);
+
+      useInputs.add(tx);
+
+      _walletDatabase.addUnspentTransaction(tx);
+      _walletDatabase.setAccountBalance(Account(
+          token: DeFiConstants.DefiTokenSymbol,
+          account: acc.account,
+          address: acc.address,
+          balance: acc.balance,
+          chain: acc.chain,
+          index: acc.index,
+          isChangeAddress: acc.isChangeAddress,
+          network: acc.network));
+
+      final keyPair = HdWalletUtil.getKeyPair(
+          key,
+          _account,
+          tx.isChangeAddress,
+          tx.index,
+          ChainHelper.chainFromString(tx.chain),
+          ChainHelper.networkFromString(tx.network));
+
+      keys.add(keyPair);
 
       if ((accBalance + acc.balance) >= neededUtxo) {
         break;
       }
       accBalance += acc.balance;
     }
+
+    final tokenType = await _apiService.tokenService
+        .getToken("DFI", DeFiConstants.DefiAccountSymbol);
+
+    var txHex = await HdWalletUtil.buildTransaction(
+        useInputs, keys, pubKey, 0, fees, pubKey, (txb, network) async {
+      final mintingStartsAt = txb.tx.ins.length + neededAccounts.length;
+      for (final acc in neededAccounts) {
+        var needAmount = min(neededUtxo, acc.balance);
+
+        txb.addAccountToUtxoOutput(
+            tokenType.id, acc.address, needAmount, mintingStartsAt, network);
+        txb.addOutput(pubKey, needAmount);
+        neededUtxo -= needAmount;
+        if (neededUtxo <= 0) {
+          break;
+        }
+      }
+    }, _chain, _network);
+
+    return Tuple2<String, List<tx.Transaction>>(txHex, useInputs);
   }
 
   Future<TransactionData> prepareAccount(int amount) async {
     final txHex = await prepareUtxoToAccountTransaction(amount);
-    return await createTxAndWait(txHex);
+    return await createTxAndWait(txHex.item1);
   }
 
-  Future<String> prepareUtxoToAccountTransaction(int amount) async {
+  Future<Tuple2<String, List<tx.Transaction>>> prepareUtxoToAccountTransaction(int amount) async {
     final tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
     final accBalance = await _walletDatabase
@@ -463,7 +580,7 @@ class Wallet extends IWallet {
 
     final tokenType = await _apiService.tokenService
         .getToken("DFI", DeFiConstants.DefiAccountSymbol);
-    final txHex = await _createBaseTransaction(
+    final txs = await _createBaseTransaction(
         0, changeAddress, changeAddress, fee + checkAmount, (txb, nw) {
       for (var input in useTxs) {
         var needAmount = min(checkAmount, input.value);
@@ -478,7 +595,7 @@ class Wallet extends IWallet {
         }
       }
     });
-    return txHex;
+    return txs;
   }
 
   Future _ensureUtxo() async {

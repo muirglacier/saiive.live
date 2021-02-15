@@ -24,6 +24,7 @@ abstract class IWalletDatabase {
   
   Future clearUnspentTransactions();
   Future<List<Transaction>> getUnspentTransactions();
+  Future removeUnspentTransactions(List<Transaction> mintIds);
   Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount);
   Future addUnspentTransaction(Transaction transaction);
 

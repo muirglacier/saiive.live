@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
@@ -38,15 +37,14 @@ class HdWalletUtil {
 
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
     final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
-    final xMasterPrivWif = xMasterPriv.toWIF();
 
     final path = derivePath(account, changeAddress, index);
 
     final address = await _getPublicAddress(
         xMasterPriv.derivePath(path), chainType, network);
 
- //   LogHelper.instance
-   //     .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
+    //   LogHelper.instance
+    //     .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
 
     return address;
   }
@@ -107,27 +105,6 @@ class HdWalletUtil {
 
   static int getDecimalPlaces(ChainType type) {
     return 9;
-  }
-
-  static Future<TransactionBuilder> addAccountToUtxo(
-      TransactionBuilder txb,
-      int prevOutputs,
-      int token,
-      List<String> from,
-      List<int> amount,
-      ChainType chain,
-      ChainNet net) async {
-    var network = getNetworkType(chain, net);
-    assert(from.length == amount.length);
-
-    int mintingStartsAt = prevOutputs + from.length;
-
-    for (int i = 0; i > from.length; i++) {
-      txb.addAccountToUtxoOutput(
-          token, from[i], amount[i], mintingStartsAt, network);
-    }
-
-    return txb;
   }
 
   static Future<TransactionBuilder> buildAccountToAccountTransaction(
@@ -250,13 +227,14 @@ class HdWalletUtil {
     return txb.build().toHex();
   }
 
-  static Future<TransactionBuilder> buildAccountToUtxosTransaction(
+  static Future<String> buildAccountToUtxosTransaction(
       List<tx.Transaction> inputTxs,
       List<ECPair> keys,
       String to,
       int amount,
       int fee,
       String returnAddress,
+      Function(TransactionBuilder, NetworkType) additional,
       ChainType chain,
       ChainNet net) async {
     var network = getNetworkType(chain, net);
@@ -271,13 +249,27 @@ class HdWalletUtil {
     for (final tx in inputTxs) {
       txb.addInput(tx.mintTxId, tx.mintIndex);
 
+      final mintTxId = tx.mintTxId;
+      final mintIndex = tx.mintIndex;
+      final inValue = tx.value;
+      LogHelper.instance
+          .d("set tx input $mintTxId@$mintIndex input value is $inValue");
+
       totalInputValue += tx.valueRaw;
     }
 
     if (totalInputValue > (amount)) {
       var changeAmount = totalInputValue - amount - fee;
       txb.addOutput(returnAddress, changeAmount);
+      LogHelper.instance
+          .d("set tx output (change) $returnAddress value is $changeAmount");
     }
+    if (amount > 0) {
+      txb.addOutput(to, amount);
+      LogHelper.instance.d("set tx output $to value is $amount");
+    }
+
+    additional(txb, network);
 
     int index = 0;
     for (final key in keys) {
@@ -285,20 +277,19 @@ class HdWalletUtil {
       final redeemScript = p2wpkh.output;
       final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
       final input = inputTxs[index].mintTxId;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
+      final witnessValue = inputTxs[index].valueRaw;
+      LogHelper.instance.d(
+          "sign tx $input with privateKey from $pubKey withnessValue. $witnessValue");
 
       txb.sign(
           vin: index,
           keyPair: key,
-          witnessValue: inputTxs[index].valueRaw,
+          witnessValue: witnessValue,
           redeemScript: redeemScript);
       index++;
     }
 
-    final tx = txb.build();
-    final txhex = tx.toHex();
-    LogHelper.instance.d("txHex is $txhex");
-    return txb;
+    return txb.build().toHex();
   }
 
   static Future<String> derivePublicKey(

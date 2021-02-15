@@ -38,7 +38,17 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future addUnspentTransaction(Transaction transaction) async {
-    _unspentTransactions.add(transaction);
+    var txAlreadyInList = false;
+
+    for (final tx in _unspentTransactions) {
+      if (tx.id == transaction.id) {
+        txAlreadyInList = true;
+        break;
+      }
+    }
+    if (!txAlreadyInList) {
+      _unspentTransactions.add(transaction);
+    }
   }
 
   @override
@@ -52,6 +62,11 @@ class MemoryDatabaseMock extends IWalletDatabase {
   @override
   Future clearUnspentTransactions() async {
     _unspentTransactions.clear();
+  }
+
+  @override
+  Future removeUnspentTransactions(List<Transaction> mintIds) {
+    //TODO
   }
 
   @override
@@ -69,15 +84,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future<AccountBalance> getAccountBalance(String token) async {
     var balance = 0;
 
-    if (token == DeFiConstants.DefiTokenSymbol) {
-      for (var tx in _unspentTransactions) {
-        balance += tx.value;
-      }
-    } else {
-      for (var acc in _accounts) {
-        if (acc.token == token) {
-          balance += acc.balance;
-        }
+    for (var acc in _accounts) {
+      if (acc.token == token) {
+        balance += acc.balance;
       }
     }
 

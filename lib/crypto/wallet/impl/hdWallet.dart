@@ -10,6 +10,7 @@ import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:hex/hex.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:tuple/tuple.dart';
 
 class HdWallet extends IHdWallet {
   int _nextFreeIndex;
@@ -200,7 +201,6 @@ class HdWallet extends IHdWallet {
     return txList;
   }
 
-
   Future<List<Transaction>> syncUnspentTransactions() async {
     int empty = 0;
     int i = 0;
@@ -225,8 +225,9 @@ class HdWallet extends IHdWallet {
             _account.account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
         var pubKeyList = keys.map((item) => item).toList();
 
-        var txs = await apiService.transactionService.getUnspentTransactionOutputs(
-            ChainHelper.chainTypeString(_chain), pubKeyList);
+        var txs = await apiService.transactionService
+            .getUnspentTransactionOutputs(
+                ChainHelper.chainTypeString(_chain), pubKeyList);
 
         LogHelper.instance.d(
             "found ${txs.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
@@ -292,5 +293,13 @@ class HdWallet extends IHdWallet {
         isChangeAddress, nextIndex, this._chain, this._network);
 
     return publicKey;
+  }
+
+  @override
+  Future<Tuple3<int, bool, int>> nextFreePublicKeyRaw(
+      IWalletDatabase database, bool isChangeAddress) async {
+    final nextIndex = await database.getNextFreeIndex(_account.account);
+  
+    return Tuple3<int, bool, int>(_account.account, isChangeAddress, nextIndex);
   }
 }

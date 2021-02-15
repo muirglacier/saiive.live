@@ -31,7 +31,7 @@ void main() async {
           isChangeAddress: true,
           confirmations: -1);
       await db.addTransaction(tx);
-      await db.addUnspentTransaction(tx);
+
 
       final dfiAccount = Account(
           token: DeFiConstants.DefiAccountSymbol,
@@ -75,14 +75,14 @@ void main() async {
       await destoryTest();
     });
 
-    test("create auth tx", () async {
+    test("create utxosToAccount tx", () async {
       await initTest();
 
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
       final tx = await wallet.prepareUtxoToAccountTransaction(243 * 100000000);
-      expect(tx,
+      expect(tx.item1,
           "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff02548c4102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b870100000000548c4102000000001de48e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f870247304402204fc0c2bd97cfa1341f5dab9c2e84cc9a0d8a4590588adc251f3da659ade0ae4302201df553e4d2017d48c81a135beeb38c9fb4eea7cf31ef5afb77d547515bc1f98c012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
       await destoryTest();
     });

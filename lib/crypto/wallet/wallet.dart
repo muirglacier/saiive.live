@@ -1,6 +1,7 @@
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
+import 'package:defichainwallet/network/model/transaction_data.dart';
 
 abstract class IWallet {
   static const int MaxUnusedAccountScan = 3;
@@ -20,7 +21,7 @@ abstract class IWallet {
   Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress);
 
   Future<List<WalletAccount>> searchAccounts();
-
-  Future<String> createSendTransaction(int amount, String token, String to);
+  
+  Future<TransactionData> createAndSend(int amount, String token, String to);
 
 }

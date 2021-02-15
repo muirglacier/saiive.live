@@ -58,6 +58,19 @@ void main() async {
           network: "testnet");
 
       await db.setAccountBalance(btcAccount);
+
+      final dfiAccount = Account(
+          token: "\$DFI",
+          address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
+          balance: 30000000000,
+          raw: "300@BTC",
+          index: 0,
+          account: 0,
+          isChangeAddress: false,
+          chain: "DFI",
+          network: "testnet");
+
+      await db.setAccountBalance(dfiAccount);
     }
 
     Future destoryTest() async {
@@ -114,11 +127,9 @@ void main() async {
       await wallet.init();
       final tx = await wallet.createSendTransaction(
           1 * 100000000, "BTC", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
-      expect(tx,
+      expect(tx.item1,
           "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a9141084ef98bacfecbc9f140496b26516ae55d79bfa87010100000000e1f5050000000018a823fc0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8702483045022100dd4a1984531ab5be2f1082ea5f1ad4febd5fe2d305c06134ffe75f47e7ca904702207427d41532904d1a571bd383b4c424183a09d7a040970e5e542b254e4728b0dc012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
-
   });
-
 }

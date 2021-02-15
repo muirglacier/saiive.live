@@ -30,13 +30,10 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     try {
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * 100000000).toInt();
-      final tx = await sl.get<DeFiChainWallet>().createSendTransaction(
+      final tx = await sl.get<DeFiChainWallet>().createAndSend(
           totalAmount, widget.token, _addressController.text);
 
-      final apiService = sl.get<ApiService>();
-
-      final txId =
-          await apiService.transactionService.sendRawTransaction("DFI", tx);
+      final txId = tx.mintTxId;
       LogHelper.instance.d("sent tx $txId");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(txId),
@@ -57,7 +54,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     super.initState();
 
     _addressController = TextEditingController(
-        text: widget.toAddress ?? 'tazZryUYYMX8jJLkZ66S7JKcV5EbqdKATZ');
+        text: widget.toAddress ?? 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
   }
 
   @override

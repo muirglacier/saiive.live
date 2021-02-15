@@ -144,9 +144,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future<tx.Transaction> getTransaction(String id) async {
     var dbStore = _transactionStoreInstance;
 
-    var finder = Finder(
-        filter:
-            Filter.equals('id', id));
+    var finder = Finder(filter: Filter.equals('id', id));
     final accounts = await dbStore.find(await database, finder: finder);
 
     final data = accounts
@@ -177,7 +175,8 @@ class SembastWalletDatabase extends IWalletDatabase {
     var dbStore = _unspentStoreInstance;
 
     final db = await database;
-    final transactions = await dbStore.find(db);
+    final transactions = await dbStore.find(db,
+        finder: Finder(sortOrders: [SortOrder("value", false)]));
 
     final data = transactions
         .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))
@@ -207,6 +206,12 @@ class SembastWalletDatabase extends IWalletDatabase {
     final txs = await getUnspentTransactions();
     final txIds = txs.map((e) => e.uniqueId);
 
+    await _unspentStoreInstance.records(txIds).delete(await database);
+  }
+
+  Future removeUnspentTransactions(List<tx.Transaction> txs) async {
+    
+    final txIds = txs.map((e) => e.uniqueId);
     await _unspentStoreInstance.records(txIds).delete(await database);
   }
 

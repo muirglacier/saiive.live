@@ -1,13 +1,7 @@
 import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/crypto/wallet/wallet-sync.dart';
-import 'package:defichainwallet/network/api_service.dart';
-import 'package:defichainwallet/network/model/ivault.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +14,6 @@ import 'package:defichainwallet/network/model/available_themes.dart';
 import 'package:logger/logger.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
-import 'crypto/wallet/impl/wallet.dart';
 import 'network/events/events.dart';
 
 enum EnvironmentType { Unknonw, Development, Staging, Production }
@@ -129,26 +122,7 @@ class StateContainerState extends State<StateContainer> {
     }
   }
 
-  static Future syncWallet(Map dataMap) async {
-    return await WalletSync.syncBalance(
-        dataMap["chain"],
-        dataMap["network"],
-        dataMap["seed"],
-        dataMap["password"],
-        dataMap["apiService"],
-        dataMap["accounts"]);
-  }
-
-  static Future syncTransactions(Map dataMap) async {
-    return await WalletSync.syncTransactions(
-        dataMap["chain"],
-        dataMap["network"],
-        dataMap["seed"],
-        dataMap["password"],
-        dataMap["apiService"],
-        dataMap["accounts"]);
-  }
-
+  
   @override
   void initState() {
     super.initState();

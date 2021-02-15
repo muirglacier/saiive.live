@@ -187,7 +187,6 @@ class Wallet extends IWallet {
   @override
   Future<TransactionData> createAndSend(
       int amount, String token, String to) async {
-
     var txData = await createSendTransaction(amount, token, to);
 
     try {
@@ -372,6 +371,10 @@ class Wallet extends IWallet {
       }
     }
 
+    if(curAmount < checkAmount) {
+      throw new ArgumentError("Insufficent funds");
+    }
+
     final txb = await HdWalletUtil.buildTransaction(useTxs, keys, to, amount,
         fees, changeAddress, additional, _chain, _network);
     return Tuple2<String, List<tx.Transaction>>(txb, useTxs);
@@ -400,6 +403,9 @@ class Wallet extends IWallet {
       retOut.isChangeAddress = isChangeAddress;
 
       _walletDatabase.removeUnspentTransactions(txHex.item2);
+      for (var out in txData.details.outputs) {
+        _walletDatabase.addUnspentTransaction(out);
+      }
     }
     return retOut;
   }
@@ -531,7 +537,8 @@ class Wallet extends IWallet {
     return await createTxAndWait(txHex.item1);
   }
 
-  Future<Tuple2<String, List<tx.Transaction>>> prepareUtxoToAccountTransaction(int amount) async {
+  Future<Tuple2<String, List<tx.Transaction>>> prepareUtxoToAccountTransaction(
+      int amount) async {
     final tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
     final accBalance = await _walletDatabase

@@ -18,8 +18,6 @@ void main() async {
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 1,
           mintTxId:
@@ -28,7 +26,6 @@ void main() async {
           spentHeight: -2,
           address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
           value: 66866570269,
-          isChangeAddress: true,
           confirmations: -1);
       await db.addTransaction(tx);
       await db.addUnspentTransaction(tx);
@@ -36,8 +33,6 @@ void main() async {
       final tx2 = Transaction(
           id: "602ab71b779edc3b780ff2da",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 2,
           mintTxId:
@@ -46,7 +41,6 @@ void main() async {
           spentHeight: -2,
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 200000,
-          isChangeAddress: false,
           confirmations: -1);
       await db.addTransaction(tx2);
       await db.addUnspentTransaction(tx2);

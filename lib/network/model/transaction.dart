@@ -17,10 +17,6 @@ class Transaction {
   int get valueRaw => (value).round();
   String get uniqueId => mintTxId + "_" + mintIndex.toString();
 
-  int index;
-  int account;
-  bool isChangeAddress;
-
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
   String get correctValueRounded => (correctValue / 100000000).toStringAsFixed(8);
 
@@ -36,10 +32,7 @@ class Transaction {
       this.spentHeight,
       this.address,
       this.value,
-      this.confirmations,
-      this.index,
-      this.account,
-      this.isChangeAddress});
+      this.confirmations});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
@@ -54,10 +47,7 @@ class Transaction {
         spentHeight: json['spentHeight'],
         address: json['address'],
         value: int.parse(json['value'].toString()),
-        confirmations: json['confirmations'],
-        index: json['index'],
-        account: json['account'],
-        isChangeAddress: json['isChangeAddress']);
+        confirmations: json['confirmations']);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -72,9 +62,6 @@ class Transaction {
         'spentHeight': spentHeight,
         'address': address,
         'value': value,
-        'confirmationsid': confirmations,
-        'index': index,
-        'account': account,
-        'isChangeAddress': isChangeAddress
+        'confirmationsid': confirmations
       };
 }

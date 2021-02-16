@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
+import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:flutter/foundation.dart';
@@ -16,8 +17,9 @@ import '../chain.dart';
 class SembastWalletDatabase extends IWalletDatabase {
   Database _database;
 
-  static const int _dbVersion = 1;
+  static const int _dbVersion = 2;
 
+  static const String _addressesStore = "addresses";
   static const String _accountStore = "accounts";
   static const String _transactionStore = "transactions";
   static const String _unspentStore = "unspent";
@@ -34,6 +36,9 @@ class SembastWalletDatabase extends IWalletDatabase {
   final StoreRef _balancesStoreInstance =
       stringMapStoreFactory.store(_balanceStore);
 
+  final StoreRef _addressesStoreInstance =
+      stringMapStoreFactory.store(_addressesStore);
+
   final _accountStreamController =
       StreamController<List<WalletAccount>>.broadcast();
   Stream<List<WalletAccount>> get accountStream =>
@@ -43,6 +48,14 @@ class SembastWalletDatabase extends IWalletDatabase {
   SembastWalletDatabase(this._path);
 
   Future destroy() async {
+    var db = await database;
+    await _accountStoreInstance.delete(db);
+    await _transactionStoreInstance.delete(db);
+    await _unspentStoreInstance.delete(db);
+    await _balancesStoreInstance.delete(db);
+    await _addressesStoreInstance.delete(db);
+
+    await close();
     _database = null;
 
     final file = File(_path);
@@ -57,6 +70,88 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future close() async {
     _database.close();
     _database = null;
+  }
+
+  @override
+  Future addAddress(WalletAddress account) async {
+    final db = await database;
+    await _addressesStoreInstance
+        .record(account.uniqueId)
+        .put(db, account.toJson());
+  }
+
+  @override
+  Future<bool> isOwnAddress(String pubKey) async {
+    var dbStore = _addressesStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('publicKey', pubKey));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    return accounts.isNotEmpty;
+  }
+
+  @override
+  Future<WalletAddress> getWalletAddress(String pubKey) async {
+    var dbStore = _addressesStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('publicKey', pubKey));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : WalletAddress.fromJson(e.value))
+        ?.toList();
+
+    if (data.isNotEmpty) {
+      return data.first;
+    }
+
+    return null;
+  }
+
+  @override
+  Future<List<WalletAddress>> getWalletAddresses(int account) async {
+    var dbStore = _addressesStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('account', 0));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : WalletAddress.fromJson(e.value))
+        ?.toList();
+
+    return data;
+  }
+
+  @override
+  Future<bool> addressExists(
+      int account, bool isChangeAddress, int index) async {
+    var dbStore = _addressesStoreInstance;
+
+    var finder = Finder(
+        filter: Filter.equals('account', account) &
+            Filter.equals('isChangeAddress', isChangeAddress) &
+            Filter.equals('index', index));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    return accounts.isNotEmpty;
+  }
+
+  @override
+  Future<WalletAddress> getWalletAddressById(
+      int account, bool isChangeAddress, int index) async {
+    var dbStore = _addressesStoreInstance;
+
+    var finder = Finder(
+        filter: Filter.equals('account', account) &
+            Filter.equals('isChangeAddress', isChangeAddress) &
+            Filter.equals('index', index));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts
+        .map((e) => e == null ? null : WalletAddress.fromJson(e.value))
+        ?.toList();
+
+    return data.firstOrNull;
   }
 
   Future<Database> get database async {
@@ -210,7 +305,6 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {
-    
     final txIds = txs.map((e) => e.uniqueId);
     await _unspentStoreInstance.records(txIds).delete(await database);
   }
@@ -238,6 +332,18 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future<AccountBalance> getAccountBalance(String token) async {
+    if (token == DeFiConstants.DefiTokenSymbol) {
+      final unspentTx = await getUnspentTransactions();
+      var value = 0;
+
+      for (final tx in unspentTx) {
+        value += tx.value;
+      }
+
+      return AccountBalance(
+          balance: value, token: DeFiConstants.DefiTokenSymbol);
+    }
+
     var dbStore = _balancesStoreInstance;
 
     var finder = Finder(filter: Filter.equals('token', token));
@@ -329,5 +435,10 @@ class SembastWalletDatabase extends IWalletDatabase {
         .toList();
 
     return balances;
+  }
+
+  @override
+  int getAddressCreationCount() {
+    return 500;
   }
 }

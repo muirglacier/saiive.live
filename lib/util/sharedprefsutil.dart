@@ -46,7 +46,7 @@ class SharedPrefsUtil {
   }
 
   Future<AuthenticationMethod> getAuthMethod() async {
-    return AuthenticationMethod(AuthMethod.values[await get(auth_method, defaultValue: AuthMethod.BIOMETRICS.index)]);
+    return AuthenticationMethod(AuthMethod.values[await get(auth_method, defaultValue: AuthMethod.NONE.index)]);
   }
 
   Future<void> setFirstLaunch() async {

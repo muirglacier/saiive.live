@@ -9,6 +9,8 @@ abstract class IWallet {
   static const int KeysPerQuery = 30;
 
   Future init();
+  Future close();
+  
   Future<List<Account>> syncBalance();
 
   Future<Transaction> getTransaction(String id);

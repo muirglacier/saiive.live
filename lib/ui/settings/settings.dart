@@ -1,5 +1,6 @@
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/version.dart';
@@ -8,16 +9,12 @@ import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/settings/settings_seed.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/ui/wallet/wallet_send.dart';
-import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
 import 'package:defichainwallet/ui/model/authentication_method.dart';
-import 'package:defichainwallet/ui/utils/biometrics.dart';
-import 'package:defichainwallet/ui/utils/hapticutil.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger_flutter/logger_flutter.dart';
-import 'package:package_info/package_info.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen();
@@ -52,6 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void doDeleteSeed() async {
     await sl.get<IWalletDatabase>().destroy();
     await sl.get<IVault>().setSeed(null);
+    await sl.get<DeFiChainWallet>().close();
 
     Navigator.of(context)
         .pushNamedAndRemoveUntil("/", (route) => false);

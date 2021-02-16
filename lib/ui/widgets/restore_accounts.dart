@@ -1,7 +1,9 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
+import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
@@ -50,6 +52,8 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
       await sl.get<IWalletDatabase>().addAccount(
           name: ChainHelper.chainTypeString(chain), account: 0, chain: chain);
     }
+
+    await sl.get<DeFiChainWallet>().init();
 
     return result;
   }

@@ -18,8 +18,6 @@ void main() async {
       final tx = Transaction(
           id: "6022346c779edc3b789bc5b9",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 0,
           mintTxId:
@@ -28,7 +26,6 @@ void main() async {
           spentHeight: -2,
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 30000000000,
-          isChangeAddress: false,
           confirmations: -1);
       await db.addTransaction(tx);
       await db.addUnspentTransaction(tx);

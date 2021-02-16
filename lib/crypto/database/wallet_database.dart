@@ -1,5 +1,6 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
+import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
@@ -35,6 +36,15 @@ abstract class IWalletDatabase {
   Future<List<Account>> getAccountBalancesForToken(String token);
   Future<List<AccountBalance>> getTotalBalances();
   Future<Account> getAccountBalanceForPubKey(String pubKey, String token);
+
+  Future addAddress(WalletAddress account);
+  Future<bool> isOwnAddress(String pubKey);
+  Future<WalletAddress> getWalletAddress(String pubKey);
+  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index);
+  Future<List<WalletAddress>> getWalletAddresses(int account);
+  Future<bool> addressExists(int account, bool isChangeAddress, int index);
+
+  int getAddressCreationCount();
 
   Future open();
   Future close();

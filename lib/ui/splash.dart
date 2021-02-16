@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/version.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:package_info/package_info.dart';
 import '../generated/l10n.dart';
 
 import 'package:defichainwallet/service_locator.dart';
@@ -40,23 +40,22 @@ class _SplashScreenState extends State<SplashScreen>
         await sl.get<IVault>().deleteAll();
       }
       await sl.get<SharedPrefsUtil>().setFirstLaunch();
-      // See if logged in already
-      bool isLoggedIn = false;
+      // See if have already a seed generated
+      bool hasSeedGenerated = true;
       var seed = await sl.get<IVault>().getSeed();
 
-      // If we have a seed set, but not a pin - or vice versa
-      // Then delete the seed and pin from device and start over.
-      // This would mean user did not complete the intro screen completely.
-      if (seed != null) {
-        isLoggedIn = true;
-      }
+      hasSeedGenerated = seed != null;
 
       var route = '/intro_welcome';
-      if (isLoggedIn) {
+      if (hasSeedGenerated) {
         route = '/home';
       }
       await sl.allReady();
 
+      if (hasSeedGenerated) {
+        final wallet = sl.get<DeFiChainWallet>();
+        await wallet.init();
+      }
       // await sl.get<IWalletDatabase>().open();
 
       Navigator.of(context).pushReplacementNamed(route);
@@ -72,8 +71,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _init() async {
-    _currentEnvironment = new EnvHelper().getEnvironment();
-    _version = await new VersionHelper().getVersion();
+    _currentEnvironment = EnvHelper().getEnvironment();
+    _version = await VersionHelper().getVersion();
   }
 
   @override
@@ -144,21 +143,29 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
               ]),
-          if(_currentEnvironment != EnvironmentType.Production)
           Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  child: AutoSizeText(
-                    _currentEnvironment.toString(),
-                    style: AppStyles.textStyleParagraph(context),
-                    maxLines: 4,
-                    stepGranularity: 0.5,
+                CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor))
+              ]),
+          if (_currentEnvironment != EnvironmentType.Production)
+            Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    child: AutoSizeText(
+                      _currentEnvironment.toString(),
+                      style: AppStyles.textStyleParagraph(context),
+                      maxLines: 4,
+                      stepGranularity: 0.5,
+                    ),
                   ),
-                ),
-              ])
+                ])
         ],
       )),
     );

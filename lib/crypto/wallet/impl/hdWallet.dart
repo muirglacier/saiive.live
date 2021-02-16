@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
+import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
+import 'package:defichainwallet/network/model/transaction.dart' as tx;
 import 'package:hex/hex.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:tuple/tuple.dart';
@@ -32,6 +35,45 @@ class HdWallet extends IHdWallet {
     var pubKeyList = keys.map((item) => item).toList();
 
     return pubKeyList;
+  }
+
+  @override
+  Future init(IWalletDatabase walletDatabase) async {
+    var addresses = await walletDatabase.getWalletAddresses(_account.account);
+
+    if (addresses.length >= walletDatabase.getAddressCreationCount()) {
+      return;
+    }
+
+    final seed = HEX.decode(_seed);
+    for (int i = 0; i <= walletDatabase.getAddressCreationCount(); i++) {
+      await _checkAndCreateIfExists(walletDatabase, seed, i, true);
+      await _checkAndCreateIfExists(walletDatabase, seed, i, false);
+    }
+  }
+
+  Future _checkAndCreateIfExists(IWalletDatabase walletDatabase, Uint8List seed,
+      int index, bool isChangeAddress) async {
+
+    final alreadyExists =
+        await walletDatabase.addressExists(_account.account, isChangeAddress, index);
+
+    if (!alreadyExists) {
+      final pubKey = await HdWalletUtil.derivePublicKey(
+          seed, _account.id, isChangeAddress, index, _chain, _network);
+
+      await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey));
+    }
+  }
+
+  WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey) {
+    return WalletAddress(
+        account: _account.id,
+        isChangeAddress: isChangeAddress,
+        index: index,
+        chain: _chain,
+        publicKey: pubKey,
+        network: _network);
   }
 
   @override
@@ -120,7 +162,7 @@ class HdWallet extends IHdWallet {
     return balanceList;
   }
 
-  Future<List<Transaction>> syncTransactions() async {
+  Future<List<tx.Transaction>> syncTransactions() async {
     int empty = 0;
     int i = 0;
     _nextFreeIndex = 0;
@@ -128,7 +170,7 @@ class HdWallet extends IHdWallet {
     var startDate = DateTime.now();
     final key = HEX.decode(_seed);
     final apiService = _apiService;
-    var txList = List<Transaction>();
+    var txList = List<tx.Transaction>.empty(growable: true);
 
     do {
       try {
@@ -149,15 +191,6 @@ class HdWallet extends IHdWallet {
 
         LogHelper.instance.d(
             "found ${txs.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
-
-        for (final tx in txs) {
-          final keyIndex = keys.indexWhere((item) => item == tx.address);
-          var pathString = path[keyIndex];
-
-          tx.index = HdWalletUtil.getIndexFromPath(pathString);
-          tx.account = _account.account;
-          tx.isChangeAddress = HdWalletUtil.isPathChangeAddress(pathString);
-        }
         txList.addAll(txs);
         var anyBalanceFound = txs.length > 0;
 
@@ -201,7 +234,7 @@ class HdWallet extends IHdWallet {
     return txList;
   }
 
-  Future<List<Transaction>> syncUnspentTransactions() async {
+  Future<List<tx.Transaction>> syncUnspentTransactions() async {
     int empty = 0;
     int i = 0;
     _nextFreeIndex = 0;
@@ -209,7 +242,7 @@ class HdWallet extends IHdWallet {
     var startDate = DateTime.now();
     final key = HEX.decode(_seed);
     final apiService = _apiService;
-    var txList = List<Transaction>();
+    var txList = List<tx.Transaction>.empty(growable: true);
 
     do {
       try {
@@ -231,15 +264,6 @@ class HdWallet extends IHdWallet {
 
         LogHelper.instance.d(
             "found ${txs.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
-
-        for (final tx in txs) {
-          final keyIndex = keys.indexWhere((item) => item == tx.address);
-          var pathString = path[keyIndex];
-
-          tx.index = HdWalletUtil.getIndexFromPath(pathString);
-          tx.account = _account.account;
-          tx.isChangeAddress = HdWalletUtil.isPathChangeAddress(pathString);
-        }
         txList.addAll(txs);
         var anyBalanceFound = txs.length > 0;
 
@@ -287,19 +311,22 @@ class HdWallet extends IHdWallet {
   Future<String> nextFreePublicKey(
       IWalletDatabase database, bool isChangeAddress) async {
     final nextIndex = await database.getNextFreeIndex(_account.account);
-    final key = HEX.decode(_seed);
 
-    var publicKey = await HdWalletUtil.derivePublicKey(key, _account.account,
-        isChangeAddress, nextIndex, this._chain, this._network);
+    if (!await database.addressExists(
+        _account.account, isChangeAddress, nextIndex)) {
+      throw ArgumentError("not allowed to happen for now");
+    }
+    var address = await database.getWalletAddressById(
+        _account.account, isChangeAddress, nextIndex);
 
-    return publicKey;
+    return address.publicKey;
   }
 
   @override
   Future<Tuple3<int, bool, int>> nextFreePublicKeyRaw(
       IWalletDatabase database, bool isChangeAddress) async {
     final nextIndex = await database.getNextFreeIndex(_account.account);
-  
+
     return Tuple3<int, bool, int>(_account.account, isChangeAddress, nextIndex);
   }
 }

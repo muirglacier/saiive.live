@@ -13,7 +13,6 @@ import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/network/model/balance.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
 import 'package:defichainwallet/network/model/transaction_data.dart';
@@ -28,6 +27,7 @@ import 'package:retry/retry.dart';
 import 'dart:math';
 
 import 'package:tuple/tuple.dart';
+import 'package:mutex/mutex.dart';
 
 class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -44,6 +44,8 @@ class Wallet extends IWallet {
   bool _isInitialized = false;
   bool checkUtxo;
 
+  final Mutex _walletMutex = Mutex();
+
   Wallet(this._chain, this.checkUtxo);
 
   void _isInitialzed() {
@@ -54,6 +56,9 @@ class Wallet extends IWallet {
 
   @override
   Future init() async {
+    if (_isInitialized) {
+      return;
+    }
     _apiService = sl.get<ApiService>();
     _walletDatabase = sl.get<IWalletDatabase>();
 
@@ -68,10 +73,17 @@ class Wallet extends IWallet {
       final wallet = new HdWallet(_password, account, _chain, _network,
           mnemonicToSeedHex(_seed), _apiService);
 
+      await wallet.init(_walletDatabase);
+
       _wallets.putIfAbsent(account.account, () => wallet);
     }
 
     _isInitialized = true;
+  }
+
+  @override
+  Future close() async {
+    _isInitialized = false;
   }
 
   @override
@@ -114,7 +126,7 @@ class Wallet extends IWallet {
   Future<List<Account>> syncBalance() async {
     _isInitialzed();
     var startDate = DateTime.now();
-    var ret = List<Account>();
+    var ret = List<Account>.empty(growable: true);
     try {
       for (final wallet in _wallets.values) {
         var balance = await wallet.syncBalance();
@@ -187,9 +199,13 @@ class Wallet extends IWallet {
   @override
   Future<TransactionData> createAndSend(
       int amount, String token, String to) async {
-    var txData = await createSendTransaction(amount, token, to);
+    _isInitialzed();
+    await _ensureUtxo();
+
+    await _walletMutex.acquire();
 
     try {
+      var txData = await createSendTransaction(amount, token, to);
       var tx = await createTxAndWait(txData.item1);
 
       await _walletDatabase.removeUnspentTransactions(txData.item2);
@@ -197,41 +213,31 @@ class Wallet extends IWallet {
     } catch (error) {
       LogHelper.instance.e("Error creating tx...", error);
       throw error;
+    } finally {
+      _walletMutex.release();
     }
   }
 
   Future<Tuple2<String, List<tx.Transaction>>> createSendTransaction(
       int amount, String token, String to) async {
-    _isInitialzed();
-    await _ensureUtxo();
+    final changeAddress = await this.getPublicKeyFromAccount(_account, true);
 
-    final changeAddressRaw =
-        await _wallets[_account].nextFreePublicKeyRaw(_walletDatabase, true);
-
-    var changeAddress = await HdWalletUtil.getPublicKey(
-        mnemonicToSeed(_seed),
-        changeAddressRaw.item1,
-        changeAddressRaw.item2,
-        changeAddressRaw.item3,
-        _chain,
-        _network);
+    var fee = await getTxFee();
 
     if (token == DeFiConstants.DefiTokenSymbol ||
         token == DeFiConstants.DefiAccountSymbol) {
-      var txHex =
-          await prepareAccountToUtxosTransactions(changeAddress, amount);
+      var txHex = await prepareAccountToUtxosTransactions(
+          changeAddress, amount + (fee * 2));
+
       if (txHex != null) {
         final tx = await createTxAndWait(txHex.item1);
 
         await _walletDatabase.removeUnspentTransactions(txHex.item2);
 
-        for (final unspentTx in tx.details.outputs
-            .where((element) => element.address == changeAddress)) {
-          unspentTx.account = changeAddressRaw.item1;
-          unspentTx.isChangeAddress = true;
-          unspentTx.index = changeAddressRaw.item3;
-
-          await _walletDatabase.addUnspentTransaction(unspentTx);
+        for (final unspentTx in tx.details.outputs) {
+          if (unspentTx.address == changeAddress) {
+            await _walletDatabase.addUnspentTransaction(unspentTx);
+          }
         }
       }
 
@@ -349,6 +355,12 @@ class Wallet extends IWallet {
 
     var curAmount = 0.0;
     for (final tx in unspentTxs) {
+      if (!await _walletDatabase.isOwnAddress(tx.address)) {
+        continue;
+      }
+
+      final address = await _walletDatabase.getWalletAddress(tx.address);
+
       if (tx.value <= 0) {
         //ignore auth txs
         continue;
@@ -358,9 +370,9 @@ class Wallet extends IWallet {
 
       final keyPair = HdWalletUtil.getKeyPair(
           key,
-          _account,
-          tx.isChangeAddress,
-          tx.index,
+          address.account,
+          address.isChangeAddress,
+          address.index,
           ChainHelper.chainFromString(tx.chain),
           ChainHelper.networkFromString(tx.network));
 
@@ -371,7 +383,7 @@ class Wallet extends IWallet {
       }
     }
 
-    if(curAmount < checkAmount) {
+    if (curAmount < (checkAmount - fees)) {
       throw new ArgumentError("Insufficent funds");
     }
 
@@ -398,10 +410,6 @@ class Wallet extends IWallet {
         (element) => element.spentHeight <= 0 && element.address == pubKey);
 
     if (retOut != null) {
-      retOut.account = account;
-      retOut.index = index;
-      retOut.isChangeAddress = isChangeAddress;
-
       _walletDatabase.removeUnspentTransactions(txHex.item2);
       for (var out in txData.details.outputs) {
         _walletDatabase.addUnspentTransaction(out);
@@ -494,11 +502,17 @@ class Wallet extends IWallet {
           isChangeAddress: acc.isChangeAddress,
           network: acc.network));
 
+      if (!await _walletDatabase.isOwnAddress(tx.address)) {
+        continue;
+      }
+
+      final address = await _walletDatabase.getWalletAddress(tx.address);
+
       final keyPair = HdWalletUtil.getKeyPair(
           key,
-          _account,
-          tx.isChangeAddress,
-          tx.index,
+          address.account,
+          address.isChangeAddress,
+          address.index,
           ChainHelper.chainFromString(tx.chain),
           ChainHelper.networkFromString(tx.network));
 
@@ -569,11 +583,17 @@ class Wallet extends IWallet {
       useTxs.add(tx);
       curAmount += tx.valueRaw;
 
+      if (!await _walletDatabase.isOwnAddress(tx.address)) {
+        continue;
+      }
+
+      final address = await _walletDatabase.getWalletAddress(tx.address);
+
       final keyPair = HdWalletUtil.getKeyPair(
           key,
-          _account,
-          tx.isChangeAddress,
-          tx.index,
+          address.account,
+          address.isChangeAddress,
+          address.index,
           ChainHelper.chainFromString(tx.chain),
           ChainHelper.networkFromString(tx.network));
 
@@ -606,10 +626,14 @@ class Wallet extends IWallet {
   }
 
   Future _ensureUtxo() async {
-    if (!checkUtxo) {
-      return;
+    await _walletMutex.acquire();
+    try {
+      if (checkUtxo) {
+        await _syncUnspentTransactionOutputs();
+      }
+    } finally {
+      _walletMutex.release();
     }
-    await _syncUnspentTransactionOutputs();
   }
 
   Future _syncUnspentTransactionOutputs() async {
@@ -643,19 +667,24 @@ class Wallet extends IWallet {
   }
 
   Future _syncTransactions() async {
-    var dataMap = Map();
-    dataMap["chain"] = _chain;
-    dataMap["network"] = _network;
-    dataMap["seed"] = await sl.get<IVault>().getSeed();
-    dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
-    dataMap["apiService"] = sl.get<ApiService>();
-    dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
+    await _walletMutex.acquire();
+    try {
+      var dataMap = Map();
+      dataMap["chain"] = _chain;
+      dataMap["network"] = _network;
+      dataMap["seed"] = await sl.get<IVault>().getSeed();
+      dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
+      dataMap["apiService"] = sl.get<ApiService>();
+      dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
 
-    var txs = await compute(WalletStaticHelper.syncTransactions, dataMap);
-    await _walletDatabase.clearUnspentTransactions();
+      var txs = await compute(WalletStaticHelper.syncTransactions, dataMap);
+      await _walletDatabase.clearTransactions();
 
-    for (tx.Transaction transaction in txs) {
-      await _walletDatabase.addTransaction(transaction);
+      for (tx.Transaction transaction in txs) {
+        await _walletDatabase.addTransaction(transaction);
+      }
+    } finally {
+      _walletMutex.release();
     }
   }
 

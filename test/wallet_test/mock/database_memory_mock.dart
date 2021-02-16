@@ -1,5 +1,6 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/model/account.dart';
@@ -12,6 +13,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
   List<Transaction> _transactions = List<Transaction>.empty(growable: true);
   List<Transaction> _unspentTransactions =
       List<Transaction>.empty(growable: true);
+
+  List<WalletAddress> _addresses = List<WalletAddress>.empty(growable: true);
 
   @override
   Future<WalletAccount> addAccount(
@@ -183,5 +186,66 @@ class MemoryDatabaseMock extends IWalletDatabase {
       }
     }
     return ret;
+  }
+
+  @override
+  Future addAddress(WalletAddress account) async {
+    _addresses.add(account);
+  }
+
+  @override
+  Future<bool> addressExists(
+      int account, bool isChangeAddress, int index) async {
+    for (final address in _addresses) {
+      if (address.account == account &&
+          address.isChangeAddress == isChangeAddress &&
+          address.index == index) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  Future<WalletAddress> getWalletAddress(String pubKey) async {
+    for (final address in _addresses) {
+      if (address.publicKey == pubKey) {
+        return address;
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<List<WalletAddress>> getWalletAddresses(int account) async {
+    return _addresses;
+  }
+
+  @override
+  Future<bool> isOwnAddress(String pubKey) async {
+    for (final address in _addresses) {
+      if (address.publicKey == pubKey) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  int getAddressCreationCount() {
+    return 20;
+  }
+
+  @override
+  Future<WalletAddress> getWalletAddressById(
+      int account, bool isChangeAddress, int index) async {
+    for (final address in _addresses) {
+      if (address.account == account &&
+          address.isChangeAddress == isChangeAddress &&
+          address.index == index) {
+        return address;
+      }
+    }
+    return null;
   }
 }

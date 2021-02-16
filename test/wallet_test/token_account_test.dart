@@ -19,8 +19,6 @@ void main() async {
       await db.addTransaction(Transaction(
           id: "601496faf1963a034ec57842",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 1,
           mintTxId:
@@ -29,13 +27,10 @@ void main() async {
           spentHeight: -2,
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 1000000000,
-          isChangeAddress: false,
           confirmations: -1));
       await db.addTransaction(Transaction(
           id: "60156e30dc5c117a2b211187",
           chain: "DFI",
-          index: 1,
-          account: 0,
           network: "testnet",
           mintIndex: 0,
           mintTxId:
@@ -44,13 +39,10 @@ void main() async {
           spentHeight: -2,
           address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
           value: 26999795496,
-          isChangeAddress: false,
           confirmations: -1));
       await db.addUnspentTransaction(Transaction(
           id: "601496faf1963a034ec57842",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 1,
           mintTxId:
@@ -59,20 +51,16 @@ void main() async {
           spentHeight: -2,
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 1000000000,
-          isChangeAddress: false,
           confirmations: -1));
       await db.addUnspentTransaction(Transaction(
           id: "60156e30dc5c117a2b211187",
           chain: "DFI",
-          index: 1,
-          account: 0,
           network: "testnet",
           mintIndex: 0,
           mintTxId:
               "d85da07fec78d920cf24507156b71130565d7eaade8bc0ff337485bc5c8e2727",
           mintHeight: 192738,
           spentHeight: -2,
-          isChangeAddress: false,
           address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
           value: 26999795496,
           confirmations: -1));
@@ -116,8 +104,6 @@ void main() async {
       await db.addTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3d",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 1,
           mintTxId:
@@ -126,20 +112,16 @@ void main() async {
           spentHeight: -2,
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 1000000000,
-          isChangeAddress: false,
           confirmations: -1));
       await db.addTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3b",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 0,
           mintTxId:
               "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
           mintHeight: 192804,
           spentHeight: -2,
-          isChangeAddress: true,
           address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
           value: 26999794496,
           confirmations: -1));
@@ -147,8 +129,6 @@ void main() async {
       await db.addUnspentTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3d",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 1,
           mintTxId:
@@ -157,13 +137,10 @@ void main() async {
           spentHeight: -2,
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 1000000000,
-          isChangeAddress: false,
           confirmations: -1));
       await db.addUnspentTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3b",
           chain: "DFI",
-          index: 0,
-          account: 0,
           network: "testnet",
           mintIndex: 0,
           mintTxId:
@@ -172,7 +149,6 @@ void main() async {
           spentHeight: -2,
           address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
           value: 26999794496,
-          isChangeAddress: true,
           confirmations: -1));
 
       final dfiToken = Account(

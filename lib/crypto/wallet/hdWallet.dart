@@ -4,6 +4,9 @@ import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class IHdWallet {
+
+  Future init(IWalletDatabase walletDatabase);
+
   Future<List<Account>> syncBalance();
 
   Future<List<String>> getPublicKeys();

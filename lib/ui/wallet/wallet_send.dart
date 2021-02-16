@@ -7,7 +7,6 @@ import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:defichainwallet/network/api_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class WalletSendScreen extends StatefulWidget {

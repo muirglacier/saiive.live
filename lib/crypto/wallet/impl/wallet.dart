@@ -201,8 +201,9 @@ class Wallet extends IWallet {
       int amount, String token, String to) async {
     _isInitialzed();
 
-    if(_walletMutex.isLocked) {
-      throw new ArgumentError("Wallet sync is in progress, wait for it to finish....");
+    if (_walletMutex.isLocked) {
+      throw new ArgumentError(
+          "Wallet sync is in progress, wait for it to finish....");
     }
 
     await _ensureUtxo();
@@ -227,12 +228,11 @@ class Wallet extends IWallet {
       int amount, String token, String to) async {
     final changeAddress = await this.getPublicKeyFromAccount(_account, true);
 
-    var fee = await getTxFee();
-
     if (token == DeFiConstants.DefiTokenSymbol ||
         token == DeFiConstants.DefiAccountSymbol) {
+      var minFee = await getTxFee(0, 0) + 10000;
       var txHex = await prepareAccountToUtxosTransactions(
-          changeAddress, amount + (fee * 2));
+          changeAddress, amount + minFee * 2);
 
       if (txHex != null) {
         final tx = await createTxAndWait(txHex.item1);
@@ -271,7 +271,7 @@ class Wallet extends IWallet {
     final accounts = await _walletDatabase.getAccountBalancesForToken(token);
     final useAccounts = List<FromAccount>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
-    final fee = await getTxFee();
+    final fee = await getTxFee(0, 0);
 
     final inputTxs = List<tx.Transaction>.empty(growable: true);
 
@@ -321,9 +321,8 @@ class Wallet extends IWallet {
   Future<Tuple2<String, List<tx.Transaction>>> createAuthTx(
       String pubKey) async {
     final changeAddress = await getPublicKeyFromAccount(_account, true);
-    final fee = await getTxFee();
-    var baseTx = await _createBaseTransaction(
-        200000, pubKey, changeAddress, fee, (txb, nw) {
+    var baseTx = await _createBaseTransaction(200000, pubKey, changeAddress, 0,
+        (txb, nw) {
       txb.addAuthOutput(outputIndex: 0);
     });
 
@@ -332,9 +331,8 @@ class Wallet extends IWallet {
 
   Future<Tuple2<String, List<tx.Transaction>>> _createUtxoTransaction(
       int amount, String to, String changeAddress) async {
-    final fee = await getTxFee();
     final txb = await _createBaseTransaction(
-        amount, to, changeAddress, fee, (txb, nw) => {});
+        amount, to, changeAddress, 0, (txb, nw) => {});
     return txb;
   }
 
@@ -342,7 +340,7 @@ class Wallet extends IWallet {
       int amount,
       String to,
       String changeAddress,
-      int fees,
+      int additionalFees,
       Function(TransactionBuilder, NetworkType) additional) async {
     final tokenBalance =
         await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
@@ -356,7 +354,8 @@ class Wallet extends IWallet {
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
 
-    final checkAmount = amount + fees;
+    final checkAmount =
+        amount + 10000; //check for some more to have some room for fees
 
     var curAmount = 0.0;
     for (final tx in unspentTxs) {
@@ -381,19 +380,14 @@ class Wallet extends IWallet {
           ChainHelper.chainFromString(tx.chain),
           ChainHelper.networkFromString(tx.network));
 
-      final pub = await HdWalletUtil.getPublicKey(key,
-          address.account,
-          address.isChangeAddress,
-          address.index,
-          ChainHelper.chainFromString(tx.chain),
-          ChainHelper.networkFromString(tx.network));
-
       keys.add(keyPair);
 
       if (curAmount >= checkAmount) {
         break;
       }
     }
+
+    final fees = await getTxFee(useTxs.length, 2);
 
     if (curAmount < (checkAmount - fees)) {
       throw new ArgumentError("Insufficent funds");
@@ -452,8 +446,9 @@ class Wallet extends IWallet {
     return await _walletDatabase.getTransaction(id);
   }
 
-  Future<int> getTxFee() async {
-    return 1000;
+  Future<int> getTxFee(int inputs, int outputs) async {
+    if (inputs == 0 && outputs == 0) return 3000; //default fee is always the same for now
+    return (inputs * 180) + (outputs * 34) + 50;
   }
 
   Future<Tuple2<String, List<tx.Transaction>>>
@@ -489,7 +484,7 @@ class Wallet extends IWallet {
     final key = mnemonicToSeed(_seed);
 
     final neededAccounts = List<Account>.empty(growable: true);
-    final fees = await getTxFee();
+    final fees = await getTxFee(0, 0);
     final useInputs = List<tx.Transaction>.empty(growable: true);
     var accBalance = 0;
 
@@ -586,7 +581,7 @@ class Wallet extends IWallet {
     final unspentTxs = await _walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
-    final fee = await getTxFee();
+    final fee = await getTxFee(0, 0);
 
     var checkAmount = (amount - accBalance.balance) + fee;
 

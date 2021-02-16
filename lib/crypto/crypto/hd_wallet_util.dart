@@ -193,6 +193,10 @@ class HdWalletUtil {
       totalInputValue += tx.valueRaw;
     }
 
+    if(totalInputValue == amount) {
+      throw ArgumentError("$totalInputValue == $amount - inputValue cannot be equal to amount, we need to pay some fees!");
+    }
+
     if (totalInputValue > (amount)) {
       var changeAmount = totalInputValue - amount - fee;
       txb.addOutput(returnAddress, changeAmount);

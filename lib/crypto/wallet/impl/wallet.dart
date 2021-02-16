@@ -200,7 +200,12 @@ class Wallet extends IWallet {
   Future<TransactionData> createAndSend(
       int amount, String token, String to) async {
     _isInitialzed();
-    //await _ensureUtxo();
+
+    if(_walletMutex.isLocked) {
+      throw new ArgumentError("Wallet sync is in progress, wait for it to finish....");
+    }
+
+    await _ensureUtxo();
 
     await _walletMutex.acquire();
 

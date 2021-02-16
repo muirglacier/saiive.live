@@ -30,7 +30,7 @@ class WalletAddress {
   factory WalletAddress.fromJson(Map<String, dynamic> json) {
     return WalletAddress(
       account: json['account'],
-      isChangeAddress: json['isChangeAddress'] == "1",
+      isChangeAddress: json['isChangeAddress'],
       index: json['index'],
       chain: ChainType.values[json['chain']],
       network: ChainNet.values[json['chain']],

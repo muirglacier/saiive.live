@@ -200,7 +200,7 @@ class Wallet extends IWallet {
   Future<TransactionData> createAndSend(
       int amount, String token, String to) async {
     _isInitialzed();
-    await _ensureUtxo();
+    //await _ensureUtxo();
 
     await _walletMutex.acquire();
 
@@ -370,6 +370,13 @@ class Wallet extends IWallet {
 
       final keyPair = HdWalletUtil.getKeyPair(
           key,
+          address.account,
+          address.isChangeAddress,
+          address.index,
+          ChainHelper.chainFromString(tx.chain),
+          ChainHelper.networkFromString(tx.network));
+
+      final pub = await HdWalletUtil.getPublicKey(key,
           address.account,
           address.isChangeAddress,
           address.index,

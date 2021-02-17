@@ -1,6 +1,11 @@
+import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/wallet/wallet_init.dart';
+import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -78,12 +83,14 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
   }
 
   Future saveSeed(bool seedIsBackedUp) async {
-    await sl.get<SharedPrefsUtil>().setSeedBackedUp(false);
+    await sl.get<SharedPrefsUtil>().setSeedBackedUp(seedIsBackedUp);
     await sl.get<IVault>().setSeed(widget.mnemonic.join(" "));
+
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (BuildContext context) => WalletInitScreen()), (route) => false);
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildScreen(BuildContext context) {
     final randomWordsToTest = getRandomForTest(4, widget.mnemonic);
 
     final textEditControllerMap = new Map<int, TextEditingController>();
@@ -91,7 +98,45 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
     randomWordsToTest.forEach((a) =>
         textEditControllerMap.putIfAbsent(a, () => TextEditingController()));
 
+    return SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            verticalDirection: VerticalDirection.down,
+            children: [
+          Text(S.of(context).wallet_new_test_confirm,
+              style: TextStyle(fontFamily: "Popins", fontSize: 20),
+              textAlign: TextAlign.center),
+          SizedBox(height: 10),
+          Text(S.of(context).wallet_new_test_confirm_info,
+              style: TextStyle(color: Theme.of(context).hintColor),
+              textAlign: TextAlign.center),
+          SizedBox(height: 20),
+          Form(
+              key: _formKey,
+              child: Column(
+                  children:
+                      buildInputs(randomWordsToTest, textEditControllerMap))),
+          SizedBox(height: 20),
+          Container(
+              child: SizedBox(
+                  width: 300,
+                  child: RaisedButton(
+                    child: Text(S.of(context).next),
+                    color: Theme.of(context).backgroundColor,
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        await saveSeed(false);
+                      }
+                    },
+                  )))
+        ]));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(S.of(context).wallet_recovery_phrase_test_title),
@@ -99,7 +144,6 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
             InkWell(
                 onTap: () async {
                   await saveSeed(false);
-                  Navigator.of(context).pushReplacementNamed("/home");
                 },
                 child: Padding(
                     padding: EdgeInsets.only(top: 15, right: 15),
@@ -110,42 +154,6 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
                     )))
           ],
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    verticalDirection: VerticalDirection.down,
-                    children: [
-                      Text(S.of(context).wallet_new_test_confirm,
-                          style: TextStyle(fontFamily: "Popins", fontSize: 20),
-                          textAlign: TextAlign.center),
-                      SizedBox(height: 10),
-                      Text(S.of(context).wallet_new_test_confirm_info,
-                          style: TextStyle(color: Theme.of(context).hintColor),
-                          textAlign: TextAlign.center),
-                      SizedBox(height: 20),
-                      Form(
-                          key: _formKey,
-                          child: Column(
-                              children: buildInputs(
-                                  randomWordsToTest, textEditControllerMap))),
-                      SizedBox(height: 20),
-                      Container(
-                          child: SizedBox(
-                              width: 300,
-                              child: RaisedButton(
-                                child: Text(S.of(context).next),
-                                color: Theme.of(context).backgroundColor,
-                                onPressed: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    await saveSeed(false);
-                                    Navigator.of(context)
-                                        .pushReplacementNamed("/home");
-                                  }
-                                },
-                              )))
-                    ]))));
+        body: Padding(padding: EdgeInsets.all(5), child: buildScreen(context)));
   }
 }

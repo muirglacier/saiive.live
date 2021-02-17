@@ -77,10 +77,6 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     RecoveryPhraseTestScreen(split)));
-
-                            // Navigator.of(context).push(AnimatedRoute(
-                            //     builder: (_) =>
-                            //         new RecoveryPhraseTestScreen(split)));
                           },
                         )))
             ]))));

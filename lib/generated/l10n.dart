@@ -375,6 +375,26 @@ class S {
     );
   }
 
+  /// `We are preparing your wallet, hang on a second.`
+  String get wallet_new_creating {
+    return Intl.message(
+      'We are preparing your wallet, hang on a second.',
+      name: 'wallet_new_creating',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wallet preparing`
+  String get wallet_new_creating_title {
+    return Intl.message(
+      'Wallet preparing',
+      name: 'wallet_new_creating_title',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Recovery phrase`
   String get wallet_recovery_phrase_title {
     return Intl.message(

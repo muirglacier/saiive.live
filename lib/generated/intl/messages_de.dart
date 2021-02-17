@@ -60,6 +60,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "title" : MessageLookupByLibrary.simpleMessage("DeFiChain Wallet"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Dein Wallet ist leer!"),
+    "wallet_new_creating" : MessageLookupByLibrary.simpleMessage("Wir bereiten dein Wallet vor, dies dauert einige Sekunden."),
+    "wallet_new_creating_title" : MessageLookupByLibrary.simpleMessage("Wallet"),
     "wallet_new_info1_header" : MessageLookupByLibrary.simpleMessage("Was sind Wiederherstellungswörter?"),
     "wallet_new_info1_text" : MessageLookupByLibrary.simpleMessage("Es ist dein Master Private Key für dein Wallet, sozusagen Benutzername und Kennwort. Nur du solltest Zugriff darauf haben, gib acht!"),
     "wallet_new_info2_header" : MessageLookupByLibrary.simpleMessage("Für was brauch ich diese?"),

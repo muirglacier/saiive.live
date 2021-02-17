@@ -178,7 +178,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                               } else {
                                 await saveSeed();
                                 Navigator.of(context)
-                                    .pushNamed("/intro_accounts_restore");
+                                    .pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
                               }
                             },
                           )))

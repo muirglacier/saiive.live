@@ -59,7 +59,7 @@ class _DexScreen extends State<DexScreen> {
   }
 
   _init() async {
-    var tokenMap = List<TokenBalance>();
+    var tokenMap = List<TokenBalance>.empty(growable: true);
     var pairs = await sl.get<IPoolPairService>().getPoolPairs('DFI');
     var uniqueTokenList = Map<String, String>();
 
@@ -290,8 +290,6 @@ class _DexScreen extends State<DexScreen> {
         )
       ],
     );
-
-    return Text(e.hash + ' ' + e.balanceDisplayRounded);
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/service_locator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
@@ -13,7 +12,7 @@ void main() async {
       "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow");
 
   group("#1 create tx", () {
-    test("#0 init database...", () async {
+    initTest() async {
       final db = sl.get<IWalletDatabase>();
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       await db.addTransaction(Transaction(
@@ -77,9 +76,15 @@ void main() async {
           network: "testnet");
 
       await db.setAccountBalance(dfiToken);
-    });
+    }  
+    
+    Future destroyTest() async {
+      final db = sl.get<IWalletDatabase>();
+      await db.destroy();
+    }
 
     test("#1 test create tx", () async {
+      await initTest();
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
@@ -88,17 +93,14 @@ void main() async {
           1000000000, "\$DFI", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
 
       expect(tx.item1,
-          "020000000001027183420ff39067699eac9ec3b22d9e6a5466c3bf31b50a32fa73f04e47df6ac0010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff27278e5cbc857433ffc08bdeaa7e5d563011b756715024cf20d978ec7fa05dd80000000017160014faf5b246f4ed8fe5b9e149a036404aa2c2ea451bffffffff02402b50490600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702473044022067acb386b138ad7ff894c5fbbe6e91e3a3e1bd153861fd244000982ff9a5e6ba02204d1061e89ede5f525583eef7846d95a98b92f5f0629388f4824da01d7a591421012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c0248304502210080d217aae754611d4ba5f577b832beabf4f78f263b9614fc941b184eee392f6802201e7041e8b2eadbe07b37d13d233432b80c2a27ec0590576e3e6f1ec1e4adef8201210241e3f9c894cd6d44c6a262d442f7aaf92e41c1dd6eb118334e7c5742335c8bcc00000000");
-      
+          "020000000001027183420ff39067699eac9ec3b22d9e6a5466c3bf31b50a32fa73f04e47df6ac0010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff27278e5cbc857433ffc08bdeaa7e5d563011b756715024cf20d978ec7fa05dd80000000017160014faf5b246f4ed8fe5b9e149a036404aa2c2ea451bffffffff024a2d50490600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa87024730440220188199841f61f87aa5adc8cb6af3ea8007b31e0e0b6b29332a7461f4b5d1939b022009004c175e798983a3d4e4485fc50d20dad1830ea18549d763af964ecbe0663d012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c0247304402201e69e0415dd9a66cffb8b34b59560eaffd79448d0ec77f81f57b6410f6e7f45b02203cdd45609b93ab36d6707de719459dec98a04fade5345add12db7f2d0dcd8afa01210241e3f9c894cd6d44c6a262d442f7aaf92e41c1dd6eb118334e7c5742335c8bcc00000000");
+      await destroyTest();
     });
-    test("#2 destroy", () async {
-      final db = sl.get<IWalletDatabase>();
-      await db.destroy();
-    });
+  
   });
 
   group("#2 create 2nd tx", () {
-    test("#0 init database...", () async {
+   initTest() async {
       final db = sl.get<IWalletDatabase>();
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       await db.addTransaction(Transaction(
@@ -163,9 +165,14 @@ void main() async {
           network: "testnet");
 
       await db.setAccountBalance(dfiToken);
-    });
+    }
 
+   destroyTest() async {
+      final db = sl.get<IWalletDatabase>();
+      await db.destroy();
+    }
     test("#1 create 2nd tx", () async {
+      await initTest();
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
@@ -174,13 +181,9 @@ void main() async {
           1000000000, "\$DFI", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
 
       expect(tx.item1,
-          "020000000001020c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f9010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f90000000017160014f5baba69ac8107ca3f47bf3a0d7afef76c5d2d4bffffffff02582750490600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702473044022066ddf7ccab40fa4cde9c8a29b2af55563a09a413c6184e991eb456976a9d1bbd02207a18b55b6461e4fa5881cc6b3c90f5f7892007f851345e26d1179e2d84794da5012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c024730440220636b8585d11344b753fb958c32c67573a7ef22022ee9205b735c48e1aea0e1cb022068fe3b7e503895d34d4a53284bcb0c29255423dacdfc5dbb7e94ee0bab30225c012103d9692afdab3120cb1b9d848de7d72c97cc2e21c00af07d0d5a98df1a4498359600000000");
-
+          "020000000001020c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f9010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f90000000017160014f5baba69ac8107ca3f47bf3a0d7afef76c5d2d4bffffffff02622950490600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702483045022100d109e5981b9ebafeb8c302c6a8623fc6afa8bf8f923e084bc1a797c5547ffd760220526fcedca72b2ebeeea6c76a3ed0a5cbb819f84283b1a0e4de1e9132f9338c84012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c02473044022069a01f006f8066a687b6dced6632e0eb34cd536f17a7d3c568f026e150f0002502200c8b0ff13db80bd9b42064bc1bdfa7382a786cb303d1c18452881490dba0b2ca012103d9692afdab3120cb1b9d848de7d72c97cc2e21c00af07d0d5a98df1a4498359600000000");
+      await destroyTest();
     });
 
-    test("#2 destroy", () async {
-      final db = sl.get<IWalletDatabase>();
-      await db.destroy();
-    });
   });
 }

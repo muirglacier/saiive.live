@@ -176,22 +176,18 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     }
     return Padding(
         padding: EdgeInsets.all(30),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SingleChildScrollView(
-                  child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemExtent: 100.0,
-                      itemCount: _accountBalance.length,
-                      itemBuilder: (context, index) {
-                        final account = _accountBalance.elementAt(index);
-                        return _buildAccountEntry(account);
-                      }))
-            ]));
+        child: SingleChildScrollView(
+            child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemExtent: 100.0,
+                itemCount: _accountBalance.length,
+                itemBuilder: (context, index) {
+                  final account = _accountBalance.elementAt(index);
+                  return _buildAccountEntry(account);
+                }))
+        );
   }
 
   @override

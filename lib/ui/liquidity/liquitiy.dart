@@ -5,6 +5,7 @@ import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -19,6 +20,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   List<PoolShareLiquidity> _liquidity;
   List<PoolPairLiquidity> _poolPairLiquidity;
   final formatCurrency = new NumberFormat.simpleCurrency();
+  bool showEstimatedRewards = false;
 
   @override
   void initState() {
@@ -100,6 +102,139 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                             '%',
                         textAlign: TextAlign.right))
               ])),
+              Visibility(
+                  visible: showEstimatedRewards,
+                  child: Column(children: <Widget>[
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Container(
+                      child: Row(children: [
+                        Expanded(
+                            flex: 2,
+                            child: Text('Estimated Rewards',
+                                style: TextStyle(fontWeight: FontWeight.bold))),
+                      ]),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 4)),
+                    Container(
+                        child: Row(children: [
+                      Expanded(flex: 4, child: Text('Per Block')),
+                      Expanded(
+                          flex: 6,
+                          child: Text(
+                              myLiquidity.blockReward.toStringAsFixed(8),
+                              textAlign: TextAlign.right
+                          )
+                      ),
+                          SizedBox(width: 40, child: Text('DFI', textAlign: TextAlign.right,))
+                    ])),
+                    Container(
+                        child: Row(children: [
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.blockRewardFiat.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text(myLiquidity.coin.currency, textAlign: TextAlign.right,))
+                        ])),
+                    Padding(padding: EdgeInsets.only(top: 4)),
+                    Container(
+                        child: Row(children: [
+                          Expanded(flex: 4, child: Text('Per Minute')),
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.minuteReward.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text('DFI', textAlign: TextAlign.right,))
+                        ])),
+                    Container(
+                        child: Row(children: [
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.minuteRewardFiat.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text(myLiquidity.coin.currency, textAlign: TextAlign.right,))
+                        ])),
+                    Padding(padding: EdgeInsets.only(top: 4)),
+                    Container(
+                        child: Row(children: [
+                          Expanded(flex: 4, child: Text('Per Hour')),
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.hourlyReword.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text('DFI', textAlign: TextAlign.right,))
+                        ])),
+                    Container(
+                        child: Row(children: [
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.hourlyRewordFiat.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text(myLiquidity.coin.currency, textAlign: TextAlign.right,))
+                        ])),
+                    Padding(padding: EdgeInsets.only(top: 4)),
+                    Container(
+                        child: Row(children: [
+                          Expanded(flex: 4, child: Text('Per Day')),
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.dailyReward.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text('DFI', textAlign: TextAlign.right,))
+                        ])),
+                    Container(
+                        child: Row(children: [
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.dailyRewardFiat.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text(myLiquidity.coin.currency, textAlign: TextAlign.right,))
+                        ])),
+                    Padding(padding: EdgeInsets.only(top: 4)),
+                    Container(
+                        child: Row(children: [
+                          Expanded(flex: 4, child: Text('Per Year')),
+                          Expanded(
+                              flex: 6,
+                              child: Text(
+                                  myLiquidity.yearlyReward.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text('DFI', textAlign: TextAlign.right,))
+                        ])),
+                    Container(
+                        child: Row(children: [
+                          Expanded(
+                              flex: 10,
+                              child: Text(
+                                  myLiquidity.yearlyRewardFiat.toStringAsFixed(8),
+                                  textAlign: TextAlign.right
+                              )
+                          ),
+                          SizedBox(width: 40, child: Text(myLiquidity.coin.currency, textAlign: TextAlign.right,))
+                        ])),
+                  ]))
             ])));
   }
 
@@ -150,10 +285,10 @@ class _LiquidityScreen extends State<LiquidityScreen> {
         SliverToBoxAdapter(
           child: Container(
               margin: EdgeInsets.only(top: 10.0),
-              child: Center(
+              child: Visibility(visible: _liquidity.length > 0, child: Center(
                   child: Text('Your Liquidity',
                       textScaleFactor: 1.5,
-                      style: TextStyle(fontWeight: FontWeight.bold)))),
+                      style: TextStyle(fontWeight: FontWeight.bold))))),
         ),
         SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -186,7 +321,24 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).liquitiy)),
+        appBar: AppBar(
+          title: Text(S.of(context).liquitiy),
+          actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      showEstimatedRewards = !showEstimatedRewards;
+                    });
+                  },
+                  child: Icon(
+                    showEstimatedRewards ? Icons.visibility_off : Icons.visibility,
+                    size: 26.0,
+                  ),
+                )),
+          ],
+        ),
         body: Container(child: buildAllLiqduitiyScreen(context)));
   }
 }

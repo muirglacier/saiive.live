@@ -53,6 +53,33 @@ class PoolShareHelper {
 
       var yearlyPoolReward = lpDailyDfiReward * poolPair.rewardPct * 365 * (dfiCoin != null ? dfiCoin.fiat : 0);
 
+      double customRewardDFI = 0;
+
+      if (null != poolPair.customRewards) {
+        poolPair.customRewards.forEach((e) {
+          String idToken = e.split('@')[1];
+          double reward = double.tryParse(e.split('@')[0]);
+
+          if ('0' == idToken) {
+            customRewardDFI += reward;
+          }
+        });
+      }
+
+      //30 seconds is the block time
+      var blockReward = (lpDailyDfiReward / (24 * 24 * 60) / 30 + customRewardDFI) * poolSharePercentage;
+
+      var minuteReward = blockReward * 2;
+      var hourlyReword = minuteReward * 60;
+      var dailyReward = hourlyReword * 24;
+      var yearlyReward = dailyReward * 365;
+
+      var blockRewardFiat = blockReward * (dfiCoin != null ? dfiCoin.fiat : 0);
+      var minuteRewardFiat = minuteReward * (dfiCoin != null ? dfiCoin.fiat : 0);
+      var hourlyRewordFiat = hourlyReword * (dfiCoin != null ? dfiCoin.fiat : 0);
+      var dailyRewardFiat = dailyReward * (dfiCoin != null ? dfiCoin.fiat : 0);
+      var yearlyRewardFiat = yearlyReward * (dfiCoin != null ? dfiCoin.fiat : 0);
+
       var liquidityReserveidTokenA = poolPair.reserveA * (priceA != null ? priceA.fiat : 0);
       var liquidityReserveidTokenB = poolPair.reserveB * (priceB != null ? priceB.fiat : 0);
       var totalLiquidity = liquidityReserveidTokenA + liquidityReserveidTokenB;
@@ -66,7 +93,18 @@ class PoolShareHelper {
         totalLiquidityInUSDT: totalLiquidity,
         yearlyPoolReward: yearlyPoolReward,
         poolSharePercentage: poolSharePercentage,
-        apy: apy
+        apy: apy,
+        coin: dfiCoin,
+        blockReward: blockReward,
+        minuteReward: minuteReward,
+        hourlyReword: hourlyReword,
+        dailyReward: dailyReward,
+        yearlyReward: yearlyReward,
+        blockRewardFiat: blockRewardFiat,
+        minuteRewardFiat: minuteRewardFiat,
+        hourlyRewordFiat: hourlyRewordFiat,
+        dailyRewardFiat: dailyRewardFiat,
+        yearlyRewardFiat: yearlyRewardFiat,
       );
     });
 

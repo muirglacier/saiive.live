@@ -1,3 +1,4 @@
+import 'package:defichainwallet/network/model/coin.dart';
 import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/pool_share.dart';
 
@@ -11,6 +12,20 @@ class PoolShareLiquidity extends PoolPair {
   final double poolSharePercentage;
   final double apy;
 
+  final double blockReward;
+  final double minuteReward;
+  final double hourlyReword;
+  final double dailyReward;
+  final double yearlyReward;
+
+  final double blockRewardFiat;
+  final double minuteRewardFiat;
+  final double hourlyRewordFiat;
+  final double dailyRewardFiat;
+  final double yearlyRewardFiat;
+
+  final Coin coin;
+
   PoolShareLiquidity({
     this.tokenA,
     this.tokenB,
@@ -20,5 +35,19 @@ class PoolShareLiquidity extends PoolPair {
     this.yearlyPoolReward,
     this.poolSharePercentage,
     this.apy,
+
+    this.coin,
+
+    this.blockReward,
+    this.minuteReward,
+    this.hourlyReword,
+    this.dailyReward,
+    this.yearlyReward,
+
+    this.blockRewardFiat,
+    this.minuteRewardFiat,
+    this.hourlyRewordFiat,
+    this.dailyRewardFiat,
+    this.yearlyRewardFiat
   });
 }

@@ -5,7 +5,6 @@ import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

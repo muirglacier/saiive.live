@@ -54,6 +54,8 @@ class PoolShareHelper {
       var yearlyPoolReward = lpDailyDfiReward * poolPair.rewardPct * 365 * (dfiCoin != null ? dfiCoin.fiat : 0);
 
       double customRewardDFI = 0;
+      double blockCommissionDFI = 0;
+      double blockCommissionOther = 0;
 
       if (null != poolPair.customRewards) {
         poolPair.customRewards.forEach((e) {
@@ -66,10 +68,26 @@ class PoolShareHelper {
         });
       }
 
-      //30 seconds is the block time
-      var blockReward = (lpDailyDfiReward / (24 * 24 * 60) / 30 + customRewardDFI) * poolSharePercentage;
+      if (poolPair.idTokenA == '0') {
+        blockCommissionDFI = poolPair.blockCommissionA;
+        blockCommissionOther = poolPair.blockCommissionB;
+      }
+      else {
+        blockCommissionDFI = poolPair.blockCommissionB;
+        blockCommissionOther = poolPair.blockCommissionA;
+      }
 
-      var minuteReward = blockReward * 2;
+      //30 seconds is the block time
+      var poolReward = (lpDailyDfiReward / ((24 * 60 * 60) / 30)) * poolPair.rewardPct;
+
+      var customRewards = customRewardDFI * (poolSharePercentage / 100);
+      var blockReward = poolReward * (poolSharePercentage / 100);
+      var blockCommission = blockCommissionDFI * (poolSharePercentage / 100);
+
+      var totalRewardsPerBlock = (blockReward + customRewards + blockCommission);
+
+      var rewardPerBlock = totalRewardsPerBlock;
+      var minuteReward = rewardPerBlock * 2;
       var hourlyReword = minuteReward * 60;
       var dailyReward = hourlyReword * 24;
       var yearlyReward = dailyReward * 365;
@@ -95,7 +113,7 @@ class PoolShareHelper {
         poolSharePercentage: poolSharePercentage,
         apy: apy,
         coin: dfiCoin,
-        blockReward: blockReward,
+        blockReward: rewardPerBlock,
         minuteReward: minuteReward,
         hourlyReword: hourlyReword,
         dailyReward: dailyReward,

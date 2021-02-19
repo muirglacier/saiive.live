@@ -1,3 +1,4 @@
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
                     child: Column(children: [
                   QrImage(
                     data: widget.pubKey,
+                    foregroundColor: StateContainer.of(context).curTheme.text,
                     size: MediaQuery.of(context).size.width - 60,
                   ),
                   Text(widget.pubKey)

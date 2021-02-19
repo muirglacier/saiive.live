@@ -6,6 +6,7 @@ import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/version.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/model/available_themes.dart';
 import 'package:defichainwallet/ui/settings/settings_seed.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/ui/wallet/wallet_send.dart';
@@ -26,6 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   var _version = "";
   EnvironmentType _currentEnvironment;
   int _authMethod;
+  int _theme;
 
   @override
   void initState() {
@@ -38,11 +40,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     var currentEnvironment = new EnvHelper().getEnvironment();
     var version = await new VersionHelper().getVersion();
     var authMethod = await sl.get<SharedPrefsUtil>().getAuthMethod();
+    var theme = await sl.get<SharedPrefsUtil>().getTheme();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
       _version = version;
       _authMethod = authMethod.getIndex();
+      _theme = theme.getIndex();
     });
   }
 
@@ -62,6 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         appBar: AppBar(title: Text(S.of(context).settings)),
         body: Padding(
             padding: EdgeInsets.all(30),
@@ -88,6 +93,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
                       },
                   )),
+                  Container(
+                      child: DropdownButton<int>(
+                        isExpanded: true,
+                        value: _theme,
+                        items: ThemeSetting.all().map((e) {
+                          return new DropdownMenuItem<int>(
+                            value: e.getIndex(),
+                            child: Text(e.getDisplayName(context)),
+                          );
+                        }).toList(),
+                        onChanged: (int val) {
+                          setState(() {
+                            _theme = val;
+                          });
+
+                          sl.get<SharedPrefsUtil>().setTheme(ThemeSetting(ThemeOptions.values[val])).then((result) {
+                            setState(() {
+                              StateContainer.of(context).updateTheme(
+                                  ThemeSetting(ThemeOptions.values[val]));
+                            });
+                          });
+                        },
+                      )),
                   Container(
                       child: DropdownButton<String>(
                     isExpanded: true,

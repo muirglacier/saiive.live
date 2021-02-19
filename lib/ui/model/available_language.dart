@@ -1,5 +1,5 @@
+import 'package:defichainwallet/ui/model/settings_item.dart';
 import 'package:flutter/material.dart';
-import 'package:defichainwallet/network/model/setting_item.dart';
 
 enum AvailableLanguage {
   DEFAULT,

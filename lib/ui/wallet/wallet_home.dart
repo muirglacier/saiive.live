@@ -146,15 +146,15 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(balance.token,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-            Text(balance.token, style: TextStyle(fontSize: 12))
+                style: Theme.of(context).textTheme.headline3),
+            Text(balance.token, style: Theme.of(context).textTheme.bodyText1)
           ]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(balance.balanceDisplayRounded.toString(),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
+                style: Theme.of(context).textTheme.headline3)
           ]),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(

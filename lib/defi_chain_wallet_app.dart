@@ -1,6 +1,6 @@
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/network/model/available_language.dart';
+import 'package:defichainwallet/ui/model/available_language.dart';
 import 'package:defichainwallet/ui/intro/intro_wallet_new.dart';
 import 'package:defichainwallet/ui/splash.dart';
 import 'package:defichainwallet/ui/home.dart';
@@ -86,19 +86,25 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
             : StateContainer.of(context).curLanguage.getLocale(),
         title: "DeFiChain Wallet",
         theme: ThemeData(
-            primaryColor: StateContainer.of(context).curTheme.primary,
-            backgroundColor:
-            StateContainer.of(context).curTheme.backgroundColor,
-            buttonColor: StateContainer.of(context).curTheme.backgroundColor,
             brightness: StateContainer.of(context).curTheme.brightness,
-            iconTheme: IconThemeData(
-                color: StateContainer.of(context).curTheme.backgroundColor),
-            buttonTheme: ButtonThemeData(
-                buttonColor:
-                StateContainer.of(context).curTheme.buttonColorPrimary),
+            primaryColor: StateContainer.of(context).curTheme.primary,
+            scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,
+            canvasColor: StateContainer.of(context).curTheme.backgroundColor,
+            textTheme: TextTheme(
+                headline3: TextStyle(
+                  fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  color: StateContainer.of(context).curTheme.text,
+                ),
+                bodyText1: TextStyle(
+                  color: StateContainer.of(context).curTheme.text,
+                ),
+                bodyText2: TextStyle(
+                  color: StateContainer.of(context).curTheme.text,
+                )),
+            buttonColor: StateContainer.of(context).curTheme.primary,
             fontFamily: 'Helvetica, Arial, sans-serif',
-            cardTheme: CardTheme(
-                color: StateContainer.of(context).curTheme.backgroundColor)),
+        ),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {

@@ -51,7 +51,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                 padding: EdgeInsets.all(30),
                 child: Column(children: <Widget>[
                   Container(
-                      decoration: new BoxDecoration(color: Colors.white),
+                      decoration: new BoxDecoration(color: Colors.transparent),
                       child: TokenPairIcon(
                           myLiquidity.tokenA, myLiquidity.tokenB)),
                   Container(
@@ -119,7 +119,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
             child: Column(children: <Widget>[
               Container(
                   margin: const EdgeInsets.only(bottom: 10.0),
-                  decoration: new BoxDecoration(color: Colors.white),
+                  decoration: new BoxDecoration(color: Colors.transparent),
                   child: TokenPairIcon(liquidity.tokenA, liquidity.tokenB)),
               Container(
                 child: Row(children: [

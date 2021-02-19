@@ -103,8 +103,8 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
   buildBalanceCard(BuildContext context) {
     return SizedBox(
         height: 100,
-        child: Card(
-            child: ListTile(
+        child:
+            ListTile(
           title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +126,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                   await loadAccountBalance();
                 },
               )),
-        )));
+        ));
   }
 
   buildTransaction(BuildContext context, Transaction tx) {
@@ -158,8 +158,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
 
   buildTransactionsList(BuildContext context) {
     return Expanded(
-        child: Card(
-            child: Column(children: [
+        child: Column(children: [
       ListTile(
         title: Text(S.of(context).wallet_token_transactions,
             style: TextStyle(fontSize: 15)),
@@ -174,7 +173,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
                 final tx = _transactions[index];
                 return buildTransaction(context, tx);
               }))
-    ])));
+    ]));
   }
 
   buildActions(BuildContext context) {

@@ -26,12 +26,10 @@ class _PoolShareScreen extends State<PoolShareScreen> {
         appBar: AppBar(
           title: Text(widget.liquidity.tokenA + ' - ' + widget.liquidity.tokenB),
         ),
-        body: Card(
-            child: Padding(
+        body: Padding(
                 padding: EdgeInsets.all(30),
                 child: Column(children: <Widget>[
                   Container(
-                      decoration: new BoxDecoration(color: Colors.white),
                       child: TokenPairIcon(
                           widget.liquidity.tokenA, widget.liquidity.tokenB)),
                   Container(
@@ -256,6 +254,6 @@ class _PoolShareScreen extends State<PoolShareScreen> {
                           ))
                     ])),
                   ])
-                ]))));
+                ])));
   }
 }

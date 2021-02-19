@@ -40,7 +40,7 @@ class _TokensScreen extends State<TokensScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(token.name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
+                style: Theme.of(context).textTheme.headline3)
           ]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

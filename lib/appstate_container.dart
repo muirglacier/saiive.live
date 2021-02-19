@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:defichainwallet/themes.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/network/model/available_language.dart';
-import 'package:defichainwallet/network/model/available_themes.dart';
+import 'package:defichainwallet/ui/model/available_language.dart';
+import 'package:defichainwallet/ui/model/available_themes.dart';
 import 'package:logger/logger.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 

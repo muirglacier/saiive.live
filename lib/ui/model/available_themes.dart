@@ -1,6 +1,6 @@
+import 'package:defichainwallet/ui/model/settings_item.dart';
 import 'package:flutter/material.dart';
 import 'package:defichainwallet/themes.dart';
-import 'package:defichainwallet/network/model/setting_item.dart';
 
 enum ThemeOptions { DEFI_LIGHT, DEFI_DARK }
 
@@ -28,6 +28,14 @@ class ThemeSetting extends SettingSelectionItem {
       default:
         return DefiThemeDark();
     }
+  }
+
+
+  static List<ThemeSetting> all() {
+    return [
+      new ThemeSetting(ThemeOptions.DEFI_LIGHT),
+      new ThemeSetting(ThemeOptions.DEFI_DARK),
+    ];
   }
 
   // For saving to shared prefs

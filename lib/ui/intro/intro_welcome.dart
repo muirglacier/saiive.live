@@ -29,12 +29,12 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
         children: <Widget>[
           Text(
             S.of(context).welcome_wallet_secure,
-            style: TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.bodyText1,
           ),
           Text(
             S.of(context).welcome_wallet_privacy,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15),
+            style: Theme.of(context).textTheme.bodyText2,
           ),
         ],
       )

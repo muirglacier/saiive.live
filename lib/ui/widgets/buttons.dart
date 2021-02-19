@@ -23,7 +23,7 @@ class AppButton {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       if (icon != null)
-                        Icon(icon, color: Theme.of(context).primaryColor),
+                        Icon(icon),
                       SizedBox(width: 10),
                       Text(
                         buttonText,
@@ -39,13 +39,12 @@ class AppButton {
         return SizedBox(
             width: width,
             child: RaisedButton(
-                color: StateContainer.of(context).curTheme.buttonColorSecondary,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       if (icon != null)
-                        Icon(icon, color: Theme.of(context).primaryColor),
+                        Icon(icon),
                       SizedBox(width: 10),
                       Text(
                         buttonText,

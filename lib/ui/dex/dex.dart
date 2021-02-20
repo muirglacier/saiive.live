@@ -453,7 +453,7 @@ class _DexScreen extends State<DexScreen> {
                         var tx = await overlay.during(createSwapFuture);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(tx.mintTxId),
+                          content: Text("Successfull swap..."),
                         ));
                       } on HttpException catch (e) {
                         final errorMsg = e.error.error;

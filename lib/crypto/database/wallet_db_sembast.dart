@@ -271,7 +271,9 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     final db = await database;
     final transactions = await dbStore.find(db,
-        finder: Finder(sortOrders: [SortOrder("value", false)]));
+        finder: Finder(
+            filter: Filter.equals('spentTxId', null),
+            sortOrders: [SortOrder("value", false)]));
 
     final data = transactions
         .map((e) => e == null ? null : tx.Transaction.fromJson(e.value))

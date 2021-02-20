@@ -10,7 +10,7 @@ abstract class IWallet {
 
   Future init();
   Future close();
-  
+
   Future<List<Account>> syncBalance();
 
   Future<Transaction> getTransaction(String id);
@@ -23,7 +23,8 @@ abstract class IWallet {
   Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress);
 
   Future<List<WalletAccount>> searchAccounts();
-  
-  Future<TransactionData> createAndSend(int amount, String token, String to);
 
+  Future<TransactionData> createAndSend(int amount, String token, String to);
+  Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount,
+      String toToken, String to, int maxPrice, int maxPriceFraction);
 }

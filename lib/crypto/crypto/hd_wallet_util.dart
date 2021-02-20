@@ -134,7 +134,7 @@ class HdWalletUtil {
     }
     for (final auth in authAddresses) {
       txb.addAccountToAccountOutput(
-          token, auth.address, to, auth.amount, network);
+          token, auth.address, to, auth.amount);
     }
 
     var changeAmount = totalInputValue - fee;
@@ -208,7 +208,7 @@ class HdWalletUtil {
       LogHelper.instance.d("set tx output $to value is $amount");
     }
 
-    additional(txb, network);
+    await additional(txb, network);
 
     int index = 0;
     for (final key in keys) {

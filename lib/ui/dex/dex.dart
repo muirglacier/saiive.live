@@ -3,10 +3,12 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/balance.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
+import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
@@ -81,8 +83,12 @@ class _DexScreen extends State<DexScreen> {
     var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
     var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
-    if (null == accountBalance.firstWhere((element) => element.token ==  DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
+    if (null ==
+        accountBalance.firstWhere(
+            (element) => element.token == DeFiConstants.DefiAccountSymbol,
+            orElse: () => null)) {
+      accountBalance.add(
+          AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
@@ -94,7 +100,7 @@ class _DexScreen extends State<DexScreen> {
       tokenMap.add(TokenBalance(
           hash: tokenId,
           idToken: symbolKey,
-          balance: double.tryParse(finalBalance.toString()),
+          balance: finalBalance,
           isPopularToken: popularSymbols.contains(tokenId)));
     });
 
@@ -411,7 +417,8 @@ class _DexScreen extends State<DexScreen> {
                   ]),
                   Divider(color: Colors.black),
                   Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
+                    Expanded(
+                        flex: 4, child: Text(S.of(context).dex_commission)),
                     Expanded(
                         flex: 6,
                         child: Column(
@@ -426,11 +433,37 @@ class _DexScreen extends State<DexScreen> {
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       final overlay = LoadingOverlay.of(context);
-                      await overlay.during(Future.delayed(const Duration(seconds: 2)));
 
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('TODO: Do Swap'),
-                      ));
+                      final wallet = sl.get<DeFiChainWallet>();
+
+                      int valueFrom = (_amountFrom * 100000000).round();
+                      int maxPrice =
+                          (_selectedPoolPair.reserveBDivReserveA * 100000000)
+                              .round();
+
+                      final walletTo = await wallet.getPublicKey();
+                      try {
+                        var createSwapFuture = wallet.createAndSendSwap(
+                            _selectedValueFrom.hash,
+                            valueFrom,
+                            _selectedValueTo.hash,
+                            walletTo,
+                            0,
+                            maxPrice);
+                        var tx = await overlay.during(createSwapFuture);
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(tx.mintTxId),
+                        ));
+                      } on HttpException catch (e) {
+                        final errorMsg = e.error.error;
+                        LogHelper.instance.e("Error saving tx...($errorMsg)");
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              'Error occured commiting the tx...($errorMsg)'),
+                        ));
+                      }
                     },
                   )
                 ])

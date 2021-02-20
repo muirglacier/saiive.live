@@ -222,12 +222,80 @@ class Wallet extends IWallet {
     }
   }
 
+  Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount,
+      String toToken, String to, int maxPrice, int maxPriceFraction) async {
+    if (_walletMutex.isLocked) {
+      throw new ArgumentError(
+          "Wallet sync is in progress, wait for it to finish....");
+    }
+    await _ensureUtxo();
+
+    await _walletMutex.acquire();
+
+    try {
+      var swap = await createSwap(
+          fromToken, fromAmount, toToken, to, maxPrice, maxPriceFraction);
+
+      return await createTxAndWait(swap.item1);
+    } finally {
+      _walletMutex.release();
+    }
+  }
+
+  Future<Tuple2<String, List<tx.Transaction>>> createSwap(
+      String fromToken,
+      int fromAmount,
+      String toToken,
+      String to,
+      int maxPrice,
+      int maxPriceFraction) async {
+    if (DeFiConstants.isDfiToken(fromToken)) {
+      await prepareAccount(fromAmount);
+    }
+
+    final changeAddress = await getPublicKeyFromAccount(_account, true);
+    final fees = await getTxFee(1, 2);
+
+    final fromTokenBalance = await _walletDatabase.getAccountBalance(fromToken);
+
+    if (fromTokenBalance.balance < fromAmount) {
+      throw new ArgumentError("Insufficient balance...");
+    }
+
+    final fromTok = await _apiService.tokenService.getToken("DFI", fromToken);
+    final toTok = await _apiService.tokenService.getToken("DFI", toToken);
+    final fee = await getTxFee(0, 0);
+
+    final fromAccounts =
+        await _walletDatabase.getAccountBalancesForToken(fromToken);
+
+    var inAmount = fromAmount;
+
+    final txb = await _createBaseTransaction(0, to, changeAddress, fees,
+        (txb, nw) async {
+      for (var acc in fromAccounts) {
+        await _getAuthInputsSmart(acc.address, fee);
+
+        var useValue = min(inAmount, acc.balance);
+        txb.addSwapOutput(fromTok.id, acc.address, useValue, toTok.id, to,
+            maxPrice, maxPriceFraction);
+
+        inAmount -= acc.balance;
+
+        if (inAmount <= 0) {
+          break;
+        }
+      }
+    });
+
+    return txb;
+  }
+
   Future<Tuple2<String, List<tx.Transaction>>> createSendTransaction(
       int amount, String token, String to) async {
     final changeAddress = await this.getPublicKeyFromAccount(_account, true);
 
-    if (token == DeFiConstants.DefiTokenSymbol ||
-        token == DeFiConstants.DefiAccountSymbol) {
+    if (DeFiConstants.isDfiToken(token)) {
       var minFee = await getTxFee(0, 0) + 10000;
       var txHex = await prepareAccountToUtxosTransactions(
           changeAddress, amount + minFee * 2);
@@ -251,8 +319,7 @@ class Wallet extends IWallet {
 
   Future<Tuple2<String, List<tx.Transaction>>> _createAccountTransaction(
       String token, int amount, String to) async {
-    if (token == DeFiConstants.DefiAccountSymbol ||
-        token == DeFiConstants.DefiTokenSymbol) {
+    if (DeFiConstants.isDfiToken(token)) {
       throw new ArgumentError(
           "$token not supported for account transactions...");
     }
@@ -413,7 +480,7 @@ class Wallet extends IWallet {
     if (retOut != null) {
       _walletDatabase.removeUnspentTransactions(txHex.item2);
       for (var out in txData.details.outputs) {
-        _walletDatabase.addUnspentTransaction(out);
+        await _walletDatabase.addUnspentTransaction(out);
       }
     }
     return retOut;
@@ -533,7 +600,7 @@ class Wallet extends IWallet {
         var needAmount = min(neededUtxo, acc.balance);
 
         txb.addAccountToUtxoOutput(
-            tokenType.id, acc.address, needAmount, mintingStartsAt, network);
+            tokenType.id, acc.address, needAmount, mintingStartsAt);
         txb.addOutput(pubKey, needAmount);
         neededUtxo -= needAmount;
         if (neededUtxo <= 0) {
@@ -547,7 +614,19 @@ class Wallet extends IWallet {
 
   Future<TransactionData> prepareAccount(int amount) async {
     final txHex = await prepareUtxoToAccountTransaction(amount);
-    return await createTxAndWait(txHex.item1);
+    if (txHex != null) {
+      var txData = await createTxAndWait(txHex.item1);
+
+      _walletDatabase.removeUnspentTransactions(txHex.item2);
+      for (var out in txData.details.outputs) {
+        if (await _walletDatabase.isOwnAddress(out.address)) {
+          await _walletDatabase.addUnspentTransaction(out);
+        }
+      }
+
+      return txData;
+    }
+    return null;
   }
 
   Future<Tuple2<String, List<tx.Transaction>>> prepareUtxoToAccountTransaction(

@@ -5,6 +5,14 @@ enum ChainNet { Mainnet, Testnet }
 class DeFiConstants {
   static const String DefiAccountSymbol = "DFI";
   static const String DefiTokenSymbol = "\$DFI";
+
+
+  static bool isDfiToken(String token) {
+    if(token == DefiAccountSymbol || token == DefiTokenSymbol) {
+      return true;
+    }
+    return false;
+  }
 }
 
 class ChainHelper {

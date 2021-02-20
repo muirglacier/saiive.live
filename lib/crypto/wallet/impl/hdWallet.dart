@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
@@ -110,13 +109,7 @@ class HdWallet extends IHdWallet {
           anyBalanceFound = true;
           balanceList.addAll(balance.accounts);
 
-          final keyIndex = keys.indexWhere((item) => item == balance.address);
-          var pathString = path[keyIndex];
-
           for (final acc in balance.accounts) {
-            acc.index = HdWalletUtil.getIndexFromPath(pathString);
-            acc.account = _account.account;
-            acc.isChangeAddress = HdWalletUtil.isPathChangeAddress(pathString);
             acc.chain = ChainHelper.chainTypeString(_chain);
             acc.network = ChainHelper.chainNetworkString(_network);
           }

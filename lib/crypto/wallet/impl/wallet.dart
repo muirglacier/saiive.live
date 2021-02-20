@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/from_account.dart';
@@ -280,17 +278,17 @@ class Wallet extends IWallet {
       final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
       useAccounts.add(fromAccount);
 
-      inputTxs.add(await _getAuthInputsSmart(
-          key, tx.index, tx.isChangeAddress, tx.index, fee));
+      final addressInfo = await _walletDatabase.getWalletAddress(tx.address);
+
+      inputTxs.add(await _getAuthInputsSmart(tx.address, fee));
 
       final keyPair = HdWalletUtil.getKeyPair(
           key,
-          _account,
-          tx.isChangeAddress,
-          tx.index,
+          addressInfo.account,
+          addressInfo.isChangeAddress,
+          addressInfo.index,
           ChainHelper.chainFromString(tx.chain),
           ChainHelper.networkFromString(tx.network));
-
       keys.add(keyPair);
 
       if ((curAmount + tx.balance) >= amount) {
@@ -398,10 +396,7 @@ class Wallet extends IWallet {
     return Tuple2<String, List<tx.Transaction>>(txb, useTxs);
   }
 
-  Future<tx.Transaction> _getAuthInputsSmart(Uint8List seed, int account,
-      bool isChangeAddress, int index, int minFee) async {
-    var pubKey = await HdWalletUtil.getPublicKey(
-        seed, account, isChangeAddress, index, _chain, _network);
+  Future<tx.Transaction> _getAuthInputsSmart(String pubKey, int minFee) async {
     var authTxs =
         await _walletDatabase.getUnspentTransactionsForPubKey(pubKey, minFee);
 
@@ -447,7 +442,8 @@ class Wallet extends IWallet {
   }
 
   Future<int> getTxFee(int inputs, int outputs) async {
-    if (inputs == 0 && outputs == 0) return 3000; //default fee is always the same for now
+    if (inputs == 0 && outputs == 0)
+      return 3000; //default fee is always the same for now
     return (inputs * 180) + (outputs * 34) + 50;
   }
 
@@ -493,20 +489,16 @@ class Wallet extends IWallet {
     for (final acc in accounts) {
       neededAccounts.add(acc);
 
-      final tx = await _getAuthInputsSmart(
-          key, acc.index, acc.isChangeAddress, acc.index, fees);
+      final tx = await _getAuthInputsSmart(acc.address, fees);
 
       useInputs.add(tx);
 
       _walletDatabase.addUnspentTransaction(tx);
       _walletDatabase.setAccountBalance(Account(
           token: DeFiConstants.DefiTokenSymbol,
-          account: acc.account,
           address: acc.address,
           balance: acc.balance,
           chain: acc.chain,
-          index: acc.index,
-          isChangeAddress: acc.isChangeAddress,
           network: acc.network));
 
       if (!await _walletDatabase.isOwnAddress(tx.address)) {

@@ -3,7 +3,6 @@ import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/wallet/recovery_phrase_display.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
-import 'package:defichainwallet/ui/widgets/recovery_phrase_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

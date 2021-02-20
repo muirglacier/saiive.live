@@ -35,9 +35,6 @@ void main() async {
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           balance: 24262150804,
           raw: "242.62150804@DFI",
-          index: 0,
-          account: 0,
-          isChangeAddress: false,
           chain: "DFI",
           network: "testnet");
 
@@ -47,9 +44,6 @@ void main() async {
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           balance: 100000000,
           raw: "100000000@\$DFI",
-          index: 0,
-          account: 0,
-          isChangeAddress: false,
           chain: "DFI",
           network: "testnet");
 

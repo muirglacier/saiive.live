@@ -1,12 +1,7 @@
 import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/poolpair.dart';
-import 'package:defichainwallet/helper/poolshare.dart';
-import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class PoolShareScreen extends StatefulWidget {
   PoolShareLiquidity liquidity;

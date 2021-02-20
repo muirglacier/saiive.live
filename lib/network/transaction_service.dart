@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:defichainwallet/bus/transaction_loaded_event.dart';
 import 'package:defichainwallet/bus/transactions_loaded_event.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/network_service.dart';

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';

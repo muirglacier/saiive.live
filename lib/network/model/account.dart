@@ -3,9 +3,6 @@ class Account {
   final String address;
   final int balance;
   final String raw;
-  int account;
-  bool isChangeAddress;
-  int index;
   String chain;
   String network;
 
@@ -14,9 +11,6 @@ class Account {
       this.address,
       this.balance,
       this.raw,
-      this.account,
-      this.isChangeAddress,
-      this.index,
       this.chain,
       this.network});
 
@@ -29,9 +23,6 @@ class Account {
         address: json['address'] ?? '',
         balance: double.parse(json['balance'].toString()).round(),
         raw: json['raw'] ?? '',
-        index: json['index'],
-        account: json['account'],
-        isChangeAddress: json['isChangeAddress'],
         chain: json['chain'],
         network: json['network']);
   }
@@ -41,9 +32,6 @@ class Account {
         'address': address,
         'balance': balance,
         'raw': raw,
-        'index': index,
-        'account': account,
-        'isChangeAddress': isChangeAddress,
         'chain': chain,
         'network': network
       };

@@ -364,7 +364,7 @@ class Wallet extends IWallet {
     final accounts = await _walletDatabase.getAccountBalancesForToken(token);
     final useAccounts = List<FromAccount>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
-    final fee = await getTxFee(2, 2);
+    final fee = await getTxFee(0, 0);
 
     final inputTxs = List<tx.Transaction>.empty(growable: true);
 

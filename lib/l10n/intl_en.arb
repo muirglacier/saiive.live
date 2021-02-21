@@ -96,6 +96,16 @@
 
   "liquitiy": "Liquidity",
   "liquitiy_pool_share_percentage": "Pool-Share",
+  "liquitiy_add": "Add Liquidity",
+  "liquitiy_add_max": "max",
+  "liquitiy_add_token_a": "Token A",
+  "liquitiy_add_token_b": "Token B",
+  "liquitiy_add_amount_a": "Amount A",
+  "liquitiy_add_amount_b": "Amount B",
+  "liquitiy_add_pool_share": "Pool Share",
+  "liquitiy_add_total_pooled": "Totally pooled",
+  "liquitiy_add_insufficient_funds": "Insufficient Funds for LM",
+  "liquitiy_add_price": "Price",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

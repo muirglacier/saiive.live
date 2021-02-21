@@ -450,6 +450,7 @@ class Wallet extends IWallet {
 
     final checkAmount =
         amount + 10000; //check for some more to have some room for fees
+        //TODO: send all funds is not possible with this solution - redesign it later on
 
     var curAmount = 0.0;
     for (final tx in unspentTxs) {
@@ -741,6 +742,8 @@ class Wallet extends IWallet {
       if (checkUtxo) {
         await _syncUnspentTransactionOutputs();
       }
+    } catch (e) {
+      LogHelper.instance.e(e);
     } finally {
       _walletMutex.release();
     }
@@ -772,7 +775,7 @@ class Wallet extends IWallet {
     await _walletDatabase.clearAccountBalances();
 
     for (final balance in balances) {
-      _walletDatabase.setAccountBalance(balance);
+      await _walletDatabase.setAccountBalance(balance);
     }
   }
 

@@ -85,6 +85,11 @@ class Wallet extends IWallet {
   }
 
   @override
+  bool isLocked() {
+    return _walletMutex.isLocked;
+  }
+
+  @override
   void setWorkingAccount(int account) {
     _isInitialzed();
     _account = account;

@@ -10,6 +10,7 @@ abstract class IWallet {
 
   Future init();
   Future close();
+  bool isLocked();
 
   Future<List<Account>> syncBalance();
 

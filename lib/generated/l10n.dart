@@ -525,6 +525,16 @@ class S {
     );
   }
 
+  /// `Wallet is synchronising right now!`
+  String get wallet_locked {
+    return Intl.message(
+      'Wallet is synchronising right now!',
+      name: 'wallet_locked',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(

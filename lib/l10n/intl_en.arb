@@ -54,6 +54,7 @@
   "wallet_restore_not_safed": "You didn't safed your recovery words, wanna do that now?",
   "wallet_empty": "Your wallet is empty!",
   "wallet_receive": "Receive",
+  "wallet_locked": "Wallet is synchronising right now!",
 
   "wallet_send": "Send",
   "wallet_send_address": "Address",

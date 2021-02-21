@@ -53,6 +53,7 @@
   "wallet_send_address": "Adresse",
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Menge",
+  "wallet_locked": "Wallet synchronisiert gerade!",
 
   "settings": "Einstellungen",
   "settings_remove_seed": "Seed löschen",

@@ -17,6 +17,11 @@ class MemoryDatabaseMock extends IWalletDatabase {
   List<WalletAddress> _addresses = List<WalletAddress>.empty(growable: true);
 
   @override
+  bool isLocked() {
+    return false;
+  }
+
+  @override
   Future<WalletAccount> addAccount(
       {String name,
       int account,

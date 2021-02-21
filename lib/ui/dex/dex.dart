@@ -578,9 +578,17 @@ class _DexScreen extends State<DexScreen> {
                     child: Text(S.of(context).dex_swap),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
-                      final overlay = LoadingOverlay.of(context);
-
                       final wallet = sl.get<DeFiChainWallet>();
+
+                      if (wallet.isLocked()) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(S.of(context).wallet_locked),
+                        ));
+
+                        return;
+                      }
+
+                      final overlay = LoadingOverlay.of(context);
 
                       int valueFrom = (_amountFrom * 100000000).round();
                       int maxPrice =

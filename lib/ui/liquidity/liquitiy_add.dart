@@ -8,6 +8,7 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class LiquidityAddScreen extends StatefulWidget {
   @override
@@ -329,7 +330,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
           child: Text(e.hash),
         ),
         Expanded(
-          flex: 1,
+          flex: 4,
           child: Text(e.balanceDisplayRounded, textAlign: TextAlign.right),
         )
       ],
@@ -350,8 +351,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Row(children: [
-                Expanded(flex: 5, child: DropdownButton<TokenBalance>(
+              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(flex: 1, child: Container(height: 60, child: DropdownButton<TokenBalance>(
                   isExpanded: true,
                   hint: Text(S.of(context).liquitiy_add_token_a),
                   value: _selectedTokenA,
@@ -371,8 +372,9 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                       handleChangeTokenASelection();
                     });
                   },
-                )),
-                Expanded(flex: 1, child: RaisedButton(
+                ))),
+                SizedBox(width: 20),
+                ButtonTheme(height: 30, minWidth: 40, child: RaisedButton(
                     child: Text(S.of(context).liquitiy_add_max),
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
@@ -389,7 +391,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 ),
               ),
             Row(children: [
-              Expanded(flex: 5, child: DropdownButton<TokenBalance>(
+              Expanded(flex: 1, child: Container(height: 60, child: DropdownButton<TokenBalance>(
                 isExpanded: true,
                 hint: Text(S.of(context).liquitiy_add_token_b),
                 value: _selectedTokenB,
@@ -409,8 +411,9 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                     handleChangeTokenBSelection();
                   });
                 },
-              )),
-              Expanded(flex: 1, child: RaisedButton(
+              ))),
+              SizedBox(width: 20),
+              ButtonTheme(height: 30, minWidth: 40, child: RaisedButton(
                   child: Text(S.of(context).liquitiy_add_max),
                   color: Theme.of(context).primaryColor,
                   onPressed: () {
@@ -430,6 +433,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 ]),
               if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false)
                 Column(children: [
+                  SizedBox(height: 10),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_price)),
                     Expanded(
@@ -463,7 +467,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                           ],
                         )),
                   ]),
-                  Divider(color: Colors.black),
+                  Divider(thickness: 2,),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_pool_share)),
                     Expanded(
@@ -486,7 +490,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                           ],
                         )),
                   ]),
-                  Divider(color: Colors.black),
+                  Divider(thickness: 2,),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenB.hash)),
                     Expanded(

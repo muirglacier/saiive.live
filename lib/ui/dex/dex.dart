@@ -468,7 +468,7 @@ class _DexScreen extends State<DexScreen> {
                           ],
                         )),
                   ]),
-                  Divider(color: Colors.black),
+                  Divider(thickness: 2,),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).dex_amount)),
                     Expanded(
@@ -480,7 +480,7 @@ class _DexScreen extends State<DexScreen> {
                           ],
                         )),
                   ]),
-                  Divider(color: Colors.black),
+                  Divider(thickness: 2,),
                   Row(children: [
                     Expanded(
                         flex: 4, child: Text(S.of(context).dex_commission)),

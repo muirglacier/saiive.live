@@ -79,7 +79,7 @@
   "cancel": "Cancel",
 
   "dex": "DEX",
-  "dex_add_max": "Max",
+  "dex_add_max": "max",
   "dex_from_token": "From Token",
   "dex_from_amount": "From Amount",
   "dex_to_token": "To Token",

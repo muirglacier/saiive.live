@@ -499,7 +499,7 @@ class _DexScreen extends State<DexScreen> {
                     height: 30,
                     minWidth: 40,
                     child: RaisedButton(
-                        child: Text(S.of(context).liquitiy_add_max),
+                        child: Text(S.of(context).dex_add_max),
                         color: Theme.of(context).primaryColor,
                         onPressed: () {
                           handleSetMaxTo();

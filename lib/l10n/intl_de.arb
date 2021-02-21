@@ -74,7 +74,7 @@
   "cancel": "Abbrechen",
 
   "dex": "DEX",
-  "dex_add_max": "Max",
+  "dex_add_max": "max",
   "dex_from_token": "Von Token",
   "dex_from_amount": "Menge Von",
   "dex_to_token": "Auf Token",
@@ -94,7 +94,7 @@
   "liquitiy": "Liquidity",
   "liquitiy_pool_share_percentage": "Pool-Anteil",
   "liquitiy_add": "Hinzufügen",
-  "liquitiy_add_max": "Max",
+  "liquitiy_add_max": "max",
   "liquitiy_add_token_a": "Token A",
   "liquitiy_add_token_b": "Token B",
   "liquitiy_add_amount_a": "Amount A",

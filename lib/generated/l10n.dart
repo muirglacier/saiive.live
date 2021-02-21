@@ -725,10 +725,10 @@ class S {
     );
   }
 
-  /// `Max`
+  /// `max`
   String get dex_add_max {
     return Intl.message(
-      'Max',
+      'max',
       name: 'dex_add_max',
       desc: '',
       args: [],

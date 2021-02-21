@@ -715,6 +715,16 @@ class S {
     );
   }
 
+  /// `Max`
+  String get dex_add_max {
+    return Intl.message(
+      'Max',
+      name: 'dex_add_max',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `From Token`
   String get dex_from_token {
     return Intl.message(

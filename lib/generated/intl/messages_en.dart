@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "dex" : MessageLookupByLibrary.simpleMessage("DEX"),
+    "dex_add_max" : MessageLookupByLibrary.simpleMessage("Max"),
     "dex_amount" : MessageLookupByLibrary.simpleMessage("Amount"),
     "dex_commission" : MessageLookupByLibrary.simpleMessage("Commision"),
     "dex_from_amount" : MessageLookupByLibrary.simpleMessage("From Amount"),

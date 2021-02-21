@@ -197,6 +197,25 @@ class _DexScreen extends State<DexScreen> {
       });
     }
   }
+  handleSetMaxFrom() {
+    if (null == _selectedValueFrom || null == _selectedValueTo) {
+      return;
+    }
+
+    _amountFromController.text = (_selectedValueFrom.balance / 100000000).toString();
+
+    handleChangeFrom();
+  }
+
+  handleSetMaxTo() {
+    if (null == _selectedValueFrom || null == _selectedValueTo) {
+      return;
+    }
+
+    _amountToController.text = (_selectedValueTo.balance / 100000000).toString();
+
+    handleChangeTo();
+  }
 
   handleChangeToToken() {
     _amountTo = null;
@@ -270,14 +289,28 @@ class _DexScreen extends State<DexScreen> {
       var wallet = sl.get<DeFiChainWallet>();
       var pubKey = await wallet.getPublicKey();
 
-      var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
-          _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
+      try {
+        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
+            _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
+
+        setState(() {
+          _amountTo = double.tryParse(swapResult.result.split('@')[0]);
+        });
+        _amountToController.text = swapResult.result.split('@')[0];
+      }
+      on HttpException catch (e) {
+        final errorMsg = e.error.error;
+        LogHelper.instance.e("Error ($errorMsg)");
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Error ($errorMsg)'),
+        ));
+
+        _amountToController.text = '-';
+      }
 
       _testSwapLoading = false;
-      setState(() {
-        _amountTo = double.tryParse(swapResult.result.split('@')[0]);
-      });
-      _amountToController.text = swapResult.result.split('@')[0];
     }
 
     checkSufficientFunds();
@@ -322,15 +355,29 @@ class _DexScreen extends State<DexScreen> {
       var wallet = sl.get<DeFiChainWallet>();
       var pubKey = await wallet.getPublicKey();
 
-      var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
-          _selectedValueFrom.hash, amount, pubKey, _selectedValueFrom.hash);
+      try {
+        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
+            _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
 
-      setState(() {
-        _amountFrom = double.tryParse(swapResult.result.split('@')[0]);
-      });
+        setState(() {
+          _amountFrom = double.tryParse(swapResult.result.split('@')[0]);
+        });
+
+        _amountFromController.text = swapResult.result.split('@')[0];
+      }
+      on HttpException catch (e) {
+        final errorMsg = e.error.error;
+        LogHelper.instance.e("Error ($errorMsg)");
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Error ($errorMsg)'),
+        ));
+
+        _amountFromController.text = '-';
+      }
 
       _testSwapLoading = false;
-      _amountFromController.text = swapResult.result.split('@')[0];
     }
     checkSufficientFunds();
 
@@ -349,7 +396,7 @@ class _DexScreen extends State<DexScreen> {
           child: Text(e.hash),
         ),
         Expanded(
-          flex: 1,
+          flex: 4,
           child: Text(e.balanceDisplayRounded, textAlign: TextAlign.right),
         )
       ],
@@ -363,27 +410,44 @@ class _DexScreen extends State<DexScreen> {
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              DropdownButton<TokenBalance>(
-                isExpanded: true,
-                hint: Text(S.of(context).dex_from_token),
-                value: _selectedValueFrom,
-                items: _fromTokens.map((e) {
-                  return new DropdownMenuItem<TokenBalance>(
-                    value: e,
-                    child: _buildDropdownListItem(e),
-                  );
-                }).toList(),
-                onChanged: (TokenBalance val) {
-                  setState(() {
-                    filter(val, _selectedValueTo);
+              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: 60,
+                        child: DropdownButton<TokenBalance>(
+                          isExpanded: true,
+                          hint: Text(S.of(context).dex_from_token),
+                          value: _selectedValueFrom,
+                          items: _fromTokens.map((e) {
+                            return new DropdownMenuItem<TokenBalance>(
+                              value: e,
+                              child: _buildDropdownListItem(e),
+                            );
+                          }).toList(),
+                          onChanged: (TokenBalance val) {
+                            setState(() {
+                              filter(val, _selectedValueTo);
 
-                    _selectedValueFrom = val;
+                              _selectedValueFrom = val;
 
-                    findPoolPair(_selectedValueFrom, _selectedValueTo);
-                    handleChangeFromToken();
-                  });
-                },
-              ),
+                              findPoolPair(
+                                  _selectedValueFrom, _selectedValueTo);
+                              handleChangeFromToken();
+                            });
+                          },
+                        ))),
+                SizedBox(width: 20),
+                ButtonTheme(
+                    height: 30,
+                    minWidth: 40,
+                    child: RaisedButton(
+                        child: Text(S.of(context).dex_add_max),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          handleSetMaxFrom();
+                        }))
+              ]),
               TextField(
                 controller: _amountFromController,
                 decoration:
@@ -403,27 +467,44 @@ class _DexScreen extends State<DexScreen> {
                   onPressed: () {
                     interchangeSymbols();
                   }),
-              DropdownButton<TokenBalance>(
-                isExpanded: true,
-                hint: Text(S.of(context).dex_to_token),
-                value: _selectedValueTo,
-                items: _toTokens.map((e) {
-                  return new DropdownMenuItem<TokenBalance>(
-                    value: e,
-                    child: _buildDropdownListItem(e),
-                  );
-                }).toList(),
-                onChanged: (TokenBalance val) {
-                  setState(() {
-                    filter(_selectedValueFrom, val);
+              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: 60,
+                        child: DropdownButton<TokenBalance>(
+                          isExpanded: true,
+                          hint: Text(S.of(context).dex_to_token),
+                          value: _selectedValueTo,
+                          items: _toTokens.map((e) {
+                            return new DropdownMenuItem<TokenBalance>(
+                              value: e,
+                              child: _buildDropdownListItem(e),
+                            );
+                          }).toList(),
+                          onChanged: (TokenBalance val) {
+                            setState(() {
+                              filter(_selectedValueFrom, val);
 
-                    _selectedValueTo = val;
+                              _selectedValueTo = val;
 
-                    findPoolPair(_selectedValueFrom, _selectedValueTo);
-                    handleChangeToToken();
-                  });
-                },
-              ),
+                              findPoolPair(
+                                  _selectedValueFrom, _selectedValueTo);
+                              handleChangeToToken();
+                            });
+                          },
+                        ))),
+                SizedBox(width: 20),
+                ButtonTheme(
+                    height: 30,
+                    minWidth: 40,
+                    child: RaisedButton(
+                        child: Text(S.of(context).liquitiy_add_max),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          handleSetMaxTo();
+                        }))
+              ]),
               TextField(
                 controller: _amountToController,
                 decoration:

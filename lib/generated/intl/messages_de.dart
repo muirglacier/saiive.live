@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_commission" : MessageLookupByLibrary.simpleMessage("Komission"),
     "dex_from_amount" : MessageLookupByLibrary.simpleMessage("Menge Von"),
     "dex_from_token" : MessageLookupByLibrary.simpleMessage("Von Token"),
+    "dex_insufficient_funds" : MessageLookupByLibrary.simpleMessage("Nicht genügend Balance für Tausch."),
     "dex_price" : MessageLookupByLibrary.simpleMessage("Preis"),
     "dex_swap" : MessageLookupByLibrary.simpleMessage("Swap"),
     "dex_to_amount" : MessageLookupByLibrary.simpleMessage("Menge Auf"),

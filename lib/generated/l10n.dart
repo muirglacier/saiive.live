@@ -795,6 +795,16 @@ class S {
     );
   }
 
+  /// `Insufficient Funds for Swap`
+  String get dex_insufficient_funds {
+    return Intl.message(
+      'Insufficient Funds for Swap',
+      name: 'dex_insufficient_funds',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(

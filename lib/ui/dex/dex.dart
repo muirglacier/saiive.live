@@ -32,6 +32,8 @@ class _DexScreen extends State<DexScreen> {
   bool _testSwapFrom = false;
   bool _testSwapTo = false;
   bool _testSwapLoading = false;
+  bool _insufficientFunds = false;
+  bool _invalidInput = false;
 
   List<TokenBalance> _fromTokens = [];
   List<TokenBalance> _toTokens = [];
@@ -172,7 +174,48 @@ class _DexScreen extends State<DexScreen> {
     }
   }
 
-  findPoolPairReserve() {}
+  checkSufficientFunds() {
+    if (_selectedValueFrom == null) {
+      return;
+    }
+
+    double amount = double.tryParse(_amountFromController.text);
+
+    if (null == amount) {
+      return;
+    }
+
+    amount *= 100000000;
+
+    if (amount > _selectedValueFrom.balance) {
+      setState(() {
+        _insufficientFunds = true;
+      });
+    }
+    else {
+      setState(() {
+        _insufficientFunds = false;
+      });
+    }
+  }
+
+  handleChangeToToken() {
+    _amountTo = null;
+    _amountFrom = null;
+
+    _amountToController.text = '-';
+
+    handleChangeTo();
+  }
+
+  handleChangeFromToken() {
+    _amountTo = null;
+    _amountFrom = null;
+
+    _amountToController.text = '-';
+
+    handleChangeFrom();
+  }
 
   interchangeSymbols() {
     var backupTo = _selectedValueTo;
@@ -203,6 +246,12 @@ class _DexScreen extends State<DexScreen> {
 
     double amount = double.tryParse(_amountFromController.text);
 
+    if (amount == 0) {
+      setState(() {
+        _amountFrom = null;
+      });
+      return;
+    }
     if (_amountFrom == amount) {
       return;
     }
@@ -232,6 +281,8 @@ class _DexScreen extends State<DexScreen> {
       _amountToController.text = swapResult.result.split('@')[0];
     }
 
+    checkSufficientFunds();
+
     _testSwapFrom = false;
   }
 
@@ -245,6 +296,13 @@ class _DexScreen extends State<DexScreen> {
     }
 
     double amount = double.tryParse(_amountToController.text);
+
+    if (amount == 0) {
+      setState(() {
+        _amountTo = null;
+      });
+      return;
+    }
 
     if (_amountTo == amount) {
       return;
@@ -275,6 +333,7 @@ class _DexScreen extends State<DexScreen> {
       _testSwapLoading = false;
       _amountFromController.text = swapResult.result.split('@')[0];
     }
+    checkSufficientFunds();
 
     _testSwapTo = false;
   }
@@ -322,6 +381,7 @@ class _DexScreen extends State<DexScreen> {
                     _selectedValueFrom = val;
 
                     findPoolPair(_selectedValueFrom, _selectedValueTo);
+                    handleChangeFromToken();
                   });
                 },
               ),
@@ -361,6 +421,7 @@ class _DexScreen extends State<DexScreen> {
                     _selectedValueTo = val;
 
                     findPoolPair(_selectedValueFrom, _selectedValueTo);
+                    handleChangeToToken();
                   });
                 },
               ),
@@ -369,7 +430,12 @@ class _DexScreen extends State<DexScreen> {
                 decoration:
                     InputDecoration(hintText: S.of(context).dex_to_amount),
               ),
-              if (_selectedPoolPair != null && _amountTo != null)
+              if (_insufficientFunds)
+                Column(children: [
+                  Padding(padding: EdgeInsets.only(top: 10)),
+                  Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
+                ]),
+              if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
                 Column(children: [
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).dex_price)),

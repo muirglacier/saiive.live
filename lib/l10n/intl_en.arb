@@ -86,6 +86,7 @@
   "dex_amount": "Amount",
   "dex_commission": "Commision",
   "dex_swap": "Swap",
+  "dex_insufficient_funds": "Insufficient Funds for Swap",
 
   "home_welcome_good_morning": "Good morning",
   "home_welcome_good_day": "Good day",

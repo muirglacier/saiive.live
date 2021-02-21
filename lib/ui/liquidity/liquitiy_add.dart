@@ -1,6 +1,7 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
+import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
@@ -196,7 +197,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       return;
     }
 
-    _amountTokenAController.text = (_selectedTokenA.balance / 100000000).toString();
+    _amountTokenAController.text = (_selectedTokenA.balance / DefiChainConstants.COIN).toString();
 
     handleChangeTokenA();
   }
@@ -207,7 +208,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       return;
     }
 
-    _amountTokenBController.text = (_selectedTokenB.balance / 100000000).toString();
+    _amountTokenBController.text = (_selectedTokenB.balance / DefiChainConstants.COIN).toString();
 
     handleChangeTokenB();
   }
@@ -291,11 +292,11 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   {
     var sufficient = false;
 
-    if (_amountTokenA != null && _amountTokenA * 100000000 > _selectedTokenA.balance) {
+    if (_amountTokenA != null && _amountTokenA * DefiChainConstants.COIN > _selectedTokenA.balance) {
       sufficient = true;
     }
 
-    if (_amountTokenB != null && _amountTokenB * 100000000 > _selectedTokenB.balance) {
+    if (_amountTokenB != null && _amountTokenB * DefiChainConstants.COIN > _selectedTokenB.balance) {
       sufficient = true;
     }
 

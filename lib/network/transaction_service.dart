@@ -87,6 +87,7 @@ class TransactionService extends NetworkService implements ITransactionService {
     }
     Map decoded = json.decode(response.body);
     final transaction = TransactionData.fromJson(decoded);
+    transaction.txId = txId;
     return transaction;
   }
 

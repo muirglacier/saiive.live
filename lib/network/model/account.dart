@@ -1,3 +1,5 @@
+import 'package:defichainwallet/helper/constants.dart';
+
 class Account {
   final String token;
   final String address;
@@ -15,7 +17,7 @@ class Account {
       this.network});
 
   String get key => token + "_" + address;
-  double get balanceDisplay => balance / 100000000;
+  double get balanceDisplay => balance / DefiChainConstants.COIN;
 
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(

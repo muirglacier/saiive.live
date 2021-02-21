@@ -84,6 +84,8 @@
   "dex_commission": "Komission",
   "dex_swap": "Swap",
   "dex_insufficient_funds": "Nicht genügend Balance für Tausch.",
+  "dex_swap_successfull": "Swap erfolgreich",
+  "dex_swap_show_transaction": "Im Explorer",
 
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",

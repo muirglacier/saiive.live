@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_insufficient_funds" : MessageLookupByLibrary.simpleMessage("Insufficient Funds for Swap"),
     "dex_price" : MessageLookupByLibrary.simpleMessage("Price"),
     "dex_swap" : MessageLookupByLibrary.simpleMessage("Swap"),
+    "dex_swap_show_transaction" : MessageLookupByLibrary.simpleMessage("In Explorer"),
+    "dex_swap_successfull" : MessageLookupByLibrary.simpleMessage("Swap successfull"),
     "dex_to_amount" : MessageLookupByLibrary.simpleMessage("To Amount"),
     "dex_to_token" : MessageLookupByLibrary.simpleMessage("To Token"),
     "helloWorld" : MessageLookupByLibrary.simpleMessage("Hello World!"),

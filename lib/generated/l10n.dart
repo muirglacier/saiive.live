@@ -825,6 +825,26 @@ class S {
     );
   }
 
+  /// `Swap successfull`
+  String get dex_swap_successfull {
+    return Intl.message(
+      'Swap successfull',
+      name: 'dex_swap_successfull',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In Explorer`
+  String get dex_swap_show_transaction {
+    return Intl.message(
+      'In Explorer',
+      name: 'dex_swap_show_transaction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(

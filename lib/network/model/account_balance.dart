@@ -1,9 +1,11 @@
+import 'package:defichainwallet/helper/constants.dart';
+
 class AccountBalance {
   final String token;
   int balance;
 
-  double get balanceDisplay => balance / 100000000;
-  String get balanceDisplayRounded => (balance / 100000000).toStringAsFixed(8);
+  double get balanceDisplay => balance / DefiChainConstants.COIN;
+  String get balanceDisplayRounded => (balance / DefiChainConstants.COIN).toStringAsFixed(8);
 
   AccountBalance({this.token, this.balance});
 }

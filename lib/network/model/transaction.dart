@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:defichainwallet/helper/constants.dart';
+
 class Transaction {
   final String id;
   final String chain;
@@ -18,7 +20,7 @@ class Transaction {
   String get uniqueId => mintTxId + "_" + mintIndex.toString();
 
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
-  String get correctValueRounded => (correctValue / 100000000).toStringAsFixed(8);
+  String get correctValueRounded => (correctValue / DefiChainConstants.COIN).toStringAsFixed(8);
 
   Transaction(
       {this.id,

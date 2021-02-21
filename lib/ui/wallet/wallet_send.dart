@@ -1,5 +1,6 @@
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
@@ -28,7 +29,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   Future sendFunds() async {
     try {
       final amount = double.parse(_amountController.text);
-      final totalAmount = (amount * 100000000).toInt();
+      final totalAmount = (amount * DefiChainConstants.COIN).toInt();
       final tx = await sl.get<DeFiChainWallet>().createAndSend(
           totalAmount, widget.token, _addressController.text);
 

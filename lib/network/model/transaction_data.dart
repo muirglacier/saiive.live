@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 
 class TransactionDetail {
@@ -39,10 +40,11 @@ class TransactionData {
   int index;
   int account;
   bool isChangeAddress;
+  String txId;
 
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
   String get correctValueRounded =>
-      (correctValue / 100000000).toStringAsFixed(8);
+      (correctValue / DefiChainConstants.COIN).toStringAsFixed(8);
 
   TransactionData(
       {this.id,

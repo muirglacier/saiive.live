@@ -3,6 +3,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/balance.dart';
+import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
@@ -13,7 +14,9 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DexScreen extends StatefulWidget {
   @override
@@ -184,7 +187,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    amount *= 100000000;
+    amount *= DefiChainConstants.COIN;
 
     if (amount > _selectedValueFrom.balance) {
       setState(() {
@@ -202,7 +205,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _amountFromController.text = (_selectedValueFrom.balance / 100000000).toString();
+    _amountFromController.text = (_selectedValueFrom.balance / DefiChainConstants.COIN).toString();
 
     handleChangeFrom();
   }
@@ -212,7 +215,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _amountToController.text = (_selectedValueTo.balance / 100000000).toString();
+    _amountToController.text = (_selectedValueTo.balance / DefiChainConstants.COIN).toString();
 
     handleChangeTo();
   }
@@ -517,6 +520,7 @@ class _DexScreen extends State<DexScreen> {
                 ]),
               if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
                 Column(children: [
+                  SizedBox(height: 10),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).dex_price)),
                     Expanded(
@@ -590,9 +594,9 @@ class _DexScreen extends State<DexScreen> {
 
                       final overlay = LoadingOverlay.of(context);
 
-                      int valueFrom = (_amountFrom * 100000000).round();
+                      int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
                       int maxPrice =
-                          (_selectedPoolPair.reserveBDivReserveA * 100000000)
+                          (_selectedPoolPair.reserveBDivReserveA * DefiChainConstants.COIN)
                               .round();
 
                       final walletTo = await wallet.getPublicKey();
@@ -607,7 +611,18 @@ class _DexScreen extends State<DexScreen> {
                         var tx = await overlay.during(createSwapFuture);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Successfull swap..."),
+                          content: Text(S.of(context).dex_swap_successfull),
+                          action: SnackBarAction(
+                            label: S.of(context).dex_swap_show_transaction,
+                            onPressed: () async {
+                              var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+                              var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
+
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              }
+                            },
+                          ),
                         ));
                       } on HttpException catch (e) {
                         final errorMsg = e.error.error;

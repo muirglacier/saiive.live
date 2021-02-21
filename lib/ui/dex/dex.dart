@@ -31,6 +31,7 @@ class _DexScreen extends State<DexScreen> {
 
   double _amountFrom;
   double _amountTo;
+  double _conversionRate;
 
   bool _testSwapFrom = false;
   bool _testSwapTo = false;
@@ -176,6 +177,12 @@ class _DexScreen extends State<DexScreen> {
     }
   }
 
+  getConversionRatio() {
+    setState(() {
+      _conversionRate = _amountTo / _amountFrom;
+    });
+  }
+
   checkSufficientFunds() {
     if (_selectedValueFrom == null) {
       return;
@@ -300,6 +307,8 @@ class _DexScreen extends State<DexScreen> {
           _amountTo = double.tryParse(swapResult.result.split('@')[0]);
         });
         _amountToController.text = swapResult.result.split('@')[0];
+
+        getConversionRatio();
       }
       on HttpException catch (e) {
         final errorMsg = e.error.error;
@@ -367,6 +376,8 @@ class _DexScreen extends State<DexScreen> {
         });
 
         _amountFromController.text = swapResult.result.split('@')[0];
+
+        getConversionRatio();
       }
       on HttpException catch (e) {
         final errorMsg = e.error.error;
@@ -529,26 +540,17 @@ class _DexScreen extends State<DexScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                                (_poolPairCondition == true
-                                        ? _selectedPoolPair.reserveADivReserveB
-                                            .toString()
-                                        : _selectedPoolPair.reserveBDivReserveA
-                                            .toString()) +
+                                _conversionRate.toStringAsFixed(8) + ' ' +
+                                    _selectedValueTo.hash +
+                                    ' per ' +
+                                    _selectedValueFrom.hash,
+                                textAlign: TextAlign.right),
+                            Text(
+                                (1 / _conversionRate).toStringAsFixed(8) +
                                     ' ' +
                                     _selectedValueFrom.hash +
                                     ' per ' +
                                     _selectedValueTo.hash,
-                                textAlign: TextAlign.right),
-                            Text(
-                                (_poolPairCondition == true
-                                        ? _selectedPoolPair.reserveBDivReserveA
-                                            .toString()
-                                        : _selectedPoolPair.reserveADivReserveB
-                                            .toString()) +
-                                    ' ' +
-                                    _selectedValueTo.hash +
-                                    ' per ' +
-                                    _selectedValueFrom.hash,
                                 textAlign: TextAlign.right),
                           ],
                         )),
@@ -595,9 +597,7 @@ class _DexScreen extends State<DexScreen> {
                       final overlay = LoadingOverlay.of(context);
 
                       int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-                      int maxPrice =
-                          (_selectedPoolPair.reserveBDivReserveA * DefiChainConstants.COIN)
-                              .round();
+                      int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
                       final walletTo = await wallet.getPublicKey();
                       try {
@@ -606,8 +606,8 @@ class _DexScreen extends State<DexScreen> {
                             valueFrom,
                             _selectedValueTo.hash,
                             walletTo,
-                            0,
-                            maxPrice);
+                            maxPrice,
+                            0);
                         var tx = await overlay.during(createSwapFuture);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

@@ -33,7 +33,6 @@ class _DexScreen extends State<DexScreen> {
   bool _testSwapTo = false;
   bool _testSwapLoading = false;
   bool _insufficientFunds = false;
-  bool _invalidInput = false;
 
   List<TokenBalance> _fromTokens = [];
   List<TokenBalance> _toTokens = [];

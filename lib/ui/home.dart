@@ -1,4 +1,3 @@
-import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/dex/dex.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy.dart';

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class TokenPairIcon extends StatefulWidget {
-  String _tokenA;
-  String _tokenB;
+  final String _tokenA;
+  final String _tokenB;
 
   TokenPairIcon(this._tokenA, this._tokenB);
 

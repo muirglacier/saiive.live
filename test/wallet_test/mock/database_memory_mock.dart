@@ -73,7 +73,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future removeUnspentTransactions(List<Transaction> mintIds) {
+  Future removeUnspentTransactions(List<Transaction> mintIds) async {
     //TODO
   }
 

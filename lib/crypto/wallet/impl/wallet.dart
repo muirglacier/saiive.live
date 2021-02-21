@@ -765,7 +765,7 @@ class Wallet extends IWallet {
     dataMap["apiService"] = sl.get<ApiService>();
     dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
 
-    var utxos = await compute(WalletStaticHelper.syncUtxo, dataMap);
+    var utxos = await compute(syncUtxo, dataMap);
 
     await _walletDatabase.clearUnspentTransactions();
 
@@ -775,7 +775,7 @@ class Wallet extends IWallet {
       }
     }
 
-    var balances = await compute(WalletStaticHelper.syncWallet, dataMap);
+    var balances = await compute(syncWallet, dataMap);
 
     await _walletDatabase.clearAccountBalances();
 
@@ -795,7 +795,7 @@ class Wallet extends IWallet {
       dataMap["apiService"] = sl.get<ApiService>();
       dataMap["accounts"] = await sl.get<IWalletDatabase>().getAccounts();
 
-      var txs = await compute(WalletStaticHelper.syncTransactions, dataMap);
+      var txs = await compute(syncTransactions, dataMap);
       await _walletDatabase.clearTransactions();
 
       for (tx.Transaction transaction in txs) {

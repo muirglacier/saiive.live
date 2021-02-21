@@ -33,7 +33,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       final tx = await sl.get<DeFiChainWallet>().createAndSend(
           totalAmount, widget.token, _addressController.text);
 
-      final txId = tx.mintTxId;
+      final txId = tx.txId;
       LogHelper.instance.d("sent tx $txId");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(txId),

@@ -4,7 +4,7 @@ import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
 
 class PoolShareScreen extends StatefulWidget {
-  PoolShareLiquidity liquidity;
+  final PoolShareLiquidity liquidity;
 
   PoolShareScreen(this.liquidity);
 

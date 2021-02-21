@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class TokenIcon extends StatefulWidget {
-    String _token;
+    final String _token;
 
     TokenIcon(this._token);
 

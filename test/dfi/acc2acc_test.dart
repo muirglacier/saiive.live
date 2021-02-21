@@ -1,4 +1,3 @@
-import 'package:bip32/bip32.dart';
 import 'package:defichaindart/defichaindart.dart';
 import 'package:flutter_test/flutter_test.dart';
 

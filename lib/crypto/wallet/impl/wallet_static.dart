@@ -1,33 +1,31 @@
 import '../wallet-sync.dart';
 
-class WalletStaticHelper {
-  static Future syncUtxo(Map dataMap) async {
-    return await WalletSync.syncUTXO(
-        dataMap["chain"],
-        dataMap["network"],
-        dataMap["seed"],
-        dataMap["password"],
-        dataMap["apiService"],
-        dataMap["accounts"]);
-  }
+Future syncUtxo(Map dataMap) async {
+  return await walletSyncUTXO(
+      dataMap["chain"],
+      dataMap["network"],
+      dataMap["seed"],
+      dataMap["password"],
+      dataMap["apiService"],
+      dataMap["accounts"]);
+}
 
-  static Future syncWallet(Map dataMap) async {
-    return await WalletSync.syncBalance(
-        dataMap["chain"],
-        dataMap["network"],
-        dataMap["seed"],
-        dataMap["password"],
-        dataMap["apiService"],
-        dataMap["accounts"]);
-  }
+Future syncWallet(Map dataMap) async {
+  return await walletSyncBalance(
+      dataMap["chain"],
+      dataMap["network"],
+      dataMap["seed"],
+      dataMap["password"],
+      dataMap["apiService"],
+      dataMap["accounts"]);
+}
 
-  static Future syncTransactions(Map dataMap) async {
-    return await WalletSync.syncTransactions(
-        dataMap["chain"],
-        dataMap["network"],
-        dataMap["seed"],
-        dataMap["password"],
-        dataMap["apiService"],
-        dataMap["accounts"]);
-  }
+Future syncTransactions(Map dataMap) async {
+  return await walletSyncTransactions(
+      dataMap["chain"],
+      dataMap["network"],
+      dataMap["seed"],
+      dataMap["password"],
+      dataMap["apiService"],
+      dataMap["accounts"]);
 }

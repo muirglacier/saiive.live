@@ -53,6 +53,7 @@
   "wallet_send_address": "Adresse",
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Menge",
+  "wallet_locked": "Wallet synchronisiert gerade!",
 
   "settings": "Einstellungen",
   "settings_remove_seed": "Seed löschen",
@@ -73,6 +74,7 @@
   "cancel": "Abbrechen",
 
   "dex": "DEX",
+  "dex_add_max": "max",
   "dex_from_token": "Von Token",
   "dex_from_amount": "Menge Von",
   "dex_to_token": "Auf Token",
@@ -81,6 +83,9 @@
   "dex_amount": "Erhaltender Betrag",
   "dex_commission": "Komission",
   "dex_swap": "Swap",
+  "dex_insufficient_funds": "Nicht genügend Balance für Tausch.",
+  "dex_swap_successfull": "Swap erfolgreich",
+  "dex_swap_show_transaction": "Im Explorer",
 
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",
@@ -90,6 +95,16 @@
 
   "liquitiy": "Liquidity",
   "liquitiy_pool_share_percentage": "Pool-Anteil",
+  "liquitiy_add": "Hinzufügen",
+  "liquitiy_add_max": "max",
+  "liquitiy_add_token_a": "Token A",
+  "liquitiy_add_token_b": "Token B",
+  "liquitiy_add_amount_a": "Amount A",
+  "liquitiy_add_amount_b": "Amount B",
+  "liquitiy_add_pool_share": "Pool Share",
+  "liquitiy_add_total_pooled": "Insgesammt gepoolt",
+  "liquitiy_add_insufficient_funds": "Nicht genügend Balance für LM",
+  "liquitiy_add_price": "Preis",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

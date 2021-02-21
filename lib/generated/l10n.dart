@@ -525,6 +525,16 @@ class S {
     );
   }
 
+  /// `Wallet is synchronising right now!`
+  String get wallet_locked {
+    return Intl.message(
+      'Wallet is synchronising right now!',
+      name: 'wallet_locked',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(
@@ -715,6 +725,16 @@ class S {
     );
   }
 
+  /// `max`
+  String get dex_add_max {
+    return Intl.message(
+      'max',
+      name: 'dex_add_max',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `From Token`
   String get dex_from_token {
     return Intl.message(
@@ -795,6 +815,36 @@ class S {
     );
   }
 
+  /// `Insufficient Funds for Swap`
+  String get dex_insufficient_funds {
+    return Intl.message(
+      'Insufficient Funds for Swap',
+      name: 'dex_insufficient_funds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swap successfull`
+  String get dex_swap_successfull {
+    return Intl.message(
+      'Swap successfull',
+      name: 'dex_swap_successfull',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In Explorer`
+  String get dex_swap_show_transaction {
+    return Intl.message(
+      'In Explorer',
+      name: 'dex_swap_show_transaction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(
@@ -860,6 +910,106 @@ class S {
     return Intl.message(
       'Pool-Share',
       name: 'liquitiy_pool_share_percentage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Liquidity`
+  String get liquitiy_add {
+    return Intl.message(
+      'Add Liquidity',
+      name: 'liquitiy_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `max`
+  String get liquitiy_add_max {
+    return Intl.message(
+      'max',
+      name: 'liquitiy_add_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Token A`
+  String get liquitiy_add_token_a {
+    return Intl.message(
+      'Token A',
+      name: 'liquitiy_add_token_a',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Token B`
+  String get liquitiy_add_token_b {
+    return Intl.message(
+      'Token B',
+      name: 'liquitiy_add_token_b',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount A`
+  String get liquitiy_add_amount_a {
+    return Intl.message(
+      'Amount A',
+      name: 'liquitiy_add_amount_a',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount B`
+  String get liquitiy_add_amount_b {
+    return Intl.message(
+      'Amount B',
+      name: 'liquitiy_add_amount_b',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pool Share`
+  String get liquitiy_add_pool_share {
+    return Intl.message(
+      'Pool Share',
+      name: 'liquitiy_add_pool_share',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Totally pooled`
+  String get liquitiy_add_total_pooled {
+    return Intl.message(
+      'Totally pooled',
+      name: 'liquitiy_add_total_pooled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insufficient Funds for LM`
+  String get liquitiy_add_insufficient_funds {
+    return Intl.message(
+      'Insufficient Funds for LM',
+      name: 'liquitiy_add_insufficient_funds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get liquitiy_add_price {
+    return Intl.message(
+      'Price',
+      name: 'liquitiy_add_price',
       desc: '',
       args: [],
     );

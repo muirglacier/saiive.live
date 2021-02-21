@@ -54,6 +54,7 @@
   "wallet_restore_not_safed": "You didn't safed your recovery words, wanna do that now?",
   "wallet_empty": "Your wallet is empty!",
   "wallet_receive": "Receive",
+  "wallet_locked": "Wallet is synchronising right now!",
 
   "wallet_send": "Send",
   "wallet_send_address": "Address",
@@ -78,6 +79,7 @@
   "cancel": "Cancel",
 
   "dex": "DEX",
+  "dex_add_max": "max",
   "dex_from_token": "From Token",
   "dex_from_amount": "From Amount",
   "dex_to_token": "To Token",
@@ -86,6 +88,9 @@
   "dex_amount": "Amount",
   "dex_commission": "Commision",
   "dex_swap": "Swap",
+  "dex_insufficient_funds": "Insufficient Funds for Swap",
+  "dex_swap_successfull": "Swap successfull",
+  "dex_swap_show_transaction": "In Explorer",
 
   "home_welcome_good_morning": "Good morning",
   "home_welcome_good_day": "Good day",
@@ -95,6 +100,16 @@
 
   "liquitiy": "Liquidity",
   "liquitiy_pool_share_percentage": "Pool-Share",
+  "liquitiy_add": "Add Liquidity",
+  "liquitiy_add_max": "max",
+  "liquitiy_add_token_a": "Token A",
+  "liquitiy_add_token_b": "Token B",
+  "liquitiy_add_amount_a": "Amount A",
+  "liquitiy_add_amount_b": "Amount B",
+  "liquitiy_add_pool_share": "Pool Share",
+  "liquitiy_add_total_pooled": "Totally pooled",
+  "liquitiy_add_insufficient_funds": "Insufficient Funds for LM",
+  "liquitiy_add_price": "Price",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

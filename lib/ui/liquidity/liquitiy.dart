@@ -3,6 +3,7 @@ import 'package:defichainwallet/helper/poolpair.dart';
 import 'package:defichainwallet/helper/poolshare.dart';
 import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
+import 'package:defichainwallet/ui/liquidity/liquitiy_add.dart';
 import 'package:defichainwallet/ui/liquidity/pool_share.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
@@ -199,6 +200,21 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(S.of(context).liquitiy),
+          actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            LiquidityAddScreen()));
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 26.0,
+                  ),
+                )),
+          ],
         ),
         body: Container(child: buildAllLiquidityScreen(context)));
   }

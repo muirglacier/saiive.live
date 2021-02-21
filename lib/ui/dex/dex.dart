@@ -3,6 +3,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/balance.dart';
+import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
@@ -13,7 +14,9 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DexScreen extends StatefulWidget {
   @override
@@ -28,10 +31,12 @@ class _DexScreen extends State<DexScreen> {
 
   double _amountFrom;
   double _amountTo;
+  double _conversionRate;
 
   bool _testSwapFrom = false;
   bool _testSwapTo = false;
   bool _testSwapLoading = false;
+  bool _insufficientFunds = false;
 
   List<TokenBalance> _fromTokens = [];
   List<TokenBalance> _toTokens = [];
@@ -172,7 +177,73 @@ class _DexScreen extends State<DexScreen> {
     }
   }
 
-  findPoolPairReserve() {}
+  getConversionRatio() {
+    setState(() {
+      _conversionRate = _amountTo / _amountFrom;
+    });
+  }
+
+  checkSufficientFunds() {
+    if (_selectedValueFrom == null) {
+      return;
+    }
+
+    double amount = double.tryParse(_amountFromController.text);
+
+    if (null == amount) {
+      return;
+    }
+
+    amount *= DefiChainConstants.COIN;
+
+    if (amount > _selectedValueFrom.balance) {
+      setState(() {
+        _insufficientFunds = true;
+      });
+    }
+    else {
+      setState(() {
+        _insufficientFunds = false;
+      });
+    }
+  }
+  handleSetMaxFrom() {
+    if (null == _selectedValueFrom || null == _selectedValueTo) {
+      return;
+    }
+
+    _amountFromController.text = (_selectedValueFrom.balance / DefiChainConstants.COIN).toString();
+
+    handleChangeFrom();
+  }
+
+  handleSetMaxTo() {
+    if (null == _selectedValueFrom || null == _selectedValueTo) {
+      return;
+    }
+
+    _amountToController.text = (_selectedValueTo.balance / DefiChainConstants.COIN).toString();
+
+    handleChangeTo();
+  }
+
+  handleChangeToToken() {
+    _amountTo = null;
+    _amountFrom = null;
+
+    _amountToController.text = '-';
+
+    handleChangeTo();
+  }
+
+  handleChangeFromToken() {
+    _amountTo = null;
+    _amountFrom = null;
+
+    _amountToController.text = '-';
+
+    handleChangeFrom();
+  }
 
   interchangeSymbols() {
     var backupTo = _selectedValueTo;
@@ -203,6 +274,12 @@ class _DexScreen extends State<DexScreen> {
 
     double amount = double.tryParse(_amountFromController.text);
 
+    if (amount == 0) {
+      setState(() {
+        _amountFrom = null;
+      });
+      return;
+    }
     if (_amountFrom == amount) {
       return;
     }
@@ -222,15 +299,33 @@ class _DexScreen extends State<DexScreen> {
       var wallet = sl.get<DeFiChainWallet>();
       var pubKey = await wallet.getPublicKey();
 
-      var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
-          _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
+      try {
+        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
+            _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
+
+        setState(() {
+          _amountTo = double.tryParse(swapResult.result.split('@')[0]);
+        });
+        _amountToController.text = swapResult.result.split('@')[0];
+
+        getConversionRatio();
+      }
+      on HttpException catch (e) {
+        final errorMsg = e.error.error;
+        LogHelper.instance.e("Error ($errorMsg)");
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Error ($errorMsg)'),
+        ));
+
+        _amountToController.text = '-';
+      }
 
       _testSwapLoading = false;
-      setState(() {
-        _amountTo = double.tryParse(swapResult.result.split('@')[0]);
-      });
-      _amountToController.text = swapResult.result.split('@')[0];
     }
+
+    checkSufficientFunds();
 
     _testSwapFrom = false;
   }
@@ -245,6 +340,13 @@ class _DexScreen extends State<DexScreen> {
     }
 
     double amount = double.tryParse(_amountToController.text);
+
+    if (amount == 0) {
+      setState(() {
+        _amountTo = null;
+      });
+      return;
+    }
 
     if (_amountTo == amount) {
       return;
@@ -265,16 +367,33 @@ class _DexScreen extends State<DexScreen> {
       var wallet = sl.get<DeFiChainWallet>();
       var pubKey = await wallet.getPublicKey();
 
-      var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
-          _selectedValueFrom.hash, amount, pubKey, _selectedValueFrom.hash);
+      try {
+        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
+            _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
 
-      setState(() {
-        _amountFrom = double.tryParse(swapResult.result.split('@')[0]);
-      });
+        setState(() {
+          _amountFrom = double.tryParse(swapResult.result.split('@')[0]);
+        });
+
+        _amountFromController.text = swapResult.result.split('@')[0];
+
+        getConversionRatio();
+      }
+      on HttpException catch (e) {
+        final errorMsg = e.error.error;
+        LogHelper.instance.e("Error ($errorMsg)");
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Error ($errorMsg)'),
+        ));
+
+        _amountFromController.text = '-';
+      }
 
       _testSwapLoading = false;
-      _amountFromController.text = swapResult.result.split('@')[0];
     }
+    checkSufficientFunds();
 
     _testSwapTo = false;
   }
@@ -291,7 +410,7 @@ class _DexScreen extends State<DexScreen> {
           child: Text(e.hash),
         ),
         Expanded(
-          flex: 1,
+          flex: 4,
           child: Text(e.balanceDisplayRounded, textAlign: TextAlign.right),
         )
       ],
@@ -305,26 +424,44 @@ class _DexScreen extends State<DexScreen> {
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              DropdownButton<TokenBalance>(
-                isExpanded: true,
-                hint: Text(S.of(context).dex_from_token),
-                value: _selectedValueFrom,
-                items: _fromTokens.map((e) {
-                  return new DropdownMenuItem<TokenBalance>(
-                    value: e,
-                    child: _buildDropdownListItem(e),
-                  );
-                }).toList(),
-                onChanged: (TokenBalance val) {
-                  setState(() {
-                    filter(val, _selectedValueTo);
+              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: 60,
+                        child: DropdownButton<TokenBalance>(
+                          isExpanded: true,
+                          hint: Text(S.of(context).dex_from_token),
+                          value: _selectedValueFrom,
+                          items: _fromTokens.map((e) {
+                            return new DropdownMenuItem<TokenBalance>(
+                              value: e,
+                              child: _buildDropdownListItem(e),
+                            );
+                          }).toList(),
+                          onChanged: (TokenBalance val) {
+                            setState(() {
+                              filter(val, _selectedValueTo);
 
-                    _selectedValueFrom = val;
+                              _selectedValueFrom = val;
 
-                    findPoolPair(_selectedValueFrom, _selectedValueTo);
-                  });
-                },
-              ),
+                              findPoolPair(
+                                  _selectedValueFrom, _selectedValueTo);
+                              handleChangeFromToken();
+                            });
+                          },
+                        ))),
+                SizedBox(width: 20),
+                ButtonTheme(
+                    height: 30,
+                    minWidth: 40,
+                    child: RaisedButton(
+                        child: Text(S.of(context).dex_add_max),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          handleSetMaxFrom();
+                        }))
+              ]),
               TextField(
                 controller: _amountFromController,
                 decoration:
@@ -344,33 +481,57 @@ class _DexScreen extends State<DexScreen> {
                   onPressed: () {
                     interchangeSymbols();
                   }),
-              DropdownButton<TokenBalance>(
-                isExpanded: true,
-                hint: Text(S.of(context).dex_to_token),
-                value: _selectedValueTo,
-                items: _toTokens.map((e) {
-                  return new DropdownMenuItem<TokenBalance>(
-                    value: e,
-                    child: _buildDropdownListItem(e),
-                  );
-                }).toList(),
-                onChanged: (TokenBalance val) {
-                  setState(() {
-                    filter(_selectedValueFrom, val);
+              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: 60,
+                        child: DropdownButton<TokenBalance>(
+                          isExpanded: true,
+                          hint: Text(S.of(context).dex_to_token),
+                          value: _selectedValueTo,
+                          items: _toTokens.map((e) {
+                            return new DropdownMenuItem<TokenBalance>(
+                              value: e,
+                              child: _buildDropdownListItem(e),
+                            );
+                          }).toList(),
+                          onChanged: (TokenBalance val) {
+                            setState(() {
+                              filter(_selectedValueFrom, val);
 
-                    _selectedValueTo = val;
+                              _selectedValueTo = val;
 
-                    findPoolPair(_selectedValueFrom, _selectedValueTo);
-                  });
-                },
-              ),
+                              findPoolPair(
+                                  _selectedValueFrom, _selectedValueTo);
+                              handleChangeToToken();
+                            });
+                          },
+                        ))),
+                SizedBox(width: 20),
+                ButtonTheme(
+                    height: 30,
+                    minWidth: 40,
+                    child: RaisedButton(
+                        child: Text(S.of(context).dex_add_max),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          handleSetMaxTo();
+                        }))
+              ]),
               TextField(
                 controller: _amountToController,
                 decoration:
                     InputDecoration(hintText: S.of(context).dex_to_amount),
               ),
-              if (_selectedPoolPair != null && _amountTo != null)
+              if (_insufficientFunds)
                 Column(children: [
+                  Padding(padding: EdgeInsets.only(top: 10)),
+                  Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
+                ]),
+              if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
+                Column(children: [
+                  SizedBox(height: 10),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).dex_price)),
                     Expanded(
@@ -379,31 +540,22 @@ class _DexScreen extends State<DexScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                                (_poolPairCondition == true
-                                        ? _selectedPoolPair.reserveADivReserveB
-                                            .toString()
-                                        : _selectedPoolPair.reserveBDivReserveA
-                                            .toString()) +
+                                _conversionRate.toStringAsFixed(8) + ' ' +
+                                    _selectedValueTo.hash +
+                                    ' per ' +
+                                    _selectedValueFrom.hash,
+                                textAlign: TextAlign.right),
+                            Text(
+                                (1 / _conversionRate).toStringAsFixed(8) +
                                     ' ' +
                                     _selectedValueFrom.hash +
                                     ' per ' +
                                     _selectedValueTo.hash,
                                 textAlign: TextAlign.right),
-                            Text(
-                                (_poolPairCondition == true
-                                        ? _selectedPoolPair.reserveBDivReserveA
-                                            .toString()
-                                        : _selectedPoolPair.reserveADivReserveB
-                                            .toString()) +
-                                    ' ' +
-                                    _selectedValueTo.hash +
-                                    ' per ' +
-                                    _selectedValueFrom.hash,
-                                textAlign: TextAlign.right),
                           ],
                         )),
                   ]),
-                  Divider(color: Colors.black),
+                  Divider(thickness: 2,),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).dex_amount)),
                     Expanded(
@@ -415,7 +567,7 @@ class _DexScreen extends State<DexScreen> {
                           ],
                         )),
                   ]),
-                  Divider(color: Colors.black),
+                  Divider(thickness: 2,),
                   Row(children: [
                     Expanded(
                         flex: 4, child: Text(S.of(context).dex_commission)),
@@ -432,14 +584,20 @@ class _DexScreen extends State<DexScreen> {
                     child: Text(S.of(context).dex_swap),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
-                      final overlay = LoadingOverlay.of(context);
-
                       final wallet = sl.get<DeFiChainWallet>();
 
-                      int valueFrom = (_amountFrom * 100000000).round();
-                      int maxPrice =
-                          (_selectedPoolPair.reserveBDivReserveA * 100000000)
-                              .round();
+                      if (wallet.isLocked()) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(S.of(context).wallet_locked),
+                        ));
+
+                        return;
+                      }
+
+                      final overlay = LoadingOverlay.of(context);
+
+                      int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
+                      int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
                       final walletTo = await wallet.getPublicKey();
                       try {
@@ -448,12 +606,23 @@ class _DexScreen extends State<DexScreen> {
                             valueFrom,
                             _selectedValueTo.hash,
                             walletTo,
-                            0,
-                            maxPrice);
+                            maxPrice,
+                            0);
                         var tx = await overlay.during(createSwapFuture);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Successfull swap..."),
+                          content: Text(S.of(context).dex_swap_successfull),
+                          action: SnackBarAction(
+                            label: S.of(context).dex_swap_show_transaction,
+                            onPressed: () async {
+                              var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+                              var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
+
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              }
+                            },
+                          ),
                         ));
                       } on HttpException catch (e) {
                         final errorMsg = e.error.error;

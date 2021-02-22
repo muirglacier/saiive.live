@@ -5,11 +5,14 @@ import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/events/wallet_sync_start_event.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
+import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
+import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
@@ -504,26 +507,40 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                       var createSwapFuture =
                           wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo, loadingStream: streamController);
                       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
-                      var tx = await overlay.during(createSwapFuture);
 
-                      streamController.close();
+                      try {
+                        var tx = await overlay.during(createSwapFuture);
 
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(S.of(context).dex_swap_successfull),
-                        action: SnackBarAction(
-                          label: S.of(context).dex_swap_show_transaction,
-                          onPressed: () async {
-                            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-                            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-                            EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            }
-                          },
-                        ),
-                      ));
+                        streamController.close();
 
-                      Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(S.of(context).dex_swap_successfull),
+                          action: SnackBarAction(
+                            label: S.of(context).dex_swap_show_transaction,
+                            onPressed: () async {
+                              var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+                              var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
+                              EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              }
+                            },
+                          ),
+                        ));
+
+                        Navigator.of(context).pop();
+                      } catch (e) {
+                        LogHelper.instance.e("Error creating addpool-tx", e);
+                        if (e is ErrorResponse) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(e.error),
+                          ));
+                        } else if (e is HttpException) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(e.error.error),
+                          ));
+                        }
+                      }
                     },
                   )
                 ])

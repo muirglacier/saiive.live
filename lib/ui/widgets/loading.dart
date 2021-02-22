@@ -37,7 +37,9 @@ class _LoadingWidget extends State<LoadingWidget> {
   void dispose() {
     super.dispose();
 
-    _textSub.cancel();
+    if (_textSub != null) {
+      _textSub.cancel();
+    }
   }
 
   @override

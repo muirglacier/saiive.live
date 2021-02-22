@@ -232,7 +232,7 @@ class Wallet extends IWallet {
     final fee = await getTxFee(0, 0);
 
     final accountA = await _getNeededAccounts(accountsA, amountA);
-    final accountB = await _getNeededAccounts(accountsB, amountB);
+    final accountB = await _getNeededAccounts(accountsB, amountB, excludeAddresses: accountA.item1.map((e) => e.address).toList());
 
     if (accountA.item1.length == accountB.item1.length) {
       var inputTxs = List<tx.Transaction>.empty(growable: true);
@@ -252,13 +252,17 @@ class Wallet extends IWallet {
     }
   }
 
-  Future<Tuple2<List<FromAccount>, List<tx.Transaction>>> _getNeededAccounts(List<Account> accounts, int amount) async {
+  Future<Tuple2<List<FromAccount>, List<tx.Transaction>>> _getNeededAccounts(List<Account> accounts, int amount, {List<String> excludeAddresses}) async {
     var curAmount = 0;
     var useAccounts = List<FromAccount>.empty(growable: true);
     final fees = await getTxFee(1, 2) + 5000;
     final inputTxs = List<tx.Transaction>.empty(growable: true);
 
     for (final tx in accounts) {
+      if (excludeAddresses != null && excludeAddresses.contains(tx.address)) {
+        continue;
+      }
+
       final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
       useAccounts.add(fromAccount);
 

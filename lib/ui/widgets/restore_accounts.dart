@@ -51,6 +51,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
     }
 
     await sl.get<DeFiChainWallet>().init();
+    await sl.get<DeFiChainWallet>().syncAll();
 
     return result.item1;
   }

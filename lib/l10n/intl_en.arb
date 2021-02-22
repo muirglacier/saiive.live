@@ -59,6 +59,10 @@
   "wallet_operation_refresh_utxo": "Refreshing utxo",
   "wallet_operation_build_tx": "Building transaction",
   "wallet_operation_send_tx": "Sending transaction",
+  "wallet_operation_refresh_addresses": "Refreshing addresses ({from}/{to})",
+  "wallet_operation_refresh_tx": "Refreshing transactions ({from}/{to})",
+  "wallet_operation_create_auth_tx": "Creating auth tx",
+  "wallet_operation_create_pepare_acc_tx": "Preparing account balance",
 
   "wallet_send": "Send",
   "wallet_send_address": "Address",

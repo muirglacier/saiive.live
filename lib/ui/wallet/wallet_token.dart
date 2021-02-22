@@ -170,7 +170,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
               child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 20, onPressed: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token)));
 
-                await loadAccountBalance();
+                Navigator.of(context).pop();
               })),
           AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 20, onPressed: () async {
             var wallet = sl.get<DeFiChainWallet>();

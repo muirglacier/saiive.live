@@ -565,6 +565,46 @@ class S {
     );
   }
 
+  /// `Refreshing addresses ({from}/{to})`
+  String wallet_operation_refresh_addresses(Object from, Object to) {
+    return Intl.message(
+      'Refreshing addresses ($from/$to)',
+      name: 'wallet_operation_refresh_addresses',
+      desc: '',
+      args: [from, to],
+    );
+  }
+
+  /// `Refreshing transactions ({from}/{to})`
+  String wallet_operation_refresh_tx(Object from, Object to) {
+    return Intl.message(
+      'Refreshing transactions ($from/$to)',
+      name: 'wallet_operation_refresh_tx',
+      desc: '',
+      args: [from, to],
+    );
+  }
+
+  /// `Creating auth tx`
+  String get wallet_operation_create_auth_tx {
+    return Intl.message(
+      'Creating auth tx',
+      name: 'wallet_operation_create_auth_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preparing account balance`
+  String get wallet_operation_create_pepare_acc_tx {
+    return Intl.message(
+      'Preparing account balance',
+      name: 'wallet_operation_create_pepare_acc_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(

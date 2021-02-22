@@ -289,7 +289,6 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
 
   calculatePoolShare() {
     var shareA = _selectedTokenA.idToken == _selectedPoolPair.idTokenA ? (_amountTokenA / _selectedPoolPair.reserveA) : (_amountTokenA / _selectedPoolPair.reserveB);
-
     var shareB = _selectedTokenB.idToken == _selectedPoolPair.idTokenB ? (_amountTokenB / _selectedPoolPair.reserveB) : (_amountTokenB / _selectedPoolPair.reserveA);
 
     setState(() {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:defichainwallet/bus/pool_pair_loaded_event.dart';
 import 'package:defichainwallet/bus/pool_pairs_loaded_event.dart';

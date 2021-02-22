@@ -19,6 +19,10 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static m0(from, to) => "Refreshing addresses (${from}/${to})";
+
+  static m1(from, to) => "Refreshing transactions (${from}/${to})";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
@@ -96,6 +100,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" word here"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" word"),
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Building transaction"),
+    "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creating auth tx"),
+    "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparing account balance"),
+    "wallet_operation_refresh_addresses" : m0,
+    "wallet_operation_refresh_tx" : m1,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refreshing utxo"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Sending transaction"),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Receive"),

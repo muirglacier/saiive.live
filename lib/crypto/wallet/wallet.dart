@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
@@ -24,6 +26,9 @@ abstract class IWallet {
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 
-  Future<TransactionData> createAndSend(int amount, String token, String to);
-  Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction);
+  Future<TransactionData> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream});
+  Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
+      {StreamController<String> loadingStream});
+
+  Future<TransactionData> createAndSendAddPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress, {StreamController<String> loadingStream});
 }

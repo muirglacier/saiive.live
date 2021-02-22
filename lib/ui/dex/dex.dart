@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
@@ -558,15 +560,19 @@ class _DexScreen extends State<DexScreen> {
                         return;
                       }
 
-                      final overlay = LoadingOverlay.of(context);
-
                       int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
                       int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
                       final walletTo = await wallet.getPublicKey();
                       try {
-                        var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0);
+                        var streamController = StreamController<String>();
+                        var createSwapFuture =
+                            wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0, loadingStream: streamController);
+
+                        final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
                         var tx = await overlay.during(createSwapFuture);
+
+                        streamController.close();
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(S.of(context).dex_swap_successfull),

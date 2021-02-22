@@ -67,15 +67,17 @@ class WalletRestore {
         final keyIndex = publicKeys.indexWhere((item) => item == tx.address);
         var pathString = path[keyIndex];
 
-        final walletAddress = WalletAddress(
-            account: account,
-            index: HdWalletUtil.getIndexFromPath(pathString),
-            isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
-            chain: chain,
-            network: net,
-            publicKey: publicKeys[keyIndex]);
+        if (!addresses.any((element) => element.publicKey == tx.address)) {
+          final walletAddress = WalletAddress(
+              account: account,
+              index: HdWalletUtil.getIndexFromPath(pathString),
+              isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
+              chain: chain,
+              network: net,
+              publicKey: publicKeys[keyIndex]);
 
-        addresses.add(walletAddress);
+          addresses.add(walletAddress);
+        }
       }
 
       if (transactions.length == 0) {

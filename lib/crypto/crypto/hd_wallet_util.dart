@@ -76,8 +76,49 @@ class HdWalletUtil {
     return 9;
   }
 
-  static Future<TransactionBuilder> buildAccountToAccountTransaction(
-      List<tx.Transaction> inputTxs, List<FromAccount> authAddresses, List<ECPair> keys, int token, String to, int amount, int fee, String returnAddress, ChainType chain, ChainNet net) async {
+  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(List<tx.Transaction> inputTxs, List<FromAccount> authAddresses, List<ECPair> keys, int token, String to,
+      int amount, int fee, String returnAddress, ChainType chain, ChainNet net) async {
+    var network = getNetworkType(chain, net);
+
+    assert(inputTxs.length == keys.length);
+
+    final txb = TransactionBuilder(network: network);
+    txb.setVersion(2);
+    txb.setLockTime(0);
+
+    int totalInputValue = 0;
+    for (final tx in inputTxs) {
+      txb.addInput(tx.mintTxId, tx.mintIndex);
+
+      totalInputValue += tx.valueRaw;
+    }
+    for (final auth in authAddresses) {
+      txb.addAccountToAccountOutput(token, auth.address, to, auth.amount);
+    }
+
+    var changeAmount = totalInputValue - fee;
+    txb.addOutput(returnAddress, changeAmount);
+
+    int index = 0;
+    for (final key in keys) {
+      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
+      final redeemScript = p2wpkh.output;
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final input = inputTxs[index].mintTxId;
+      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
+
+      txb.sign(vin: index, keyPair: key, witnessValue: inputTxs[index].valueRaw, redeemScript: redeemScript);
+      index++;
+    }
+
+    final tx = txb.build();
+    final txhex = tx.toHex();
+    LogHelper.instance.d("txHex is $txhex");
+    return txb;
+  }
+
+  static Future<TransactionBuilder> buildAccountToAccountTransaction(List<tx.Transaction> inputTxs, List<FromAccount> authAddresses, List<ECPair> keys, int token, String to,
+      int amount, int fee, String returnAddress, ChainType chain, ChainNet net) async {
     var network = getNetworkType(chain, net);
 
     assert(inputTxs.length == keys.length);

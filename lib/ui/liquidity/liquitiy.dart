@@ -22,6 +22,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   List<PoolPairLiquidity> _poolPairLiquidity;
   final formatCurrency = new NumberFormat.simpleCurrency();
   bool showEstimatedRewards = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -31,12 +32,26 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   }
 
   _init() async {
+    _refresh();
+  }
+
+  _refresh() async
+  {
+    if (_isLoading) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
     var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
     var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
 
     setState(() {
       _liquidity = liquidity;
       _poolPairLiquidity = poolPairLiquidity;
+      _isLoading = false;
     });
   }
 
@@ -109,7 +124,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   }
 
   buildAllLiquidityScreen(BuildContext context) {
-    if (_liquidity == null) {
+    if (_liquidity == null || _isLoading) {
       return LoadingWidget(text: S.of(context).loading);
     }
 
@@ -156,6 +171,17 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   },
                   child: Icon(
                     Icons.add,
+                    size: 26.0,
+                  ),
+                )),
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    _refresh();
+                  },
+                  child: Icon(
+                    Icons.refresh,
                     size: 26.0,
                   ),
                 )),

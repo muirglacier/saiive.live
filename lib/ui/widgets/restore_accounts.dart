@@ -141,7 +141,6 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(S.of(context).welcome_wallet_restore)),
-        backgroundColor: Theme.of(context).backgroundColor,
         body: Column(children: <Widget>[
           Container(
               child: Padding(

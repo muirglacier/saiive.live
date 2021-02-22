@@ -404,7 +404,7 @@ class _DexScreen extends State<DexScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(title: Text(S.of(context).dex)),
-        body: Padding(
+        body: SingleChildScrollView(child: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
@@ -601,6 +601,6 @@ class _DexScreen extends State<DexScreen> {
                     },
                   )
                 ])
-            ])));
+            ]))));
   }
 }

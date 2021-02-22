@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
@@ -76,11 +77,24 @@ class HdWalletUtil {
     return 9;
   }
 
-  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(List<tx.Transaction> inputTxs, List<FromAccount> authAddresses, List<ECPair> keys, int token, String to,
-      int amount, int fee, String returnAddress, ChainType chain, ChainNet net) async {
+  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(
+      List<tx.Transaction> inputTxs,
+      List<FromAccount> authAddressesA,
+      List<FromAccount> authAddressesB,
+      IWalletDatabase database,
+      int tokenA,
+      int tokenB,
+      String shareAddress,
+      int amountA,
+      int amountB,
+      int fee,
+      String returnAddress,
+      Uint8List seed,
+      ChainType chain,
+      ChainNet net) async {
     var network = getNetworkType(chain, net);
 
-    assert(inputTxs.length == keys.length);
+    assert(authAddressesA.length == authAddressesB.length);
 
     final txb = TransactionBuilder(network: network);
     txb.setVersion(2);
@@ -89,18 +103,25 @@ class HdWalletUtil {
     int totalInputValue = 0;
     for (final tx in inputTxs) {
       txb.addInput(tx.mintTxId, tx.mintIndex);
-
       totalInputValue += tx.valueRaw;
     }
-    for (final auth in authAddresses) {
-      txb.addAccountToAccountOutput(token, auth.address, to, auth.amount);
+    int i = 0;
+    for (final auth in authAddressesA) {
+      var authA = auth;
+      var authB = authAddressesB[i];
+      txb.addAddLiquidityOutput(tokenA, authA.address, authA.amount, tokenB, authB.address, authB.amount, shareAddress);
     }
 
     var changeAmount = totalInputValue - fee;
     txb.addOutput(returnAddress, changeAmount);
 
     int index = 0;
-    for (final key in keys) {
+
+    for (final tx in inputTxs) {
+      final addressInfo = await database.getWalletAddress(tx.address);
+
+      final key = HdWalletUtil.getKeyPair(
+          seed, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
       final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);

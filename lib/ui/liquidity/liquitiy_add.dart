@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
@@ -8,6 +11,7 @@ import 'package:defichainwallet/network/model/token_balance.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
+import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -486,6 +490,18 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                     child: Text(S.of(context).liquitiy_add),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
+                      final wallet = sl.get<DeFiChainWallet>();
+                      final walletTo = await wallet.getPublicKey();
+
+                      int amountTokenA = (_amountTokenA * DefiChainConstants.COIN).round();
+                      int amountTokenB = (_amountTokenB * DefiChainConstants.COIN).round();
+
+                      var streamController = StreamController<String>();
+                      var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo);
+                      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+                      var tx = await overlay.during(createSwapFuture);
+
+                      streamController.close();
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text('Todo'),
                       ));

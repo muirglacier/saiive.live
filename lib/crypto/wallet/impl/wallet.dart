@@ -205,6 +205,12 @@ class Wallet extends IWallet {
     final changeAddress = await getPublicKeyFromAccount(_account, true);
     final fees = await getTxFee(1, 2) + 5000;
 
+    if (!DeFiConstants.isDfiToken(tokenA) && !DeFiConstants.isDfiToken(tokenB)) {
+      throw ArgumentError("One of the 2 tokens must be DFI!");
+    }
+
+    await prepareAccount(tokenA == DeFiConstants.isDfiToken(tokenA) ? amountA : amountB);
+
     final tokenABalance = await _walletDatabase.getAccountBalance(tokenA);
     final tokenBBalance = await _walletDatabase.getAccountBalance(tokenB);
 
@@ -223,13 +229,24 @@ class Wallet extends IWallet {
     final accountsA = await _walletDatabase.getAccountBalancesForToken(tokenA);
     final accountsB = await _walletDatabase.getAccountBalancesForToken(tokenB);
 
-    final keys = List<ECPair>.empty(growable: true);
     final fee = await getTxFee(0, 0);
 
     final accountA = await _getNeededAccounts(accountsA, amountA);
     final accountB = await _getNeededAccounts(accountsB, amountB);
 
     if (accountA.item1.length == accountB.item1.length) {
+      var inputTxs = List<tx.Transaction>.empty(growable: true);
+      inputTxs.addAll(accountA.item2);
+
+      for (final input in accountB.item2) {
+        if (!inputTxs.any((element) => element.mintTxId == input.mintTxId && element.mintHeight == input.mintHeight)) {
+          inputTxs.add(input);
+        }
+      }
+
+      final txb = await HdWalletUtil.buildAddPollLiquidityTransaction(
+          inputTxs, accountA.item1, accountB.item1, _walletDatabase, tokenAType.id, tokenBType.id, shareAddress, amountA, amountB, fee, shareAddress, key, _chain, _network);
+      return txb.build().toHex();
     } else {
       throw new ArgumentError("now i am fucked...");
     }

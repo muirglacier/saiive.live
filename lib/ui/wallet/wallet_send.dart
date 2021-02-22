@@ -33,7 +33,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
 
-      final tx = await sl.get<DeFiChainWallet>().createAndSend(totalAmount, widget.token, _addressController.text, stream: stream);
+      final tx = await sl.get<DeFiChainWallet>().createAndSend(totalAmount, widget.token, _addressController.text, loadingStream: stream);
 
       final txId = tx.txId;
       LogHelper.instance.d("sent tx $txId");

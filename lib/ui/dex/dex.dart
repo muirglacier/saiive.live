@@ -8,6 +8,7 @@ import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/dex_service.dart';
+import 'package:defichainwallet/network/events/wallet_sync_start_event.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/pool_pair.dart';
 import 'package:defichainwallet/network/model/token_balance.dart';
@@ -17,6 +18,7 @@ import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -581,7 +583,7 @@ class _DexScreen extends State<DexScreen> {
                             onPressed: () async {
                               var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
                               var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-
+                              EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
                               if (await canLaunch(url)) {
                                 await launch(url);
                               }

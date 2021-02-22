@@ -63,10 +63,7 @@ class AppCenterWrapper {
         });
       }
     } on PlatformException catch (e) {
-      AppCenter.trackEventAsync('startAppDeviceInfoError', <String, String>{
-        'os': Platform.isAndroid ? "android" : "ios",
-        'error': e.message
-      });
+      AppCenter.trackEventAsync('startAppDeviceInfoError', <String, String>{'os': Platform.isAndroid ? "android" : "ios", 'error': e.message});
     }
   }
 
@@ -84,11 +81,9 @@ class AppCenterWrapper {
         properties.putIfAbsent("id", () => _android.id);
         properties.putIfAbsent("baseOs", () => _android.version.baseOS);
         properties.putIfAbsent("release", () => _android.version.release);
-        properties.putIfAbsent(
-            "sdkInt", () => _android.version.sdkInt.toString());
+        properties.putIfAbsent("sdkInt", () => _android.version.sdkInt.toString());
         properties.putIfAbsent("codename", () => _android.version.codename);
-        properties.putIfAbsent(
-            "isPhysicalDevice", () => _android.isPhysicalDevice.toString());
+        properties.putIfAbsent("isPhysicalDevice", () => _android.isPhysicalDevice.toString());
       } else if (Platform.isIOS && _ios != null) {
         properties.putIfAbsent("os", () => "android");
         properties.putIfAbsent("name", () => _ios.name);
@@ -100,8 +95,7 @@ class AppCenterWrapper {
         properties.putIfAbsent("release", () => _ios.utsname.version);
         properties.putIfAbsent("version", () => _ios.utsname.version);
         properties.putIfAbsent("machine", () => _ios.utsname.machine);
-        properties.putIfAbsent(
-            "isPhysicalDevice", () => _ios.isPhysicalDevice.toString());
+        properties.putIfAbsent("isPhysicalDevice", () => _ios.isPhysicalDevice.toString());
       }
       await AppCenter.trackEventAsync(eventName, properties);
     } on Exception catch (e) {

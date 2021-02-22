@@ -46,9 +46,7 @@ class StateContainer extends StatefulWidget {
   // Exactly like MediaQuery.of and Theme.of
   // It basically says 'get the data from the widget of this type.
   static StateContainerState of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_InheritedStateContainer>()
-        .data;
+    return context.dependOnInheritedWidgetOfExactType<_InheritedStateContainer>().data;
   }
 
   @override
@@ -73,25 +71,20 @@ class StateContainerState extends State<StateContainer> {
   StreamSubscription<WalletSyncStartEvent> _walletSyncSubscribe;
 
   _registerBus() {
-    _walletInitSubscribe = EventTaxiImpl.singleton()
-        .registerTo<WalletInitStartEvent>()
-        .listen((event) async {
+    _walletInitSubscribe = EventTaxiImpl.singleton().registerTo<WalletInitStartEvent>().listen((event) async {
       var wallet = sl.get<DeFiChainWallet>();
 
       try {
         await wallet.init();
         EventTaxiImpl.singleton().fire(WalletInitDoneEvent());
       } catch (e) {
-        EventTaxiImpl.singleton()
-            .fire(WalletInitDoneEvent(hasError: true, error: e));
+        EventTaxiImpl.singleton().fire(WalletInitDoneEvent(hasError: true, error: e));
       }
     });
 
-    _walletSyncSubscribe = EventTaxiImpl.singleton()
-        .registerTo<WalletSyncStartEvent>()
-        .listen((event) async {
+    _walletSyncSubscribe = EventTaxiImpl.singleton().registerTo<WalletSyncStartEvent>().listen((event) async {
       try {
-        if(_walletSyncing) {
+        if (_walletSyncing) {
           return;
         }
         var wallet = sl.get<DeFiChainWallet>();
@@ -99,11 +92,9 @@ class StateContainerState extends State<StateContainer> {
         _walletSyncing = true;
         await wallet.init();
         await wallet.syncAll();
-
         EventTaxiImpl.singleton().fire(WalletSyncDoneEvent());
       } catch (e) {
-        EventTaxiImpl.singleton()
-            .fire(WalletSyncDoneEvent(hasError: true, error: e));
+        EventTaxiImpl.singleton().fire(WalletSyncDoneEvent(hasError: true, error: e));
 
         logger.e("wallet sync failed....", e);
       } finally {
@@ -122,7 +113,6 @@ class StateContainerState extends State<StateContainer> {
     }
   }
 
-  
   @override
   void initState() {
     super.initState();

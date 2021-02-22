@@ -5,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class TokenIcon extends StatefulWidget {
-    final String _token;
+  final String _token;
 
-    TokenIcon(this._token);
+  TokenIcon(this._token);
 
-    @override
-    _TokenIconState createState() => new _TokenIconState();
-  }
+  @override
+  _TokenIconState createState() => new _TokenIconState();
+}
 
 class _TokenIconState extends State<TokenIcon> {
   String _path;
@@ -39,19 +39,14 @@ class _TokenIconState extends State<TokenIcon> {
             builder: (_, snapshot) {
               if (null == _path) {
                 if (!_colorList.containsKey(widget._token)) {
-                  _colorList[widget._token] = Colors
-                      .primaries[Random().nextInt(Colors.primaries.length)];
+                  _colorList[widget._token] = Colors.primaries[Random().nextInt(Colors.primaries.length)];
                 }
 
                 return SizedBox(
                     width: 32,
                     height: 32,
                     child: CircleAvatar(
-                        backgroundColor: _colorList[widget._token],
-                        radius: 16,
-                        child: Text(widget._token.substring(0, 1).toUpperCase(),
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.black))));
+                        backgroundColor: _colorList[widget._token], radius: 16, child: Text(widget._token.substring(0, 1).toUpperCase(), style: TextStyle(fontSize: 18, color: Colors.black))));
               }
 
               return SizedBox(

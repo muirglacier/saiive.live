@@ -48,6 +48,7 @@ dependencies:
   retry: ^3.0.1 
   tuple: ^1.0.3
   mutex: ^1.1.0
+  async: ^2.4.2
   
   #ui libs
   carousel_slider: ^2.1.0

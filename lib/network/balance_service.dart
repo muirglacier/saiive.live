@@ -7,7 +7,7 @@ import 'package:defichainwallet/network/model/balance.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
-
+import 'package:flutter/foundation.dart';
 
 Map decodeJson(dynamic src) {
   return json.decode(src);
@@ -20,37 +20,29 @@ abstract class IBalanceService {
   Future<List<Balance>> getBalancesAddresses(String coin, List<String> addresses);
 }
 
-class BalanceService extends NetworkService implements IBalanceService
-{
+class BalanceService extends NetworkService implements IBalanceService {
   Future<List<Balance>> getAllBalances(String coin, String address) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/balance-all/$address', coin);
+    dynamic response = await this.httpService.makeDynamicHttpGetRequest('/balance-all/$address', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    List<Balance> balances = json
-        .decode(response.body)
-        .map<Balance>((data) => Balance.fromJson(data))
-        .toList();
-    
+    final balances = await compute(balancesFromJson, response);
     this.fireEvent(new BalancesLoadedEvent(balances: balances));
-    
+
     return balances;
   }
 
   Future<List<Balance>> getAllBalancesAddresses(String coin, List<String> addresses) async {
     AddressesRequest request = AddressesRequest(addresses: addresses);
-    dynamic response = await this.httpService.makeHttpPostRequest('/balance-all', coin,  request);
+    dynamic response = await this.httpService.makeHttpPostRequest('/balance-all', coin, request);
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    List<Balance> balances = json
-        .decode(response.body)
-        .map<Balance>((data) => Balance.fromJson(data))
-        .toList();
+    final balances = await compute(balancesFromJson, response);
 
     this.fireEvent(new BalancesLoadedEvent(balances: balances));
 
@@ -79,10 +71,7 @@ class BalanceService extends NetworkService implements IBalanceService
       this.handleError(response);
     }
 
-    List<Balance> balances = json
-        .decode(response.body)
-        .map<Balance>((data) => Balance.fromJson(data))
-        .toList();
+    final balances = await compute(balancesFromJson, response);
 
     this.fireEvent(new BalancesLoadedEvent(balances: balances));
 

@@ -8,8 +8,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import '../wallet_test_base.dart';
 
 void main() async {
-  await testSetup(
-      "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow");
+  await testSetup("sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow");
 
   group("#1 create tx", () {
     Future initTest() async {
@@ -20,8 +19,7 @@ void main() async {
           chain: "DFI",
           network: "testnet",
           mintIndex: 1,
-          mintTxId:
-              "520be057c9cf6846cc9073a7f2690e549523a1e16c5438d6c4bc6a24a6c5cdc4",
+          mintTxId: "520be057c9cf6846cc9073a7f2690e549523a1e16c5438d6c4bc6a24a6c5cdc4",
           mintHeight: 218296,
           spentHeight: -2,
           address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw",
@@ -29,23 +27,11 @@ void main() async {
           confirmations: -1);
       await db.addTransaction(tx);
 
-
-      final dfiAccount = Account(
-          token: DeFiConstants.DefiAccountSymbol,
-          address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
-          balance: 24262150804,
-          raw: "242.62150804@DFI",
-          chain: "DFI",
-          network: "testnet");
+      final dfiAccount =
+          Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 24262150804, raw: "242.62150804@DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiAccount);
-      final dfiToken = Account(
-          token: DeFiConstants.DefiTokenSymbol,
-          address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
-          balance: 100000000,
-          raw: "100000000@\$DFI",
-          chain: "DFI",
-          network: "testnet");
+      final dfiToken = Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, raw: "100000000@\$DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiToken);
     }

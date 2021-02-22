@@ -32,8 +32,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
 
   _init() async {
     var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
-    var poolPairLiquidity =
-        await new PoolPairHelper().getPoolPairs('DFI', 'USD');
+    var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
 
     setState(() {
       _liquidity = liquidity;
@@ -44,23 +43,16 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   Widget _buildMyLiquidityEntry(PoolShareLiquidity myLiquidity) {
     return InkWell(
         onTap: () async {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) => PoolShareScreen(myLiquidity)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => PoolShareScreen(myLiquidity)));
         },
         child: Card(
             child: Padding(
                 padding: EdgeInsets.all(30),
                 child: Column(children: <Widget>[
-                  Container(
-                      decoration: new BoxDecoration(color: Colors.transparent),
-                      child: TokenPairIcon(
-                          myLiquidity.tokenA, myLiquidity.tokenB)),
+                  Container(decoration: new BoxDecoration(color: Colors.transparent), child: TokenPairIcon(myLiquidity.tokenA, myLiquidity.tokenB)),
                   Container(
                     child: Row(children: [
-                      Expanded(
-                          flex: 2,
-                          child: Text('APY',
-                              style: TextStyle(fontWeight: FontWeight.bold))),
+                      Expanded(flex: 2, child: Text('APY', style: TextStyle(fontWeight: FontWeight.bold))),
                       Expanded(
                           flex: 10,
                           child: Text(
@@ -74,41 +66,19 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   Container(
                     child: Row(children: [
                       Expanded(flex: 4, child: Text(myLiquidity.tokenA)),
-                      Expanded(
-                          flex: 6,
-                          child: Text(
-                              (myLiquidity.poolSharePercentage /
-                                      100 *
-                                      myLiquidity.poolPair.reserveA)
-                                  .toStringAsFixed(8),
-                              textAlign: TextAlign.right))
+                      Expanded(flex: 6, child: Text((myLiquidity.poolSharePercentage / 100 * myLiquidity.poolPair.reserveA).toStringAsFixed(8), textAlign: TextAlign.right))
                     ]),
                   ),
                   Container(
                     child: Row(children: [
                       Expanded(flex: 4, child: Text(myLiquidity.tokenB)),
-                      Expanded(
-                          flex: 6,
-                          child: Text(
-                              (myLiquidity.poolSharePercentage /
-                                      100 *
-                                      myLiquidity.poolPair.reserveB)
-                                  .toStringAsFixed(8),
-                              textAlign: TextAlign.right))
+                      Expanded(flex: 6, child: Text((myLiquidity.poolSharePercentage / 100 * myLiquidity.poolPair.reserveB).toStringAsFixed(8), textAlign: TextAlign.right))
                     ]),
                   ),
                   Container(
                       child: Row(children: [
-                    Expanded(
-                        flex: 4,
-                        child:
-                            Text(S.of(context).liquitiy_pool_share_percentage)),
-                    Expanded(
-                        flex: 6,
-                        child: Text(
-                            myLiquidity.poolSharePercentage.toStringAsFixed(8) +
-                                '%',
-                            textAlign: TextAlign.right))
+                    Expanded(flex: 4, child: Text(S.of(context).liquitiy_pool_share_percentage)),
+                    Expanded(flex: 6, child: Text(myLiquidity.poolSharePercentage.toStringAsFixed(8) + '%', textAlign: TextAlign.right))
                   ])),
                 ]))));
   }
@@ -118,16 +88,10 @@ class _LiquidityScreen extends State<LiquidityScreen> {
         child: Padding(
             padding: EdgeInsets.all(30),
             child: Column(children: <Widget>[
-              Container(
-                  margin: const EdgeInsets.only(bottom: 10.0),
-                  decoration: new BoxDecoration(color: Colors.transparent),
-                  child: TokenPairIcon(liquidity.tokenA, liquidity.tokenB)),
+              Container(margin: const EdgeInsets.only(bottom: 10.0), decoration: new BoxDecoration(color: Colors.transparent), child: TokenPairIcon(liquidity.tokenA, liquidity.tokenB)),
               Container(
                 child: Row(children: [
-                  Expanded(
-                      flex: 2,
-                      child: Text('APY',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  Expanded(flex: 2, child: Text('APY', style: TextStyle(fontWeight: FontWeight.bold))),
                   Expanded(
                       flex: 10,
                       child: Text(
@@ -138,14 +102,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                 ]),
               ),
               Container(
-                child: Row(children: [
-                  Expanded(flex: 4, child: Text(liquidity.tokenA)),
-                  Expanded(
-                      flex: 6,
-                      child: Text(
-                          formatCurrency.format(liquidity.totalLiquidityInUSDT),
-                          textAlign: TextAlign.right))
-                ]),
+                child: Row(
+                    children: [Expanded(flex: 4, child: Text(liquidity.tokenA)), Expanded(flex: 6, child: Text(formatCurrency.format(liquidity.totalLiquidityInUSDT), textAlign: TextAlign.right))]),
               ),
             ])));
   }
@@ -160,12 +118,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
         SliverToBoxAdapter(
           child: Container(
               margin: EdgeInsets.only(top: 10.0),
-              child: Visibility(
-                  visible: _liquidity.length > 0,
-                  child: Center(
-                      child: Text('Your Liquidity',
-                          textScaleFactor: 1.5,
-                          style: TextStyle(fontWeight: FontWeight.bold))))),
+              child: Visibility(visible: _liquidity.length > 0, child: Center(child: Text('Your Liquidity', textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold))))),
         ),
         SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -175,18 +128,12 @@ class _LiquidityScreen extends State<LiquidityScreen> {
           childCount: _liquidity.length,
         )),
         SliverToBoxAdapter(
-          child: Container(
-              margin: EdgeInsets.only(top: 10.0),
-              child: Center(
-                  child: Text('Pool Pairs',
-                      textScaleFactor: 1.5,
-                      style: TextStyle(fontWeight: FontWeight.bold)))),
+          child: Container(margin: EdgeInsets.only(top: 10.0), child: Center(child: Text('Pool Pairs', textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)))),
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return _buildPoolPairLiquidityEntry(
-                  _poolPairLiquidity.elementAt(index));
+              return _buildPoolPairLiquidityEntry(_poolPairLiquidity.elementAt(index));
             },
             childCount: _poolPairLiquidity.length,
           ),
@@ -205,9 +152,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                   onTap: () async {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            LiquidityAddScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityAddScreen()));
                   },
                   child: Icon(
                     Icons.add,

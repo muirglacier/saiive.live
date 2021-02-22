@@ -8,8 +8,7 @@ abstract class IGovService {
 
 class GovService extends NetworkService implements IGovService {
   Future<Map<String, dynamic>> getGov(String coin) async {
-    dynamic response =
-        await this.httpService.makeHttpGetRequest('/gov', coin);
+    dynamic response = await this.httpService.makeHttpGetRequest('/gov', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);

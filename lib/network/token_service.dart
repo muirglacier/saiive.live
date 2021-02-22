@@ -18,8 +18,7 @@ class TokenService extends NetworkService implements ITokenService {
       this.handleError(map);
     }
 
-    List<Token> tokens =
-        map.entries.map<Token>((data) => Token.fromJson(data.value)).toList();
+    List<Token> tokens = map.entries.map<Token>((data) => Token.fromJson(data.value)).toList();
 
     this.fireEvent(new TokensLoadedEvent(tokens: tokens));
 
@@ -27,8 +26,7 @@ class TokenService extends NetworkService implements ITokenService {
   }
 
   Future<Token> getToken(String coin, String token) async {
-    dynamic response =
-        await this.httpService.makeHttpGetRequest('/tokens/$token', coin);
+    dynamic response = await this.httpService.makeHttpGetRequest('/tokens/$token', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);

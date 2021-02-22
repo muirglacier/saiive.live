@@ -26,28 +26,24 @@ class PoolShareLiquidity extends PoolPair {
 
   final Coin coin;
 
-  PoolShareLiquidity({
-    this.tokenA,
-    this.tokenB,
-    this.poolPair,
-    this.poolShare,
-    this.totalLiquidityInUSDT,
-    this.yearlyPoolReward,
-    this.poolSharePercentage,
-    this.apy,
-
-    this.coin,
-
-    this.blockReward,
-    this.minuteReward,
-    this.hourlyReword,
-    this.dailyReward,
-    this.yearlyReward,
-
-    this.blockRewardFiat,
-    this.minuteRewardFiat,
-    this.hourlyRewordFiat,
-    this.dailyRewardFiat,
-    this.yearlyRewardFiat
-  });
+  PoolShareLiquidity(
+      {this.tokenA,
+      this.tokenB,
+      this.poolPair,
+      this.poolShare,
+      this.totalLiquidityInUSDT,
+      this.yearlyPoolReward,
+      this.poolSharePercentage,
+      this.apy,
+      this.coin,
+      this.blockReward,
+      this.minuteReward,
+      this.hourlyReword,
+      this.dailyReward,
+      this.yearlyReward,
+      this.blockRewardFiat,
+      this.minuteRewardFiat,
+      this.hourlyRewordFiat,
+      this.dailyRewardFiat,
+      this.yearlyRewardFiat});
 }

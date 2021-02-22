@@ -6,9 +6,8 @@ class DeFiConstants {
   static const String DefiAccountSymbol = "DFI";
   static const String DefiTokenSymbol = "\$DFI";
 
-
   static bool isDfiToken(String token) {
-    if(token == DefiAccountSymbol || token == DefiTokenSymbol) {
+    if (token == DefiAccountSymbol || token == DefiTokenSymbol) {
       return true;
     }
     return false;
@@ -42,7 +41,7 @@ class ChainHelper {
       throw new ArgumentError();
     }
 
-    if(chain.toLowerCase() == "dfi") {
+    if (chain.toLowerCase() == "dfi") {
       return ChainType.DeFiChain;
     }
     return ChainType.Bitcoin;
@@ -53,7 +52,7 @@ class ChainHelper {
       throw new ArgumentError();
     }
 
-    if(network.toLowerCase() == "testnet") {
+    if (network.toLowerCase() == "testnet") {
       return ChainNet.Testnet;
     }
     return ChainNet.Mainnet;

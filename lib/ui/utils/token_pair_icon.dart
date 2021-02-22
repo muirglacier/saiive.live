@@ -9,8 +9,7 @@ class TokenPairIcon extends StatefulWidget {
   TokenPairIcon(this._tokenA, this._tokenB);
 
   @override
-  _TokenPairIconState createState() =>
-      new _TokenPairIconState(this._tokenA, this._tokenB);
+  _TokenPairIconState createState() => new _TokenPairIconState(this._tokenA, this._tokenB);
 }
 
 class _TokenPairIconState extends State<TokenPairIcon> {

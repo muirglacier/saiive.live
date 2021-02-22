@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+balancesFromJson(dynamic input) {
+  return json.decode(input.body).map<Balance>((data) => Balance.fromJson(data)).toList();
+}
+
 class Balance {
   final double confirmed;
   final double unconfirmed;

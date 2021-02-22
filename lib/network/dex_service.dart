@@ -15,16 +15,9 @@ abstract class IDexService {
 
 class DexService extends NetworkService implements IDexService {
   Future<TestPoolSwapResult> testPoolSwap(String coin, String from, String tokenFrom, double amountFrom, String to, String tokenTo) async {
-    var request = TestPoolSwapRequest(
-      from: from,
-      tokenFrom: tokenFrom,
-      amountFrom: amountFrom,
-      to: to,
-      tokenTo: tokenTo
-    );
+    var request = TestPoolSwapRequest(from: from, tokenFrom: tokenFrom, amountFrom: amountFrom, to: to, tokenTo: tokenTo);
 
-    dynamic response =
-        await this.httpService.makeHttpPostRequest('/dex/testpoolswap', coin, request);
+    dynamic response = await this.httpService.makeHttpPostRequest('/dex/testpoolswap', coin, request);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -34,9 +27,7 @@ class DexService extends NetworkService implements IDexService {
   }
 
   Future<PoolPair> getPoolPair(String coin, String poolID) async {
-    dynamic response = await this
-        .httpService
-        .makeHttpGetRequest('/getpoolpairs/$poolID', coin);
+    dynamic response = await this.httpService.makeHttpGetRequest('/getpoolpairs/$poolID', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);

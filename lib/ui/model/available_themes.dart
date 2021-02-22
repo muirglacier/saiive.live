@@ -13,10 +13,9 @@ class ThemeSetting extends SettingSelectionItem {
       case ThemeOptions.DEFI_DARK:
         return "Defi Dark";
 
-    case ThemeOptions.DEFI_LIGHT:
+      case ThemeOptions.DEFI_LIGHT:
       default:
         return "Defi Light";
-
     }
   }
 
@@ -29,7 +28,6 @@ class ThemeSetting extends SettingSelectionItem {
         return DefiThemeDark();
     }
   }
-
 
   static List<ThemeSetting> all() {
     return [

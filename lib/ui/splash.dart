@@ -18,8 +18,7 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
   var _version = "";
   bool _hasCheckedLoggedIn;
   bool _retried;
@@ -84,8 +83,7 @@ class _SplashScreenState extends State<SplashScreen>
     WidgetsBinding.instance.addObserver(this);
     _hasCheckedLoggedIn = false;
     _retried = false;
-    if (SchedulerBinding.instance.schedulerPhase ==
-        SchedulerPhase.persistentCallbacks) {
+    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) => checkLoggedIn());
     }
   }
@@ -122,50 +120,37 @@ class _SplashScreenState extends State<SplashScreen>
         children: [
           Text(
             S.of(context).title,
-            style: TextStyle(
-                fontSize: 30,
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 30, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800),
           ),
           Image.asset('assets/logo.png'),
           SizedBox(height: 20),
+          Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+              child: AutoSizeText(
+                _version,
+                style: AppStyles.textStyleParagraph(context),
+                maxLines: 4,
+                stepGranularity: 0.5,
+              ),
+            ),
+          ]),
           Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  child: AutoSizeText(
-                    _version,
-                    style: AppStyles.textStyleParagraph(context),
-                    maxLines: 4,
-                    stepGranularity: 0.5,
-                  ),
-                ),
-              ]),
-          Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor))
-              ]),
+              children: [CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor))]),
           if (_currentEnvironment != EnvironmentType.Production)
-            Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                    child: AutoSizeText(
-                      _currentEnvironment.toString(),
-                      style: AppStyles.textStyleParagraph(context),
-                      maxLines: 4,
-                      stepGranularity: 0.5,
-                    ),
-                  ),
-                ])
+            Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                child: AutoSizeText(
+                  _currentEnvironment.toString(),
+                  style: AppStyles.textStyleParagraph(context),
+                  maxLines: 4,
+                  stepGranularity: 0.5,
+                ),
+              ),
+            ])
         ],
       )),
     );

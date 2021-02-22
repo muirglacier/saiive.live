@@ -55,8 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await sl.get<IVault>().setSeed(null);
     await sl.get<DeFiChainWallet>().close();
 
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil("/", (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(S.of(context).settings_removed_seed),
@@ -66,7 +65,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         appBar: AppBar(title: Text(S.of(context).settings)),
         body: Padding(
             padding: EdgeInsets.all(30),
@@ -85,37 +83,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Text(e.getDisplayName(context)),
                       );
                     }).toList(),
-                      onChanged: (int val) {
-                        setState(() {
-                          _authMethod = val;
-                        });
+                    onChanged: (int val) {
+                      setState(() {
+                        _authMethod = val;
+                      });
 
-                        sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
-                      },
+                      sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
+                    },
                   )),
                   Container(
                       child: DropdownButton<int>(
-                        isExpanded: true,
-                        value: _theme,
-                        items: ThemeSetting.all().map((e) {
-                          return new DropdownMenuItem<int>(
-                            value: e.getIndex(),
-                            child: Text(e.getDisplayName(context)),
-                          );
-                        }).toList(),
-                        onChanged: (int val) {
-                          setState(() {
-                            _theme = val;
-                          });
+                    isExpanded: true,
+                    value: _theme,
+                    items: ThemeSetting.all().map((e) {
+                      return new DropdownMenuItem<int>(
+                        value: e.getIndex(),
+                        child: Text(e.getDisplayName(context)),
+                      );
+                    }).toList(),
+                    onChanged: (int val) {
+                      setState(() {
+                        _theme = val;
+                      });
 
-                          sl.get<SharedPrefsUtil>().setTheme(ThemeSetting(ThemeOptions.values[val])).then((result) {
-                            setState(() {
-                              StateContainer.of(context).updateTheme(
-                                  ThemeSetting(ThemeOptions.values[val]));
-                            });
-                          });
-                        },
-                      )),
+                      sl.get<SharedPrefsUtil>().setTheme(ThemeSetting(ThemeOptions.values[val])).then((result) {
+                        setState(() {
+                          StateContainer.of(context).updateTheme(ThemeSetting(ThemeOptions.values[val]));
+                        });
+                      });
+                    },
+                  )),
                   Container(
                       child: DropdownButton<String>(
                     isExpanded: true,
@@ -133,7 +130,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Text(S.of(context).settings_remove_seed),
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
-                      sl.get<AuthenticationHelper>().forceAuth(context, () { doDeleteSeed(); });
+                      sl.get<AuthenticationHelper>().forceAuth(context, () {
+                        doDeleteSeed();
+                      });
                     },
                   )),
                   Container(
@@ -142,9 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       sl.get<AuthenticationHelper>().forceAuth(context, () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                SettingsSeedScreen()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
                       });
                     },
                   )),
@@ -154,8 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Text("Show logs"),
                       color: Theme.of(context).backgroundColor,
                       onPressed: () async {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) => LogConsole()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
                       },
                     ))
                 ],
@@ -174,36 +170,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ))),
                   Container(
                       child: RaisedButton(
-                    child: Text("dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs",
-                        style: TextStyle(color: Colors.white)),
+                    child: Text("dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs", style: TextStyle(color: Colors.white)),
                     color: Theme.of(context).primaryColor,
                     onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => WalletSendScreen(
-                              'DFI',
-                              toAddress:
-                                  'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen('DFI', toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
                     },
                   )),
                   SizedBox(height: 20),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: Text(_version,
-                              style: AppStyles.textStyleParagraph(context)),
-                        ),
-                      ]),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: Text(_currentEnvironment.toString(),
-                              style: AppStyles.textStyleParagraph(context)),
-                        ),
-                      ]),
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Container(
+                      child: Text(_version, style: AppStyles.textStyleParagraph(context)),
+                    ),
+                  ]),
+                  Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Container(
+                      child: Text(_currentEnvironment.toString(), style: AppStyles.textStyleParagraph(context)),
+                    ),
+                  ]),
                   Container(
                       margin: EdgeInsets.only(top: 10),
                       child: Text(

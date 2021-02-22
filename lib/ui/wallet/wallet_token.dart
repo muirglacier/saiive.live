@@ -26,8 +26,7 @@ class WalletTokenScreen extends StatefulWidget {
   }
 }
 
-class _WalletTokenScreen extends State<WalletTokenScreen>
-    with TickerProviderStateMixin {
+class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderStateMixin {
   AccountBalance _balance;
   bool _balanceLoaded = false;
   bool _balanceRefreshing = false;
@@ -46,8 +45,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
 
     final db = sl.get<IWalletDatabase>();
 
-    if (widget.token == DeFiConstants.DefiTokenSymbol ||
-        widget.token == DeFiConstants.DefiAccountSymbol) {
+    if (widget.token == DeFiConstants.DefiTokenSymbol || widget.token == DeFiConstants.DefiAccountSymbol) {
       _balance = await db.getAccountBalance(DeFiConstants.DefiAccountSymbol);
       var dfi = await db.getAccountBalance(DeFiConstants.DefiTokenSymbol);
       _balance.balance += dfi.balance;
@@ -103,25 +101,16 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
   buildBalanceCard(BuildContext context) {
     return SizedBox(
         height: 100,
-        child:
-            ListTile(
-          title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(S.of(context).wallet_token_available_balance,
-                    style: TextStyle(fontSize: 12)),
-                SizedBox(height: 5),
-                Text((_balance.balanceDisplay).toStringAsFixed(8),
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
-              ]),
+        child: ListTile(
+          title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(S.of(context).wallet_token_available_balance, style: TextStyle(fontSize: 12)),
+            SizedBox(height: 5),
+            Text((_balance.balanceDisplay).toStringAsFixed(8), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
+          ]),
           trailing: RotationTransition(
               turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
               child: IconButton(
-                icon: Icon(Icons.refresh,
-                    color: _balanceRefreshing
-                        ? Theme.of(context).primaryColor
-                        : StateContainer.of(context).curTheme.text),
+                icon: Icon(Icons.refresh, color: _balanceRefreshing ? Theme.of(context).primaryColor : StateContainer.of(context).curTheme.text),
                 onPressed: () async {
                   await loadAccountBalance();
                 },
@@ -132,36 +121,28 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
   buildTransaction(BuildContext context, Transaction tx) {
     return Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                      child: new Text(
-                          S.of(context).wallet_token_show_in_explorer,
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor)),
-                      onTap: () => launch(DefiChainConstants.getExplorerUrl(
-                          _chainNet, tx.mintTxId))),
-                  Text(tx.correctValueRounded)
-                ],
-              ),
-              SizedBox(height: 5),
-              Text(tx.mintTxId, style: TextStyle(fontSize: 8)),
-              Divider()
-            ]));
+              InkWell(
+                  child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor)),
+                  onTap: () => launch(DefiChainConstants.getExplorerUrl(_chainNet, tx.mintTxId))),
+              Text(tx.correctValueRounded)
+            ],
+          ),
+          SizedBox(height: 5),
+          Text(tx.mintTxId, style: TextStyle(fontSize: 8)),
+          Divider()
+        ]));
   }
 
   buildTransactionsList(BuildContext context) {
     return Expanded(
         child: Column(children: [
       ListTile(
-        title: Text(S.of(context).wallet_token_transactions,
-            style: TextStyle(fontSize: 15)),
+        title: Text(S.of(context).wallet_token_transactions, style: TextStyle(fontSize: 15)),
       ),
       Flexible(
           child: ListView.builder(
@@ -186,25 +167,15 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
         children: [
           Padding(
               padding: EdgeInsets.only(right: 10),
-              child: AppButton.buildAppButton(
-                  context, AppButtonType.PRIMARY, S.of(context).send,
-                  icon: Icons.arrow_upward,
-                  width: width / 2 - 20, onPressed: () async {
-                await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        WalletSendScreen(widget.token)));
+              child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 20, onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token)));
 
                 await loadAccountBalance();
               })),
-          AppButton.buildAppButton(
-              context, AppButtonType.PRIMARY, S.of(context).receive,
-              icon: Icons.arrow_downward,
-              width: width / 2 - 20, onPressed: () async {
+          AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 20, onPressed: () async {
             var wallet = sl.get<DeFiChainWallet>();
             var pubKey = await wallet.getPublicKey();
-            await Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    WalletReceiveScreen(pubKey: pubKey)));
+            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
           })
         ],
       ),
@@ -217,13 +188,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen>
     }
 
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          buildActions(context),
-          buildBalanceCard(context),
-          buildTransactionsList(context)
-        ]);
+        crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.start, children: [buildActions(context), buildBalanceCard(context), buildTransactionsList(context)]);
   }
 
   @override

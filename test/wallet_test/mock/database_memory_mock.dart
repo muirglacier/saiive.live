@@ -8,25 +8,18 @@ import 'package:defichainwallet/crypto/model/wallet_account.dart';
 
 class MemoryDatabaseMock extends IWalletDatabase {
   List<Account> _accounts = List<Account>.empty(growable: true);
-  List<WalletAccount> _walletAccounts =
-      List<WalletAccount>.empty(growable: true);
+  List<WalletAccount> _walletAccounts = List<WalletAccount>.empty(growable: true);
   List<Transaction> _transactions = List<Transaction>.empty(growable: true);
-  List<Transaction> _unspentTransactions =
-      List<Transaction>.empty(growable: true);
+  List<Transaction> _unspentTransactions = List<Transaction>.empty(growable: true);
 
   List<WalletAddress> _addresses = List<WalletAddress>.empty(growable: true);
 
-  @override
   bool isLocked() {
     return false;
   }
 
   @override
-  Future<WalletAccount> addAccount(
-      {String name,
-      int account,
-      ChainType chain,
-      bool isSelected = false}) async {
+  Future<WalletAccount> addAccount({String name, int account, ChainType chain, bool isSelected = false}) async {
     var newAccount = WalletAccount();
     newAccount.name = name;
     newAccount.account = account;
@@ -144,8 +137,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<Transaction>> getUnspentTransactionsForPubKey(
-      String pubKey, int minAmount) async {
+  Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount) async {
     var ret = List<Transaction>.empty(growable: true);
 
     for (final tx in _unspentTransactions) {
@@ -171,8 +163,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<Account> getAccountBalanceForPubKey(
-      String pubKey, String token) async {
+  Future<Account> getAccountBalanceForPubKey(String pubKey, String token) async {
     for (final acc in _accounts) {
       if (acc.address == pubKey && acc.token == token) {
         return acc;
@@ -199,12 +190,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<bool> addressExists(
-      int account, bool isChangeAddress, int index) async {
+  Future<bool> addressExists(int account, bool isChangeAddress, int index) async {
     for (final address in _addresses) {
-      if (address.account == account &&
-          address.isChangeAddress == isChangeAddress &&
-          address.index == index) {
+      if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index) {
         return true;
       }
     }
@@ -242,12 +230,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<WalletAddress> getWalletAddressById(
-      int account, bool isChangeAddress, int index) async {
+  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index) async {
     for (final address in _addresses) {
-      if (address.account == account &&
-          address.isChangeAddress == isChangeAddress &&
-          address.index == index) {
+      if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index) {
         return address;
       }
     }

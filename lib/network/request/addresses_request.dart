@@ -10,6 +10,5 @@ class AddressesRequest extends BaseRequest {
   }
 
   @override
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{'addresses': this.addresses};
+  Map<String, dynamic> toJson() => <String, dynamic>{'addresses': this.addresses};
 }

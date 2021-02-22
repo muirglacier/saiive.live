@@ -32,11 +32,7 @@ abstract class Taggable {
   const Taggable();
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Taggable &&
-          runtimeType == other.runtimeType &&
-          _equals(props, other.props, caseSensitive);
+  bool operator ==(Object other) => identical(this, other) || other is Taggable && runtimeType == other.runtimeType && _equals(props, other.props, caseSensitive);
 
   @override
   int get hashCode => runtimeType.hashCode ^ _mapPropsToHashCode(props);
@@ -59,10 +55,7 @@ mixin TaggableMixin implements Taggable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is TaggableMixin &&
-            runtimeType == other.runtimeType &&
-            _equals(props, other.props, caseSensitive);
+    return identical(this, other) || other is TaggableMixin && runtimeType == other.runtimeType && _equals(props, other.props, caseSensitive);
   }
 
   @override
@@ -77,16 +70,12 @@ int _mapPropsToHashCode(dynamic props) {
 
   if (props is Map) {
     props.forEach((key, value) {
-      final propHashCode =
-          _mapPropsToHashCode(key) ^ _mapPropsToHashCode(value);
+      final propHashCode = _mapPropsToHashCode(key) ^ _mapPropsToHashCode(value);
       hashCode = hashCode ^ propHashCode;
     });
   } else if (props is List || props is Iterable || props is Set) {
     props.forEach((prop) {
-      final propHashCode =
-          (prop is List || prop is Iterable || prop is Set || prop is Map)
-              ? _mapPropsToHashCode(prop)
-              : prop.hashCode;
+      final propHashCode = (prop is List || prop is Iterable || prop is Set || prop is Map) ? _mapPropsToHashCode(prop) : prop.hashCode;
       hashCode = hashCode ^ propHashCode;
     });
   } else {
@@ -116,8 +105,7 @@ bool _equals(List list1, List list2, bool caseSensitive) {
       if (caseSensitive && unit1.compareTo(unit2) != 0) {
         return false;
       }
-      if (!caseSensitive &&
-          unit1.toLowerCase().compareTo(unit2.toLowerCase()) != 0) {
+      if (!caseSensitive && unit1.toLowerCase().compareTo(unit2.toLowerCase()) != 0) {
         return false;
       }
     } else if (unit1 != unit2) {

@@ -15,8 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
     WalletHomeScreen(),
     LiquidityScreen(),
@@ -50,9 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.compare_arrows),
             label: S.of(context).home_dex,
           ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.radio_button_unchecked),
-              label: S.of(context).home_tokens)
+          BottomNavigationBarItem(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens)
         ],
         currentIndex: _selectedIndex,
         showUnselectedLabels: true,

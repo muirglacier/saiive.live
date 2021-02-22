@@ -1,4 +1,3 @@
-
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';

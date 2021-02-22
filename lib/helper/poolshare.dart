@@ -44,12 +44,11 @@ class PoolShareHelper {
       var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
       var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
 
-      var poolSharePercentage =
-          (poolShare.amount / poolShare.totalLiquidity) * 100;
+      var poolSharePercentage = (poolShare.amount / poolShare.totalLiquidity) * 100;
 
-      var dfiCoin = priceData.firstWhere((element) => element.idToken == '0', orElse: () =>  null);
-      var priceA = priceData.firstWhere((element) => element.idToken == poolPair.idTokenA, orElse: () =>  null);
-      var priceB = priceData.firstWhere((element) => element.idToken == poolPair.idTokenB, orElse: () =>  null);
+      var dfiCoin = priceData.firstWhere((element) => element.idToken == '0', orElse: () => null);
+      var priceA = priceData.firstWhere((element) => element.idToken == poolPair.idTokenA, orElse: () => null);
+      var priceB = priceData.firstWhere((element) => element.idToken == poolPair.idTokenB, orElse: () => null);
 
       var yearlyPoolReward = lpDailyDfiReward * poolPair.rewardPct * 365 * (dfiCoin != null ? dfiCoin.fiat : 0);
 
@@ -71,8 +70,7 @@ class PoolShareHelper {
       if (poolPair.idTokenA == '0') {
         blockCommissionDFI = poolPair.blockCommissionA;
         blockCommissionOther = poolPair.blockCommissionB;
-      }
-      else {
+      } else {
         blockCommissionDFI = poolPair.blockCommissionB;
         blockCommissionOther = poolPair.blockCommissionA;
       }
@@ -126,7 +124,7 @@ class PoolShareHelper {
       );
     });
 
-    for(Future<PoolShareLiquidity> f in result) {
+    for (Future<PoolShareLiquidity> f in result) {
       waitResult.add(await f);
     }
 

@@ -88,25 +88,15 @@ class _DexScreen extends State<DexScreen> {
     var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
     var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
-    if (null ==
-        accountBalance.firstWhere(
-            (element) => element.token == DeFiConstants.DefiAccountSymbol,
-            orElse: () => null)) {
-      accountBalance.add(
-          AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
+    if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
-      var account = accountBalance.firstWhere(
-          (element) => element.token == tokenId,
-          orElse: () => null);
+      var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
 
-      tokenMap.add(TokenBalance(
-          hash: tokenId,
-          idToken: symbolKey,
-          balance: finalBalance,
-          isPopularToken: popularSymbols.contains(tokenId)));
+      tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId)));
     });
 
     _poolPairs = pairs;
@@ -165,15 +155,10 @@ class _DexScreen extends State<DexScreen> {
     }
 
     _selectedPoolPair = _poolPairs.firstWhere(
-        (element) =>
-            (element.idTokenA == tokenA.idToken &&
-                element.idTokenB == tokenB.idToken) ||
-            (element.idTokenA == tokenB.idToken &&
-                element.idTokenB == tokenA.idToken),
+        (element) => (element.idTokenA == tokenA.idToken && element.idTokenB == tokenB.idToken) || (element.idTokenA == tokenB.idToken && element.idTokenB == tokenA.idToken),
         orElse: () => null);
     if (null != _selectedPoolPair) {
-      _poolPairCondition = _selectedPoolPair.idTokenA == tokenA.idToken &&
-          _selectedPoolPair.idTokenB == tokenB.idToken;
+      _poolPairCondition = _selectedPoolPair.idTokenA == tokenA.idToken && _selectedPoolPair.idTokenB == tokenB.idToken;
     }
   }
 
@@ -200,13 +185,13 @@ class _DexScreen extends State<DexScreen> {
       setState(() {
         _insufficientFunds = true;
       });
-    }
-    else {
+    } else {
       setState(() {
         _insufficientFunds = false;
       });
     }
   }
+
   handleSetMaxFrom() {
     if (null == _selectedValueFrom || null == _selectedValueTo) {
       return;
@@ -300,8 +285,7 @@ class _DexScreen extends State<DexScreen> {
       var pubKey = await wallet.getPublicKey();
 
       try {
-        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
-            _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
+        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
 
         setState(() {
           _amountTo = double.tryParse(swapResult.result.split('@')[0]);
@@ -309,14 +293,12 @@ class _DexScreen extends State<DexScreen> {
         _amountToController.text = swapResult.result.split('@')[0];
 
         getConversionRatio();
-      }
-      on HttpException catch (e) {
+      } on HttpException catch (e) {
         final errorMsg = e.error.error;
         LogHelper.instance.e("Error ($errorMsg)");
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'Error ($errorMsg)'),
+          content: Text('Error ($errorMsg)'),
         ));
 
         _amountToController.text = '-';
@@ -368,8 +350,7 @@ class _DexScreen extends State<DexScreen> {
       var pubKey = await wallet.getPublicKey();
 
       try {
-        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey,
-            _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
+        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
 
         setState(() {
           _amountFrom = double.tryParse(swapResult.result.split('@')[0]);
@@ -378,14 +359,12 @@ class _DexScreen extends State<DexScreen> {
         _amountFromController.text = swapResult.result.split('@')[0];
 
         getConversionRatio();
-      }
-      on HttpException catch (e) {
+      } on HttpException catch (e) {
         final errorMsg = e.error.error;
         LogHelper.instance.e("Error ($errorMsg)");
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'Error ($errorMsg)'),
+          content: Text('Error ($errorMsg)'),
         ));
 
         _amountFromController.text = '-';
@@ -445,8 +424,7 @@ class _DexScreen extends State<DexScreen> {
 
                               _selectedValueFrom = val;
 
-                              findPoolPair(
-                                  _selectedValueFrom, _selectedValueTo);
+                              findPoolPair(_selectedValueFrom, _selectedValueTo);
                               handleChangeFromToken();
                             });
                           },
@@ -464,20 +442,16 @@ class _DexScreen extends State<DexScreen> {
               ]),
               TextField(
                 controller: _amountFromController,
-                decoration:
-                    InputDecoration(hintText: S.of(context).dex_from_amount),
+                decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
               ),
               RaisedButton(
                   color: StateContainer.of(context).curTheme.buttonColorPrimary,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 10),
-                        Text(
-                          '<->',
-                        ),
-                      ]),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                    SizedBox(width: 10),
+                    Text(
+                      '<->',
+                    ),
+                  ]),
                   onPressed: () {
                     interchangeSymbols();
                   }),
@@ -502,8 +476,7 @@ class _DexScreen extends State<DexScreen> {
 
                               _selectedValueTo = val;
 
-                              findPoolPair(
-                                  _selectedValueFrom, _selectedValueTo);
+                              findPoolPair(_selectedValueFrom, _selectedValueTo);
                               handleChangeToToken();
                             });
                           },
@@ -521,8 +494,7 @@ class _DexScreen extends State<DexScreen> {
               ]),
               TextField(
                 controller: _amountToController,
-                decoration:
-                    InputDecoration(hintText: S.of(context).dex_to_amount),
+                decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
               ),
               if (_insufficientFunds)
                 Column(children: [
@@ -539,23 +511,14 @@ class _DexScreen extends State<DexScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                                _conversionRate.toStringAsFixed(8) + ' ' +
-                                    _selectedValueTo.hash +
-                                    ' per ' +
-                                    _selectedValueFrom.hash,
-                                textAlign: TextAlign.right),
-                            Text(
-                                (1 / _conversionRate).toStringAsFixed(8) +
-                                    ' ' +
-                                    _selectedValueFrom.hash +
-                                    ' per ' +
-                                    _selectedValueTo.hash,
-                                textAlign: TextAlign.right),
+                            Text(_conversionRate.toStringAsFixed(8) + ' ' + _selectedValueTo.hash + ' per ' + _selectedValueFrom.hash, textAlign: TextAlign.right),
+                            Text((1 / _conversionRate).toStringAsFixed(8) + ' ' + _selectedValueFrom.hash + ' per ' + _selectedValueTo.hash, textAlign: TextAlign.right),
                           ],
                         )),
                   ]),
-                  Divider(thickness: 2,),
+                  Divider(
+                    thickness: 2,
+                  ),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).dex_amount)),
                     Expanded(
@@ -567,10 +530,11 @@ class _DexScreen extends State<DexScreen> {
                           ],
                         )),
                   ]),
-                  Divider(thickness: 2,),
+                  Divider(
+                    thickness: 2,
+                  ),
                   Row(children: [
-                    Expanded(
-                        flex: 4, child: Text(S.of(context).dex_commission)),
+                    Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
                     Expanded(
                         flex: 6,
                         child: Column(
@@ -601,13 +565,7 @@ class _DexScreen extends State<DexScreen> {
 
                       final walletTo = await wallet.getPublicKey();
                       try {
-                        var createSwapFuture = wallet.createAndSendSwap(
-                            _selectedValueFrom.hash,
-                            valueFrom,
-                            _selectedValueTo.hash,
-                            walletTo,
-                            maxPrice,
-                            0);
+                        var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0);
                         var tx = await overlay.during(createSwapFuture);
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -629,8 +587,7 @@ class _DexScreen extends State<DexScreen> {
                         LogHelper.instance.e("Error saving tx...($errorMsg)");
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'Error occured commiting the tx...($errorMsg)'),
+                          content: Text('Error occured commiting the tx...($errorMsg)'),
                         ));
                       }
                     },

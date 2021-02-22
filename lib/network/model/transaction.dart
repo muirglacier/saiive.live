@@ -1,6 +1,11 @@
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:defichainwallet/helper/constants.dart';
+
+Future<List<Transaction>> transactionsFromJson(dynamic input) async {
+  return json.decode(input.body).map<Transaction>((data) => Transaction.fromJson(data)).toList();
+}
 
 class Transaction {
   final String id;
@@ -22,19 +27,7 @@ class Transaction {
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
   String get correctValueRounded => (correctValue / DefiChainConstants.COIN).toStringAsFixed(8);
 
-  Transaction(
-      {this.id,
-      this.chain,
-      this.network,
-      this.coinbase,
-      this.mintIndex,
-      this.spentTxId,
-      this.mintTxId,
-      this.mintHeight,
-      this.spentHeight,
-      this.address,
-      this.value,
-      this.confirmations});
+  Transaction({this.id, this.chain, this.network, this.coinbase, this.mintIndex, this.spentTxId, this.mintTxId, this.mintHeight, this.spentHeight, this.address, this.value, this.confirmations});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(

@@ -13,16 +13,7 @@ class WalletAccount {
   String balance;
   String publicKey;
 
-  WalletAccount(
-      {this.id,
-      this.chain,
-      this.account,
-      this.isChangeAddress,
-      this.name,
-      this.lastAccess,
-      this.selected = false,
-      this.balance,
-      this.publicKey});
+  WalletAccount({this.id, this.chain, this.account, this.isChangeAddress, this.name, this.lastAccess, this.selected = false, this.balance, this.publicKey});
 
   factory WalletAccount.fromJson(Map<String, dynamic> json) {
     return WalletAccount(

@@ -113,25 +113,15 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
     var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
-    if (null ==
-        accountBalance.firstWhere(
-                (element) => element.token == DeFiConstants.DefiAccountSymbol,
-            orElse: () => null)) {
-      accountBalance.add(
-          AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
+    if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
-      var account = accountBalance.firstWhere(
-              (element) => element.token == tokenId,
-          orElse: () => null);
+      var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
 
-      tokenMap.add(TokenBalance(
-          hash: tokenId,
-          idToken: symbolKey,
-          balance: finalBalance,
-          isPopularToken: popularSymbols.contains(tokenId)));
+      tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId)));
     });
 
     _poolPairs = pairs;
@@ -149,15 +139,10 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     }
 
     _selectedPoolPair = _poolPairs.firstWhere(
-            (element) =>
-        (element.idTokenA == tokenA.idToken &&
-            element.idTokenB == tokenB.idToken) ||
-            (element.idTokenA == tokenB.idToken &&
-                element.idTokenB == tokenA.idToken),
+        (element) => (element.idTokenA == tokenA.idToken && element.idTokenB == tokenB.idToken) || (element.idTokenA == tokenB.idToken && element.idTokenB == tokenA.idToken),
         orElse: () => null);
     if (null != _selectedPoolPair) {
-      _poolPairCondition = _selectedPoolPair.idTokenA == tokenA.idToken &&
-          _selectedPoolPair.idTokenB == tokenB.idToken;
+      _poolPairCondition = _selectedPoolPair.idTokenA == tokenA.idToken && _selectedPoolPair.idTokenB == tokenB.idToken;
     }
   }
 
@@ -183,16 +168,15 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     setState(() {
       _conversionRate = _poolPairCondition
           ? _selectedPoolPair.reserveBDivReserveA != 0
-          ? _selectedPoolPair.reserveB / _selectedPoolPair.reserveA
-          : 0
+              ? _selectedPoolPair.reserveB / _selectedPoolPair.reserveA
+              : 0
           : _selectedPoolPair.reserveADivReserveB != 0
-          ? _selectedPoolPair.reserveA / _selectedPoolPair.reserveB
-          : 0;
+              ? _selectedPoolPair.reserveA / _selectedPoolPair.reserveB
+              : 0;
     });
   }
 
-  handleSetMaxTokenA()
-  {
+  handleSetMaxTokenA() {
     if (null == _selectedTokenB || null == _selectedTokenA) {
       return;
     }
@@ -202,8 +186,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     handleChangeTokenA();
   }
 
-  handleSetMaxTokenB()
-  {
+  handleSetMaxTokenB() {
     if (null == _selectedTokenB || null == _selectedTokenA) {
       return;
     }
@@ -288,8 +271,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     checkSufficientFunds();
   }
 
-  checkSufficientFunds()
-  {
+  checkSufficientFunds() {
     var sufficient = false;
 
     if (_amountTokenA != null && _amountTokenA * DefiChainConstants.COIN > _selectedTokenA.balance) {
@@ -306,13 +288,9 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   }
 
   calculatePoolShare() {
-    var shareA = _selectedTokenA.idToken == _selectedPoolPair.idTokenA ?
-      (_amountTokenA / _selectedPoolPair.reserveA) :
-      (_amountTokenA / _selectedPoolPair.reserveB);
+    var shareA = _selectedTokenA.idToken == _selectedPoolPair.idTokenA ? (_amountTokenA / _selectedPoolPair.reserveA) : (_amountTokenA / _selectedPoolPair.reserveB);
 
-    var shareB = _selectedTokenB.idToken == _selectedPoolPair.idTokenB ?
-      (_amountTokenB / _selectedPoolPair.reserveB):
-      (_amountTokenB / _selectedPoolPair.reserveA);
+    var shareB = _selectedTokenB.idToken == _selectedPoolPair.idTokenB ? (_amountTokenB / _selectedPoolPair.reserveB) : (_amountTokenB / _selectedPoolPair.reserveA);
 
     setState(() {
       _poolSharePercentage = ((shareA + shareB) / 2) * 100;
@@ -353,79 +331,86 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Expanded(flex: 1, child: Container(height: 60, child: DropdownButton<TokenBalance>(
-                  isExpanded: true,
-                  hint: Text(S.of(context).liquitiy_add_token_a),
-                  value: _selectedTokenA,
-                  items: _fromTokens.map((e) {
-                    return new DropdownMenuItem<TokenBalance>(
-                      value: e,
-                      child: _buildDropdownListItem(e),
-                    );
-                  }).toList(),
-                  onChanged: (TokenBalance val) {
-                    setState(() {
-                      filter(val, _selectedTokenB);
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: 60,
+                        child: DropdownButton<TokenBalance>(
+                          isExpanded: true,
+                          hint: Text(S.of(context).liquitiy_add_token_a),
+                          value: _selectedTokenA,
+                          items: _fromTokens.map((e) {
+                            return new DropdownMenuItem<TokenBalance>(
+                              value: e,
+                              child: _buildDropdownListItem(e),
+                            );
+                          }).toList(),
+                          onChanged: (TokenBalance val) {
+                            setState(() {
+                              filter(val, _selectedTokenB);
 
-                      _selectedTokenA = val;
+                              _selectedTokenA = val;
 
-                      findPoolPair(_selectedTokenA, _selectedTokenB);
-                      handleChangeTokenASelection();
-                    });
-                  },
-                ))),
+                              findPoolPair(_selectedTokenA, _selectedTokenB);
+                              handleChangeTokenASelection();
+                            });
+                          },
+                        ))),
                 SizedBox(width: 20),
-                ButtonTheme(height: 30, minWidth: 40, child: RaisedButton(
-                    child: Text(S.of(context).liquitiy_add_max),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      handleSetMaxTokenA();
-                    }
-                ))
+                ButtonTheme(
+                    height: 30,
+                    minWidth: 40,
+                    child: RaisedButton(
+                        child: Text(S.of(context).liquitiy_add_max),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          handleSetMaxTokenA();
+                        }))
               ]),
               TextField(
                 controller: _amountTokenAController,
-                decoration:
-                InputDecoration(
-                    hintText: S.of(context).liquitiy_add_amount_a,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0)
-                ),
+                decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
               ),
-            Row(children: [
-              Expanded(flex: 1, child: Container(height: 60, child: DropdownButton<TokenBalance>(
-                isExpanded: true,
-                hint: Text(S.of(context).liquitiy_add_token_b),
-                value: _selectedTokenB,
-                items: _toTokens.map((e) {
-                  return new DropdownMenuItem<TokenBalance>(
-                    value: e,
-                    child: _buildDropdownListItem(e),
-                  );
-                }).toList(),
-                onChanged: (TokenBalance val) {
-                  setState(() {
-                    filter(_selectedTokenA, val);
+              Row(children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        height: 60,
+                        child: DropdownButton<TokenBalance>(
+                          isExpanded: true,
+                          hint: Text(S.of(context).liquitiy_add_token_b),
+                          value: _selectedTokenB,
+                          items: _toTokens.map((e) {
+                            return new DropdownMenuItem<TokenBalance>(
+                              value: e,
+                              child: _buildDropdownListItem(e),
+                            );
+                          }).toList(),
+                          onChanged: (TokenBalance val) {
+                            setState(() {
+                              filter(_selectedTokenA, val);
 
-                    _selectedTokenB = val;
+                              _selectedTokenB = val;
 
-                    findPoolPair(_selectedTokenA, _selectedTokenB);
-                    handleChangeTokenBSelection();
-                  });
-                },
-              ))),
-              SizedBox(width: 20),
-              ButtonTheme(height: 30, minWidth: 40, child: RaisedButton(
-                  child: Text(S.of(context).liquitiy_add_max),
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    handleSetMaxTokenB();
-                  }
-              ))
-            ]),
+                              findPoolPair(_selectedTokenA, _selectedTokenB);
+                              handleChangeTokenBSelection();
+                            });
+                          },
+                        ))),
+                SizedBox(width: 20),
+                ButtonTheme(
+                    height: 30,
+                    minWidth: 40,
+                    child: RaisedButton(
+                        child: Text(S.of(context).liquitiy_add_max),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          handleSetMaxTokenB();
+                        }))
+              ]),
               TextField(
                 controller: _amountTokenBController,
-                decoration:
-                InputDecoration(hintText: S.of(context).liquitiy_add_amount_b),
+                decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_b),
               ),
               if (_insufficientFunds)
                 Column(children: [
@@ -443,32 +428,25 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                                (_poolPairCondition == true
-                                    ? _selectedPoolPair.reserveBDivReserveA
-                                    .toString()
-                                    : _selectedPoolPair.reserveADivReserveB
-                                    .toString()) +
+                                (_poolPairCondition == true ? _selectedPoolPair.reserveBDivReserveA.toString() : _selectedPoolPair.reserveADivReserveB.toString()) +
                                     ' ' +
                                     _selectedTokenB.hash +
                                     ' per ' +
                                     _selectedTokenA.hash,
                                 textAlign: TextAlign.right),
                             Text(
-                                (_poolPairCondition == true
-                                    ? _selectedPoolPair.reserveADivReserveB
-                                    .toString()
-                                    : _selectedPoolPair.reserveBDivReserveA
-                                    .toString()) +
+                                (_poolPairCondition == true ? _selectedPoolPair.reserveADivReserveB.toString() : _selectedPoolPair.reserveBDivReserveA.toString()) +
                                     ' ' +
                                     _selectedTokenA.hash +
                                     ' per ' +
                                     _selectedTokenB.hash,
                                 textAlign: TextAlign.right),
-
                           ],
                         )),
                   ]),
-                  Divider(thickness: 2,),
+                  Divider(
+                    thickness: 2,
+                  ),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_pool_share)),
                     Expanded(
@@ -491,7 +469,9 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                           ],
                         )),
                   ]),
-                  Divider(thickness: 2,),
+                  Divider(
+                    thickness: 2,
+                  ),
                   Row(children: [
                     Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenB.hash)),
                     Expanded(

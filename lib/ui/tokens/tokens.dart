@@ -35,20 +35,9 @@ class _TokensScreen extends State<TokensScreen> {
     return Card(
         child: ListTile(
       leading: TokenIcon(token.symbol),
-      title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(token.name,
-                style: Theme.of(context).textTheme.headline3)
-          ]),
+      title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Text(token.name, style: Theme.of(context).textTheme.headline3)]),
       trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(token.symbol,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
-          ]),
+          crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [Text(token.symbol, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))]),
     ));
   }
 
@@ -74,8 +63,6 @@ class _TokensScreen extends State<TokensScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).home_tokens)),
-        body: Scaffold(body: buildTokenScreen(context)));
+    return Scaffold(appBar: AppBar(title: Text(S.of(context).home_tokens)), body: Scaffold(body: buildTokenScreen(context)));
   }
 }

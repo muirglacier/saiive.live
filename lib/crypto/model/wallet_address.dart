@@ -11,21 +11,9 @@ class WalletAddress {
 
   String publicKey;
 
-  String get uniqueId =>
-      account.toString() +
-      "_" +
-      (isChangeAddress ? "1" : "0") +
-      "_" +
-      index.toString();
+  String get uniqueId => account.toString() + "_" + (isChangeAddress ? "1" : "0") + "_" + index.toString();
 
-  WalletAddress(
-      {this.index,
-      this.chain,
-      this.account,
-      this.isChangeAddress,
-      this.name,
-      this.publicKey,
-      this.network});
+  WalletAddress({this.index, this.chain, this.account, this.isChangeAddress, this.name, this.publicKey, this.network});
 
   factory WalletAddress.fromJson(Map<String, dynamic> json) {
     return WalletAddress(

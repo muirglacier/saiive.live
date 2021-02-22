@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/constants.dart';
@@ -26,12 +28,12 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _addressController;
   var _amountController = TextEditingController(text: '1');
 
-  Future sendFunds() async {
+  Future sendFunds(StreamController<String> stream) async {
     try {
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
-      final tx = await sl.get<DeFiChainWallet>().createAndSend(
-          totalAmount, widget.token, _addressController.text);
+
+      final tx = await sl.get<DeFiChainWallet>().createAndSend(totalAmount, widget.token, _addressController.text, stream: stream);
 
       final txId = tx.txId;
       LogHelper.instance.d("sent tx $txId");
@@ -53,8 +55,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   void initState() {
     super.initState();
 
-    _addressController = TextEditingController(
-        text: widget.toAddress ?? 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
+    _addressController = TextEditingController(text: widget.toAddress ?? 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
   }
 
   @override
@@ -78,10 +79,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                             return;
                           }
                         }
-                        final address = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    QrCodeScan()));
+                        final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
                         _addressController.text = address;
                       },
                       icon: Icon(Icons.camera_alt),
@@ -89,16 +87,17 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                   )),
               TextField(
                 controller: _amountController,
-                decoration:
-                    InputDecoration(hintText: S.of(context).wallet_send_amount),
+                decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
               ),
               RaisedButton(
                 child: Text(S.of(context).wallet_send),
                 color: Theme.of(context).backgroundColor,
                 onPressed: () async {
                   sl.get<AuthenticationHelper>().forceAuth(context, () {
-                    final overlay = LoadingOverlay.of(context);
-                    overlay.during(sendFunds());
+                    final streamController = new StreamController<String>();
+                    final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+
+                    overlay.during(sendFunds(streamController));
                   });
                 },
               )

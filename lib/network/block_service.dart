@@ -5,8 +5,7 @@ import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 
-class BlockService extends NetworkService
-{
+class BlockService extends NetworkService {
   Future<Block> getBlockWithHeight(String coin, int height) async {
     dynamic response = await this.httpService.makeHttpGetRequest('/block/$height', coin);
 
@@ -15,9 +14,9 @@ class BlockService extends NetworkService
     }
 
     Block block = Block.fromJson(response);
-    
+
     this.fireEvent(new BlockLoadedEvent(block: block));
-    
+
     return block;
   }
 

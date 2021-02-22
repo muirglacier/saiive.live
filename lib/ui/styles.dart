@@ -4,54 +4,54 @@ class AppStyles {
   // Text style for paragraph text.
   static TextStyle textStyleParagraph(BuildContext context) {
     return TextStyle(
-        fontSize: AppFontSizes.medium,
-        fontWeight: FontWeight.w200,
+      fontSize: AppFontSizes.medium,
+      fontWeight: FontWeight.w200,
     );
   }
 
   static TextStyle textStyleButtonPrimary(BuildContext context) {
     return TextStyle(
-        fontSize: AppFontSizes.large,
-        fontWeight: FontWeight.w700,
+      fontSize: AppFontSizes.large,
+      fontWeight: FontWeight.w700,
     );
   }
 
   // Text style for outline button
   static TextStyle textStyleButtonPrimaryOutline(BuildContext context) {
     return TextStyle(
-        fontSize: AppFontSizes.large,
-        fontWeight: FontWeight.w700,
+      fontSize: AppFontSizes.large,
+      fontWeight: FontWeight.w700,
     );
   }
 
   static TextStyle textStyleButtonPrimaryOutlineDisabled(BuildContext context) {
     return TextStyle(
-        fontSize: AppFontSizes.large,
-        fontWeight: FontWeight.w700,
+      fontSize: AppFontSizes.large,
+      fontWeight: FontWeight.w700,
     );
   }
 
   // Green primary button
   static TextStyle textStyleButtonPrimaryGreen(BuildContext context) {
     return TextStyle(
-        fontSize: AppFontSizes.large,
-        fontWeight: FontWeight.w700,
+      fontSize: AppFontSizes.large,
+      fontWeight: FontWeight.w700,
     );
   }
 
   // Text style for success outline button
   static TextStyle textStyleButtonSuccessOutline(BuildContext context) {
     return TextStyle(
-        fontSize: AppFontSizes.large,
-        fontWeight: FontWeight.w700,
+      fontSize: AppFontSizes.large,
+      fontWeight: FontWeight.w700,
     );
   }
 
   // Text style for text outline button
   static TextStyle textStyleButtonTextOutline(BuildContext context) {
     return TextStyle(
-        fontSize: AppFontSizes.large,
-        fontWeight: FontWeight.w700,
+      fontSize: AppFontSizes.large,
+      fontWeight: FontWeight.w700,
     );
   }
 }

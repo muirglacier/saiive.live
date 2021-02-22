@@ -62,8 +62,7 @@ class SharedPrefsUtil {
   }
 
   Future<LanguageSetting> getLanguage() async {
-    return LanguageSetting(AvailableLanguage.values[await get(cur_language,
-        defaultValue: AvailableLanguage.DEFAULT.index)]);
+    return LanguageSetting(AvailableLanguage.values[await get(cur_language, defaultValue: AvailableLanguage.DEFAULT.index)]);
   }
 
   Future<void> setTheme(ThemeSetting theme) async {
@@ -71,13 +70,11 @@ class SharedPrefsUtil {
   }
 
   Future<ThemeSetting> getTheme() async {
-    return ThemeSetting(ThemeOptions.values[
-        await get(cur_theme, defaultValue: ThemeOptions.DEFI_LIGHT.index)]);
+    return ThemeSetting(ThemeOptions.values[await get(cur_theme, defaultValue: ThemeOptions.DEFI_LIGHT.index)]);
   }
 
   Future<ChainNet> getChainNetwork() async {
-    return ChainNet
-        .values[await get(cur_net, defaultValue: ChainNet.Testnet.index)];
+    return ChainNet.values[await get(cur_net, defaultValue: ChainNet.Testnet.index)];
   }
 
   // For logging out

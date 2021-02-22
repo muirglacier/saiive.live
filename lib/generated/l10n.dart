@@ -535,6 +535,36 @@ class S {
     );
   }
 
+  /// `Refreshing utxo`
+  String get wallet_operation_refresh_utxo {
+    return Intl.message(
+      'Refreshing utxo',
+      name: 'wallet_operation_refresh_utxo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Building transaction`
+  String get wallet_operation_build_tx {
+    return Intl.message(
+      'Building transaction',
+      name: 'wallet_operation_build_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sending transaction`
+  String get wallet_operation_send_tx {
+    return Intl.message(
+      'Sending transaction',
+      name: 'wallet_operation_send_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(

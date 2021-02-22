@@ -43,8 +43,7 @@ class TransactionData {
   String txId;
 
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
-  String get correctValueRounded =>
-      (correctValue / DefiChainConstants.COIN).toStringAsFixed(8);
+  String get correctValueRounded => (correctValue / DefiChainConstants.COIN).toStringAsFixed(8);
 
   TransactionData(
       {this.id,

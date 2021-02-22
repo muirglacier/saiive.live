@@ -6,12 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group("test hd", () {
     test("get transaction", () async {
-      var network =
-          HdWalletUtil.getNetworkType(ChainType.DeFiChain, ChainNet.Testnet);
+      var network = HdWalletUtil.getNetworkType(ChainType.DeFiChain, ChainNet.Testnet);
 
-      final alice = ECPair.fromWIF(
-          "cNpueJjp8geQJut28fDyUD8e5zoyctHxj9GE8rTbQXwiEwLo1kq4",
-          network: network);
+      final alice = ECPair.fromWIF("cNpueJjp8geQJut28fDyUD8e5zoyctHxj9GE8rTbQXwiEwLo1kq4", network: network);
 
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: alice.publicKey)).data;
       final redeemScript = p2wpkh.output;
@@ -20,16 +17,10 @@ void main() {
       txb.setVersion(2);
       txb.setLockTime(0);
 
-      txb.addInput(
-          'eca1a534a6e9349a77d914b9e593492a9cac58ff9e974aaf5e2353909df367af',
-          0);
+      txb.addInput('eca1a534a6e9349a77d914b9e593492a9cac58ff9e974aaf5e2353909df367af', 0);
       txb.addOutput('tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN', 27999796096 - 200);
 
-      txb.sign(
-          vin: 0,
-          keyPair: alice,
-          witnessValue: 27999796096,
-          redeemScript: redeemScript);
+      txb.sign(vin: 0, keyPair: alice, witnessValue: 27999796096, redeemScript: redeemScript);
       final tx = txb.build();
       final txhex = tx.toHex();
       expect(txhex,

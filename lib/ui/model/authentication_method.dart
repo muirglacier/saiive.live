@@ -15,7 +15,7 @@ class AuthenticationMethod extends SettingSelectionItem {
         return S.of(context).settings_auth_biometric;
       case AuthMethod.NONE:
       default:
-      return S.of(context).settings_auth_none;
+        return S.of(context).settings_auth_none;
     }
   }
 

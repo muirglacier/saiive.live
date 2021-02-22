@@ -169,16 +169,13 @@ class AutoSizeText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, size) {
-      var userScaleFactor =
-          textScaleFactor ?? MediaQuery.textScaleFactorOf(context);
+      var userScaleFactor = textScaleFactor ?? MediaQuery.textScaleFactorOf(context);
       var effectiveMaxFontSize = (maxFontSize ?? double.infinity);
-      assert(minFontSize <= effectiveMaxFontSize,
-          "MinFontSize has to be smaller or equal than maxFontSize.");
+      assert(minFontSize <= effectiveMaxFontSize, "MinFontSize has to be smaller or equal than maxFontSize.");
 
       DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(context);
       TextStyle effectiveStyle = style;
-      if (style == null || style.inherit)
-        effectiveStyle = defaultTextStyle.style.merge(style);
+      if (style == null || style.inherit) effectiveStyle = defaultTextStyle.style.merge(style);
 
       var effectiveMaxLines = maxLines ?? defaultTextStyle.maxLines;
 
@@ -196,19 +193,16 @@ class AutoSizeText extends StatelessWidget {
       }
 
       var unitScale = 1 / effectiveStyle.fontSize;
-      var currentScale =
-          (initialFontSize * userScaleFactor) / effectiveStyle.fontSize;
+      var currentScale = (initialFontSize * userScaleFactor) / effectiveStyle.fontSize;
 
-      while (!_checkTextFits(currentScale, effectiveStyle, effectiveMaxLines,
-          size.maxWidth, size.maxHeight)) {
+      while (!_checkTextFits(currentScale, effectiveStyle, effectiveMaxLines, size.maxWidth, size.maxHeight)) {
         if (presetFontSizes == null) {
           var newScale = currentScale - stepGranularity * unitScale;
           var newFontSize = newScale / unitScale;
           if (newFontSize < (minFontSize * userScaleFactor)) break;
           currentScale = newScale;
         } else if (presetIndex < presetFontSizes.length) {
-          currentScale =
-              presetFontSizes[presetIndex++] * userScaleFactor * unitScale;
+          currentScale = presetFontSizes[presetIndex++] * userScaleFactor * unitScale;
         } else {
           break;
         }
@@ -248,8 +242,7 @@ class AutoSizeText extends StatelessWidget {
     }
   }
 
-  bool _checkTextFits(double scale, TextStyle style, int maxLines,
-      double maxWidth, double maxHeight) {
+  bool _checkTextFits(double scale, TextStyle style, int maxLines, double maxWidth, double maxHeight) {
     var span = textSpan ??
         TextSpan(
           text: data,

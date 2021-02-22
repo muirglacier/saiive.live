@@ -9,26 +9,20 @@ enum AppButtonType {
 
 class AppButton {
   // Primary button builder
-  static Widget buildAppButton(
-      BuildContext context, AppButtonType type, String buttonText,
-      {Function onPressed, IconData icon = null, double width = 300}) {
+  static Widget buildAppButton(BuildContext context, AppButtonType type, String buttonText, {Function onPressed, IconData icon = null, double width = 300}) {
     switch (type) {
       case AppButtonType.PRIMARY:
         return SizedBox(
             width: width,
             child: RaisedButton(
                 color: StateContainer.of(context).curTheme.buttonColorPrimary,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (icon != null)
-                        Icon(icon),
-                      SizedBox(width: 10),
-                      Text(
-                        buttonText,
-                      ),
-                    ]),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                  if (icon != null) Icon(icon),
+                  SizedBox(width: 10),
+                  Text(
+                    buttonText,
+                  ),
+                ]),
                 onPressed: () {
                   if (onPressed != null) {
                     onPressed();
@@ -39,17 +33,13 @@ class AppButton {
         return SizedBox(
             width: width,
             child: RaisedButton(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (icon != null)
-                        Icon(icon),
-                      SizedBox(width: 10),
-                      Text(
-                        buttonText,
-                      ),
-                    ]),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                  if (icon != null) Icon(icon),
+                  SizedBox(width: 10),
+                  Text(
+                    buttonText,
+                  ),
+                ]),
                 onPressed: () {
                   if (onPressed != null) {
                     onPressed();

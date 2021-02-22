@@ -7,16 +7,8 @@ class TestPoolSwapRequest extends BaseRequest {
   String to;
   String tokenTo;
 
-  TestPoolSwapRequest(
-      {this.from, this.tokenFrom, this.amountFrom, this.to, this.tokenTo});
+  TestPoolSwapRequest({this.from, this.tokenFrom, this.amountFrom, this.to, this.tokenTo});
 
   @override
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{
-        'from': this.from,
-        'tokenFrom': this.tokenFrom,
-        'amountFrom': this.amountFrom,
-        'to': this.to,
-        'tokenTo': this.tokenTo
-      };
+  Map<String, dynamic> toJson() => <String, dynamic>{'from': this.from, 'tokenFrom': this.tokenFrom, 'amountFrom': this.amountFrom, 'to': this.to, 'tokenTo': this.tokenTo};
 }

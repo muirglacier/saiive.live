@@ -47,20 +47,14 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
             i,
             Container(
               child: Column(children: <Widget>[
-                Text(
-                    "#" +
-                        (element + 1).toString() +
-                        S.of(context).wallet_new_test_word,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Theme.of(context).hintColor)),
+                Text("#" + (element + 1).toString() + S.of(context).wallet_new_test_word, textAlign: TextAlign.left, style: TextStyle(color: Theme.of(context).hintColor)),
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextFormField(
                         autofocus: i == 0,
                         controller: controller[element],
                         validator: (value) {
-                          if (value != widget.mnemonic[element])
-                            return S.of(context).wallet_new_test_invalid;
+                          if (value != widget.mnemonic[element]) return S.of(context).wallet_new_test_invalid;
                           return null;
                         },
                         onEditingComplete: () => {},
@@ -68,9 +62,7 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
                           fillColor: Theme.of(context).highlightColor,
                           filled: true,
                           border: InputBorder.none,
-                          labelText: S.of(context).wallet_new_test_put1 +
-                              (element + 1).toString() +
-                              S.of(context).wallet_new_test_put2,
+                          labelText: S.of(context).wallet_new_test_put1 + (element + 1).toString() + S.of(context).wallet_new_test_put2,
                         )))
               ]),
             )))
@@ -82,8 +74,7 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
     await sl.get<SharedPrefsUtil>().setSeedBackedUp(seedIsBackedUp);
     await sl.get<IVault>().setSeed(widget.mnemonic.join(" "));
 
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-        builder: (BuildContext context) => WalletInitScreen()), (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => WalletInitScreen()), (route) => false);
   }
 
   Widget buildScreen(BuildContext context) {
@@ -91,42 +82,29 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
 
     final textEditControllerMap = new Map<int, TextEditingController>();
 
-    randomWordsToTest.forEach((a) =>
-        textEditControllerMap.putIfAbsent(a, () => TextEditingController()));
+    randomWordsToTest.forEach((a) => textEditControllerMap.putIfAbsent(a, () => TextEditingController()));
 
     return SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
-            verticalDirection: VerticalDirection.down,
-            children: [
-          Text(S.of(context).wallet_new_test_confirm,
-              style: TextStyle(fontFamily: "Popins", fontSize: 20),
-              textAlign: TextAlign.center),
-          SizedBox(height: 10),
-          Text(S.of(context).wallet_new_test_confirm_info,
-              style: TextStyle(color: Theme.of(context).hintColor),
-              textAlign: TextAlign.center),
-          SizedBox(height: 20),
-          Form(
-              key: _formKey,
-              child: Column(
-                  children:
-                      buildInputs(randomWordsToTest, textEditControllerMap))),
-          SizedBox(height: 20),
-          Container(
-              child: SizedBox(
-                  width: 300,
-                  child: RaisedButton(
-                    child: Text(S.of(context).next),
-                    color: Theme.of(context).backgroundColor,
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        await saveSeed(false);
-                      }
-                    },
-                  )))
-        ]));
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.start, verticalDirection: VerticalDirection.down, children: [
+      Text(S.of(context).wallet_new_test_confirm, style: TextStyle(fontFamily: "Popins", fontSize: 20), textAlign: TextAlign.center),
+      SizedBox(height: 10),
+      Text(S.of(context).wallet_new_test_confirm_info, style: TextStyle(color: Theme.of(context).hintColor), textAlign: TextAlign.center),
+      SizedBox(height: 20),
+      Form(key: _formKey, child: Column(children: buildInputs(randomWordsToTest, textEditControllerMap))),
+      SizedBox(height: 20),
+      Container(
+          child: SizedBox(
+              width: 300,
+              child: RaisedButton(
+                child: Text(S.of(context).next),
+                color: Theme.of(context).backgroundColor,
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    await saveSeed(false);
+                  }
+                },
+              )))
+    ]));
   }
 
   @override

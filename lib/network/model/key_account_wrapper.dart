@@ -9,13 +9,8 @@ class KeyAccountWrapper {
 
   factory KeyAccountWrapper.fromJson(Map<String, dynamic> json) {
     final accountList = (json['accounts'] as List);
-    return KeyAccountWrapper(
-        address: json['address'],
-        accounts: accountList?.map((e) => Account.fromJson(e))?.toList());
+    return KeyAccountWrapper(address: json['address'], accounts: accountList?.map((e) => Account.fromJson(e))?.toList());
   }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-    'address': address,
-    'balance': accounts.map((e) => e.toJson()).toList()
-  };
+  Map<String, dynamic> toJson() => <String, dynamic>{'address': address, 'balance': accounts.map((e) => e.toJson()).toList()};
 }

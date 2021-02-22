@@ -11,18 +11,13 @@ abstract class IWalletDatabase {
 
   Future<List<WalletAccount>> getAccounts();
   Future<WalletAccount> updateAccount(WalletAccount account);
-  Future<WalletAccount> addAccount(
-      {@required String name,
-      @required int account,
-      @required ChainType chain,
-      bool isSelected = false});
+  Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false});
 
   Future clearTransactions();
   Future<List<Transaction>> getTransactions();
   Future<Transaction> getTransaction(String id);
   Future addTransaction(Transaction transaction);
 
-  
   Future clearUnspentTransactions();
   Future<List<Transaction>> getUnspentTransactions();
   Future removeUnspentTransactions(List<Transaction> mintIds);
@@ -37,7 +32,7 @@ abstract class IWalletDatabase {
   Future<List<AccountBalance>> getTotalBalances();
   Future<Account> getAccountBalanceForPubKey(String pubKey, String token);
 
-  Future addAddress(WalletAddress account);
+  Future addAddress(WalletAddress address);
   Future<bool> isOwnAddress(String pubKey);
   Future<WalletAddress> getWalletAddress(String pubKey);
   Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index);

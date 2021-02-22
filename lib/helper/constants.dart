@@ -9,11 +9,6 @@ class DefiChainConstants {
   static const int COIN = 100000000;
 
   static getExplorerUrl(ChainNet net, String txId) {
-    return "https://" +
-        ChainHelper.chainNetworkString(net) +
-        ".defichain.io/#/DFI/" +
-        ChainHelper.chainNetworkString(net) +
-        "/tx/" +
-        txId;
+    return "https://" + ChainHelper.chainNetworkString(net) + ".defichain.io/#/DFI/" + ChainHelper.chainNetworkString(net) + "/tx/" + txId;
   }
 }

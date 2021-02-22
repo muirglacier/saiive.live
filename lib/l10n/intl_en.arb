@@ -56,6 +56,10 @@
   "wallet_receive": "Receive",
   "wallet_locked": "Wallet is synchronising right now!",
 
+  "wallet_operation_refresh_utxo": "Refreshing utxo",
+  "wallet_operation_build_tx": "Building transaction",
+  "wallet_operation_send_tx": "Sending transaction",
+
   "wallet_send": "Send",
   "wallet_send_address": "Address",
   "wallet_send_address_scan": "Scan",

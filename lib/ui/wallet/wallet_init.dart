@@ -22,10 +22,8 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
     final wallet = sl.get<DeFiChainWallet>();
 
     final walletDb = sl.get<IWalletDatabase>();
-    await walletDb.addAccount(
-        name: "DFI0", account: 0, chain: ChainType.DeFiChain);
-    await walletDb.addAccount(
-        name: "BTC0", account: 0, chain: ChainType.Bitcoin);
+    await walletDb.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
+    await walletDb.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
 
     await wallet.init();
 
@@ -53,8 +51,6 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 verticalDirection: VerticalDirection.up,
-                children: [
-                  LoadingWidget(text: S.of(context).wallet_new_creating)
-                ])));
+                children: [LoadingWidget(text: S.of(context).wallet_new_creating)])));
   }
 }

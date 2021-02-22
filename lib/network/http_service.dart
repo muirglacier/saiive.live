@@ -8,6 +8,7 @@ import 'package:defichainwallet/network/model/error.dart';
 import 'package:defichainwallet/network/base_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,10 @@ class HttpService extends IHttpService {
 
   HttpService();
 
+  static Future<dynamic> _parseJson(String str) async {
+    return json.decode(str);
+  }
+
   Future init() async {
     final sharedPreferences = await SharedPreferences.getInstance();
     final rawValue = await sharedPreferences.get(SharedPrefsUtil.cur_net);
@@ -32,15 +37,13 @@ class HttpService extends IHttpService {
     }
   }
 
-  Future<Map<String, dynamic>> makeHttpGetRequest(String url, String coin,
-      {cached: false}) async {
+  Future<Map<String, dynamic>> makeHttpGetRequest(String url, String coin, {cached: false}) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
 
     if (cached && cachedResults.containsKey(finalUrl)) {
       var cachedResult = cachedResults[finalUrl];
 
-      if (cachedResult.created + cachedResult.lifetime >
-          DateTime.now().millisecondsSinceEpoch) {
+      if (cachedResult.created + cachedResult.lifetime > DateTime.now().millisecondsSinceEpoch) {
         cachedResults.remove(finalUrl);
       } else {
         return cachedResult.data;
@@ -56,28 +59,25 @@ class HttpService extends IHttpService {
       var error = ErrorResponse(response: response, error: response.body);
       throw error;
     }
-    Map decoded = json.decode(response.body);
+    final decoded = await compute(HttpService._parseJson, response.body);
     if (decoded.containsKey("error")) {
       throw Error.fromJson(decoded);
     }
 
     if (cached) {
-      cachedResults[finalUrl] = new CachedResponse(
-          60 * 60, DateTime.now().millisecondsSinceEpoch, decoded);
+      cachedResults[finalUrl] = new CachedResponse(60 * 60, DateTime.now().millisecondsSinceEpoch, decoded);
     }
 
     return decoded;
   }
 
-  Future<dynamic> makeDynamicHttpGetRequest(String url, String coin,
-      {cached: false}) async {
+  Future<dynamic> makeDynamicHttpGetRequest(String url, String coin, {cached: false}) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
 
     if (cached && cachedResults.containsKey(finalUrl)) {
       var cachedResult = cachedResults[finalUrl];
 
-      if (cachedResult.created + cachedResult.lifetime >
-          DateTime.now().millisecondsSinceEpoch) {
+      if (cachedResult.created + cachedResult.lifetime > DateTime.now().millisecondsSinceEpoch) {
         cachedResults.remove(finalUrl);
       } else {
         return cachedResult.data;
@@ -94,24 +94,17 @@ class HttpService extends IHttpService {
     }
 
     if (cached) {
-      cachedResults[finalUrl] = new CachedResponse(
-          60 * 60, DateTime.now().millisecondsSinceEpoch, response);
+      cachedResults[finalUrl] = new CachedResponse(60 * 60, DateTime.now().millisecondsSinceEpoch, response);
     }
 
     return response;
   }
 
-  Future<dynamic> makeHttpPostRequest(
-      String url, String coin, BaseRequest request) async {
+  Future<dynamic> makeHttpPostRequest(String url, String coin, BaseRequest request) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
     final body = json.encode(request.toJson());
 
-    http.Response response = await http.post(finalUrl,
-        headers: {
-          'Content-type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: body);
+    http.Response response = await http.post(finalUrl, headers: {'Content-type': 'application/json', 'Accept': 'application/json'}, body: body);
     if (response.statusCode != 200) {
       return ErrorResponse(response: response, error: response.body);
     }

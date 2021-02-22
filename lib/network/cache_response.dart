@@ -1,5 +1,4 @@
-class CachedResponse
-{
+class CachedResponse {
   int lifetime;
   int created;
   dynamic data;

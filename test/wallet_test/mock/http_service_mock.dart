@@ -5,7 +5,6 @@ import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:http/http.dart' as http;
 
 class MockHttpService extends IHttpService {
-  
   String baseUri = "/api/v1/";
 
   @override
@@ -14,8 +13,7 @@ class MockHttpService extends IHttpService {
   }
 
   @override
-  Future<Map<String, dynamic>> makeHttpGetRequest(
-      String url, String coin, {cached: false}) async {
+  Future<Map<String, dynamic>> makeHttpGetRequest(String url, String coin, {cached: false}) async {
     final finalUrl = "https://dev-supernode.defichain-wallet.com" + baseUri + "testnet" + "/" + coin + url;
     var response = await http.get(
       finalUrl,
@@ -33,15 +31,13 @@ class MockHttpService extends IHttpService {
   }
 
   @override
-  Future<Map<String, dynamic>> makeDynamicHttpGetRequest(
-      String url, String coin, {cached: false}) async {
+  Future<Map<String, dynamic>> makeDynamicHttpGetRequest(String url, String coin, {cached: false}) async {
     await Future.delayed(Duration(microseconds: 1));
     return null;
   }
 
   @override
-  Future makeHttpPostRequest(
-      String url, String coin, BaseRequest request) async {
+  Future makeHttpPostRequest(String url, String coin, BaseRequest request) async {
     await Future.delayed(Duration(microseconds: 1));
     return null;
   }

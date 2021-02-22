@@ -32,8 +32,7 @@ class PhraseTaggable extends Taggable {
 class PhraseService {
   /// Mocks fetching language from network API with delay of 500ms.
   static List<PhraseTaggable> getLanguages(String query) {
-    final words =
-        WORDLIST_ENGLISH.where((element) => element.startsWith(query));
+    final words = WORDLIST_ENGLISH.where((element) => element.startsWith(query));
     var phraseList = List<PhraseTaggable>.empty(growable: true);
 
     words.forEach((element) {
@@ -57,12 +56,10 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
     _selectedPhrases = [];
 
     if (env["ENV"] == "dev") {
-      var demoWords2 =
-          "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
-          
+      var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
+
       if (Platform.isAndroid) {
-        demoWords2 =
-            "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+        demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
       }
 
       var items = demoWords2.split(" ");
@@ -89,20 +86,14 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
       textFieldConfiguration: TextFieldConfiguration(
         focusNode: _tagBoxFocus,
         enabled: _inputEnabled,
-        decoration: InputDecoration(
-            labelText: S.of(context).wallet_restore_enterWords,
-            enabled: _inputEnabled),
+        decoration: InputDecoration(labelText: S.of(context).wallet_restore_enterWords, enabled: _inputEnabled),
       ),
       findSuggestions: PhraseService.getLanguages,
       configureSuggestion: (phrase) {
         return SuggestionConfiguration(title: Text(phrase.name));
       },
       configureChip: (lang) {
-        return ChipConfiguration(
-            label: Text(lang.name),
-            backgroundColor: Theme.of(context).primaryColor,
-            labelStyle: TextStyle(color: Colors.white),
-            deleteIconColor: Colors.white);
+        return ChipConfiguration(label: Text(lang.name), backgroundColor: Theme.of(context).primaryColor, labelStyle: TextStyle(color: Colors.white), deleteIconColor: Colors.white);
       },
       onChanged: () {
         //  _tagBoxFocus.requestFocus();
@@ -155,11 +146,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                   Align(
                       alignment: Alignment.center,
                       child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          alignment: WrapAlignment.center,
-                          runAlignment: WrapAlignment.center,
-                          direction: Axis.horizontal,
-                          children: [buildTagInput()])),
+                          crossAxisAlignment: WrapCrossAlignment.center, alignment: WrapAlignment.center, runAlignment: WrapAlignment.center, direction: Axis.horizontal, children: [buildTagInput()])),
                   SizedBox(height: 50),
                   Container(
                       child: SizedBox(
@@ -171,14 +158,11 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                               if (!validateMnemonic(_phrase)) {
                                 ScaffoldMessenger.of(context)
                                   ..showSnackBar(SnackBar(
-                                    content: Text(S
-                                        .of(context)
-                                        .wallet_restore_invalidMnemonic),
+                                    content: Text(S.of(context).wallet_restore_invalidMnemonic),
                                   ));
                               } else {
                                 await saveSeed();
-                                Navigator.of(context)
-                                    .pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
+                                Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
                               }
                             },
                           )))

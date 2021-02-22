@@ -2,9 +2,9 @@ class PoolShare {
   final String key;
   final String poolID;
   final String owner;
-  final double amount;
-  final double percent;
-  final double totalLiquidity;
+  double amount;
+  double percent;
+  double totalLiquidity;
 
   PoolShare({
     this.key,

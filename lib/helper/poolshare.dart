@@ -9,6 +9,7 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:flutter/material.dart';
 
 class PoolShareHelper {
   Future<List<PoolShareLiquidity>> getPoolShares(String coin, String currency) async {
@@ -35,8 +36,19 @@ class PoolShareHelper {
       poolStats[value.idTokenA + '_' + value.idTokenB] = value;
     });
 
+    var combinedPoolShares = new Map<String, PoolShare>();
+
+    for (var poolShare in poolShares) {
+      if (!combinedPoolShares.containsKey(poolShare.poolID)) {
+        combinedPoolShares[poolShare.poolID] = poolShare;
+      }
+      else {
+        combinedPoolShares[poolShare.poolID].amount += poolShare.amount;
+      }
+    }
+
     List<PoolShareLiquidity> waitResult = [];
-    Iterable<Future<PoolShareLiquidity>> result = poolShares.map((poolShare) async {
+    Iterable<Future<PoolShareLiquidity>> result = combinedPoolShares.values.map((poolShare) async {
       var poolPair = await sl.get<IPoolPairService>().getPoolPair(coin, poolShare.poolID);
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;

@@ -1085,6 +1085,16 @@ class S {
     );
   }
 
+  /// `Add liquidity successfull`
+  String get liqudity_add_successfull {
+    return Intl.message(
+      'Add liquidity successfull',
+      name: 'liqudity_add_successfull',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Biometric Authentification Error`
   String get biometric_auth_error {
     return Intl.message(

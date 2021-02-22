@@ -19,6 +19,10 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
+  static m0(from, to) => "Aktualisiere Adressen (${from}/${to})";
+
+  static m1(from, to) => "Aktualisiere Transaktionen (${from}/${to})";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
@@ -47,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_welcome_good_evening" : MessageLookupByLibrary.simpleMessage("Guten Abend"),
     "home_welcome_good_morning" : MessageLookupByLibrary.simpleMessage("Guten Tag"),
     "later" : MessageLookupByLibrary.simpleMessage("Später"),
+    "liqudity_add_successfull" : MessageLookupByLibrary.simpleMessage("Hinzufügen war erfolgreich"),
     "liquitiy" : MessageLookupByLibrary.simpleMessage("Liquidity"),
     "liquitiy_add" : MessageLookupByLibrary.simpleMessage("Hinzufügen"),
     "liquitiy_add_amount_a" : MessageLookupByLibrary.simpleMessage("Amount A"),
@@ -94,6 +99,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Schreibe das #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" Wort hier"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" Wort"),
+    "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird erstellt"),
+    "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Erstelle Auth TX"),
+    "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Account wird vorbereitet"),
+    "wallet_operation_refresh_addresses" : m0,
+    "wallet_operation_refresh_tx" : m1,
+    "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("UTXO aktualisieren..."),
+    "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird gesendet"),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter Test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter"),

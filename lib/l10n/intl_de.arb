@@ -55,6 +55,15 @@
   "wallet_send_amount": "Menge",
   "wallet_locked": "Wallet synchronisiert gerade!",
 
+  
+  "wallet_operation_refresh_utxo": "UTXO aktualisieren...",
+  "wallet_operation_build_tx": "Transaktion wird erstellt",
+  "wallet_operation_send_tx": "Transaktion wird gesendet",
+  "wallet_operation_refresh_addresses": "Aktualisiere Adressen ({from}/{to})",
+  "wallet_operation_refresh_tx": "Aktualisiere Transaktionen ({from}/{to})",
+  "wallet_operation_create_auth_tx": "Erstelle Auth TX",
+  "wallet_operation_create_pepare_acc_tx": "Account wird vorbereitet",
+
   "settings": "Einstellungen",
   "settings_remove_seed": "Seed löschen",
   "settings_show_seed": "Seed anzeigen",
@@ -105,6 +114,7 @@
   "liquitiy_add_total_pooled": "Insgesammt gepoolt",
   "liquitiy_add_insufficient_funds": "Nicht genügend Balance für LM",
   "liquitiy_add_price": "Preis",
+  "liqudity_add_successfull": "Hinzufügen war erfolgreich",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

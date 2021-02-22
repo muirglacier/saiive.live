@@ -202,14 +202,11 @@ class Wallet extends IWallet {
   }
 
   Future<String> addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress, {StreamController<String> loadingStream}) async {
-    final changeAddress = await getPublicKeyFromAccount(_account, true);
-    final fees = await getTxFee(1, 2) + 5000;
-
     if (!DeFiConstants.isDfiToken(tokenA) && !DeFiConstants.isDfiToken(tokenB)) {
       throw ArgumentError("One of the 2 tokens must be DFI!");
     }
 
-    await prepareAccount(tokenA == DeFiConstants.isDfiToken(tokenA) ? amountA : amountB);
+    await prepareAccount(DeFiConstants.isDfiToken(tokenA) ? amountA : amountB);
 
     final tokenABalance = await _walletDatabase.getAccountBalance(tokenA);
     final tokenBBalance = await _walletDatabase.getAccountBalance(tokenB);
@@ -248,7 +245,22 @@ class Wallet extends IWallet {
           inputTxs, accountA.item1, accountB.item1, _walletDatabase, tokenAType.id, tokenBType.id, shareAddress, amountA, amountB, fee, shareAddress, key, _chain, _network);
       return txb.build().toHex();
     } else {
-      throw new ArgumentError("now i am fucked...");
+      final firstTokenA = accountA.item1.first;
+      for (int i = 1; i < accountA.item1.length; i++) {
+        final token = accountA.item1[i];
+        var tx = await _createAccountTransaction(tokenA, token.amount, firstTokenA.address);
+        await createTxAndWait(tx.item1, loadingStream: loadingStream);
+      }
+      final firstTokenB = accountB.item1.first;
+      for (int i = 1; i < accountB.item1.length; i++) {
+        final token = accountB.item1[i];
+        var tx = await _createAccountTransaction(tokenB, token.amount, firstTokenB.address);
+        await createTxAndWait(tx.item1, loadingStream: loadingStream);
+      }
+
+      //try again
+      await _ensureUtxo(loadingStream: loadingStream);
+      return addPoolLiquidity(tokenA, amountA, tokenB, amountB, shareAddress);
     }
   }
 

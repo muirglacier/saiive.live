@@ -12,8 +12,10 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LiquidityAddScreen extends StatefulWidget {
   @override
@@ -497,13 +499,26 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                       int amountTokenB = (_amountTokenB * DefiChainConstants.COIN).round();
 
                       var streamController = StreamController<String>();
-                      var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo);
+                      var createSwapFuture =
+                          wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo, loadingStream: streamController);
                       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
                       var tx = await overlay.during(createSwapFuture);
 
                       streamController.close();
+
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('Todo'),
+                        content: Text(S.of(context).dex_swap_successfull),
+                        action: SnackBarAction(
+                          label: S.of(context).dex_swap_show_transaction,
+                          onPressed: () async {
+                            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+                            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
+
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            }
+                          },
+                        ),
                       ));
                     },
                   )

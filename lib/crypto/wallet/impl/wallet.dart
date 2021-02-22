@@ -245,6 +245,7 @@ class Wallet extends IWallet {
           inputTxs, accountA.item1, accountB.item1, _walletDatabase, tokenAType.id, tokenBType.id, shareAddress, amountA, amountB, fee, shareAddress, key, _chain, _network);
       return txb.build().toHex();
     } else {
+      throw ErrorResponse(error: "not implement right now...");
       final firstTokenA = accountA.item1.first;
       for (int i = 1; i < accountA.item1.length; i++) {
         final token = accountA.item1[i];
@@ -414,8 +415,7 @@ class Wallet extends IWallet {
 
       inputTxs.add(await _getAuthInputsSmart(tx.address, fee));
 
-      final keyPair = HdWalletUtil.getKeyPair(
-          key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
+      final keyPair = HdWalletUtil.getKeyPair(key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, addressInfo.chain, addressInfo.network);
       keys.add(keyPair);
 
       if ((curAmount + tx.balance) >= amount) {
@@ -478,8 +478,7 @@ class Wallet extends IWallet {
       useTxs.add(tx);
       curAmount += tx.valueRaw;
 
-      final keyPair =
-          HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
+      final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network);
 
       keys.add(keyPair);
 

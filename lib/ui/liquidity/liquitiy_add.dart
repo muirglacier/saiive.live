@@ -514,7 +514,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                         streamController.close();
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(S.of(context).dex_swap_successfull),
+                          content: Text(S.of(context).liqudity_add_successfull),
                           action: SnackBarAction(
                             label: S.of(context).dex_swap_show_transaction,
                             onPressed: () async {

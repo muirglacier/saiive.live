@@ -11,4 +11,8 @@ class DefiChainConstants {
   static getExplorerUrl(ChainNet net, String txId) {
     return "https://" + ChainHelper.chainNetworkString(net) + ".defichain.io/#/DFI/" + ChainHelper.chainNetworkString(net) + "/tx/" + txId;
   }
+
+  static getExplorerBlockUrl(ChainNet net, String blockHash) {
+    return "https://" + ChainHelper.chainNetworkString(net) + ".defichain.io/#/DFI/" + ChainHelper.chainNetworkString(net) + "/block/" + blockHash;
+  }
 }

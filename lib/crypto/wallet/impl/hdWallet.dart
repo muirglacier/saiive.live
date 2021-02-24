@@ -9,6 +9,7 @@ import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:hex/hex.dart';
 import 'package:tuple/tuple.dart';
@@ -36,6 +37,12 @@ class HdWallet extends IHdWallet {
     var addresses = await walletDatabase.getWalletAddresses(_account.account);
 
     if (addresses.length >= walletDatabase.getAddressCreationCount()) {
+      for (final address in addresses) {
+        final pubKey = address.publicKey;
+        final pathString = address.account.toString() + "/" + (address.isChangeAddress ? "1" : "0") + "/" + address.index.toString();
+        LogHelper.instance.i("Wallet uses address $pubKey at $pathString");
+      }
+
       return;
     }
 

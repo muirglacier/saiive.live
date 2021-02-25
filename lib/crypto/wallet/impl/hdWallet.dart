@@ -101,6 +101,10 @@ class HdWallet extends IHdWallet {
       final startSubList = i * IWallet.KeysPerQuery;
       final addresses = walletAddresses.sublist(startSubList, subListLen).map((e) => e.publicKey).toList();
 
+      for (final addr in addresses) {
+        LogHelper.instance.d("Address: $addr");
+      }
+
       await work(addresses, startSubList, walletLen);
       i++;
     } while (remainingAddresses >= 0);

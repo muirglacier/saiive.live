@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
@@ -37,6 +39,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       final txId = tx.txId;
       LogHelper.instance.d("sent tx $txId");
+
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(txId),
       ));
@@ -48,7 +52,11 @@ class _WalletSendScreen extends State<WalletSendScreen> {
         ));
       }
     }
-    Navigator.of(context).pop();
+  }
+
+  handleSetMax() async {
+    var tokenAmount = await BalanceHelper().getAccountBalance(widget.token);
+    _amountController.text = (tokenAmount.balance / DefiChainConstants.COIN).toString();
   }
 
   @override
@@ -65,30 +73,50 @@ class _WalletSendScreen extends State<WalletSendScreen> {
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              TextField(
-                  controller: _addressController,
-                  decoration: InputDecoration(
-                    hintText: S.of(context).wallet_send_address,
-                    suffixIcon: IconButton(
-                      onPressed: () async {
-                        var status = await Permission.camera.status;
-                        if (status.isUndetermined) {
-                          final permission = await Permission.camera.request();
+              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        child: TextField(
+                            controller: _addressController,
+                            decoration: InputDecoration(
+                              hintText: S.of(context).wallet_send_address,
+                              suffixIcon: IconButton(
+                                onPressed: () async {
+                                  var status = await Permission.camera.status;
+                                  if (status.isUndetermined) {
+                                    final permission = await Permission.camera.request();
 
-                          if (!permission.isGranted) {
-                            return;
-                          }
-                        }
-                        final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
-                        _addressController.text = address;
-                      },
-                      icon: Icon(Icons.camera_alt),
-                    ),
-                  )),
-              TextField(
-                controller: _amountController,
-                decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
-              ),
+                                    if (!permission.isGranted) {
+                                      return;
+                                    }
+                                  }
+                                  final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
+                                  _addressController.text = address;
+                                },
+                                icon: Icon(Icons.camera_alt),
+                              ),
+                            ))))
+              ]),
+              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                        child: TextField(
+                      controller: _amountController,
+                      decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
+                    ))),
+                SizedBox(width: 20),
+                ButtonTheme(
+                    height: 30,
+                    minWidth: 40,
+                    child: RaisedButton(
+                        child: Text(S.of(context).liquitiy_add_max),
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          handleSetMax();
+                        }))
+              ]),
               RaisedButton(
                 child: Text(S.of(context).wallet_send),
                 color: Theme.of(context).backgroundColor,

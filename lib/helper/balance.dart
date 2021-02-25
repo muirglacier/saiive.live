@@ -4,6 +4,21 @@ import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/service_locator.dart';
 
 class BalanceHelper {
+  Future<AccountBalance> getAccountBalance(String token) async {
+    if (DeFiConstants.isDfiToken(token)) {
+      var accountBalance = await sl.get<IWalletDatabase>().getAccountBalance(DeFiConstants.DefiAccountSymbol);
+      var tokenBalance = await sl.get<IWalletDatabase>().getAccountBalance(DeFiConstants.DefiTokenSymbol);
+
+      accountBalance.balance += tokenBalance.balance;
+
+      return accountBalance;
+    }
+
+    var accountBalance = await sl.get<IWalletDatabase>().getAccountBalance(token);
+
+    return accountBalance;
+  }
+
   Future<List<AccountBalance>> getDisplayAccountBalance() async {
     var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
 

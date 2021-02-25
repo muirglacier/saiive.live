@@ -3,6 +3,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
@@ -43,15 +44,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     });
     _controller.forward();
 
-    final db = sl.get<IWalletDatabase>();
-
-    if (widget.token == DeFiConstants.DefiTokenSymbol || widget.token == DeFiConstants.DefiAccountSymbol) {
-      _balance = await db.getAccountBalance(DeFiConstants.DefiAccountSymbol);
-      var dfi = await db.getAccountBalance(DeFiConstants.DefiTokenSymbol);
-      _balance.balance += dfi.balance;
-    } else {
-      _balance = await db.getAccountBalance(widget.token);
-    }
+    _balance = await BalanceHelper().getAccountBalance(widget.token);
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -188,7 +181,9 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     }
 
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.start, children: [buildActions(context), buildBalanceCard(context), buildTransactionsList(context)]);
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [buildActions(context), buildBalanceCard(context), buildTransactionsList(context)]);
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:core';
 
 import 'package:async/async.dart';
 import 'package:defichaindart/defichaindart.dart';
@@ -602,7 +603,7 @@ class Wallet extends IWallet {
       var useAcc = acc;
 
       if ((accBalance + acc.balance) >= neededUtxo) {
-        var neededAccBalance = min(acc.balance, neededUtxo - acc.balance);
+        var neededAccBalance = min(acc.balance, neededUtxo - accBalance);
         accBalance += neededAccBalance;
         useAcc = Account(address: acc.address, balance: neededAccBalance, chain: acc.chain, network: acc.network, raw: acc.raw, token: acc.token);
       } else {

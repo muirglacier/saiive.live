@@ -145,15 +145,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       });
                     },
                   )),
-                  if (_currentEnvironment != EnvironmentType.Production)
-                    Container(
-                        child: RaisedButton(
-                      child: Text("Show logs"),
-                      color: Theme.of(context).backgroundColor,
-                      onPressed: () async {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
-                      },
-                    ))
+                  Container(
+                      child: RaisedButton(
+                    child: Text("Show logs"),
+                    color: Theme.of(context).backgroundColor,
+                    onPressed: () async {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
+                    },
+                  ))
                 ],
               )),
               Container(

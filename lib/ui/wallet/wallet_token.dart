@@ -3,9 +3,10 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/network/account_history_service.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
+import 'package:defichainwallet/network/model/account_history.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
@@ -35,8 +36,23 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
 
   bool _transactionsLoading = false;
   List<Transaction> _transactions = [];
+  List<AccountHistory> _history = [];
 
   ChainNet _chainNet;
+
+  Future loadAccountHistory() async {
+    setState(() {
+      _transactionsLoading = true;
+    });
+
+    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+    var history = await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, widget.token);
+
+    setState(() {
+      _history = history;
+      _transactionsLoading = false;
+    });
+  }
 
   Future loadAccountBalance() async {
     setState(() {
@@ -44,7 +60,15 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     });
     _controller.forward();
 
-    _balance = await BalanceHelper().getAccountBalance(widget.token);
+    final db = sl.get<IWalletDatabase>();
+
+    if (widget.token == DeFiConstants.DefiTokenSymbol || widget.token == DeFiConstants.DefiAccountSymbol) {
+      _balance = await db.getAccountBalance(DeFiConstants.DefiAccountSymbol);
+      var dfi = await db.getAccountBalance(DeFiConstants.DefiTokenSymbol);
+      _balance.balance += dfi.balance;
+    } else {
+      _balance = await db.getAccountBalance(widget.token);
+    }
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -53,18 +77,6 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
       _balanceRefreshing = false;
       _controller.stop();
       _controller.reset();
-    });
-  }
-
-  Future loadTransactions() async {
-    setState(() {
-      _transactionsLoading = true;
-    });
-    final db = sl.get<IWalletDatabase>();
-    _transactions = await db.getTransactions();
-
-    setState(() {
-      _transactionsLoading = false;
     });
   }
 
@@ -88,7 +100,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
 
     loadChainNetwork();
     loadAccountBalance();
-    loadTransactions();
+    loadAccountHistory();
   }
 
   buildBalanceCard(BuildContext context) {
@@ -111,27 +123,27 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
         ));
   }
 
-  buildTransaction(BuildContext context, Transaction tx) {
+  buildAccountHistory(BuildContext context, AccountHistory history) {
     return Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: _transactionsLoading ? LoadingWidget(text: 'Loading') : Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
                   child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor)),
-                  onTap: () => launch(DefiChainConstants.getExplorerUrl(_chainNet, tx.mintTxId))),
-              Text(tx.correctValueRounded)
+                  onTap: () => launch(DefiChainConstants.getExplorerBlockUrl(_chainNet, history.blockHash))),
+              Text((history.getBalance(widget.token) / DefiChainConstants.COIN).toStringAsFixed(8))
             ],
           ),
           SizedBox(height: 5),
-          Text(tx.mintTxId, style: TextStyle(fontSize: 8)),
+          Text(history.blockHash, style: TextStyle(fontSize: 8)),
           Divider()
         ]));
   }
 
-  buildTransactionsList(BuildContext context) {
+  buildAccountHistoryList(BuildContext context) {
     return Expanded(
         child: Column(children: [
       ListTile(
@@ -142,10 +154,10 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
               physics: BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: _transactions.length,
+              itemCount: _history.length,
               itemBuilder: (context, index) {
-                final tx = _transactions[index];
-                return buildTransaction(context, tx);
+                final history = _history[index];
+                return buildAccountHistory(context, history);
               }))
     ]));
   }
@@ -181,9 +193,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     }
 
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [buildActions(context), buildBalanceCard(context), buildTransactionsList(context)]);
+        crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.start, children: [buildActions(context), buildBalanceCard(context), buildAccountHistoryList(context)]);
   }
 
   @override

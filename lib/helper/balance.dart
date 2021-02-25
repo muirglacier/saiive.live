@@ -25,6 +25,8 @@ class BalanceHelper {
     if (accountBalance.isNotEmpty) {
       var dollarDFI =
           accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiTokenSymbol, orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiTokenSymbol));
+      var hasDfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol,
+          orElse: () => null);
       var dfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol,
           orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiAccountSymbol));
 
@@ -44,6 +46,10 @@ class BalanceHelper {
 
         return a.token.compareTo(b.token);
       });
+
+      if (hasDfi == null) {
+        accountBalance.add(dfi);
+      }
     }
 
     return accountBalance;

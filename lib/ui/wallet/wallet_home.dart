@@ -10,6 +10,7 @@ import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
+import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -133,7 +134,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
       title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text(balance.token, style: Theme.of(context).textTheme.headline3), Text(balance.token, style: Theme.of(context).textTheme.bodyText1)]),
+          children: [AutoSizeText(balance.token, style: Theme.of(context).textTheme.headline3, maxLines: 1,), AutoSizeText(balance.token, style: Theme.of(context).textTheme.bodyText1, maxLines: 1,)]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

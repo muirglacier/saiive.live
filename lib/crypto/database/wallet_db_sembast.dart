@@ -293,7 +293,7 @@ class SembastWalletDatabase extends IWalletDatabase {
         value += tx.value;
       }
 
-      return AccountBalance(balance: value, token: DeFiConstants.DefiTokenSymbol);
+      return AccountBalance(balance: value == null ? 0 : value, token: DeFiConstants.DefiTokenSymbol);
     }
 
     var dbStore = _balancesStoreInstance;
@@ -311,7 +311,8 @@ class SembastWalletDatabase extends IWalletDatabase {
       sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
     });
 
-    return AccountBalance(balance: sumMap[token], token: token);
+    var sumBalance = sumMap[token];
+    return AccountBalance(balance: sumBalance == null ? 0 : sumBalance, token: token);
   }
 
   @override

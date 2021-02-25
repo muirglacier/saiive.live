@@ -404,203 +404,204 @@ class _DexScreen extends State<DexScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(title: Text(S.of(context).dex)),
-        body: SingleChildScrollView(child: Padding(
-            padding: EdgeInsets.all(30),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        height: 60,
-                        child: DropdownButton<TokenBalance>(
-                          isExpanded: true,
-                          hint: Text(S.of(context).dex_from_token),
-                          value: _selectedValueFrom,
-                          items: _fromTokens.map((e) {
-                            return new DropdownMenuItem<TokenBalance>(
-                              value: e,
-                              child: _buildDropdownListItem(e),
-                            );
-                          }).toList(),
-                          onChanged: (TokenBalance val) {
-                            setState(() {
-                              filter(val, _selectedValueTo);
-
-                              _selectedValueFrom = val;
-
-                              findPoolPair(_selectedValueFrom, _selectedValueTo);
-                              handleChangeFromToken();
-                            });
-                          },
-                        ))),
-                SizedBox(width: 20),
-                ButtonTheme(
-                    height: 30,
-                    minWidth: 40,
-                    child: RaisedButton(
-                        child: Text(S.of(context).dex_add_max),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          handleSetMaxFrom();
-                        }))
-              ]),
-              TextField(
-                controller: _amountFromController,
-                decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
-              ),
-              RaisedButton(
-                  color: StateContainer.of(context).curTheme.buttonColorPrimary,
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                    SizedBox(width: 10),
-                    Text(
-                      '<->',
-                    ),
-                  ]),
-                  onPressed: () {
-                    interchangeSymbols();
-                  }),
-              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        height: 60,
-                        child: DropdownButton<TokenBalance>(
-                          isExpanded: true,
-                          hint: Text(S.of(context).dex_to_token),
-                          value: _selectedValueTo,
-                          items: _toTokens.map((e) {
-                            return new DropdownMenuItem<TokenBalance>(
-                              value: e,
-                              child: _buildDropdownListItem(e),
-                            );
-                          }).toList(),
-                          onChanged: (TokenBalance val) {
-                            setState(() {
-                              filter(_selectedValueFrom, val);
-
-                              _selectedValueTo = val;
-
-                              findPoolPair(_selectedValueFrom, _selectedValueTo);
-                              handleChangeToToken();
-                            });
-                          },
-                        ))),
-                SizedBox(width: 20),
-                ButtonTheme(
-                    height: 30,
-                    minWidth: 40,
-                    child: RaisedButton(
-                        child: Text(S.of(context).dex_add_max),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          handleSetMaxTo();
-                        }))
-              ]),
-              TextField(
-                controller: _amountToController,
-                decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
-              ),
-              if (_insufficientFunds)
-                Column(children: [
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
-                ]),
-              if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
-                Column(children: [
-                  SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).dex_price)),
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.all(30),
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                     Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_conversionRate.toStringAsFixed(8) + ' ' + _selectedValueTo.hash + ' per ' + _selectedValueFrom.hash, textAlign: TextAlign.right),
-                            Text((1 / _conversionRate).toStringAsFixed(8) + ' ' + _selectedValueFrom.hash + ' per ' + _selectedValueTo.hash, textAlign: TextAlign.right),
-                          ],
-                        )),
+                        flex: 1,
+                        child: Container(
+                            height: 60,
+                            child: DropdownButton<TokenBalance>(
+                              isExpanded: true,
+                              hint: Text(S.of(context).dex_from_token),
+                              value: _selectedValueFrom,
+                              items: _fromTokens.map((e) {
+                                return new DropdownMenuItem<TokenBalance>(
+                                  value: e,
+                                  child: _buildDropdownListItem(e),
+                                );
+                              }).toList(),
+                              onChanged: (TokenBalance val) {
+                                setState(() {
+                                  filter(val, _selectedValueTo);
+
+                                  _selectedValueFrom = val;
+
+                                  findPoolPair(_selectedValueFrom, _selectedValueTo);
+                                  handleChangeFromToken();
+                                });
+                              },
+                            ))),
+                    SizedBox(width: 20),
+                    ButtonTheme(
+                        height: 30,
+                        minWidth: 40,
+                        child: RaisedButton(
+                            child: Text(S.of(context).dex_add_max),
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              handleSetMaxFrom();
+                            }))
                   ]),
-                  Divider(
-                    thickness: 2,
+                  TextField(
+                    controller: _amountFromController,
+                    decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
                   ),
-                  Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).dex_amount)),
-                    Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_amountTo.toString()),
-                          ],
-                        )),
-                  ]),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
-                    Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_selectedPoolPair.commission.toString()),
-                          ],
-                        )),
-                  ]),
                   RaisedButton(
-                    child: Text(S.of(context).dex_swap),
-                    color: Theme.of(context).backgroundColor,
-                    onPressed: () async {
-                      final wallet = sl.get<DeFiChainWallet>();
+                      color: StateContainer.of(context).curTheme.buttonColorPrimary,
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                        SizedBox(width: 10),
+                        Text(
+                          '<->',
+                        ),
+                      ]),
+                      onPressed: () {
+                        interchangeSymbols();
+                      }),
+                  Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            height: 60,
+                            child: DropdownButton<TokenBalance>(
+                              isExpanded: true,
+                              hint: Text(S.of(context).dex_to_token),
+                              value: _selectedValueTo,
+                              items: _toTokens.map((e) {
+                                return new DropdownMenuItem<TokenBalance>(
+                                  value: e,
+                                  child: _buildDropdownListItem(e),
+                                );
+                              }).toList(),
+                              onChanged: (TokenBalance val) {
+                                setState(() {
+                                  filter(_selectedValueFrom, val);
 
-                      if (wallet.isLocked()) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(S.of(context).wallet_locked),
-                        ));
+                                  _selectedValueTo = val;
 
-                        return;
-                      }
+                                  findPoolPair(_selectedValueFrom, _selectedValueTo);
+                                  handleChangeToToken();
+                                });
+                              },
+                            ))),
+                    SizedBox(width: 20),
+                    ButtonTheme(
+                        height: 30,
+                        minWidth: 40,
+                        child: RaisedButton(
+                            child: Text(S.of(context).dex_add_max),
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              handleSetMaxTo();
+                            }))
+                  ]),
+                  TextField(
+                    controller: _amountToController,
+                    decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
+                  ),
+                  if (_insufficientFunds)
+                    Column(children: [
+                      Padding(padding: EdgeInsets.only(top: 10)),
+                      Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
+                    ]),
+                  if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
+                    Column(children: [
+                      SizedBox(height: 10),
+                      Row(children: [
+                        Expanded(flex: 4, child: Text(S.of(context).dex_price)),
+                        Expanded(
+                            flex: 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(_conversionRate.toStringAsFixed(8) + ' ' + _selectedValueTo.hash + ' per ' + _selectedValueFrom.hash, textAlign: TextAlign.right),
+                                Text((1 / _conversionRate).toStringAsFixed(8) + ' ' + _selectedValueFrom.hash + ' per ' + _selectedValueTo.hash, textAlign: TextAlign.right),
+                              ],
+                            )),
+                      ]),
+                      Divider(
+                        thickness: 2,
+                      ),
+                      Row(children: [
+                        Expanded(flex: 4, child: Text(S.of(context).dex_amount)),
+                        Expanded(
+                            flex: 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(_amountTo.toString()),
+                              ],
+                            )),
+                      ]),
+                      Divider(
+                        thickness: 2,
+                      ),
+                      Row(children: [
+                        Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
+                        Expanded(
+                            flex: 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(_selectedPoolPair.commission.toString()),
+                              ],
+                            )),
+                      ]),
+                      RaisedButton(
+                        child: Text(S.of(context).dex_swap),
+                        color: Theme.of(context).backgroundColor,
+                        onPressed: () async {
+                          final wallet = sl.get<DeFiChainWallet>();
 
-                      int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-                      int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
+                          if (wallet.isLocked()) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(S.of(context).wallet_locked),
+                            ));
 
-                      final walletTo = await wallet.getPublicKey();
-                      try {
-                        var streamController = StreamController<String>();
-                        var createSwapFuture =
-                            wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0, loadingStream: streamController);
+                            return;
+                          }
 
-                        final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
-                        var tx = await overlay.during(createSwapFuture);
+                          int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
+                          int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
-                        streamController.close();
+                          final walletTo = await wallet.getPublicKey();
+                          try {
+                            var streamController = StreamController<String>();
+                            var createSwapFuture =
+                                wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0, loadingStream: streamController);
 
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(S.of(context).dex_swap_successfull),
-                          action: SnackBarAction(
-                            label: S.of(context).dex_swap_show_transaction,
-                            onPressed: () async {
-                              var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-                              var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-                              EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              }
-                            },
-                          ),
-                        ));
-                      } on HttpException catch (e) {
-                        final errorMsg = e.error.error;
-                        LogHelper.instance.e("Error saving tx...($errorMsg)");
+                            final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+                            var tx = await overlay.during(createSwapFuture);
 
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Error occured commiting the tx...($errorMsg)'),
-                        ));
-                      }
-                    },
-                  )
-                ])
-            ]))));
+                            streamController.close();
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(S.of(context).dex_swap_successfull),
+                              action: SnackBarAction(
+                                label: S.of(context).dex_swap_show_transaction,
+                                onPressed: () async {
+                                  var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+                                  var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
+                                  EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  }
+                                },
+                              ),
+                            ));
+                          } on HttpException catch (e) {
+                            final errorMsg = e.error.error;
+                            LogHelper.instance.e("Error saving tx...($errorMsg)");
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Error occured commiting the tx...($errorMsg)'),
+                            ));
+                          }
+                        },
+                      )
+                    ])
+                ]))));
   }
 }

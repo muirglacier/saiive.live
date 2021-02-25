@@ -62,6 +62,8 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
         demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
       }
 
+      demoWords2 = "glad village quantum off rely pretty emerge predict clump orphan crater space monster sleep trip remain cute into village drip proud siren clean middle";
+
       var items = demoWords2.split(" ");
 
       items.forEach((element) {
@@ -93,7 +95,8 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
         return SuggestionConfiguration(title: Text(phrase.name));
       },
       configureChip: (lang) {
-        return ChipConfiguration(label: Text(lang.name), backgroundColor: Theme.of(context).primaryColor, labelStyle: TextStyle(color: Colors.white), deleteIconColor: Colors.white);
+        return ChipConfiguration(
+            label: Text(lang.name), backgroundColor: Theme.of(context).primaryColor, labelStyle: TextStyle(color: Colors.white), deleteIconColor: Colors.white);
       },
       onChanged: () {
         //  _tagBoxFocus.requestFocus();
@@ -146,7 +149,11 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                   Align(
                       alignment: Alignment.center,
                       child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center, alignment: WrapAlignment.center, runAlignment: WrapAlignment.center, direction: Axis.horizontal, children: [buildTagInput()])),
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          alignment: WrapAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          direction: Axis.horizontal,
+                          children: [buildTagInput()])),
                   SizedBox(height: 50),
                   Container(
                       child: SizedBox(

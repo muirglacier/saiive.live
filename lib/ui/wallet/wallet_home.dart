@@ -131,10 +131,18 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     return Card(
         child: ListTile(
       leading: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [TokenIcon(balance.token)]),
-      title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [AutoSizeText(balance.token, style: Theme.of(context).textTheme.headline3, maxLines: 1,), AutoSizeText(balance.token, style: Theme.of(context).textTheme.bodyText1, maxLines: 1,)]),
+      title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+        AutoSizeText(
+          balance.token,
+          style: Theme.of(context).textTheme.headline3,
+          maxLines: 1,
+        ),
+        AutoSizeText(
+          balance.token,
+          style: Theme.of(context).textTheme.bodyText1,
+          maxLines: 1,
+        )
+      ]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -206,6 +214,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                 ))
           ],
         ),
-        body: SmartRefresher(controller: _refreshController, enablePullDown: true, enablePullUp: true, onRefresh: _refresh, onLoading: _initWallet, child: buildWalletScreen(context)));
+        body: SmartRefresher(
+            controller: _refreshController, enablePullDown: true, enablePullUp: true, onRefresh: _refresh, onLoading: _initWallet, child: buildWalletScreen(context)));
   }
 }

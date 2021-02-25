@@ -653,13 +653,14 @@ class Wallet extends IWallet {
     final tokenBalance = await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
     final accBalance = await _walletDatabase.getAccountBalance(DeFiConstants.DefiAccountSymbol);
 
-    final totalBalance = tokenBalance.balance + accBalance.balance;
+    final accountBalance = accBalance.balance != null ? accBalance.balance : 0;
+    final totalBalance = (tokenBalance.balance != null ? tokenBalance.balance : 0) + accountBalance;
 
     if (amount > totalBalance) {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
 
-    if (accBalance.balance > amount) {
+    if (accountBalance > amount) {
       // we already have enough acc balance
       return null;
     }
@@ -672,7 +673,7 @@ class Wallet extends IWallet {
     final keys = List<ECPair>.empty(growable: true);
     final fee = await getTxFee(0, 0);
 
-    var checkAmount = (amount - accBalance.balance) + fee;
+    var checkAmount = (amount - accountBalance) + fee;
 
     var curAmount = 0;
     for (final tx in unspentTxs) {

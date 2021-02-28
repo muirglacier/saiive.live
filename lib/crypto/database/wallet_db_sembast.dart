@@ -159,7 +159,8 @@ class SembastWalletDatabase extends IWalletDatabase {
     if (records.length == 0) {
       return 0;
     }
-    return records.first["id"] + 1;
+
+    return records.first["id"];
   }
 
   Future<WalletAccount> updateAccount(WalletAccount account) async {

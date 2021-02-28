@@ -22,8 +22,13 @@ class RestoreRecoveryPhraseScreen extends StatefulWidget {
 
 class PhraseTaggable extends Taggable {
   final String name;
+  final int pos;
 
-  PhraseTaggable({this.name});
+  String get posDisplay => (pos + 1).toString();
+
+  String get phraseDisplay => (posDisplay) + ": " + name;
+
+  PhraseTaggable({@required this.name, @required this.pos});
 
   @override
   List<Object> get props => [name];
@@ -35,8 +40,10 @@ class PhraseService {
     final words = WORDLIST_ENGLISH.where((element) => element.startsWith(query));
     var phraseList = List<PhraseTaggable>.empty(growable: true);
 
+    int pos = 0;
     words.forEach((element) {
-      phraseList.add(PhraseTaggable(name: element));
+      phraseList.add(PhraseTaggable(name: element, pos: pos));
+      pos++;
     });
 
     return phraseList;
@@ -62,12 +69,15 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
         demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
       }
 
-      demoWords2 = "glad village quantum off rely pretty emerge predict clump orphan crater space monster sleep trip remain cute into village drip proud siren clean middle";
+      //WOLFI
+      //demoWords2 = "glad village quantum off rely pretty emerge predict clump orphan crater space monster sleep trip remain cute into village drip proud siren clean middle";
 
       var items = demoWords2.split(" ");
 
+      int pos = 0;
       items.forEach((element) {
-        _selectedPhrases.add(new PhraseTaggable(name: element));
+        // _selectedPhrases.add(new PhraseTaggable(name: element, pos: pos));
+        pos++;
       });
 
       _phrase = demoWords2;
@@ -96,7 +106,12 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
       },
       configureChip: (lang) {
         return ChipConfiguration(
-            label: Text(lang.name), backgroundColor: Theme.of(context).primaryColor, labelStyle: TextStyle(color: Colors.white), deleteIconColor: Colors.white);
+            label: Text(lang.phraseDisplay), backgroundColor: Theme.of(context).primaryColor, labelStyle: TextStyle(color: Colors.white), deleteIconColor: Colors.white);
+      },
+      onAdded: (item) async {
+        var test = item;
+
+        return new PhraseTaggable(name: item.name, pos: _selectedPhrases.length);
       },
       onChanged: () {
         //  _tagBoxFocus.requestFocus();

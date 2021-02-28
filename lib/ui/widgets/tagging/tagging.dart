@@ -270,15 +270,24 @@ class _FlutterTaggingState<T extends Taggable> extends State<FlutterTagging<T>> 
               ),
             );
           },
-          onSuggestionSelected: (suggestion) {
-            if (_additionItem != suggestion) {
-              setState(() {
-                widget.initialItems.add(suggestion);
-              });
+          onSuggestionSelected: (suggestion) async {
+            if (widget.onAdded != null) {
+              var _item = await widget.onAdded(suggestion);
+              if (_item != null) {
+                setState(() {
+                  widget.initialItems.add(_item);
+                });
+              }
+            } else {
+              if (_additionItem != suggestion) {
+                setState(() {
+                  widget.initialItems.add(suggestion);
+                });
+                _textController.clear();
+              }
               if (widget.onChanged != null) {
                 widget.onChanged();
               }
-              _textController.clear();
             }
           },
         ),

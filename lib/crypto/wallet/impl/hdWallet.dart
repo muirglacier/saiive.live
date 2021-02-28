@@ -95,15 +95,19 @@ class HdWallet extends IHdWallet {
     var i = 0;
     var remainingAddresses = walletLen;
 
+    final allAddresses = walletAddresses.map((e) => e.publicKey).toList().join("\",\"");
+
+    LogHelper.instance.d("AllAddress for wallet: $allAddresses");
+
     do {
       remainingAddresses = (walletLen - IWallet.KeysPerQuery * (i + 1));
       final subListLen = min(IWallet.KeysPerQuery * (i + 1), walletLen);
       final startSubList = i * IWallet.KeysPerQuery;
       final addresses = walletAddresses.sublist(startSubList, subListLen).map((e) => e.publicKey).toList();
 
-      for (final addr in addresses) {
-        LogHelper.instance.d("Address: $addr");
-      }
+      final addressesStr = addresses.join("\",\"");
+
+      LogHelper.instance.d("Address: $addressesStr");
 
       await work(addresses, startSubList, walletLen);
       i++;

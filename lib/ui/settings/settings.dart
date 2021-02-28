@@ -8,6 +8,7 @@ import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/model/available_themes.dart';
 import 'package:defichainwallet/ui/settings/settings_seed.dart';
+import 'package:defichainwallet/ui/settings/wallet_addresses.dart';
 import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/ui/wallet/wallet_send.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
@@ -151,6 +152,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
+                    },
+                  )),
+                  Container(
+                      child: RaisedButton(
+                    child: Text("Show wallet addresses"),
+                    color: Theme.of(context).backgroundColor,
+                    onPressed: () async {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
                     },
                   ))
                 ],

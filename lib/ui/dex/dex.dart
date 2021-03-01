@@ -381,6 +381,60 @@ class _DexScreen extends State<DexScreen> {
     _testSwapTo = false;
   }
 
+  Future doSwap() async {
+    final wallet = sl.get<DeFiChainWallet>();
+
+    if (wallet.isLocked()) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(S.of(context).wallet_locked),
+      ));
+
+      return;
+    }
+
+    int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
+    int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
+
+    final walletTo = await wallet.getPublicKey();
+    try {
+      var streamController = StreamController<String>();
+      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0, loadingStream: streamController);
+
+      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+      var tx = await overlay.during(createSwapFuture);
+
+      streamController.close();
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(S.of(context).dex_swap_successfull),
+        action: SnackBarAction(
+          label: S.of(context).dex_swap_show_transaction,
+          onPressed: () async {
+            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
+            EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+            if (await canLaunch(url)) {
+              await launch(url);
+            }
+          },
+        ),
+      ));
+    } on HttpException catch (e) {
+      final errorMsg = e.error.error;
+      LogHelper.instance.e("Error saving tx...($errorMsg)");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error occured commiting the tx...($errorMsg)'),
+      ));
+    } catch (e) {
+      LogHelper.instance.e("Error...", e);
+      final errorMsg = e.toString();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error occured commiting the tx...($errorMsg)'),
+      ));
+    }
+  }
+
   _buildDropdownListItem(TokenBalance e) {
     return Row(
       children: [
@@ -551,52 +605,7 @@ class _DexScreen extends State<DexScreen> {
                       ElevatedButton(
                         child: Text(S.of(context).dex_swap),
                         onPressed: () async {
-                          final wallet = sl.get<DeFiChainWallet>();
-
-                          if (wallet.isLocked()) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(S.of(context).wallet_locked),
-                            ));
-
-                            return;
-                          }
-
-                          int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-                          int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
-
-                          final walletTo = await wallet.getPublicKey();
-                          try {
-                            var streamController = StreamController<String>();
-                            var createSwapFuture =
-                                wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0, loadingStream: streamController);
-
-                            final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
-                            var tx = await overlay.during(createSwapFuture);
-
-                            streamController.close();
-
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(S.of(context).dex_swap_successfull),
-                              action: SnackBarAction(
-                                label: S.of(context).dex_swap_show_transaction,
-                                onPressed: () async {
-                                  var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-                                  var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-                                  EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-                                  if (await canLaunch(url)) {
-                                    await launch(url);
-                                  }
-                                },
-                              ),
-                            ));
-                          } on HttpException catch (e) {
-                            final errorMsg = e.error.error;
-                            LogHelper.instance.e("Error saving tx...($errorMsg)");
-
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('Error occured commiting the tx...($errorMsg)'),
-                            ));
-                          }
+                          await doSwap();
                         },
                       )
                     ])

@@ -326,6 +326,56 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     );
   }
 
+  Future addLiquidity() async {
+    final wallet = sl.get<DeFiChainWallet>();
+    final walletTo = await wallet.getPublicKey();
+
+    int amountTokenA = (_amountTokenA * DefiChainConstants.COIN).round();
+    int amountTokenB = (_amountTokenB * DefiChainConstants.COIN).round();
+
+    var streamController = StreamController<String>();
+    var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo, loadingStream: streamController);
+    final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+
+    try {
+      var tx = await overlay.during(createSwapFuture);
+
+      streamController.close();
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(S.of(context).liqudity_add_successfull),
+        action: SnackBarAction(
+          label: S.of(context).dex_swap_show_transaction,
+          onPressed: () async {
+            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
+            EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+            if (await canLaunch(url)) {
+              await launch(url);
+            }
+          },
+        ),
+      ));
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      LogHelper.instance.e("Error creating addpool-tx", e);
+      if (e is ErrorResponse) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.error),
+        ));
+      } else if (e is HttpException) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.error.error),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()),
+        ));
+      }
+    }
+  }
+
   @override
   void dispose() {
     _amountTokenAController.dispose();
@@ -494,50 +544,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                   ElevatedButton(
                     child: Text(S.of(context).liquitiy_add),
                     onPressed: () async {
-                      final wallet = sl.get<DeFiChainWallet>();
-                      final walletTo = await wallet.getPublicKey();
-
-                      int amountTokenA = (_amountTokenA * DefiChainConstants.COIN).round();
-                      int amountTokenB = (_amountTokenB * DefiChainConstants.COIN).round();
-
-                      var streamController = StreamController<String>();
-                      var createSwapFuture =
-                          wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo, loadingStream: streamController);
-                      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
-
-                      try {
-                        var tx = await overlay.during(createSwapFuture);
-
-                        streamController.close();
-
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(S.of(context).liqudity_add_successfull),
-                          action: SnackBarAction(
-                            label: S.of(context).dex_swap_show_transaction,
-                            onPressed: () async {
-                              var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-                              var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-                              EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              }
-                            },
-                          ),
-                        ));
-
-                        Navigator.of(context).pop();
-                      } catch (e) {
-                        LogHelper.instance.e("Error creating addpool-tx", e);
-                        if (e is ErrorResponse) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(e.error),
-                          ));
-                        } else if (e is HttpException) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(e.error.error),
-                          ));
-                        }
-                      }
+                      await addLiquidity();
                     },
                   )
                 ])

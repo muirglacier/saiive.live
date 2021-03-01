@@ -51,6 +51,10 @@ class _WalletSendScreen extends State<WalletSendScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(e.error),
         ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()),
+        ));
       }
     }
   }

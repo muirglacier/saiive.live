@@ -71,12 +71,11 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
 
       //WOLFI
       //demoWords2 = "glad village quantum off rely pretty emerge predict clump orphan crater space monster sleep trip remain cute into village drip proud siren clean middle";
-
       var items = demoWords2.split(" ");
 
       int pos = 0;
       items.forEach((element) {
-        // _selectedPhrases.add(new PhraseTaggable(name: element, pos: pos));
+        _selectedPhrases.add(new PhraseTaggable(name: element, pos: pos));
         pos++;
       });
 

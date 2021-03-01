@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
@@ -59,6 +60,8 @@ class _DexScreen extends State<DexScreen> {
     _amountFromController.addListener(handleChangeFrom);
     _amountToController.addListener(handleChangeTo);
 
+    sl.get<AppCenterWrapper>().trackEvent("openSwapPage", <String, String>{});
+
     _init();
   }
 
@@ -70,6 +73,7 @@ class _DexScreen extends State<DexScreen> {
   }
 
   _init() async {
+    sl.get<AppCenterWrapper>().trackEvent("openSwapPageLoadStart", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
     var tokenMap = List<TokenBalance>.empty(growable: true);
     var pairs = await sl.get<IPoolPairService>().getPoolPairs('DFI');
     var uniqueTokenList = Map<String, String>();
@@ -110,6 +114,8 @@ class _DexScreen extends State<DexScreen> {
       _fromTokens = tokenMap;
       _toTokens = tokenMap;
     });
+
+    sl.get<AppCenterWrapper>().trackEvent("openSwapPageLoadEnd", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
   }
 
   filter(TokenBalance valFromSymbol, TokenBalance valToSymbol) {
@@ -372,6 +378,9 @@ class _DexScreen extends State<DexScreen> {
         ));
 
         _amountFromController.text = '-';
+
+        sl.get<AppCenterWrapper>().trackEvent(
+            "swapTestError", <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": amount.toString(), "walletTo": pubKey});
       }
 
       _testSwapLoading = false;
@@ -400,8 +409,25 @@ class _DexScreen extends State<DexScreen> {
       var streamController = StreamController<String>();
       var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0, loadingStream: streamController);
 
+      sl.get<AppCenterWrapper>().trackEvent("swap", <String, String>{
+        "fromToken": _selectedValueFrom.hash,
+        "toToken": _selectedValueTo.hash,
+        "valueFrom": valueFrom.toString(),
+        "walletTo": walletTo,
+        "maxPrice": maxPrice.toString()
+      });
+
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createSwapFuture);
+
+      sl.get<AppCenterWrapper>().trackEvent("swapSuccess", <String, String>{
+        "fromToken": _selectedValueFrom.hash,
+        "toToken": _selectedValueTo.hash,
+        "valueFrom": valueFrom.toString(),
+        "walletTo": walletTo,
+        "maxPrice": maxPrice.toString(),
+        "txId": tx.mintTxId
+      });
 
       streamController.close();
 
@@ -426,12 +452,29 @@ class _DexScreen extends State<DexScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error occured commiting the tx...($errorMsg)'),
       ));
+      sl.get<AppCenterWrapper>().trackEvent("swawFailureHandled", <String, String>{
+        "fromToken": _selectedValueFrom.hash,
+        "toToken": _selectedValueTo.hash,
+        "valueFrom": valueFrom.toString(),
+        "walletTo": walletTo,
+        "maxPrice": maxPrice.toString(),
+        "error": errorMsg
+      });
     } catch (e) {
       LogHelper.instance.e("Error...", e);
       final errorMsg = e.toString();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error occured commiting the tx...($errorMsg)'),
       ));
+
+      sl.get<AppCenterWrapper>().trackEvent("swapFailure", <String, String>{
+        "fromToken": _selectedValueFrom.hash,
+        "toToken": _selectedValueTo.hash,
+        "valueFrom": valueFrom.toString(),
+        "walletTo": walletTo,
+        "maxPrice": maxPrice.toString(),
+        "error": e.toString()
+      });
     }
   }
 

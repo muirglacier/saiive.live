@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
@@ -107,6 +108,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
     _wallet = sl.get<DeFiChainWallet>();
     _syncEvents();

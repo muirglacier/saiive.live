@@ -51,7 +51,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
     super.initState();
 
     EventTaxiImpl.singleton().registerAll().listen((event) {
-      final eventType = event.toString();
+      final eventType = event.runtimeType.toString();
       StateContainer.of(context).appCenter.trackEvent(eventType, {});
       StateContainer.of(context).logger.d("Event " + eventType + " called...");
     });

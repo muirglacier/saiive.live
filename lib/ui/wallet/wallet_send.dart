@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
@@ -36,6 +36,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
 
+      sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
+
       final tx = await sl.get<DeFiChainWallet>().createAndSend(totalAmount, widget.token, _addressController.text, loadingStream: stream);
 
       final txId = tx.txId;
@@ -45,16 +47,24 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(txId),
       ));
+
+      sl
+          .get<AppCenterWrapper>()
+          .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
     } catch (e) {
       LogHelper.instance.e("Error creating tx", e);
       if (e is ErrorResponse) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(e.error),
         ));
+
+        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailureHandled", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.error});
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(e.toString()),
         ));
+
+        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
       }
     }
   }
@@ -67,6 +77,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   @override
   void initState() {
     super.initState();
+
+    sl.get<AppCenterWrapper>().trackEvent("openWalletSend", <String, String>{"coin": widget.token});
 
     _addressController = TextEditingController(text: widget.toAddress ?? 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
   }

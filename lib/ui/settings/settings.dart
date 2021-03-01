@@ -1,3 +1,4 @@
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
@@ -34,6 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
 
+    sl.get<AppCenterWrapper>().trackEvent("openSettingsPage", <String, String>{});
     _init();
   }
 
@@ -52,6 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void doDeleteSeed() async {
+    sl.get<AppCenterWrapper>().trackEvent("settingsDeleteSeed", {});
+
     await sl.get<IWalletDatabase>().destroy();
     await sl.get<IVault>().setSeed(null);
     await sl.get<DeFiChainWallet>().close();
@@ -107,9 +111,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         _theme = val;
                       });
 
-                      sl.get<SharedPrefsUtil>().setTheme(ThemeSetting(ThemeOptions.values[val])).then((result) {
+                      final theme = ThemeSetting(ThemeOptions.values[val]);
+                      sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
+
+                      sl.get<SharedPrefsUtil>().setTheme(theme).then((result) {
                         setState(() {
-                          StateContainer.of(context).updateTheme(ThemeSetting(ThemeOptions.values[val]));
+                          StateContainer.of(context).updateTheme(theme);
                         });
                       });
                     },

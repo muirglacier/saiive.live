@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
@@ -55,6 +56,8 @@ void setupServiceLocator() {
   sl.registerLazySingleton<BiometricUtil>(() => BiometricUtil());
   sl.registerLazySingleton<HapticUtil>(() => HapticUtil());
   sl.registerLazySingleton<AuthenticationHelper>(() => AuthenticationHelper());
+
+  sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
 
   sl.registerSingletonAsync<IWalletDatabase>(() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();

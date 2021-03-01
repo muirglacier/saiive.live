@@ -1,8 +1,10 @@
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/poolpair.dart';
 import 'package:defichainwallet/helper/poolshare.dart';
 import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
+import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_add.dart';
 import 'package:defichainwallet/ui/liquidity/pool_share.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
@@ -28,6 +30,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   void initState() {
     super.initState();
 
+    sl.get<AppCenterWrapper>().trackEvent("openLiquidityPage", <String, String>{});
     _init();
   }
 
@@ -39,6 +42,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     if (_isLoading) {
       return;
     }
+    sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadStart", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
 
     setState(() {
       _isLoading = true;
@@ -52,6 +56,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       _poolPairLiquidity = poolPairLiquidity;
       _isLoading = false;
     });
+
+    sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadEnd", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
   }
 
   Widget _buildMyLiquidityEntry(PoolShareLiquidity myLiquidity) {

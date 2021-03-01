@@ -62,7 +62,7 @@ class StateContainerState extends State<StateContainer> {
   BaseTheme curTheme = DefiThemeDark();
   LanguageSetting curLanguage = LanguageSetting(AvailableLanguage.DEFAULT);
   Locale deviceLocale = Locale('en', 'US');
-  AppCenterWrapper appCenter = AppCenterWrapper();
+  AppCenterWrapper appCenter;
   Logger get logger => LogHelper.instance;
 
   bool _walletSyncing = false;
@@ -123,6 +123,7 @@ class StateContainerState extends State<StateContainer> {
       updateTheme(theme);
     });
 
+    appCenter = sl.get<AppCenterWrapper>();
     appCenter.start();
   }
 

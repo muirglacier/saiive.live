@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
@@ -56,6 +57,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
 
     _amountTokenAController.addListener(handleChangeTokenA);
     _amountTokenBController.addListener(handleChangeTokenB);
+
+    sl.get<AppCenterWrapper>().trackEvent("openAddLiquidity", <String, String>{});
 
     _init();
   }
@@ -334,11 +337,29 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     int amountTokenB = (_amountTokenB * DefiChainConstants.COIN).round();
 
     var streamController = StreamController<String>();
+
+    sl.get<AppCenterWrapper>().trackEvent("addLiquidity", <String, String>{
+      "tokenA": _selectedTokenA.hash,
+      "amountA": amountTokenA.toString(),
+      "tokenB": _selectedTokenB.hash,
+      "amountB": amountTokenB.toString(),
+      "shareAddress": walletTo
+    });
+
     var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo, loadingStream: streamController);
     final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
 
     try {
       var tx = await overlay.during(createSwapFuture);
+
+      sl.get<AppCenterWrapper>().trackEvent("addLiquiditySuccess", <String, String>{
+        "tokenA": _selectedTokenA.hash,
+        "amountA": amountTokenA.toString(),
+        "tokenB": _selectedTokenB.hash,
+        "amountB": amountTokenB.toString(),
+        "shareAddress": walletTo,
+        "txId": tx.mintTxId
+      });
 
       streamController.close();
 
@@ -364,14 +385,41 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(e.error),
         ));
+
+        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
+          "tokenA": _selectedTokenA.hash,
+          "amountA": amountTokenA.toString(),
+          "tokenB": _selectedTokenB.hash,
+          "amountB": amountTokenB.toString(),
+          "shareAddress": walletTo,
+          "error": e.error
+        });
       } else if (e is HttpException) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(e.error.error),
         ));
+
+        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
+          "tokenA": _selectedTokenA.hash,
+          "amountA": amountTokenA.toString(),
+          "tokenB": _selectedTokenB.hash,
+          "amountB": amountTokenB.toString(),
+          "shareAddress": walletTo,
+          "error": e.error.error
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(e.toString()),
         ));
+
+        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailure", <String, String>{
+          "tokenA": _selectedTokenA.hash,
+          "amountA": amountTokenA.toString(),
+          "tokenB": _selectedTokenB.hash,
+          "amountB": amountTokenB.toString(),
+          "shareAddress": walletTo,
+          "error": e.toString()
+        });
       }
     }
   }

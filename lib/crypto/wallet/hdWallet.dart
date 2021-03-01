@@ -6,7 +6,7 @@ import 'package:tuple/tuple.dart';
 abstract class IHdWallet {
   Future init(IWalletDatabase walletDatabase);
 
-  Future<List<String>> getPublicKeys();
+  Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase);
   Future<String> nextFreePublicKey(IWalletDatabase database, bool isChangeAddress);
 
   Future<Tuple3<int, bool, int>> nextFreePublicKeyRaw(IWalletDatabase database, bool isChangeAddress);

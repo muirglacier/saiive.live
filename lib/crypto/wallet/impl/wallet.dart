@@ -111,7 +111,7 @@ class Wallet extends IWallet {
     List<String> keys = [];
 
     for (var wallet in _wallets.values) {
-      keys.addAll(await wallet.getPublicKeys());
+      keys.addAll(await wallet.getPublicKeys(_walletDatabase));
     }
 
     return keys;

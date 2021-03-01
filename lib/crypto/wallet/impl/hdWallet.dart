@@ -24,12 +24,11 @@ class HdWallet extends IHdWallet {
 
   HdWallet(this._password, this._account, this._chain, this._network, this._seed, this._apiService);
 
-  Future<List<String>> getPublicKeys() async {
-    final key = HEX.decode(_seed);
-    var keys = await HdWalletUtil.derivePublicKeysWithChange(key, _account.account, 0, _chain, _network, IWallet.KeysPerQuery);
-    var pubKeyList = keys.map((item) => item).toList();
+  Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase) async {
+    final walletAddresses = await walletDatabase.getWalletAddresses(_account.account);
+    final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
 
-    return pubKeyList;
+    return allAddresses;
   }
 
   @override

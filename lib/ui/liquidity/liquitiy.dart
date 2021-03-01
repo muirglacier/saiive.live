@@ -35,8 +35,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     _refresh();
   }
 
-  _refresh() async
-  {
+  _refresh() async {
     if (_isLoading) {
       return;
     }
@@ -103,7 +102,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
         child: Padding(
             padding: EdgeInsets.all(30),
             child: Column(children: <Widget>[
-              Container(margin: const EdgeInsets.only(bottom: 10.0), decoration: new BoxDecoration(color: Colors.transparent), child: TokenPairIcon(liquidity.tokenA, liquidity.tokenB)),
+              Container(
+                  margin: const EdgeInsets.only(bottom: 10.0), decoration: new BoxDecoration(color: Colors.transparent), child: TokenPairIcon(liquidity.tokenA, liquidity.tokenB)),
               Container(
                 child: Row(children: [
                   Expanded(flex: 2, child: Text('APY', style: TextStyle(fontWeight: FontWeight.bold))),
@@ -117,8 +117,10 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                 ]),
               ),
               Container(
-                child: Row(
-                    children: [Expanded(flex: 4, child: Text(liquidity.tokenA)), Expanded(flex: 6, child: Text(formatCurrency.format(liquidity.totalLiquidityInUSDT), textAlign: TextAlign.right))]),
+                child: Row(children: [
+                  Expanded(flex: 4, child: Text(liquidity.tokenA)),
+                  Expanded(flex: 6, child: Text(formatCurrency.format(liquidity.totalLiquidityInUSDT), textAlign: TextAlign.right))
+                ]),
               ),
             ])));
   }

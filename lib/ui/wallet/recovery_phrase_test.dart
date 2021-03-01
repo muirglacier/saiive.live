@@ -95,9 +95,9 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
       Container(
           child: SizedBox(
               width: 300,
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text(S.of(context).next),
-                color: Theme.of(context).backgroundColor,
+                style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     await saveSeed(false);

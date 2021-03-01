@@ -95,6 +95,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
   Widget buildTagInput() {
     return FlutterTagging<PhraseTaggable>(
       initialItems: _selectedPhrases,
+      enableImmediateSuggestion: false,
       textFieldConfiguration: TextFieldConfiguration(
         focusNode: _tagBoxFocus,
         enabled: _inputEnabled,
@@ -114,14 +115,15 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
         return new PhraseTaggable(name: item.name, pos: _selectedPhrases.length);
       },
       onChanged: () {
-        //  _tagBoxFocus.requestFocus();
+        _tagBoxFocus.requestFocus();
+
         setState(() {
           _inputEnabled = _selectedPhrases.length < 24;
           _phrase = _selectedPhrases.map((e) => e.name).join(" ");
         });
 
         if (_inputEnabled) {
-          // Future.delayed(Duration(milliseconds: 10), () => _tagBoxFocus.requestFocus());
+          Future.delayed(Duration(milliseconds: 10), () => _tagBoxFocus.requestFocus());
         }
       },
     );
@@ -173,9 +175,8 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
                   Container(
                       child: SizedBox(
                           width: 300,
-                          child: RaisedButton(
+                          child: ElevatedButton(
                             child: Text(S.of(context).next),
-                            color: Theme.of(context).backgroundColor,
                             onPressed: () async {
                               if (!validateMnemonic(_phrase)) {
                                 ScaffoldMessenger.of(context)

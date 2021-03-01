@@ -91,7 +91,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
           flex: 1,
           child: Column(children: [
             Expanded(flex: 1, child: Padding(padding: EdgeInsets.only(top: 10), child: _buildAccountListEntry(accounts))),
-            RaisedButton(
+            ElevatedButton(
               child: Text(S.of(context).next),
               onPressed: () async {
                 Navigator.of(context).pushNamedAndRemoveUntil("/home", (_) => false);

@@ -110,16 +110,15 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                 ButtonTheme(
                     height: 30,
                     minWidth: 40,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                         child: Text(S.of(context).liquitiy_add_max),
-                        color: Theme.of(context).primaryColor,
                         onPressed: () {
                           handleSetMax();
                         }))
               ]),
-              RaisedButton(
+              ElevatedButton(
                 child: Text(S.of(context).wallet_send),
-                color: Theme.of(context).backgroundColor,
+                style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                 onPressed: () async {
                   sl.get<AuthenticationHelper>().forceAuth(context, () {
                     final streamController = new StreamController<String>();

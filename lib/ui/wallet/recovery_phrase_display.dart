@@ -68,9 +68,9 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
                 Container(
                     child: SizedBox(
                         width: 300,
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           child: Text(S.of(context).next),
-                          color: Theme.of(context).backgroundColor,
+                          style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split)));
                           },

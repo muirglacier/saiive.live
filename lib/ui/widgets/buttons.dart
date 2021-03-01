@@ -14,8 +14,8 @@ class AppButton {
       case AppButtonType.PRIMARY:
         return SizedBox(
             width: width,
-            child: RaisedButton(
-                color: StateContainer.of(context).curTheme.buttonColorPrimary,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                   if (icon != null) Icon(icon),
                   SizedBox(width: 10),
@@ -32,7 +32,7 @@ class AppButton {
       case AppButtonType.SECONDARY:
         return SizedBox(
             width: width,
-            child: RaisedButton(
+            child: ElevatedButton(
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                   if (icon != null) Icon(icon),
                   SizedBox(width: 10),

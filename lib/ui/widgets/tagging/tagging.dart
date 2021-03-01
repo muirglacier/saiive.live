@@ -276,6 +276,8 @@ class _FlutterTaggingState<T extends Taggable> extends State<FlutterTagging<T>> 
               if (_item != null) {
                 setState(() {
                   widget.initialItems.add(_item);
+                  _textController.clear();
+                  Future.delayed(Duration(milliseconds: 200), () => _focusNode.requestFocus());
                 });
               }
             } else {
@@ -283,7 +285,9 @@ class _FlutterTaggingState<T extends Taggable> extends State<FlutterTagging<T>> 
                 setState(() {
                   widget.initialItems.add(suggestion);
                 });
+
                 _textController.clear();
+                _focusNode.requestFocus();
               }
               if (widget.onChanged != null) {
                 widget.onChanged();

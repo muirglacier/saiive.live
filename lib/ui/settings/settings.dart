@@ -127,9 +127,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     }).toList(),
                   )),
                   Container(
-                      child: RaisedButton(
+                      child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                     child: Text(S.of(context).settings_remove_seed),
-                    color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       sl.get<AuthenticationHelper>().forceAuth(context, () {
                         doDeleteSeed();
@@ -137,9 +137,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   )),
                   Container(
-                      child: RaisedButton(
+                      child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                     child: Text(S.of(context).settings_show_seed),
-                    color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       sl.get<AuthenticationHelper>().forceAuth(context, () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
@@ -147,17 +147,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   )),
                   Container(
-                      child: RaisedButton(
+                      child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                     child: Text("Show logs"),
-                    color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
                     },
                   )),
                   Container(
-                      child: RaisedButton(
+                      child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                     child: Text("Show wallet addresses"),
-                    color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
                     },
@@ -177,9 +177,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             textAlign: TextAlign.center,
                           ))),
                   Container(
-                      child: RaisedButton(
+                      child: ElevatedButton(
                     child: Text("dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs", style: TextStyle(color: Colors.white)),
-                    color: Theme.of(context).primaryColor,
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen('DFI', toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
                     },

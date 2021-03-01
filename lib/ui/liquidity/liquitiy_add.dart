@@ -370,9 +370,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 ButtonTheme(
                     height: 30,
                     minWidth: 40,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                         child: Text(S.of(context).liquitiy_add_max),
-                        color: Theme.of(context).primaryColor,
                         onPressed: () {
                           handleSetMaxTokenA();
                         }))
@@ -411,9 +410,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 ButtonTheme(
                     height: 30,
                     minWidth: 40,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                         child: Text(S.of(context).liquitiy_add_max),
-                        color: Theme.of(context).primaryColor,
                         onPressed: () {
                           handleSetMaxTokenB();
                         }))
@@ -493,9 +491,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                           ],
                         )),
                   ]),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text(S.of(context).liquitiy_add),
-                    color: Theme.of(context).backgroundColor,
                     onPressed: () async {
                       final wallet = sl.get<DeFiChainWallet>();
                       final walletTo = await wallet.getPublicKey();

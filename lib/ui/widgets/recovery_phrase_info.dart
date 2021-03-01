@@ -89,7 +89,7 @@ class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
           Container(
               child: SizedBox(
                   width: 300,
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     child: Text(S.of(context).wallet_new_reveal),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseDisplayScreen(widget.mnemonic)));

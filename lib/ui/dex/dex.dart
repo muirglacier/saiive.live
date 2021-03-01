@@ -438,9 +438,8 @@ class _DexScreen extends State<DexScreen> {
                     ButtonTheme(
                         height: 30,
                         minWidth: 40,
-                        child: RaisedButton(
+                        child: ElevatedButton(
                             child: Text(S.of(context).dex_add_max),
-                            color: Theme.of(context).primaryColor,
                             onPressed: () {
                               handleSetMaxFrom();
                             }))
@@ -449,8 +448,8 @@ class _DexScreen extends State<DexScreen> {
                     controller: _amountFromController,
                     decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
                   ),
-                  RaisedButton(
-                      color: StateContainer.of(context).curTheme.buttonColorPrimary,
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
                       child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                         SizedBox(width: 10),
                         Text(
@@ -490,9 +489,8 @@ class _DexScreen extends State<DexScreen> {
                     ButtonTheme(
                         height: 30,
                         minWidth: 40,
-                        child: RaisedButton(
+                        child: ElevatedButton(
                             child: Text(S.of(context).dex_add_max),
-                            color: Theme.of(context).primaryColor,
                             onPressed: () {
                               handleSetMaxTo();
                             }))
@@ -549,9 +547,8 @@ class _DexScreen extends State<DexScreen> {
                               ],
                             )),
                       ]),
-                      RaisedButton(
+                      ElevatedButton(
                         child: Text(S.of(context).dex_swap),
-                        color: Theme.of(context).backgroundColor,
                         onPressed: () async {
                           final wallet = sl.get<DeFiChainWallet>();
 

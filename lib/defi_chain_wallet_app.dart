@@ -77,29 +77,30 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
           const Locale('en', ''),
           const Locale('de', '')
         ],
-        locale:
-            StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT ? null : StateContainer.of(context).curLanguage.getLocale(),
+        locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
+            ? null
+            : StateContainer.of(context).curLanguage.getLocale(),
         title: "DeFiChain Wallet",
         theme: ThemeData(
-          brightness: StateContainer.of(context).curTheme.brightness,
-          primaryColor: StateContainer.of(context).curTheme.primary,
-          scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,
-          canvasColor: StateContainer.of(context).curTheme.backgroundColor,
-          textTheme: TextTheme(
-              headline3: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: StateContainer.of(context).curTheme.text,
-              ),
-              bodyText1: TextStyle(
-                color: StateContainer.of(context).curTheme.text,
-              ),
-              bodyText2: TextStyle(
-                color: StateContainer.of(context).curTheme.text,
-              )),
-          buttonColor: StateContainer.of(context).curTheme.primary,
-          fontFamily: 'Helvetica, Arial, sans-serif',
-        ),
+            brightness: StateContainer.of(context).curTheme.brightness,
+            primaryColor: StateContainer.of(context).curTheme.primary,
+            scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,
+            canvasColor: StateContainer.of(context).curTheme.backgroundColor,
+            textTheme: TextTheme(
+                headline3: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: StateContainer.of(context).curTheme.text,
+                ),
+                bodyText1: TextStyle(
+                  color: StateContainer.of(context).curTheme.text,
+                ),
+                bodyText2: TextStyle(
+                  color: StateContainer.of(context).curTheme.text,
+                )),
+            buttonColor: StateContainer.of(context).curTheme.primary,
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary))),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {

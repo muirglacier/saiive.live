@@ -535,11 +535,21 @@ class S {
     );
   }
 
-  /// `Refreshing utxo`
+  /// `Refreshing utxo...`
   String get wallet_operation_refresh_utxo {
     return Intl.message(
-      'Refreshing utxo',
+      'Refreshing utxo...',
       name: 'wallet_operation_refresh_utxo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refreshing utxo...done`
+  String get wallet_operation_refresh_utxo_done {
+    return Intl.message(
+      'Refreshing utxo...done',
+      name: 'wallet_operation_refresh_utxo_done',
       desc: '',
       args: [],
     );
@@ -550,6 +560,16 @@ class S {
     return Intl.message(
       'Building transaction',
       name: 'wallet_operation_build_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create swap transaction`
+  String get wallet_operation_create_swap_tx {
+    return Intl.message(
+      'Create swap transaction',
+      name: 'wallet_operation_create_swap_tx',
       desc: '',
       args: [],
     );

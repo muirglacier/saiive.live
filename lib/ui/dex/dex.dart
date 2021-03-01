@@ -449,11 +449,12 @@ class _DexScreen extends State<DexScreen> {
                     decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
                   ),
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
+                      style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
                       child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                         SizedBox(width: 10),
                         Text(
                           '<->',
+                          style: TextStyle(color: StateContainer.of(context).curTheme.text),
                         ),
                       ]),
                       onPressed: () {

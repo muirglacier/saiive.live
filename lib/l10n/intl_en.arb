@@ -56,8 +56,11 @@
   "wallet_receive": "Receive",
   "wallet_locked": "Wallet is synchronising right now!",
 
-  "wallet_operation_refresh_utxo": "Refreshing utxo",
+  "wallet_operation_refresh_utxo": "Refreshing utxo...",
+  "wallet_operation_refresh_utxo_done": "Refreshing utxo...done",
   "wallet_operation_build_tx": "Building transaction",
+  
+  "wallet_operation_create_swap_tx": "Create swap transaction",
   "wallet_operation_send_tx": "Sending transaction",
   "wallet_operation_refresh_addresses": "Refreshing addresses ({from}/{to})",
   "wallet_operation_refresh_tx": "Refreshing transactions ({from}/{to})",

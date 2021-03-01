@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
@@ -117,8 +118,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         }))
               ]),
               ElevatedButton(
-                child: Text(S.of(context).wallet_send),
-                style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
+                child: Text(S.of(context).wallet_send, style: TextStyle(color: StateContainer.of(context).curTheme.text)),
+                style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
                 onPressed: () async {
                   sl.get<AuthenticationHelper>().forceAuth(context, () {
                     final streamController = new StreamController<String>();

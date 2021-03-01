@@ -118,7 +118,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     return Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: _transactionsLoading
-            ? LoadingWidget(text: 'Loading')
+            ? LoadingWidget(text: S.of(context).loading)
             : Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

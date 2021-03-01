@@ -298,6 +298,7 @@ class Wallet extends IWallet {
     await _walletMutex.acquire();
 
     try {
+      loadingStream?.add(S.current.wallet_operation_create_swap_tx);
       var swap = await createSwap(fromToken, fromAmount, toToken, to, maxPrice, maxPriceFraction, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       return await createTxAndWait(swap.item1, loadingStream: loadingStream);

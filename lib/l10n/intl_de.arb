@@ -57,7 +57,9 @@
 
   
   "wallet_operation_refresh_utxo": "UTXO aktualisieren...",
+  "wallet_operation_refresh_utxo_done": "UTXO aktualisieren...fertig",
   "wallet_operation_build_tx": "Transaktion wird erstellt",
+  "wallet_operation_create_swap_tx": "Swap transaktion wird erstellt",
   "wallet_operation_send_tx": "Transaktion wird gesendet",
   "wallet_operation_refresh_addresses": "Aktualisiere Adressen ({from}/{to})",
   "wallet_operation_refresh_tx": "Aktualisiere Transaktionen ({from}/{to})",

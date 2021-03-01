@@ -140,6 +140,8 @@ class HdWallet extends IHdWallet {
         });
       }
     }, loadingStream: loadingStream);
+
+    loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
   }
 
   @override
@@ -155,5 +157,6 @@ class HdWallet extends IHdWallet {
         await database.addTransaction(element);
       });
     }, loadingStream: loadingStream);
+    loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
   }
 }

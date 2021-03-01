@@ -43,15 +43,8 @@ Mistakes and bugs happen, but with your help in resolving and reporting, togethe
   * Sync your wallet
   * See all funds ($DFI, DST)
 * Send $DFI funds
-
-## DEX
-WIP
-
-## Liquidity Pool
-WIP
-
-## Tokens
-You can already see a list of all tokens. Thats it. And thats all you need in a mobile app.
+* Swap Tokens
+* Add Liquidity 
 
 
 # Development

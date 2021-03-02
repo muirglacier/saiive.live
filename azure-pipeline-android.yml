@@ -13,9 +13,16 @@ stages:
       vmImage: 'ubuntu-latest'
 
     steps:
+      - task: Bash@3
+        displayName: "Prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
+
       - task: XplatGenerateReleaseNotes@3
         inputs:
-          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes'
+          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
           templateLocation: 'File'
           templatefile: '.devops/release_notes_template.txt'
           dumpPayloadToConsole: true

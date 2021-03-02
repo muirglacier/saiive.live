@@ -18,6 +18,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
             touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
 
       - task: XplatGenerateReleaseNotes@3

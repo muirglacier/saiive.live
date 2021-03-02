@@ -7,7 +7,39 @@ stages:
   displayName: iOS
   
   jobs:
+  - job: ReleaseNotes
+    displayName: "Generate release notes"
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: Bash@3
+        displayName: "Prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
+            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
+
+      - task: XplatGenerateReleaseNotes@3
+        inputs:
+          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
+          templateLocation: 'File'
+          templatefile: '.devops/release_notes_template.txt'
+          dumpPayloadToConsole: true
+          dumpPayloadToFile: false
+          replaceFile: false
+          getParentsAndChildren: False
+          getAllParents: False
+          getIndirectPullRequests: False
+    
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'release-notes'
+        
   - job: BuildiOSAdHoc
+    dependsOn: ReleaseNotes
     displayName: "Build iOS AdHoc"
     pool:
       vmImage: 'macOS-latest'
@@ -93,6 +125,7 @@ stages:
           ArtifactName: 'staging-ios'
 
   - job: BuildiOSAppStore
+    dependsOn: ReleaseNotes
     displayName: "Build iOS AppStore"
     pool:
       vmImage: 'macOS-latest'

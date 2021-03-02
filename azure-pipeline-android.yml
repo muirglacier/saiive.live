@@ -7,6 +7,24 @@ stages:
   displayName: Android
   
   jobs:
+  - job: ReleaseNotes
+    displayName: "Generate release notes"
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: XplatGenerateReleaseNotes@3
+        inputs:
+          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes'
+          templateLocation: 'File'
+          templatefile: '.devops/release_notes_template.txt'
+          dumpPayloadToConsole: true
+          dumpPayloadToFile: false
+          replaceFile: true
+          getParentsAndChildren: False
+          getAllParents: False
+          getIndirectPullRequests: False
+          
   - job: BuildAndroidDev
     displayName: "Build Android DEV"
     pool:
@@ -54,6 +72,7 @@ stages:
           entryPoint: 'lib/main.dart'
           buildNumber: $(Build.BuildNumber)
 
+          
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:

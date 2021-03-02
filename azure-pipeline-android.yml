@@ -32,6 +32,11 @@ stages:
           getParentsAndChildren: False
           getAllParents: False
           getIndirectPullRequests: False
+      
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'release-notes'
           
   - job: BuildAndroidDev
     dependsOn: ReleaseNotes

@@ -56,7 +56,6 @@ We are working in the Flutter beta channel.
 ``` 
 flutter channel beta
 flutter upgrade
-flutter config --enable-web
 
 flutter pub get
 flutter build apk //for android

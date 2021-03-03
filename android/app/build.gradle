@@ -38,12 +38,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "at.defichain.wallet"
+        applicationId "com.defichain.wallet"
         minSdkVersion 28
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        resValue "string", "build_config_package", "at.defichain.wallet"
+        resValue "string", "build_config_package", "com.defichain.wallet"
     }
 
     buildTypes {
@@ -65,20 +65,20 @@ android {
         dev {
             getIsDefault().set(true)
             dimension "env"
-            applicationId "at.defichain.wallet.dev"
-            resValue "string", "build_config_package", "at.defichain.wallet"
+            applicationId "com.defichain.wallet.dev"
+            resValue "string", "build_config_package", "com.defichain.wallet"
         }
  
         staging {
             dimension "env"
-            applicationId "at.defichain.wallet.staging"
-            resValue "string", "build_config_package", "at.defichain.wallet"
+            applicationId "com.defichain.wallet.staging"
+            resValue "string", "build_config_package", "com.defichain.wallet"
         }
 
         prod {
             dimension "env"
-            applicationId "at.defichain.wallet"
-            resValue "string", "build_config_package", "at.defichain.wallet"
+            applicationId "com.defichain.wallet"
+            resValue "string", "build_config_package", "com.defichain.wallet"
         }
     }
 }

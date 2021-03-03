@@ -34,7 +34,7 @@ dependencies:
   flutter_dotenv: ^3.1.0
   flutter_config: ^1.0.8
   shared_preferences: ^0.5.12+4
-  package_info: ^0.4.3+2
+  package_info: ^2.0.0
   permission_handler: ^5.0.1+1
 
   #cryto libs
@@ -51,7 +51,7 @@ dependencies:
   async: ^2.4.2
   
   #ui libs
-  carousel_slider: ^2.1.0
+  carousel_slider: ^3.0.0
   flutter_typeahead: ^2.0.0
   pull_to_refresh: ^1.6.4
   auto_size_text: ^2.1.0
@@ -60,10 +60,10 @@ dependencies:
   flutter_launcher_icons: ^0.8.1
 
   # Dependency Injection
-  get_it: ^5.0.6
+  get_it: ^6.0.0
 
   # Securley store data in a keystore
-  flutter_secure_storage: ^3.3.5
+  flutter_secure_storage: ^4.0.0
 
   # Flare for animations
   flare_flutter: ^2.0.6
@@ -82,7 +82,7 @@ dependencies:
 
   #appcenter
   flutter_appcenter_bundle: ^3.2.0+2
-  device_info: 1.0.0
+  device_info: ^2.0.0
 
   # TouchID/FaceID
   local_auth: ^1.0.0-nullsafety.4

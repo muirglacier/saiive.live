@@ -11,6 +11,11 @@ class AppCenterWrapper {
   IosDeviceInfo _ios;
 
   Future start() async {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      //TODO: DESKTOP
+      return;
+    }
+
     final android = env["APPCENTER_ANDROID_ID"];
     final iOs = env["APPCENTER_IOS_ID"];
     await AppCenter.startAsync(
@@ -68,6 +73,11 @@ class AppCenterWrapper {
   }
 
   Future trackEvent(String eventName, Map<String, String> properties) async {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      //TODO: DESKTOP
+      return;
+    }
+
     try {
       assert(properties != null);
 

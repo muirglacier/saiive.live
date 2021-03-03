@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/model/authentication_method.dart';
@@ -8,6 +10,11 @@ import 'package:flutter/material.dart';
 
 class AuthenticationHelper {
   void forceAuth(context, onAuth()) async {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      //TODO: DESKTOP
+      onAuth();
+      return;
+    }
     final hasBiometrics = await sl.get<BiometricUtil>().hasBiometrics();
     final authMethod = await sl.get<SharedPrefsUtil>().getAuthMethod();
 

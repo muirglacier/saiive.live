@@ -66,8 +66,9 @@ stages:
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
-          channel: 'beta'
-          version: 'latest'
+          channel: 'stable'
+          version: 'custom'
+          customVersion: '2.0.0'
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -152,8 +153,9 @@ stages:
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
-          channel: 'beta'
-          version: 'latest'
+          channel: 'stable'
+          version: 'custom'
+          customVersion: '2.0.0'
 
       - task: Bash@3
         displayName: "Flutter prepare"

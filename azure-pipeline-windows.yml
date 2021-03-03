@@ -102,6 +102,10 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter clean
             $(FlutterToolPath)/flutter precache
+            $(FlutterToolPath)/flutter config --enable-windows-desktop
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+            $(FlutterToolPath)/flutter config --enable-linux-desktop
+
             
       - task: FlutterBuild@0
         displayName: Windows Release
@@ -143,7 +147,10 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter clean
-            
+            $(FlutterToolPath)/flutter config --enable-windows-desktop
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+            $(FlutterToolPath)/flutter config --enable-linux-desktop
+
       - task: Bash@3
         displayName: "Flutter build icons"
         inputs:
@@ -201,6 +208,10 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter clean
+            $(FlutterToolPath)/flutter config --enable-windows-desktop
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+            $(FlutterToolPath)/flutter config --enable-linux-desktop
+
             
       - task: Bash@3
         displayName: "Flutter build icons"

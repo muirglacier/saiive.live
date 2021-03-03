@@ -149,7 +149,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text(balance.balanceDisplayRounded.toString(), style: Theme.of(context).textTheme.headline3)]),
+          children: [AutoSizeText(balance.balanceDisplayRounded.toString(), style: Theme.of(context).textTheme.headline3, maxLines: 1,)]),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token)));
       },

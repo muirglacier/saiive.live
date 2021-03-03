@@ -233,7 +233,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     });
 
     if (null == amount) {
-      _amountTokenBController.text = '-';
+      _amountTokenBController.text = '';
     } else {
       getConversionRatio();
 
@@ -271,7 +271,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     });
 
     if (null == amount) {
-      _amountTokenAController.text = '-';
+      _amountTokenAController.text = '';
     } else {
       getConversionRatio();
 
@@ -318,14 +318,17 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
           padding: EdgeInsets.only(right: 10),
           child: TokenIcon(e.hash),
         ),
-        AutoSizeText(
-          e.hash,
-          style: Theme.of(context).textTheme.headline3,
-          maxLines: 1,
-        ),
         Expanded(
-          flex: 4,
-          child: Text(e.balanceDisplayRounded, textAlign: TextAlign.right),
+            flex: 1,
+            child: AutoSizeText(
+              e.hash,
+              style: Theme.of(context).textTheme.headline3,
+              maxLines: 1,
+            )),
+        Expanded(
+          flex: 1,
+          child: AutoSizeText(e.balanceDisplayRounded,
+              maxLines: 1, textAlign: TextAlign.right),
         )
       ],
     );

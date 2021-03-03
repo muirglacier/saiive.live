@@ -495,8 +495,13 @@ class _DexScreen extends State<DexScreen> {
           ),
         ),
         Expanded(
-          flex: 4,
-          child: Text(e.balanceDisplayRounded, textAlign: TextAlign.right),
+          flex: 1,
+          child: AutoSizeText(
+            e.balanceDisplayRounded,
+            style: Theme.of(context).textTheme.headline3,
+            maxLines: 1,
+            textAlign: TextAlign.right
+          )
         )
       ],
     );

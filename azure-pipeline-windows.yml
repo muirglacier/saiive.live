@@ -1,5 +1,6 @@
 trigger:
 - main
+- windowsbuild
 name: $(BuildID)
 
 stages:
@@ -53,26 +54,28 @@ stages:
           version: 'custom'
           customVersion: '2.0.0'
 
-      - task: Bash@3
+      - task: CmdLine@2
         displayName: "Flutter prepare"
         inputs:
-          targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter doctor -v
-            $(FlutterToolPath)/flutter precache
-            $(FlutterToolPath)/flutter config --enable-windows-desktop
-            $(FlutterToolPath)/flutter config --enable-macos-desktop
-            $(FlutterToolPath)/flutter config --enable-linux-desktop
+            $(FlutterToolPath)\flutter doctor -v
+            $(FlutterToolPath)\flutter precache
+      
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
 
-      - task: Bash@3
+      - task: CmdLine@2
         displayName: "Flutter build icons"
         inputs:
-          targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter pub get
-            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
+            $(FlutterToolPath)\flutter pub get
+            $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
 
       - task: FlutterTest@0
         inputs:
@@ -94,17 +97,16 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.exe'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Debug\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/debug'
 
-      - task: Bash@3
+      - task: CmdLine@2
         displayName: "Flutter clean"
         inputs:
-          targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
-            $(FlutterToolPath)/flutter precache
+            $(FlutterToolPath)\flutter clean
+            $(FlutterToolPath)\flutter precache
 
             
       - task: FlutterBuild@0
@@ -119,7 +121,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.exe'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/release'
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
@@ -140,25 +142,28 @@ stages:
           version: 'custom'
           customVersion: '2.0.0'
 
-      - task: Bash@3
+      - task: CmdLine@2
         displayName: "Flutter clean"
         inputs:
-          targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
-            $(FlutterToolPath)/flutter config --enable-windows-desktop
-            $(FlutterToolPath)/flutter config --enable-macos-desktop
-            $(FlutterToolPath)/flutter config --enable-linux-desktop
+            $(FlutterToolPath)\flutter clean
+           
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
 
-      - task: Bash@3
+      - task: CmdLine@2
         displayName: "Flutter build icons"
         inputs:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter pub get
-            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+            $(FlutterToolPath)\flutter pub get
+            $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
 
       - task: FlutterTest@0
         inputs:
@@ -178,7 +183,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.exe'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/release'
 
       - task: PublishBuildArtifacts@1
@@ -201,26 +206,28 @@ stages:
           version: 'custom'
           customVersion: '2.0.0'
 
-      - task: Bash@3
+      - task: CmdLine@2
         displayName: "Flutter clean"
         inputs:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter clean
-            $(FlutterToolPath)/flutter config --enable-windows-desktop
-            $(FlutterToolPath)/flutter config --enable-macos-desktop
-            $(FlutterToolPath)/flutter config --enable-linux-desktop
+            $(FlutterToolPath)\flutter clean
 
-            
-      - task: Bash@3
-        displayName: "Flutter build icons"
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
         inputs:
-          targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter pub get
-            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
+            
+      - task: CmdLine@2
+        displayName: "Flutter build icons"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub get
+            $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
 
       - task: FlutterTest@0
         inputs:
@@ -240,7 +247,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.exe'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/release'
 
       - task: PublishBuildArtifacts@1

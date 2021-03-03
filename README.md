@@ -5,6 +5,9 @@ Android
 iOS
 [![Build Status iOS](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.iOS?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=7&branchName=main)
 
+Windows
+[![Build Status](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.Windows?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=8&branchName=main)
+
 A mobile application for [DeFiChain](https://defichain.com/).
 
 # Donate

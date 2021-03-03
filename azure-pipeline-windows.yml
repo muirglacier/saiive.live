@@ -61,6 +61,12 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter doctor -v
             $(FlutterToolPath)\flutter precache
+      
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter config --enable-windows-desktop
 
       - task: CmdLine@2
@@ -142,6 +148,12 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter clean
+           
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter config --enable-windows-desktop
 
       - task: CmdLine@2
@@ -201,8 +213,13 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter clean
-            $(FlutterToolPath)\flutter config --enable-windows-desktop
 
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
             
       - task: CmdLine@2
         displayName: "Flutter build icons"

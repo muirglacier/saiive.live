@@ -17,6 +17,7 @@ import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
+import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
@@ -487,7 +488,11 @@ class _DexScreen extends State<DexScreen> {
         ),
         Expanded(
           flex: 1,
-          child: Text(e.hash),
+          child: AutoSizeText(
+            e.hash,
+            style: Theme.of(context).textTheme.headline3,
+            maxLines: 1,
+          ),
         ),
         Expanded(
           flex: 4,

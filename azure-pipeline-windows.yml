@@ -10,7 +10,7 @@ stages:
   - job: ReleaseNotes
     displayName: "Generate release notes"
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'ubuntu-latest'
 
     steps:
       - task: Bash@3

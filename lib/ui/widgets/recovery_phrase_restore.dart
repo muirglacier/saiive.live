@@ -65,7 +65,7 @@ class _RestoreRecoveryPhraseScreen extends State<RestoreRecoveryPhraseScreen> {
     if (env["ENV"] == "dev") {
       var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
 
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid || Platform.isWindows) {
         demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
       }
 

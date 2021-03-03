@@ -12,7 +12,8 @@ import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:tuple/tuple.dart';
 
 class WalletRestore {
-  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService, {List<int> existingAccounts}) async {
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
+      {List<int> existingAccounts}) async {
     assert(chain != null);
     assert(network != null);
     assert(seed != null);
@@ -57,35 +58,40 @@ class WalletRestore {
     var addresses = List<WalletAddress>.empty(growable: true);
 
     do {
-      var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account, IWallet.KeysPerQuery * i, chain, net, IWallet.KeysPerQuery);
-      var path = HdWalletUtil.derivePathsWithChange(account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+      try {
+        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account, IWallet.KeysPerQuery * i, chain, net, IWallet.KeysPerQuery);
+        var path = HdWalletUtil.derivePathsWithChange(account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
 
-      var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
-      LogHelper.instance.d("found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
+        var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
+        LogHelper.instance.d("found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
 
-      for (final tx in transactions) {
-        final keyIndex = publicKeys.indexWhere((item) => item == tx.address);
-        var pathString = path[keyIndex];
+        for (final tx in transactions) {
+          final keyIndex = publicKeys.indexWhere((item) => item == tx.address);
+          var pathString = path[keyIndex];
 
-        if (!addresses.any((element) => element.publicKey == tx.address)) {
-          final walletAddress = WalletAddress(
-              account: account,
-              index: HdWalletUtil.getIndexFromPath(pathString),
-              isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
-              chain: chain,
-              network: net,
-              publicKey: publicKeys[keyIndex]);
+          if (!addresses.any((element) => element.publicKey == tx.address)) {
+            final walletAddress = WalletAddress(
+                account: account,
+                index: HdWalletUtil.getIndexFromPath(pathString),
+                isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
+                chain: chain,
+                network: net,
+                publicKey: publicKeys[keyIndex]);
 
-          addresses.add(walletAddress);
+            addresses.add(walletAddress);
+          }
         }
-      }
 
-      if (transactions.length == 0) {
-        maxEmpty--;
-      } else {
-        return addresses;
+        if (transactions.length == 0) {
+          maxEmpty--;
+        } else {
+          return addresses;
+        }
+      } catch (e) {
+        LogHelper.instance.e(e);
+      } finally {
+        i++;
       }
-      i++;
     } while (maxEmpty > 0);
 
     var endDate = DateTime.now();

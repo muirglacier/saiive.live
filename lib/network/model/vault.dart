@@ -1,9 +1,11 @@
 import 'dart:convert' as utf;
+import 'dart:io';
 
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:flutter/services.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Vault extends IVault {
   static const String seedKey = 'defichainwallet_seed';
@@ -13,17 +15,31 @@ class Vault extends IVault {
 
   // Re-usable
   Future<String> _write(String key, String value) async {
-    await secureStorage.write(key: key, value: value);
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      var sharedPreferences = await SharedPreferences.getInstance();
 
+      sharedPreferences.setString(key, value);
+    } else {
+      await secureStorage.write(key: key, value: value);
+    }
     return value;
   }
 
   Future<String> _read(String key, {String defaultValue}) async {
-    return await secureStorage.read(key: key) ?? defaultValue;
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      var sharedPreferences = await SharedPreferences.getInstance();
+      return sharedPreferences.getString(key) ?? defaultValue;
+    } else {
+      return await secureStorage.read(key: key) ?? defaultValue;
+    }
   }
 
-  Future<void> deleteAll() async {
-    return await secureStorage.deleteAll();
+  Future deleteAll() async {
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      return await Future.delayed(Duration(milliseconds: 1));
+    } else {
+      return await secureStorage.deleteAll();
+    }
   }
 
   // Specific keys

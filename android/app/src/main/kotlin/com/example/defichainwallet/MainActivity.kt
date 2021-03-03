@@ -1,4 +1,4 @@
-package at.defichain.wallet
+package com.defichain.wallet
 
 import io.flutter.embedding.android.FlutterActivity
 

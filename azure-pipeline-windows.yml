@@ -97,7 +97,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '$(Build.SourcesDirectory)build\windows\runner\Debug\**'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Debug\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/debug'
 
       - task: CmdLine@2
@@ -121,7 +121,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '$(Build.SourcesDirectory)build\windows\runner\Release\**'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/release'
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
@@ -183,7 +183,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '$(Build.SourcesDirectory)build\windows\runner\Release\**'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/release'
 
       - task: PublishBuildArtifacts@1
@@ -247,7 +247,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '$(Build.SourcesDirectory)build\windows\runner\Release\**'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
           targetFolder: '$(build.artifactStagingDirectory)/windows/release'
 
       - task: PublishBuildArtifacts@1

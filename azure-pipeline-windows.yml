@@ -10,7 +10,7 @@ stages:
   - job: ReleaseNotes
     displayName: "Generate release notes"
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
 
     steps:
       - task: Bash@3
@@ -42,7 +42,7 @@ stages:
     dependsOn: ReleaseNotes
     displayName: "Build Windows DEV"
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
     
     steps:
 
@@ -130,7 +130,7 @@ stages:
     dependsOn: ReleaseNotes
     displayName: "Build Windows STAGING"
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
     
     steps:
       - task: FlutterInstall@0
@@ -190,7 +190,7 @@ stages:
     dependsOn: ReleaseNotes
     displayName: "Build Widnows PROD"
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'windows-latest'
     
     steps:
 

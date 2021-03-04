@@ -95,23 +95,24 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   buildBalanceCard(BuildContext context) {
-    return SizedBox(
-        height: 100,
-        child: ListTile(
-          title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(S.of(context).wallet_token_available_balance, style: TextStyle(fontSize: 12)),
-            SizedBox(height: 5),
-            Text((_balance.balanceDisplay).toStringAsFixed(8), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
-          ]),
-          trailing: RotationTransition(
-              turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
-              child: IconButton(
-                icon: Icon(Icons.refresh, color: _balanceRefreshing ? Theme.of(context).primaryColor : StateContainer.of(context).curTheme.text),
-                onPressed: () async {
-                  await loadAccountBalance();
-                },
-              )),
-        ));
+    return Card(
+        child: SizedBox(
+            height: 100,
+            child: ListTile(
+              title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(S.of(context).wallet_token_available_balance, style: TextStyle(fontSize: 12)),
+                SizedBox(height: 5),
+                Text((_balance.balanceDisplay).toStringAsFixed(8), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
+              ]),
+              trailing: RotationTransition(
+                  turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+                  child: IconButton(
+                    icon: Icon(Icons.refresh, color: _balanceRefreshing ? Theme.of(context).primaryColor : StateContainer.of(context).curTheme.text),
+                    onPressed: () async {
+                      await loadAccountBalance();
+                    },
+                  )),
+            )));
   }
 
   buildAccountHistory(BuildContext context, AccountHistory history) {
@@ -137,40 +138,41 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   buildAccountHistoryList(BuildContext context) {
-    return Expanded(
-        child: Column(children: [
+    return Card(
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
       ListTile(
         title: Text(S.of(context).wallet_token_transactions, style: TextStyle(fontSize: 15)),
       ),
-      Flexible(
-          child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: _history.length,
-              itemBuilder: (context, index) {
-                final history = _history[index];
-                return buildAccountHistory(context, history);
-              }))
+      Expanded(
+          child: Scrollbar(
+              child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _history.length,
+                  itemBuilder: (context, index) {
+                    final history = _history[index];
+                    return buildAccountHistory(context, history);
+                  })))
     ]));
   }
 
   buildActions(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return Padding(
-      padding: EdgeInsets.only(right: 10, left: 10),
+      padding: EdgeInsets.only(top: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
               padding: EdgeInsets.only(right: 10),
-              child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 20, onPressed: () async {
+              child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 10, onPressed: () async {
                 await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token)));
 
                 Navigator.of(context).pop();
               })),
-          AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 20, onPressed: () async {
+          AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
             var wallet = sl.get<DeFiChainWallet>();
             var pubKey = await wallet.getPublicKey();
             await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
@@ -186,15 +188,15 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     }
 
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [buildActions(context), buildBalanceCard(context), buildAccountHistoryList(context)]);
+        children: [buildActions(context), buildBalanceCard(context), Expanded(child: buildAccountHistoryList(context))]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.token)),
+      appBar: AppBar(title: Text(widget.token, style: TextStyle(color: Theme.of(context).appBarTheme.foregroundColor))),
       body: buildView(context),
     );
   }

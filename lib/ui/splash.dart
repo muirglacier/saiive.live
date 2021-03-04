@@ -113,10 +113,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-      height -= 400;
+      height = height / 2;
     }
     return Scaffold(
       body: Center(

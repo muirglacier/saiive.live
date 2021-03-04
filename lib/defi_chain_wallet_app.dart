@@ -70,10 +70,12 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
 
     var shadowColor = Colors.black;
     var appBarColor = StateContainer.of(context).curTheme.primary;
+    var appBarTextColor = StateContainer.of(context).curTheme.text;
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       shadowColor = Colors.transparent;
-      appBarColor = StateContainer.of(context).curTheme.backgroundColor;
+      appBarColor = StateContainer.of(context).curTheme.lightColor;
+      appBarTextColor = StateContainer.of(context).curTheme.primary;
     }
 
     return MaterialApp(
@@ -95,9 +97,10 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
             appBarTheme: AppBarTheme(
                 backgroundColor: appBarColor,
                 shadowColor: shadowColor,
-                foregroundColor: StateContainer.of(context).curTheme.text,
-                toolbarTextStyle: TextStyle(color: StateContainer.of(context).curTheme.text),
-                titleTextStyle: TextStyle(color: StateContainer.of(context).curTheme.text)),
+                iconTheme: IconThemeData(color: appBarTextColor),
+                foregroundColor: appBarTextColor,
+                toolbarTextStyle: TextStyle(color: appBarTextColor),
+                titleTextStyle: TextStyle(color: appBarTextColor)),
             brightness: StateContainer.of(context).curTheme.brightness,
             primaryColor: StateContainer.of(context).curTheme.primary,
             scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,

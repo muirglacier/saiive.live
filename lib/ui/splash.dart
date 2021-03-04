@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/env.dart';
@@ -112,6 +113,11 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.width;
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      height -= 400;
+    }
     return Scaffold(
       body: Center(
           child: Column(
@@ -122,7 +128,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
             S.of(context).title,
             style: TextStyle(fontSize: 30, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800),
           ),
-          Image.asset('assets/logo.png'),
+          Container(child: Image.asset('assets/logo.png', height: height)),
           SizedBox(height: 20),
           Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
             Container(

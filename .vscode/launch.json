@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "WalletApp",
+            "name": "walletapp",
             "request": "launch",
             "type": "dart",
             "env": [
@@ -14,7 +14,7 @@
             ]
         },
         {
-            "name": "WalletApp Staging",
+            "name": "walletppp Staging",
             "request": "launch",
             "type": "dart",
             "args": [

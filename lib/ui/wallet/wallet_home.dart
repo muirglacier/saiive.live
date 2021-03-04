@@ -146,10 +146,13 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           maxLines: 1,
         )
       ]),
-      trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [AutoSizeText(balance.balanceDisplayRounded.toString(), style: Theme.of(context).textTheme.headline3, maxLines: 1,)]),
+      trailing: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+        AutoSizeText(
+          balance.balanceDisplayRounded.toString(),
+          style: Theme.of(context).textTheme.headline3,
+          maxLines: 1,
+        )
+      ]),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token)));
       },
@@ -186,7 +189,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(_welcomeText, style: TextStyle(fontSize: 15)), Text(_syncText, style: TextStyle(fontSize: 12))],
+            children: [
+              Text(_welcomeText, style: TextStyle(fontSize: 15, color: Theme.of(context).appBarTheme.foregroundColor)),
+              Text(_syncText, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor))
+            ],
           ),
           actionsIconTheme: Theme.of(context).iconTheme,
           actions: [

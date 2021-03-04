@@ -17,7 +17,11 @@ abstract class BaseTheme {
   Color backgroundColor;
   Color cardBackgroundColor;
   Color text;
+  Color textInverse;
   Color shadowColor;
+
+  Color lightColor;
+  Color darkColor;
 
   Color buttonColorPrimary;
   Color buttonColorSecondary;
@@ -28,10 +32,14 @@ abstract class BaseTheme {
 class DefiThemeLight extends BaseTheme {
   Color primary = BaseTheme.pink;
   Color disabled = Color.fromARGB(0xCC, 0xCC, 0x00, 0xAF);
-  Color backgroundColor = BaseTheme.white;
-  Color cardBackgroundColor = Color(0xffE09E45);
+  Color backgroundColor = Colors.grey[200];
+  Color cardBackgroundColor = Color(0xffd3d3d3);
   Color text = BaseTheme.black;
+  Color textInverse = BaseTheme.white;
   Color shadowColor = Color(0x1f6D42CE);
+
+  Color lightColor = BaseTheme.white;
+  Color darkColor = BaseTheme.black;
 
   Color buttonColorPrimary = BaseTheme.white;
   Color buttonColorSecondary = Colors.grey.withOpacity(0.8);
@@ -45,7 +53,11 @@ class DefiThemeDark extends BaseTheme {
   Color backgroundColor = Colors.grey[900];
   Color cardBackgroundColor = Colors.grey[800];
   Color text = BaseTheme.white;
+  Color textInverse = BaseTheme.black;
   Color shadowColor = Color(0x1f6D42CE);
+
+  Color lightColor = BaseTheme.black;
+  Color darkColor = BaseTheme.white;
 
   Color buttonColorPrimary = BaseTheme.pink;
   Color buttonColorSecondary = Colors.grey.shade50;

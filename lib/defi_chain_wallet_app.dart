@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/ui/model/available_language.dart';
@@ -66,6 +68,14 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
       DeviceOrientation.portraitDown,
     ]);
 
+    var shadowColor = Colors.black;
+    var appBarColor = StateContainer.of(context).curTheme.primary;
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      shadowColor = Colors.transparent;
+      appBarColor = StateContainer.of(context).curTheme.backgroundColor;
+    }
+
     return MaterialApp(
         localizationsDelegates: [
           S.delegate,
@@ -82,6 +92,12 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
             : StateContainer.of(context).curLanguage.getLocale(),
         title: "DeFiChain Wallet",
         theme: ThemeData(
+            appBarTheme: AppBarTheme(
+                backgroundColor: appBarColor,
+                shadowColor: shadowColor,
+                foregroundColor: StateContainer.of(context).curTheme.text,
+                toolbarTextStyle: TextStyle(color: StateContainer.of(context).curTheme.text),
+                titleTextStyle: TextStyle(color: StateContainer.of(context).curTheme.text)),
             brightness: StateContainer.of(context).curTheme.brightness,
             primaryColor: StateContainer.of(context).curTheme.primary,
             scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,

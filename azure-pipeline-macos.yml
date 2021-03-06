@@ -109,7 +109,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --debug --target=lib/main_staging.dart --build-name=0.1
+            $(FlutterToolPath)/flutter build macos --release --target=lib/main_staging.dart --build-name=0.1
 
       - task: Bash@3
         displayName: 'Sign .app'

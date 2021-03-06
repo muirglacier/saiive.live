@@ -84,7 +84,7 @@ stages:
         inputs:
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter config --enable-macos-desktop
+            #$(FlutterToolPath)/flutter config --enable-macos-desktop
 
       - task: Bash@3
         displayName: "Flutter build icons"

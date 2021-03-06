@@ -41,7 +41,7 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
     final split = mnemonic.split(" ");
 
     return Scaffold(
-        appBar: AppBar(backgroundColor: Theme.of(context).primaryColor, title: Text(S.of(context).wallet_recovery_phrase_title)),
+        appBar: AppBar(title: Text(S.of(context).wallet_recovery_phrase_title)),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: Container(

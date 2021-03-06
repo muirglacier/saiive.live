@@ -49,19 +49,19 @@ stages:
         inputs:
           azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
           KeyVaultName: 'defichain-wallet'
-          SecretsFilter: 'apple-adhoc-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletAdHoc.p12'
-          certPwd: '$(apple-adhoc-cert-password)'
+          certSecureFile: 'DefiChainWalletMacOSDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.mobileprovision'
+          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -107,12 +107,12 @@ stages:
         inputs:
           target: 'macos'
           projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: '0.1'
+          debugMode: true
           buildFlavour: 'staging'
           entryPoint: 'lib/main_staging.dart'
-          verboseMode: true
-          debugMode: false
-          buildName: '0.1'
           buildNumber: $(Build.BuildNumber)
+          extraArgs: '--debug --target=lib/main_staging.dart --build-name=0.1'
 
       - task: Bash@3
         displayName: 'Sign .app'

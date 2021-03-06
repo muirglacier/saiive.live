@@ -107,12 +107,7 @@ stages:
         inputs:
           target: 'macos'
           projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
-          debugMode: true
-          buildFlavour: 'staging'
-          entryPoint: 'lib/main_staging.dart'
-          buildNumber: $(Build.BuildNumber)
-          extraArgs: '--debug --target=lib/main_staging.dart --build-name=0.1'
+          extraArgs: '--debug --target="lib/main_staging.dart" --build-name="0.1"'
 
       - task: Bash@3
         displayName: 'Sign .app'

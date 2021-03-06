@@ -69,7 +69,7 @@ stages:
         inputs:
           channel: 'stable'
           version: 'custom'
-          customVersion: '2.0.0'
+          customVersion: '2.0.1'
 
       - task: Bash@3
         displayName: "Flutter prepare"

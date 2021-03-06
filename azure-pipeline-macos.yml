@@ -101,14 +101,15 @@ stages:
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
           generateCodeCoverageReport: true
-          
-      - task: FlutterBuild@0
-        displayName: "Build MacOS"
-        inputs:
-          target: 'macos'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          extraArgs: '--debug --target="lib/main_staging.dart" --build-name="0.1"'
 
+      - task: Bash@3
+          displayName: "Build MacOS"
+          inputs:
+            targetType: 'inline'
+            script: |
+              cd $(Build.SourcesDirectory)
+              $(FlutterToolPath)/flutter build macos --debug --target=lib/main_staging.dart --build-name=0.1
+              
       - task: Bash@3
         displayName: 'Sign .app'
         inputs:

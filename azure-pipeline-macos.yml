@@ -40,7 +40,7 @@ stages:
         
   - job: BuildMacOS
     dependsOn: ReleaseNotes
-    displayName: "Build macOS .dmg"
+    displayName: "Build macOS"
     pool:
       vmImage: 'macOS-latest'
     
@@ -78,6 +78,13 @@ stages:
             #cd $(Build.SourcesDirectory)
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
+
+      - task: CmdLine@2
+        displayName: "Flutter enable macos"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-macos-desktop
 
       - task: Bash@3
         displayName: "Flutter build icons"

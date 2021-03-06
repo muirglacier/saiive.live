@@ -104,7 +104,7 @@ stages:
           generateCodeCoverageReport: true
 
       - task: Bash@3
-        displayName: "Build MacOS Debug"
+        displayName: "Build MacOS Staging"
         inputs:
           targetType: 'inline'
           script: |
@@ -126,7 +126,7 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "defichainwallet" \
+              --volname "defichainwallet-staging" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \

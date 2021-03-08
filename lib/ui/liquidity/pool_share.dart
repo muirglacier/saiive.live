@@ -22,8 +22,8 @@ class _PoolShareScreen extends State<PoolShareScreen> {
           title: Text(widget.liquidity.tokenA + ' - ' + widget.liquidity.tokenB),
         ),
         body: Padding(
-            padding: EdgeInsets.all(30),
-            child: Column(children: <Widget>[
+            padding: EdgeInsets.all(10),
+            child: Column(children: [Card(child: Padding(padding: EdgeInsets.all(30), child: Column(children: <Widget>[
               Container(child: TokenPairIcon(widget.liquidity.tokenA, widget.liquidity.tokenB)),
               Container(
                 child: Row(children: [
@@ -173,6 +173,6 @@ class _PoolShareScreen extends State<PoolShareScreen> {
                       ))
                 ])),
               ])
-            ])));
+            ])))])));
   }
 }

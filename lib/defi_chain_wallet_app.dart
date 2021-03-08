@@ -19,11 +19,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger_flutter/logger_flutter.dart';
+import 'package:window_size/window_size.dart';
 
 void run() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   setupServiceLocator();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('Defichain Wallet App');
+    setWindowMinSize(const Size(700, 500));
+    setWindowMaxSize(Size.infinite);
+  }
 
   // Run app
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {

@@ -52,6 +52,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_welcome_good_morning" : MessageLookupByLibrary.simpleMessage("Guten Tag"),
     "later" : MessageLookupByLibrary.simpleMessage("Später"),
     "liqudity_add_successfull" : MessageLookupByLibrary.simpleMessage("Hinzufügen war erfolgreich"),
+    "liqudity_pool_pairs" : MessageLookupByLibrary.simpleMessage("Pool Paare"),
+    "liqudity_your_liquidity" : MessageLookupByLibrary.simpleMessage("Deine Liquidität"),
     "liquitiy" : MessageLookupByLibrary.simpleMessage("Liquidity"),
     "liquitiy_add" : MessageLookupByLibrary.simpleMessage("Hinzufügen"),
     "liquitiy_add_amount_a" : MessageLookupByLibrary.simpleMessage("Amount A"),

@@ -1115,6 +1115,26 @@ class S {
     );
   }
 
+  /// `Your Liquidity`
+  String get liqudity_your_liquidity {
+    return Intl.message(
+      'Your Liquidity',
+      name: 'liqudity_your_liquidity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pool Pairs`
+  String get liqudity_pool_pairs {
+    return Intl.message(
+      'Pool Pairs',
+      name: 'liqudity_pool_pairs',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Biometric Authentification Error`
   String get biometric_auth_error {
     return Intl.message(

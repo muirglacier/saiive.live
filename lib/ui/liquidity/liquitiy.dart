@@ -5,11 +5,15 @@ import 'package:defichainwallet/helper/poolshare.dart';
 import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/util/chunks.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_add.dart';
+import 'package:defichainwallet/ui/liquidity/liquitiy_box.dart';
 import 'package:defichainwallet/ui/liquidity/pool_share.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 
 class LiquidityScreen extends StatefulWidget {
@@ -136,27 +140,59 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       return LoadingWidget(text: S.of(context).loading);
     }
 
+    MediaQueryData queryData = MediaQuery.of(context);
+    var cols = (queryData.size.width / 500).round();
+
+    var elements = new List<Widget>();
+    var chunked = _liquidity.chunked(cols);
+
+    chunked.toList().asMap().forEach((index, e) {
+      var children = new List<Widget>();
+
+      e.forEach((element) {
+        children.add(Expanded(child: new LiquidityBoxWidget(element), flex: 1));
+      });
+
+      if (chunked.length > 1 && index == chunked.length - 1 && index < chunked.first.length) {
+        for (var i = children.length; i<chunked.first.length; i++) {
+          children.add(Expanded(flex: 1, child: Container()));
+        }
+      }
+
+      elements.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: children));
+    });
+
+    var row = Column(crossAxisAlignment: CrossAxisAlignment.start, children: elements);
+
     return CustomScrollView(
       slivers: <Widget>[
         SliverToBoxAdapter(
           child: Container(
               margin: EdgeInsets.only(top: 10.0),
-              child: Visibility(visible: _liquidity.length > 0, child: Center(child: Text('Your Liquidity', textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold))))),
+              child: Visibility(
+                  visible: _liquidity.length > 0,
+                  child: Center(
+                      child: Text(S.of(context).liqudity_your_liquidity,
+                          textScaleFactor: 1.5,
+                          style: TextStyle(fontWeight: FontWeight.bold))))),
         ),
-        SliverList(
-            delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return _buildMyLiquidityEntry(_liquidity.elementAt(index));
-          },
-          childCount: _liquidity.length,
-        )),
         SliverToBoxAdapter(
-          child: Container(margin: EdgeInsets.only(top: 10.0), child: Center(child: Text('Pool Pairs', textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)))),
+          child: Container(child: row)
+        ),
+
+        SliverToBoxAdapter(
+          child: Container(
+              margin: EdgeInsets.only(top: 10.0),
+              child: Center(
+                  child: Text(S.of(context).liqudity_pool_pairs,
+                      textScaleFactor: 1.5,
+                      style: TextStyle(fontWeight: FontWeight.bold)))),
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return _buildPoolPairLiquidityEntry(_poolPairLiquidity.elementAt(index));
+              return _buildPoolPairLiquidityEntry(
+                  _poolPairLiquidity.elementAt(index));
             },
             childCount: _poolPairLiquidity.length,
           ),
@@ -195,6 +231,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                 )),
           ],
         ),
-        body: Container(child: buildAllLiquidityScreen(context)));
+        body: LayoutBuilder(builder: (_, builder) {
+          return buildAllLiquidityScreen(context);
+        }));
   }
 }

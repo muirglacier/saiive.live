@@ -122,6 +122,8 @@
   "liquitiy_add_insufficient_funds": "Insufficient Funds for LM",
   "liquitiy_add_price": "Price",
   "liqudity_add_successfull": "Add liquidity successfull",
+  "liqudity_your_liquidity": "Your Liquidity",
+  "liqudity_pool_pairs": "Pool Pairs",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

@@ -117,6 +117,8 @@
   "liquitiy_add_insufficient_funds": "Nicht genügend Balance für LM",
   "liquitiy_add_price": "Preis",
   "liqudity_add_successfull": "Hinzufügen war erfolgreich",
+  "liqudity_your_liquidity": "Deine Liquidität",
+  "liqudity_pool_pairs": "Pool Paare",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

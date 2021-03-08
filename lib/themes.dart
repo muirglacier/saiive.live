@@ -7,6 +7,11 @@ class AppColors {
   static const overlay85 = Color(0xD9000000);
 }
 
+class Sizes {
+  static const double smallPhone = 500;
+  static const double largePhone = 700;
+}
+
 abstract class BaseTheme {
   static const pink = Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF);
   static const black = Color(0xFF000000);

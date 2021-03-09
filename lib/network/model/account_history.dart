@@ -7,6 +7,8 @@ class AccountHistory {
   final int blockTime;
   final String type;
   final String poolID;
+  final int txn;
+  final String txid;
   final List<dynamic> amounts;
 
   AccountHistory({
@@ -16,6 +18,8 @@ class AccountHistory {
     this.blockTime,
     this.type,
     this.poolID,
+    this.txn,
+    this.txid,
     this.amounts
   });
 
@@ -43,6 +47,8 @@ class AccountHistory {
         blockTime: json['blockTime'],
         type: json['type'],
         poolID: json['poolID'],
+        txn: json['txn'],
+        txid: json['txId'],
         amounts: json['amounts']
     );
   }

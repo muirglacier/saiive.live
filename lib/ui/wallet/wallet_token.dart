@@ -32,6 +32,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   AccountBalance _balance;
   bool _balanceLoaded = false;
   bool _balanceRefreshing = false;
+  bool _transactionIncludingRewards = false;
   AnimationController _controller;
 
   bool _transactionsLoading = false;
@@ -40,13 +41,13 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
 
   ChainNet _chainNet;
 
-  Future loadAccountHistory() async {
+  Future loadAccountHistory({bool includingRewards = false}) async {
     setState(() {
       _transactionsLoading = true;
     });
 
     var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
-    var history = await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, widget.token);
+    var history = await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, widget.token, !includingRewards);
 
     setState(() {
       _history = history;
@@ -125,10 +126,11 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    InkWell(
-                        child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor)),
-                        onTap: () => launch(DefiChainConstants.getExplorerBlockUrl(_chainNet, history.blockHash))),
-                    Text((history.getBalance(widget.token) / DefiChainConstants.COIN).toStringAsFixed(8))
+                    Expanded(child: Text(history.type), flex: 1),
+                    Expanded(child: Text((history.getBalance(widget.token) / DefiChainConstants.COIN).toStringAsFixed(8), textAlign: TextAlign.right), flex: 2),
+                    if (history.txid != null) Expanded(child: InkWell(
+                        child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor), textAlign: TextAlign.right),
+                        onTap: () => launch(DefiChainConstants.getExplorerUrl(_chainNet, history.txid))), flex: 1),
                   ],
                 ),
                 SizedBox(height: 5),
@@ -138,6 +140,10 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   buildAccountHistoryList(BuildContext context) {
+    if (_history.length == 0) {
+      return LoadingWidget(text: S.of(context).loading);
+    }
+
     return Card(
         child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
       ListTile(
@@ -190,7 +196,25 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [buildActions(context), buildBalanceCard(context), Expanded(child: buildAccountHistoryList(context))]);
+        children: [
+          buildActions(context),
+          buildBalanceCard(context),
+          CheckboxListTile(
+            title: Text("Incl. Rewards"),
+            value: _transactionIncludingRewards,
+            activeColor: StateContainer.of(context).curTheme.primary,
+            onChanged: (newValue) {
+              setState(() {
+                _history = [];
+                _transactionIncludingRewards = newValue;
+              });
+
+              loadAccountHistory(includingRewards: newValue);
+            },
+            controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+          ),
+          Expanded(child: buildAccountHistoryList(context))
+        ]);
   }
 
   @override

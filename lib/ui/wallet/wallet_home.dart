@@ -6,12 +6,14 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/network/events/events.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
+import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -28,6 +30,9 @@ class WalletHomeScreen extends StatefulWidget {
 class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   StreamSubscription<WalletInitDoneEvent> _walletInitDoneSubscription;
   StreamSubscription<WalletSyncDoneEvent> _walletSyncDoneSubscription;
+  StreamSubscription<BlockTipUpdatedEvent> _blockTipUpdatedEvent;
+
+  Block _lastSyncBlockTip;
 
   String _welcomeText = "";
   String _syncText = " ";
@@ -85,7 +90,28 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
         });
       });
     }
+
+    if (_blockTipUpdatedEvent == null) {
+      _blockTipUpdatedEvent = EventTaxiImpl.singleton().registerTo<BlockTipUpdatedEvent>().listen((event) async {
+        setState(() {
+          _lastSyncBlockTip = event.block;
+        });
+      });
+    }
+
     _refreshController.loadComplete();
+  }
+
+  _initLastSyncedBlock() async {
+    var hasLastBlock = await sl.get<SharedPrefsUtil>().hasLastSyncedBlock();
+
+    if (hasLastBlock) {
+      var block = await sl.get<SharedPrefsUtil>().getLastSyncedBlock();
+
+      setState(() {
+        _lastSyncBlockTip = block;
+      });
+    }
   }
 
   _initSyncText() {
@@ -114,6 +140,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     _wallet = sl.get<DeFiChainWallet>();
     _syncEvents();
     _initWallet();
+    _initLastSyncedBlock();
   }
 
   @override
@@ -191,7 +218,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(_welcomeText, style: TextStyle(fontSize: 15, color: Theme.of(context).appBarTheme.foregroundColor)),
-              Text(_syncText, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor))
+              Row(children: [
+                Text(_syncText, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor)),
+                if (_lastSyncBlockTip != null) Text(" " + S.of(context).home_welcome_account_block_height, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor)),
+                if (_lastSyncBlockTip != null) Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor)),
+              ]),
             ],
           ),
           actionsIconTheme: Theme.of(context).iconTheme,

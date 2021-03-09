@@ -107,6 +107,7 @@
   "home_welcome_good_evening": "Guten Abend",
   "home_welcome_account_synced": "Deine %s Konten sind aktualisiert!",
   "home_welcome_account_syncing": "Aktualisieren...",
+  "home_welcome_account_block_height": "Block Höhe: ",
 
   "liquitiy": "Liquidity",
   "liquitiy_pool_share_percentage": "Pool-Anteil",

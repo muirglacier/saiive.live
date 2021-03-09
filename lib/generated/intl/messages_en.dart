@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_liquitiy" : MessageLookupByLibrary.simpleMessage("Liquidity"),
     "home_tokens" : MessageLookupByLibrary.simpleMessage("Tokens"),
     "home_wallet" : MessageLookupByLibrary.simpleMessage("Wallet"),
+    "home_welcome_account_block_height" : MessageLookupByLibrary.simpleMessage("Block Height: "),
     "home_welcome_account_synced" : MessageLookupByLibrary.simpleMessage("Your %s accounts are synced!"),
     "home_welcome_account_syncing" : MessageLookupByLibrary.simpleMessage("Synchronizing..."),
     "home_welcome_good_day" : MessageLookupByLibrary.simpleMessage("Good day"),

@@ -43,13 +43,31 @@ class Block {
       height: json['height'],
       merkleRoot: json['merkleRoot'],
       time: json['time'],
-      nonce: json['nonce'],
-      bits: json['bits'],
+      nonce: BigInt.from(json['nonce']),
+      bits: BigInt.from(json['bits']),
       previousBlockHash: json['previousBlockHash'],
       nextBlockHash: json['nextBlockHash'],
-      reward: json['reward'],
+      reward: double.tryParse(json['reward'].toString()),
       transactionCount: json['transactionCount'],
       confirmations: json['confirmations'],
     );
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'id': id,
+    'chain': chain,
+    'network': network,
+    'hash': hash,
+    'size': size,
+    'height': height,
+    'merkleRoot': merkleRoot,
+    'time': time,
+    'nonce': nonce,
+    'bits': bits,
+    'previousBlockHash': previousBlockHash,
+    'nextBlockHash': nextBlockHash,
+    'reward': reward,
+    'transactionCount': transactionCount,
+    'confirmations': confirmations
+  };
 }

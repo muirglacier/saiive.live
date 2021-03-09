@@ -7,6 +7,7 @@ import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/account_history_service.dart';
 import 'package:defichainwallet/network/account_service.dart';
 import 'package:defichainwallet/network/balance_service.dart';
+import 'package:defichainwallet/network/block_service.dart';
 import 'package:defichainwallet/network/coingecko_service.dart';
 import 'package:defichainwallet/network/defichain_service.dart';
 import 'package:defichainwallet/network/dex_service.dart';
@@ -53,6 +54,7 @@ void setupServiceLocator() {
   sl.registerLazySingleton<IDefichainService>(() => DefichainService());
   sl.registerLazySingleton<IPoolShareService>(() => PoolShareService());
   sl.registerLazySingleton<IAccountHistoryService>(() => AccountHistoryService());
+  sl.registerLazySingleton<BlockService>(() => BlockService());
   sl.registerLazySingleton<BiometricUtil>(() => BiometricUtil());
   sl.registerLazySingleton<HapticUtil>(() => HapticUtil());
   sl.registerLazySingleton<AuthenticationHelper>(() => AuthenticationHelper());

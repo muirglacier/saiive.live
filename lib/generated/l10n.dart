@@ -1025,6 +1025,16 @@ class S {
     );
   }
 
+  /// `Block Height: `
+  String get home_welcome_account_block_height {
+    return Intl.message(
+      'Block Height: ',
+      name: 'home_welcome_account_block_height',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Liquidity`
   String get liquitiy {
     return Intl.message(

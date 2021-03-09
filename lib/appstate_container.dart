@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
+import 'package:defichainwallet/network/block_service.dart';
+import 'package:defichainwallet/network/model/block.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +71,7 @@ class StateContainerState extends State<StateContainer> {
 
   StreamSubscription<WalletInitStartEvent> _walletInitSubscribe;
   StreamSubscription<WalletSyncStartEvent> _walletSyncSubscribe;
+  StreamSubscription<WalletSyncDoneEvent> _walletSyncDoneSubscibre;
 
   _registerBus() {
     _walletInitSubscribe = EventTaxiImpl.singleton().registerTo<WalletInitStartEvent>().listen((event) async {
@@ -101,6 +104,14 @@ class StateContainerState extends State<StateContainer> {
         logger.i("Start wallet sync....done");
         _walletSyncing = false;
       }
+    });
+
+    _walletSyncDoneSubscibre = EventTaxiImpl.singleton().registerTo<WalletSyncDoneEvent>().listen((event) async {
+      Block blockTip = await sl.get<BlockService>().getBlockTip('DFI');
+
+      sl.get<SharedPrefsUtil>().setLastSyncedBlock(blockTip);
+
+      EventTaxiImpl.singleton().fire(BlockTipUpdatedEvent(block: blockTip));
     });
   }
 

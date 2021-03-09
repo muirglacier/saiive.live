@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/ui/model/authentication_method.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:defichainwallet/ui/model/available_language.dart';
@@ -12,6 +15,7 @@ class SharedPrefsUtil {
   static const String cur_theme = 'defi_theme_pref';
   static const String cur_net = 'cur_net';
   static const String auth_method = 'defi_auth_method';
+  static const String last_block = 'defi_last_block';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -55,6 +59,20 @@ class SharedPrefsUtil {
 
   Future<bool> getFirstLaunch() async {
     return await get(first_launch_key, defaultValue: true);
+  }
+
+  Future<void> setLastSyncedBlock(Block block) async {
+    return await set(last_block, block.toJson());
+  }
+
+  Future<bool> hasLastSyncedBlock() async {
+    return await get(last_block) != null;
+  }
+
+  Future<Block> getLastSyncedBlock() async {
+    String block = await get(last_block);
+
+    return Block.fromJson(json.decode(block.toString()));
   }
 
   Future<void> setLanguage(LanguageSetting language) async {

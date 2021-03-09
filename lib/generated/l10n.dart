@@ -505,6 +505,36 @@ class S {
     );
   }
 
+  /// `Enter Word`
+  String get wallet_restore_word_hint {
+    return Intl.message(
+      'Enter Word',
+      name: 'wallet_restore_word_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter Word`
+  String get wallet_restore_word_empty {
+    return Intl.message(
+      'Please enter Word',
+      name: 'wallet_restore_word_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Word is invalid`
+  String get wallet_restore_word_invalid {
+    return Intl.message(
+      'Word is invalid',
+      name: 'wallet_restore_word_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Your wallet is empty!`
   String get wallet_empty {
     return Intl.message(

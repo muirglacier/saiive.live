@@ -5,6 +5,7 @@ import 'package:defichainwallet/helper/poolshare.dart';
 import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/ui/widgets/responsive.dart';
 import 'package:defichainwallet/util/chunks.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_add.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_box.dart';
@@ -13,7 +14,6 @@ import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 
 class LiquidityScreen extends StatefulWidget {
@@ -140,29 +140,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    MediaQueryData queryData = MediaQuery.of(context);
-    var cols = (queryData.size.width / 500).round();
-
-    var elements = new List<Widget>();
-    var chunked = _liquidity.chunked(cols);
-
-    chunked.toList().asMap().forEach((index, e) {
-      var children = new List<Widget>();
-
-      e.forEach((element) {
-        children.add(Expanded(child: new LiquidityBoxWidget(element), flex: 1));
-      });
-
-      if (chunked.length > 1 && index == chunked.length - 1 && index < chunked.first.length) {
-        for (var i = children.length; i<chunked.first.length; i++) {
-          children.add(Expanded(flex: 1, child: Container()));
-        }
-      }
-
-      elements.add(Row(crossAxisAlignment: CrossAxisAlignment.start, children: children));
-    });
-
-    var row = Column(crossAxisAlignment: CrossAxisAlignment.start, children: elements);
+    var row = Responsive.buildResponsive<PoolShareLiquidity>(
+        context, _liquidity, 500, (el) => new LiquidityBoxWidget(el));
 
     return CustomScrollView(
       slivers: <Widget>[

@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,17 +53,19 @@ class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
   @override
   Widget build(BuildContext context) {
     final carouselItems = getCarouselItems(context);
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, verticalDirection: VerticalDirection.down, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, verticalDirection: VerticalDirection.down, children: <Widget>[
           Container(
-              width: double.infinity,
+              width: width*0.9,
               child: CarouselSlider(
                 items: carouselItems,
                 options: CarouselOptions(
                     enableInfiniteScroll: false,
-                    enlargeCenterPage: true,
+                    viewportFraction: 1.0,
+                    enlargeCenterPage: false,
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
@@ -79,7 +82,7 @@ class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
                 margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _current == index ? Color.fromRGBO(0, 0, 0, 0.9) : Color.fromRGBO(0, 0, 0, 0.4),
+                  color: _current == index ? Theme.of(context).primaryColor : Theme.of(context).backgroundColor,
                 ),
               );
             }).toList(),
@@ -91,6 +94,7 @@ class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
                   width: 300,
                   child: ElevatedButton(
                     child: Text(S.of(context).wallet_new_reveal),
+                    style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseDisplayScreen(widget.mnemonic)));
                     },

@@ -815,6 +815,16 @@ class S {
     );
   }
 
+  /// `Address copied to Clipboard`
+  String get receive_address_copied_to_clipboard {
+    return Intl.message(
+      'Address copied to Clipboard',
+      name: 'receive_address_copied_to_clipboard',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get send {
     return Intl.message(

@@ -47,6 +47,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
   Widget build(BuildContext context) {
     final carouselItems = getCarouselItems(context);
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.start, verticalDirection: VerticalDirection.down, children: <Widget>[
@@ -62,12 +63,13 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
         Column(children: <Widget>[
           Container(
               height: height / 5,
-              width: double.infinity,
+              width: width*0.9,
               child: CarouselSlider(
                 items: carouselItems,
                 options: CarouselOptions(
                     enableInfiniteScroll: false,
-                    enlargeCenterPage: true,
+                    viewportFraction: 1.0,
+                    enlargeCenterPage: false,
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
@@ -84,7 +86,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
                 margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _current == index ? Color.fromRGBO(0, 0, 0, 0.9) : Color.fromRGBO(0, 0, 0, 0.4),
+                  color: _current == index ? Theme.of(context).primaryColor : Theme.of(context).backgroundColor,
                 ),
               );
             }).toList(),

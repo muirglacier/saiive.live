@@ -83,6 +83,7 @@
   "wallet_token_show_in_explorer": "Im Explorer anzeigen",
   
   "receive": "Empfangen",
+  "receive_address_copied_to_clipboard": "Adresse wurde in die Zwischenablage übernommen",
   "send": "Senden",
 
   "cancel": "Abbrechen",

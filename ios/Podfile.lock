@@ -9,6 +9,8 @@ PODS:
     - AppCenter/Core
   - AppCenter/Distribute (3.2.0):
     - AppCenter/Core
+  - clipboard_manager (0.0.3):
+    - Flutter
   - device_info (0.0.1):
     - Flutter
   - Flutter (1.0.0)
@@ -46,6 +48,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - clipboard_manager (from `.symlinks/plugins/clipboard_manager/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
   - flutter_appcenter_bundle (from `.symlinks/plugins/flutter_appcenter_bundle/ios`)
@@ -69,6 +72,8 @@ SPEC REPOS:
     - AppCenter
 
 EXTERNAL SOURCES:
+  clipboard_manager:
+    :path: ".symlinks/plugins/clipboard_manager/ios"
   device_info:
     :path: ".symlinks/plugins/device_info/ios"
   Flutter:
@@ -106,6 +111,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppCenter: ca66175050d538b157959382dd43f1ab96cdab84
+  clipboard_manager: f4800834e62cc26b1cc4e0a92a35cd452dd8b827
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_appcenter_bundle: bbf1dd726a7a090027c88201a62b83269a56f075

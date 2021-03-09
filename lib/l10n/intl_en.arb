@@ -88,6 +88,7 @@
   "wallet_token_transactions": "Transactions",
   "wallet_token_show_in_explorer": "Open in explorer",
   "receive": "Receive",
+  "receive_address_copied_to_clipboard": "Address copied to Clipboard",
   "send": "Send",
 
   "cancel": "Cancel",

@@ -69,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading" : MessageLookupByLibrary.simpleMessage("Laden..."),
     "next" : MessageLookupByLibrary.simpleMessage("Weiter"),
     "receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
+    "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Adresse wurde in die Zwischenablage übernommen"),
     "send" : MessageLookupByLibrary.simpleMessage("Senden"),
     "settings" : MessageLookupByLibrary.simpleMessage("Einstellungen"),
     "settings_auth_biometric" : MessageLookupByLibrary.simpleMessage("Biometrisch"),

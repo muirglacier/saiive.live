@@ -94,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedItemColor: Theme.of(context).primaryColor,
       unselectedItemColor: Theme.of(context).hintColor,
       onTap: _onItemTapped,
+      type: BottomNavigationBarType.fixed,
     );
   }
 

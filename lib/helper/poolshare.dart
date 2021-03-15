@@ -9,7 +9,6 @@ import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/service_locator.dart';
-import 'package:flutter/material.dart';
 
 class PoolShareHelper {
   Future<List<PoolShareLiquidity>> getPoolShares(String coin, String currency) async {
@@ -41,8 +40,7 @@ class PoolShareHelper {
     for (var poolShare in poolShares) {
       if (!combinedPoolShares.containsKey(poolShare.poolID)) {
         combinedPoolShares[poolShare.poolID] = poolShare;
-      }
-      else {
+      } else {
         combinedPoolShares[poolShare.poolID].amount += poolShare.amount;
       }
     }

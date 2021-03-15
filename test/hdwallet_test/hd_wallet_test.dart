@@ -3,7 +3,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bip32/bip32.dart' as bip32;
+import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart' as defichain;
 import 'package:hex/hex.dart';
 
@@ -13,10 +13,11 @@ void main() {
       var mnemonic = 'sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow';
 
       final seed = defichain.mnemonicToSeed(mnemonic, passphrase: "");
-      final xPriv = bip32.BIP32.fromSeed(seed, bip32.NetworkType(bip32: bip32.Bip32Type(private: defichain.testnet.bip32.private, public: defichain.testnet.bip32.public), wif: defichain.testnet.wif));
+      final xPriv = bip32.BIP32
+          .fromSeed(seed, bip32.NetworkType(bip32: bip32.Bip32Type(private: defichain.testnet.bip32.private, public: defichain.testnet.bip32.public), wif: defichain.testnet.wif));
 
-      final xMasterPriv = bip32.BIP32
-          .fromSeed(xPriv.privateKey, bip32.NetworkType(bip32: bip32.Bip32Type(private: defichain.testnet.bip32.private, public: defichain.testnet.bip32.public), wif: defichain.testnet.wif));
+      final xMasterPriv = bip32.BIP32.fromSeed(xPriv.privateKey,
+          bip32.NetworkType(bip32: bip32.Bip32Type(private: defichain.testnet.bip32.private, public: defichain.testnet.bip32.public), wif: defichain.testnet.wif));
 
       var eicd = defichain.ECPair.fromWIF("cMmT7Q7sy3y44zbHWvkQQRto4hMsnMHfPJNXCeaadNHjZXU5HQ88", network: defichain.defichain_testnet);
 

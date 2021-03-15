@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_tokens" : MessageLookupByLibrary.simpleMessage("Tokens"),
     "home_wallet" : MessageLookupByLibrary.simpleMessage("Wallet"),
     "home_welcome_account_block_height" : MessageLookupByLibrary.simpleMessage("Block Höhe: "),
-    "home_welcome_account_synced" : MessageLookupByLibrary.simpleMessage("Deine %s Konten sind aktualisiert!"),
+    "home_welcome_account_synced" : MessageLookupByLibrary.simpleMessage("Wallet ist aktualisiert..."),
     "home_welcome_account_syncing" : MessageLookupByLibrary.simpleMessage("Aktualisieren..."),
     "home_welcome_good_day" : MessageLookupByLibrary.simpleMessage("Guten Tag"),
     "home_welcome_good_evening" : MessageLookupByLibrary.simpleMessage("Guten Abend"),

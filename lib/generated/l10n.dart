@@ -1005,10 +1005,10 @@ class S {
     );
   }
 
-  /// `Your %s accounts are synced!`
+  /// `Wallet is synced...`
   String get home_welcome_account_synced {
     return Intl.message(
-      'Your %s accounts are synced!',
+      'Wallet is synced...',
       name: 'home_welcome_account_synced',
       desc: '',
       args: [],

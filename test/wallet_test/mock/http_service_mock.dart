@@ -16,7 +16,7 @@ class MockHttpService extends IHttpService {
   Future<Map<String, dynamic>> makeHttpGetRequest(String url, String coin, {cached: false}) async {
     final finalUrl = "https://dev-supernode.defichain-wallet.com" + baseUri + "testnet" + "/" + coin + url;
     var response = await http.get(
-      finalUrl,
+      Uri.parse(finalUrl),
       headers: {'Content-type': 'application/json'},
     );
 

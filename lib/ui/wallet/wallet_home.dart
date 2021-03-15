@@ -85,7 +85,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
         var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
 
         setState(() {
-          _syncText = sprintf(S.of(context).home_welcome_account_synced, [accounts.length.toString()]);
+          _syncText = S.of(context).home_welcome_account_synced;
           _accountBalance = accountBalance;
         });
       });
@@ -217,11 +217,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_welcomeText, style: TextStyle(fontSize: 15, color: Theme.of(context).appBarTheme.foregroundColor)),
+              Text(_welcomeText, style: TextStyle(fontSize: 15, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.bold)),
               Row(children: [
-                Text(_syncText, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor)),
-                if (_lastSyncBlockTip != null) Text(" " + S.of(context).home_welcome_account_block_height, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor)),
-                if (_lastSyncBlockTip != null) Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor)),
+                Text(_syncText, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.bold)),
+                if (_lastSyncBlockTip != null)
+                  Text(" " + S.of(context).home_welcome_account_block_height,
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.w800)),
+                if (_lastSyncBlockTip != null)
+                  Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.w800)),
               ]),
             ],
           ),

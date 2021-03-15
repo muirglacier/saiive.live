@@ -38,7 +38,7 @@ dependencies:
   permission_handler: ^5.0.1+1
 
   #cryto libs
-  defichaindart: ^2.2.1+2
+  defichaindart: ^2.2.1+4
 
   #utils
   sprintf: "^4.0.0"

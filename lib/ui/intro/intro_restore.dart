@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/widgets/mnemonic_seed.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,7 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).welcome_wallet_restore)),
-      body: MnemonicSeedWidget(words: _phrase)
-    );
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
+        body: MnemonicSeedWidget(words: _phrase));
   }
 }

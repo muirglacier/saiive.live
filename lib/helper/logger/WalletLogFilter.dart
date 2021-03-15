@@ -1,6 +1,6 @@
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:logger/logger.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class WalletLogFilter extends LogFilter {
   EnvironmentType _currentEnvironment = EnvironmentType.Unknonw;

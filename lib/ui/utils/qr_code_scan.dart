@@ -1,3 +1,4 @@
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_qr_reader/qrcode_reader_view.dart';
@@ -24,6 +25,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
         onScan: onScan,
         helpWidget: Scaffold(),
         headerWidget: AppBar(
+          toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),

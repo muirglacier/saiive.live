@@ -1,3 +1,4 @@
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/token.dart';
 import 'package:defichainwallet/network/token_service.dart';
@@ -35,9 +36,14 @@ class _TokensScreen extends State<TokensScreen> {
     return Card(
         child: ListTile(
       leading: TokenIcon(token.symbol),
-      title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Text(token.name, style: Theme.of(context).textTheme.headline3)]),
+      title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text(token.name.isNotEmpty ? token.name : token.symbol, style: Theme.of(context).textTheme.headline3)]),
       trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [Text(token.symbol, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))]),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text(token.symbol, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))]),
     ));
   }
 
@@ -47,22 +53,28 @@ class _TokensScreen extends State<TokensScreen> {
     }
 
     return Padding(
-        padding: EdgeInsets.all(30),
-        child: ListView(children: [
-          Center(
-              child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: _tokens.length,
-                  itemBuilder: (context, index) {
-                    return _buildTokenEntry(_tokens.elementAt(index));
-                  }))
-        ]));
+        padding: EdgeInsets.all(10),
+        child: Scrollbar(
+            child: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: ListView(children: [
+                  ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: _tokens.length,
+                      itemBuilder: (context, index) {
+                        return _buildTokenEntry(_tokens.elementAt(index));
+                      })
+                ]))));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text(S.of(context).home_tokens)), body: Scaffold(body: buildTokenScreen(context)));
+    return Scaffold(
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Text(S.of(context).home_tokens, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+        body: Scaffold(body: buildTokenScreen(context)));
   }
 }

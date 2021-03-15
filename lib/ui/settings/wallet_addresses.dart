@@ -1,3 +1,4 @@
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';
@@ -57,6 +58,6 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Addresses")), body: _buildWalletAddressList(context));
+    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Addresses")), body: _buildWalletAddressList(context));
   }
 }

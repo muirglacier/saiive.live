@@ -145,6 +145,16 @@ class S {
     );
   }
 
+  /// `Network`
+  String get wallet_home_network {
+    return Intl.message(
+      'Network',
+      name: 'wallet_home_network',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Create a new wallet`
   String get welcome_wallet_create {
     return Intl.message(

@@ -31,6 +31,8 @@ abstract class BaseTheme {
   Color buttonColorPrimary;
   Color buttonColorSecondary;
 
+  double toolbarHeight = kToolbarHeight;
+
   Brightness brightness = Brightness.light;
 }
 

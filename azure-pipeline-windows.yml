@@ -77,6 +77,9 @@ stages:
             $(FlutterToolPath)\flutter pub get
             $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
 
+            cd windows/runner/resources
+            xcopy /Y app_icon_dev.ico app_icon.ico
+
       - task: FlutterTest@0
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
@@ -165,6 +168,9 @@ stages:
             $(FlutterToolPath)\flutter pub get
             $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
 
+            cd windows/runner/resources
+            xcopy /Y app_icon_staging.ico app_icon.ico
+
       - task: FlutterTest@0
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
@@ -228,6 +234,9 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter pub get
             $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+
+            cd windows/runner/resources
+            xcopy /Y app_icon_prod.ico app_icon.ico
 
       - task: FlutterTest@0
         inputs:

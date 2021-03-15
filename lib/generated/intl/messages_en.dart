@@ -83,6 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "title" : MessageLookupByLibrary.simpleMessage("DeFiChain Wallet"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Your wallet is empty!"),
+    "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Network"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet is synchronising right now!"),
     "wallet_new_creating" : MessageLookupByLibrary.simpleMessage("We are preparing your wallet, hang on a second."),
     "wallet_new_creating_title" : MessageLookupByLibrary.simpleMessage("Wallet preparing"),

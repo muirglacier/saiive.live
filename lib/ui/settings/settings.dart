@@ -14,7 +14,6 @@ import 'package:defichainwallet/ui/styles.dart';
 import 'package:defichainwallet/ui/wallet/wallet_send.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
 import 'package:defichainwallet/ui/model/authentication_method.dart';
-import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -71,18 +70,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).settings)),
-        body: Padding(padding: EdgeInsets.all(30), child: CustomScrollView(
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Column(
-                children: <Widget>[
-                  Expanded(child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                          child: DropdownButton<int>(
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Text(S.of(context).settings, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+        body: Padding(
+            padding: EdgeInsets.all(30),
+            child: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                              child: DropdownButton<int>(
                             isExpanded: true,
                             value: _authMethod,
                             items: AuthenticationMethod.all().map((e) {
@@ -99,8 +103,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
                             },
                           )),
-                      Container(
-                          child: DropdownButton<int>(
+                          SizedBox(height: 5),
+                          Container(
+                              child: DropdownButton<int>(
                             isExpanded: true,
                             value: _theme,
                             items: ThemeSetting.all().map((e) {
@@ -124,8 +129,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                             },
                           )),
-                      Container(
-                          child: DropdownButton<String>(
+                          SizedBox(height: 5),
+                          Container(
+                              child: DropdownButton<String>(
                             isExpanded: true,
                             disabledHint: Text('testnet'),
                             value: null,
@@ -136,46 +142,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               );
                             }).toList(),
                           )),
-                      Container(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                            child: Text(S.of(context).settings_remove_seed),
+                          SizedBox(height: 5),
+                          Container(
+                              child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            child: Text(
+                              S.of(context).settings_remove_seed,
+                              style: TextStyle(color: StateContainer.of(context).curTheme.darkColor),
+                            ),
                             onPressed: () async {
                               sl.get<AuthenticationHelper>().forceAuth(context, () {
                                 doDeleteSeed();
                               });
                             },
                           )),
-                      Container(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                            child: Text(S.of(context).settings_show_seed),
+                          SizedBox(height: 5),
+                          Container(
+                              child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            child: Text(S.of(context).settings_show_seed, style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               sl.get<AuthenticationHelper>().forceAuth(context, () {
                                 Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
                               });
                             },
                           )),
-                      Container(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                            child: Text("Show logs"),
+                          SizedBox(height: 5),
+                          Container(
+                              child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            child: Text("Show logs", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
                             },
                           )),
-                      Container(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                            child: Text("Show wallet addresses"),
+                          SizedBox(height: 5),
+                          Container(
+                              child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            child: Text("Show wallet addresses", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
                             },
                           ))
-                    ],
-                  )),
-                  Container(
-                      child: Column(
+                        ],
+                      )),
+                      Container(
+                          child: Column(
                         children: [
                           Image.asset('assets/logo.png', height: 100),
                           Container(
@@ -188,11 +201,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ))),
                           Container(
                               child: ElevatedButton(
-                                child: Text("dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs", style: TextStyle(color: Colors.white), maxLines: 1,),
-                                onPressed: () async {
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen('DFI', toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
-                                },
-                              )),
+                            child: Text(
+                              "dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs",
+                              style: TextStyle(color: Colors.white),
+                              maxLines: 1,
+                            ),
+                            onPressed: () async {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen('DFI', toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
+                            },
+                          )),
                           SizedBox(height: 20),
                           Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
                             Container(
@@ -213,117 +231,114 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ))
                         ],
                       )),
-                ],
-              ),
-            ),
-          ],
-        ))
-    );
+                    ],
+                  ),
+                ),
+              ],
+            )));
 
-
-        return Scaffold(
+    return Scaffold(
         appBar: AppBar(title: Text(S.of(context).settings)),
-        body: SingleChildScrollView(child: Padding(
-            padding: EdgeInsets.all(30),
-            child: Column(children: [
-              (
-                  Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                      child: DropdownButton<int>(
-                    isExpanded: true,
-                    value: _authMethod,
-                    items: AuthenticationMethod.all().map((e) {
-                      return new DropdownMenuItem<int>(
-                        value: e.getIndex(),
-                        child: Text(e.getDisplayName(context)),
-                      );
-                    }).toList(),
-                    onChanged: (int val) {
-                      setState(() {
-                        _authMethod = val;
-                      });
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.all(30),
+                child: Column(children: [
+                  (Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                          child: DropdownButton<int>(
+                        isExpanded: true,
+                        value: _authMethod,
+                        items: AuthenticationMethod.all().map((e) {
+                          return new DropdownMenuItem<int>(
+                            value: e.getIndex(),
+                            child: Text(e.getDisplayName(context)),
+                          );
+                        }).toList(),
+                        onChanged: (int val) {
+                          setState(() {
+                            _authMethod = val;
+                          });
 
-                      sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
-                    },
-                  )),
-                  Container(
-                      child: DropdownButton<int>(
-                    isExpanded: true,
-                    value: _theme,
-                    items: ThemeSetting.all().map((e) {
-                      return new DropdownMenuItem<int>(
-                        value: e.getIndex(),
-                        child: Text(e.getDisplayName(context)),
-                      );
-                    }).toList(),
-                    onChanged: (int val) {
-                      setState(() {
-                        _theme = val;
-                      });
+                          sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
+                        },
+                      )),
+                      Container(
+                          child: DropdownButton<int>(
+                        isExpanded: true,
+                        value: _theme,
+                        items: ThemeSetting.all().map((e) {
+                          return new DropdownMenuItem<int>(
+                            value: e.getIndex(),
+                            child: Text(e.getDisplayName(context)),
+                          );
+                        }).toList(),
+                        onChanged: (int val) {
+                          setState(() {
+                            _theme = val;
+                          });
 
-                      final theme = ThemeSetting(ThemeOptions.values[val]);
-                      sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
+                          final theme = ThemeSetting(ThemeOptions.values[val]);
+                          sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
 
-                      sl.get<SharedPrefsUtil>().setTheme(theme).then((result) {
-                        setState(() {
-                          StateContainer.of(context).updateTheme(theme);
-                        });
-                      });
-                    },
+                          sl.get<SharedPrefsUtil>().setTheme(theme).then((result) {
+                            setState(() {
+                              StateContainer.of(context).updateTheme(theme);
+                            });
+                          });
+                        },
+                      )),
+                      Container(
+                          child: DropdownButton<String>(
+                        isExpanded: true,
+                        disabledHint: Text('testnet'),
+                        value: null,
+                        items: ['testnet', 'mainnet'].map((e) {
+                          return new DropdownMenuItem<String>(
+                            value: e,
+                            child: Text(e),
+                          );
+                        }).toList(),
+                      )),
+                      Container(
+                          child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
+                        child: Text(S.of(context).settings_remove_seed),
+                        onPressed: () async {
+                          sl.get<AuthenticationHelper>().forceAuth(context, () {
+                            doDeleteSeed();
+                          });
+                        },
+                      )),
+                      Container(
+                          child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
+                        child: Text(S.of(context).settings_show_seed),
+                        onPressed: () async {
+                          sl.get<AuthenticationHelper>().forceAuth(context, () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
+                          });
+                        },
+                      )),
+                      Container(
+                          child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
+                        child: Text("Show logs"),
+                        onPressed: () async {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
+                        },
+                      )),
+                      Container(
+                          child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
+                        child: Text("Show wallet addresses"),
+                        onPressed: () async {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
+                        },
+                      ))
+                    ],
                   )),
-                  Container(
-                      child: DropdownButton<String>(
-                    isExpanded: true,
-                    disabledHint: Text('testnet'),
-                    value: null,
-                    items: ['testnet', 'mainnet'].map((e) {
-                      return new DropdownMenuItem<String>(
-                        value: e,
-                        child: Text(e),
-                      );
-                    }).toList(),
-                  )),
-                  Container(
-                      child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                    child: Text(S.of(context).settings_remove_seed),
-                    onPressed: () async {
-                      sl.get<AuthenticationHelper>().forceAuth(context, () {
-                        doDeleteSeed();
-                      });
-                    },
-                  )),
-                  Container(
-                      child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                    child: Text(S.of(context).settings_show_seed),
-                    onPressed: () async {
-                      sl.get<AuthenticationHelper>().forceAuth(context, () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
-                      });
-                    },
-                  )),
-                  Container(
-                      child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                    child: Text("Show logs"),
-                    onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
-                    },
-                  )),
-                  Container(
-                      child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                    child: Text("Show wallet addresses"),
-                    onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
-                    },
-                  ))
-                ],
-              )),
-
-            ]))));
+                ]))));
   }
 }

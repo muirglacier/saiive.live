@@ -86,7 +86,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).wallet_send)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).wallet_send)),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -101,7 +101,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                               suffixIcon: IconButton(
                                 onPressed: () async {
                                   var status = await Permission.camera.status;
-                                  if (status.isUndetermined) {
+                                  if (!status.isGranted) {
                                     final permission = await Permission.camera.request();
 
                                     if (!permission.isGranted) {

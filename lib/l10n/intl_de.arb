@@ -10,6 +10,9 @@
   "loading": "Laden...",
   "next": "Weiter",
   "later": "Später",
+  
+  "wallet_home_network": "Netzwerk",
+
   "welcome_wallet_create": "Neues Wallet anlegen",
   "welcome_wallet_restore": "Wallet importieren",
   "welcome_wallet_info": "Erstelle dein DeFiChain Wallet und behalte die Kontrolle deiner Privaten Schlüssel!",

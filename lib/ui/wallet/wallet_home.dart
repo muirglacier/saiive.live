@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
@@ -213,6 +214,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

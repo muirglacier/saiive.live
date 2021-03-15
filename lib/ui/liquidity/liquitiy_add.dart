@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
@@ -327,8 +328,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             )),
         Expanded(
           flex: 1,
-          child: AutoSizeText(e.balanceDisplayRounded,
-              maxLines: 1, textAlign: TextAlign.right),
+          child: AutoSizeText(e.balanceDisplayRounded, maxLines: 1, textAlign: TextAlign.right),
         )
       ],
     );
@@ -439,7 +439,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).liquitiy_add)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquitiy_add)),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [

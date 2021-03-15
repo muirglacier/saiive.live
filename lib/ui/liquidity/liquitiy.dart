@@ -1,4 +1,5 @@
 import 'package:defichainwallet/appcenter/appcenter.dart';
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/poolpair.dart';
 import 'package:defichainwallet/helper/poolshare.dart';
@@ -6,7 +7,6 @@ import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/widgets/responsive.dart';
-import 'package:defichainwallet/util/chunks.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_add.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_box.dart';
 import 'package:defichainwallet/ui/liquidity/pool_share.dart';
@@ -140,8 +140,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    var row = Responsive.buildResponsive<PoolShareLiquidity>(
-        context, _liquidity, 500, (el) => new LiquidityBoxWidget(el));
+    var row = Responsive.buildResponsive<PoolShareLiquidity>(context, _liquidity, 500, (el) => new LiquidityBoxWidget(el));
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -150,28 +149,18 @@ class _LiquidityScreen extends State<LiquidityScreen> {
               margin: EdgeInsets.only(top: 10.0),
               child: Visibility(
                   visible: _liquidity.length > 0,
-                  child: Center(
-                      child: Text(S.of(context).liqudity_your_liquidity,
-                          textScaleFactor: 1.5,
-                          style: TextStyle(fontWeight: FontWeight.bold))))),
+                  child: Center(child: Text(S.of(context).liqudity_your_liquidity, textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold))))),
         ),
-        SliverToBoxAdapter(
-          child: Container(child: row)
-        ),
-
+        SliverToBoxAdapter(child: Container(child: row)),
         SliverToBoxAdapter(
           child: Container(
               margin: EdgeInsets.only(top: 10.0),
-              child: Center(
-                  child: Text(S.of(context).liqudity_pool_pairs,
-                      textScaleFactor: 1.5,
-                      style: TextStyle(fontWeight: FontWeight.bold)))),
+              child: Center(child: Text(S.of(context).liqudity_pool_pairs, textScaleFactor: 1.5, style: TextStyle(fontWeight: FontWeight.bold)))),
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return _buildPoolPairLiquidityEntry(
-                  _poolPairLiquidity.elementAt(index));
+              return _buildPoolPairLiquidityEntry(_poolPairLiquidity.elementAt(index));
             },
             childCount: _poolPairLiquidity.length,
           ),
@@ -184,7 +173,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(S.of(context).liquitiy),
+          toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+          title: Text(S.of(context).liquitiy, style: TextStyle(color: StateContainer.of(context).curTheme.primary)),
           actions: [
             Padding(
                 padding: EdgeInsets.only(right: 20.0),

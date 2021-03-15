@@ -19,6 +19,7 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
             title: Text(S.of(context).wallet_receive),
             actionsIconTheme: Theme.of(context).iconTheme,
             actions: [
@@ -38,8 +39,7 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
                       size: 26.0,
                     ),
                   ))
-            ]
-        ),
+            ]),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Center(
@@ -50,8 +50,7 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
                       constraints: BoxConstraints(minWidth: 100, maxWidth: 400),
                       child: QrImage(
                         data: widget.pubKey,
-                        foregroundColor:
-                            StateContainer.of(context).curTheme.text,
+                        foregroundColor: StateContainer.of(context).curTheme.text,
                       )),
                   SelectableText(widget.pubKey)
                 ]))

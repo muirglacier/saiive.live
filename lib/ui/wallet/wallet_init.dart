@@ -1,3 +1,4 @@
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
@@ -42,6 +43,7 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(S.of(context).wallet_new_creating_title),
         ),

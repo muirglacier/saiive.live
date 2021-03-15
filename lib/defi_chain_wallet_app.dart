@@ -83,6 +83,8 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
       shadowColor = Colors.transparent;
       appBarColor = StateContainer.of(context).curTheme.lightColor;
       appBarTextColor = StateContainer.of(context).curTheme.primary;
+
+      StateContainer.of(context).curTheme.toolbarHeight = 80;
     }
 
     return MaterialApp(

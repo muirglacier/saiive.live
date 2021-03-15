@@ -1,11 +1,15 @@
 import 'dart:io';
 
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/version.dart';
+import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/dex/dex.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy.dart';
 import 'package:defichainwallet/ui/tokens/tokens.dart';
 import 'package:defichainwallet/ui/wallet/wallet_home.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +29,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  ChainNet _currentNet = ChainNet.Testnet;
+  String _version = "";
 
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
@@ -45,6 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  void _init() async {
+    _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    _version = await VersionHelper().getVersion();
+    setState(() {});
+  }
+
   _buildContent(BuildContext context) {
     if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia) {
       return Center(
@@ -55,6 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         NavigationRail(
             backgroundColor: StateContainer.of(context).curTheme.lightColor,
@@ -67,7 +87,22 @@ class _HomeScreenState extends State<HomeScreen> {
             labelType: NavigationRailLabelType.all,
             selectedIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.primary),
             selectedLabelTextStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),
-            leading: SizedBox(height: 100, width: 200, child: Center(child: Text("TODO: Add current network, version, etc..."))),
+            leading: Container(
+                child: Column(children: [
+              SizedBox(
+                  width: 200,
+                  child: Column(children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, top: 20, right: 20),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+                        Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
+                        SizedBox(height: 5),
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(ChainHelper.chainNetworkString(_currentNet)), Text(_version)])
+                      ]),
+                    ),
+                    Divider(color: StateContainer.of(context).curTheme.backgroundColor)
+                  ]))
+            ])),
             destinations: navBar),
         VerticalDivider(thickness: 1, width: 1),
         // This is the main content.

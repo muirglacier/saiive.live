@@ -494,15 +494,7 @@ class _DexScreen extends State<DexScreen> {
             maxLines: 1,
           ),
         ),
-        Expanded(
-          flex: 1,
-          child: AutoSizeText(
-            e.balanceDisplayRounded,
-            style: Theme.of(context).textTheme.headline3,
-            maxLines: 1,
-            textAlign: TextAlign.right
-          )
-        )
+        Expanded(flex: 1, child: AutoSizeText(e.balanceDisplayRounded, style: Theme.of(context).textTheme.headline3, maxLines: 1, textAlign: TextAlign.right))
       ],
     );
   }
@@ -510,7 +502,8 @@ class _DexScreen extends State<DexScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).dex)),
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
         body: SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.all(30),

@@ -14,6 +14,9 @@
   "loading": "Loading...",
   "next": "Next",
   "later": "Later",
+
+  "wallet_home_network": "Network",
+
   "welcome_wallet_create": "Create a new wallet",
   "welcome_wallet_restore": "Import existing wallet",
   "welcome_wallet_info": "Create your DeFiChain wallet and keep full control of your private keys!",

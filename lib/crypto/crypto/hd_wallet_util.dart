@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:bip32/bip32.dart' as bip32;
+import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';

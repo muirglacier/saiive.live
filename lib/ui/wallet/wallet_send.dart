@@ -133,18 +133,21 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                           handleSetMax();
                         }))
               ]),
-              ElevatedButton(
-                child: Text(S.of(context).wallet_send, style: TextStyle(color: StateContainer.of(context).curTheme.text)),
-                style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
-                onPressed: () async {
-                  sl.get<AuthenticationHelper>().forceAuth(context, () {
-                    final streamController = new StreamController<String>();
-                    final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+              SizedBox(height: 20),
+              SizedBox(
+                  width: 250,
+                  child: ElevatedButton(
+                    child: Text(S.of(context).wallet_send, style: TextStyle(color: StateContainer.of(context).curTheme.text)),
+                    style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
+                    onPressed: () async {
+                      sl.get<AuthenticationHelper>().forceAuth(context, () {
+                        final streamController = new StreamController<String>();
+                        final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
 
-                    overlay.during(sendFunds(streamController));
-                  });
-                },
-              )
+                        overlay.during(sendFunds(streamController));
+                      });
+                    },
+                  ))
             ])));
   }
 }

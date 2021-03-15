@@ -181,6 +181,10 @@ class Wallet extends IWallet {
       await _walletDatabase.removeUnspentTransactions(txData.item2);
       return tx;
     } catch (error) {
+      if (error is HttpException) {
+        LogHelper.instance.e("Error creating tx..." + error.error.error, error.error);
+        throw error.error;
+      }
       LogHelper.instance.e("Error creating tx...", error);
       throw error;
     } finally {

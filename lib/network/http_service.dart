@@ -51,7 +51,7 @@ class HttpService extends IHttpService {
     }
 
     http.Response response = await http.get(
-      finalUrl,
+      Uri.parse(finalUrl),
       headers: {'Content-type': 'application/json'},
     );
 
@@ -85,7 +85,7 @@ class HttpService extends IHttpService {
     }
 
     http.Response response = await http.get(
-      finalUrl,
+      Uri.parse(finalUrl),
       headers: {'Content-type': 'application/json'},
     );
 
@@ -104,7 +104,7 @@ class HttpService extends IHttpService {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
     final body = json.encode(request.toJson());
 
-    http.Response response = await http.post(finalUrl, headers: {'Content-type': 'application/json', 'Accept': 'application/json'}, body: body);
+    http.Response response = await http.post(Uri.parse(finalUrl), headers: {'Content-type': 'application/json', 'Accept': 'application/json'}, body: body);
     if (response.statusCode != 200) {
       return ErrorResponse(response: response, error: response.body);
     }

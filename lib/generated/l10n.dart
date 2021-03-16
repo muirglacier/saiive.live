@@ -145,6 +145,36 @@ class S {
     );
   }
 
+  /// `Ok`
+  String get ok {
+    return Intl.message(
+      'Ok',
+      name: 'ok',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark`
+  String get dark_mode {
+    return Intl.message(
+      'Dark',
+      name: 'dark_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get light_mode {
+    return Intl.message(
+      'Light',
+      name: 'light_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Network`
   String get wallet_home_network {
     return Intl.message(
@@ -780,6 +810,36 @@ class S {
     return Intl.message(
       'None',
       name: 'settings_auth_none',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network updated...`
+  String get settings_network_changed {
+    return Intl.message(
+      'Network updated...',
+      name: 'settings_network_changed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Danger!`
+  String get settings_change_network_title {
+    return Intl.message(
+      'Danger!',
+      name: 'settings_change_network_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure to switch to "Mainnet"? You alone are responsible for your funds!`
+  String get settings_change_network_text {
+    return Intl.message(
+      'Are you sure to switch to "Mainnet"? You alone are responsible for your funds!',
+      name: 'settings_change_network_text',
       desc: '',
       args: [],
     );

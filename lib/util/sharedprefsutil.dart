@@ -87,6 +87,10 @@ class SharedPrefsUtil {
     return await set(cur_theme, theme.getIndex());
   }
 
+  Future<void> setNetwork(ChainNet network) async {
+    return await set(cur_net, network.index);
+  }
+
   Future<ThemeSetting> getTheme() async {
     return ThemeSetting(ThemeOptions.values[await get(cur_theme, defaultValue: ThemeOptions.DEFI_LIGHT.index)]);
   }

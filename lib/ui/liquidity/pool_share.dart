@@ -21,7 +21,7 @@ class _PoolShareScreen extends State<PoolShareScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Text(widget.liquidity.tokenA + ' - ' + widget.liquidity.tokenB),
+          title: Text(widget.liquidity.tokenA + ' - ' + widget.liquidity.tokenB, style: TextStyle(color: StateContainer.of(context).curTheme.primary)),
         ),
         body: Padding(
             padding: EdgeInsets.all(10),

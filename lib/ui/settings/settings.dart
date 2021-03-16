@@ -1,10 +1,12 @@
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/version.dart';
+import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/model/available_themes.dart';
@@ -31,6 +33,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _authMethod;
   int _theme;
 
+  ChainNet _curNet;
+
   @override
   void initState() {
     super.initState();
@@ -44,12 +48,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     var version = await new VersionHelper().getVersion();
     var authMethod = await sl.get<SharedPrefsUtil>().getAuthMethod();
     var theme = await sl.get<SharedPrefsUtil>().getTheme();
+    var chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
       _version = version;
       _authMethod = authMethod.getIndex();
       _theme = theme.getIndex();
+      _curNet = chainNet;
     });
   }
 
@@ -65,6 +71,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(S.of(context).settings_removed_seed),
     ));
+  }
+
+  Future doChainNetSwitch(ChainNet net) async {
+    sl.get<SharedPrefsUtil>().setNetwork(net);
+
+    setState(() {
+      _curNet = net;
+    });
+
+    await sl.get<IWalletDatabase>().close();
+    await sl.get<IWalletDatabase>().destroy();
+    await sl.get<DeFiChainWallet>().close();
+    await sl.get<IHttpService>().init();
+
+    Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(S.of(context).settings_network_changed),
+    ));
+  }
+
+  Future doChangeChainNet(ChainNet net) async {
+    if (net == _curNet) {
+      return;
+    }
+
+    if (net == ChainNet.Testnet) {
+      await doChainNetSwitch(net);
+      return;
+    }
+
+    Widget okButton = TextButton(
+      child: Text(S.of(context).ok),
+      onPressed: () async {
+        await doChainNetSwitch(net);
+      },
+    );
+    Widget cancelButton = TextButton(
+      child: Text(S.of(context).cancel),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(S.of(context).settings_change_network_title),
+      content: Text(S.of(context).settings_change_network_text),
+      actions: [okButton, cancelButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -131,21 +195,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           )),
                           SizedBox(height: 5),
                           Container(
-                              child: DropdownButton<String>(
+                              child: DropdownButton<ChainNet>(
                             isExpanded: true,
                             disabledHint: Text('testnet'),
-                            value: null,
-                            items: ['testnet', 'mainnet'].map((e) {
-                              return new DropdownMenuItem<String>(
+                            value: _curNet,
+                            onChanged: (e) async {
+                              await doChangeChainNet(e);
+                            },
+                            items: ChainNet.values.map((e) {
+                              return new DropdownMenuItem<ChainNet>(
                                 value: e,
-                                child: Text(e),
+                                child: Text(ChainHelper.chainNetworkString(e)),
                               );
                             }).toList(),
                           )),
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
                             child: Text(
                               S.of(context).settings_remove_seed,
                               style: TextStyle(color: StateContainer.of(context).curTheme.darkColor),
@@ -159,7 +226,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
                             child: Text(S.of(context).settings_show_seed, style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               sl.get<AuthenticationHelper>().forceAuth(context, () {
@@ -170,16 +237,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
                             child: Text("Show logs", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
+                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole(showCloseButton: true, dark: _theme == 1)));
                             },
                           )),
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
                             child: Text("Show wallet addresses", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));

@@ -19,7 +19,6 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:sprintf/sprintf.dart';
 
 class WalletHomeScreen extends StatefulWidget {
   @override
@@ -44,7 +43,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   DeFiChainWallet _wallet;
 
   _refresh() async {
-    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    if (await _wallet.hasAccounts()) {
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    }
 
     _refreshController.refreshCompleted();
     final syncText = S.of(context).home_welcome_account_syncing;
@@ -54,14 +55,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   }
 
   _initWallet() async {
-    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    if (await _wallet.hasAccounts()) {
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    }
     if (_walletInitDoneSubscription == null) {
       _walletInitDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletInitDoneEvent>().listen((event) async {
-        final accounts = await _wallet.getAccounts();
-        if (accounts.length == 0) {
-          Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
-        }
-
         var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
 
         setState(() {
@@ -155,6 +153,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     if (_walletSyncDoneSubscription != null) {
       _walletSyncDoneSubscription.cancel();
       _walletSyncDoneSubscription = null;
+    }
+
+    if (_blockTipUpdatedEvent != null) {
+      _blockTipUpdatedEvent.cancel();
+      _blockTipUpdatedEvent = null;
     }
   }
 

@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/network/model/ivault.dart';
+import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/widgets/mnemonic_seed.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,6 +17,15 @@ class IntroRestoreScreen extends StatefulWidget {
 
 class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
   List<String> _phrase = [];
+
+  String getPhrase() {
+    return _phrase.join(" ");
+  }
+
+  Future saveSeed() async {
+    await sl.get<SharedPrefsUtil>().setSeedBackedUp(true);
+    await sl.get<IVault>().setSeed(getPhrase());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +42,15 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
     }
 
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
-        body: MnemonicSeedWidget(words: _phrase));
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Text(S.of(context).welcome_wallet_restore, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+        body: MnemonicSeedWidget(
+          words: _phrase,
+          onNext: () async {
+            await saveSeed();
+            Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
+          },
+        ));
   }
 }

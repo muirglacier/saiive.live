@@ -134,6 +134,12 @@ class Wallet extends IWallet {
     return _walletDatabase.addAccount(name: name, account: account, chain: _chain);
   }
 
+  Future<bool> hasAccounts() async {
+    _isInitialzed();
+    final acc = await _walletDatabase.getAccounts();
+    return acc.isNotEmpty;
+  }
+
   @override
   Future<List<WalletAccount>> getAccounts() {
     _isInitialzed();

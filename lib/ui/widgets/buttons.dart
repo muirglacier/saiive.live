@@ -34,11 +34,13 @@ class AppButton {
         return SizedBox(
             width: width,
             child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorSecondary),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  if (icon != null) Icon(icon),
+                  if (icon != null) Icon(icon, color: StateContainer.of(context).curTheme.lightColor),
                   SizedBox(width: 10),
                   Text(
                     buttonText,
+                    style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
                   ),
                 ]),
                 onPressed: () {

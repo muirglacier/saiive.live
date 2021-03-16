@@ -10,6 +10,9 @@
   "loading": "Laden...",
   "next": "Weiter",
   "later": "Später",
+  "dark_mode": "Dunkel",
+  "light_mode": "Hell",
+  "ok": "Ok",
   
   "wallet_home_network": "Netzwerk",
 
@@ -80,6 +83,9 @@
   "settings_disclaimer": "No one who is contributing to this project is taking any responsibility of what happens to your funds.",
   "settings_auth_biometric": "Biometrisch",
   "settings_auth_none": "Keine",
+  "settings_network_changed": "Netzwerk wurde geändert...",
+  "settings_change_network_title": "Achtung!",
+  "settings_change_network_text": "Bist du sicher ins \"Mainnet\" zu wechseln? Du bist allein für deine Funds verantwortlich!",
 
   "wallet_token_available_balance": "Verfügbar",
   "wallet_token_transactions": "Transaktionen",

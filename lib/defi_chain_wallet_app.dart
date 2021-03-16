@@ -160,7 +160,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
               );
             case '/intro_accounts_restore':
               return NoTransitionRoute(
-                builder: (_) => RestoreAccountsScreen(ChainType.DeFiChain, _network),
+                builder: (_) => RestoreAccountsScreen(ChainType.DeFiChain),
                 settings: settings,
               );
             case '/intro_wallet_new':

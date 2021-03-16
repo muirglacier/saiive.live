@@ -18,7 +18,11 @@ class Vault extends IVault {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       var sharedPreferences = await SharedPreferences.getInstance();
 
-      sharedPreferences.setString(key, value);
+      if (value == null) {
+        sharedPreferences.remove(key);
+      } else {
+        sharedPreferences.setString(key, value);
+      }
     } else {
       await secureStorage.write(key: key, value: value);
     }

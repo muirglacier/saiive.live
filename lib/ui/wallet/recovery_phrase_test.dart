@@ -114,8 +114,7 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text(S.of(context).wallet_recovery_phrase_test_title),
+          title: Text(S.of(context).wallet_recovery_phrase_test_title, style: TextStyle(color: StateContainer.of(context).curTheme.primary)),
           actions: <Widget>[
             InkWell(
                 onTap: () async {
@@ -126,7 +125,7 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
                     child: Text(
                       S.of(context).later,
                       textScaleFactor: 1.5,
-                      style: new TextStyle(fontSize: 12.0),
+                      style: new TextStyle(fontSize: 12.0, color: StateContainer.of(context).curTheme.darkColor),
                     )))
           ],
         ),

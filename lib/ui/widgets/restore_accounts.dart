@@ -14,11 +14,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
+import 'package:defichainwallet/util/sharedprefsutil.dart';
+
 class RestoreAccountsScreen extends StatefulWidget {
   final ChainType chain;
-  final ChainNet network;
 
-  RestoreAccountsScreen(this.chain, this.network);
+  RestoreAccountsScreen(this.chain);
 
   @override
   State<StatefulWidget> createState() {
@@ -27,7 +28,9 @@ class RestoreAccountsScreen extends StatefulWidget {
 }
 
 class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
-  Future<List<WalletAccount>> searchAccounts(ChainType chain, ChainNet network) async {
+  Future<List<WalletAccount>> searchAccounts(ChainType chain) async {
+    final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+
     var dataMap = Map();
     dataMap["chain"] = chain;
     dataMap["network"] = network;
@@ -75,9 +78,9 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
       Icon(
         Icons.arrow_right,
         size: 19.0,
-        color: Theme.of(context).accentColor,
+        color: StateContainer.of(context).curTheme.primary,
       ),
-      Padding(padding: EdgeInsets.only(left: 5), child: Text(account.name, style: TextStyle(color: Theme.of(context).accentColor, fontSize: 15)))
+      Padding(padding: EdgeInsets.only(left: 5), child: Text(account.name, style: TextStyle(color: StateContainer.of(context).curTheme.primary, fontSize: 15)))
     ]));
   }
 
@@ -125,7 +128,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
 
   Widget _buildRestoreRunner(BuildContext context) {
     return FutureBuilder<List<WalletAccount>>(
-      future: searchAccounts(widget.chain, widget.network),
+      future: searchAccounts(widget.chain),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<WalletAccount> data = snapshot.data;
@@ -141,8 +144,11 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
-        body: Column(children: <Widget>[
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Text(S.of(context).welcome_wallet_restore, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+        body: Card(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
           Container(
               child: Padding(
                   padding: EdgeInsets.all(10),
@@ -152,6 +158,6 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
                     style: TextStyle(fontSize: 20),
                   ))),
           Expanded(flex: 1, child: Padding(padding: EdgeInsets.all(20), child: _buildRestoreRunner(context)))
-        ]));
+        ])));
   }
 }

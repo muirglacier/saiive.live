@@ -107,11 +107,16 @@ class StateContainerState extends State<StateContainer> {
     });
 
     _walletSyncDoneSubscibre = EventTaxiImpl.singleton().registerTo<WalletSyncDoneEvent>().listen((event) async {
-      Block blockTip = await sl.get<BlockService>().getBlockTip('DFI');
+      try {
+        Block blockTip = await sl.get<BlockService>().getBlockTip('DFI');
 
-      sl.get<SharedPrefsUtil>().setLastSyncedBlock(blockTip);
+        sl.get<SharedPrefsUtil>().setLastSyncedBlock(blockTip);
 
-      EventTaxiImpl.singleton().fire(BlockTipUpdatedEvent(block: blockTip));
+        EventTaxiImpl.singleton().fire(BlockTipUpdatedEvent(block: blockTip));
+      } catch (e) {
+        logger.e("Error getting blocktip", e);
+        await sl.get<AppCenterWrapper>().trackEvent("getBlockTipError", <String, String>{"error": e.toString()});
+      }
     });
   }
 

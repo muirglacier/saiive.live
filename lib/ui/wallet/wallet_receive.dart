@@ -20,7 +20,7 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).wallet_receive),
+            title: Text(S.of(context).wallet_receive, style: TextStyle(color: StateContainer.of(context).curTheme.primary)),
             actionsIconTheme: Theme.of(context).iconTheme,
             actions: [
               Padding(

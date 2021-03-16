@@ -28,7 +28,7 @@ class HttpService extends IHttpService {
 
   Future init() async {
     final sharedPreferences = await SharedPreferences.getInstance();
-    final rawValue = await sharedPreferences.get(SharedPrefsUtil.cur_net);
+    final rawValue = sharedPreferences.get(SharedPrefsUtil.cur_net);
 
     final chainNet = ChainNet.values[rawValue ?? ChainNet.Testnet.index];
     this.network = ChainHelper.chainNetworkString(chainNet);

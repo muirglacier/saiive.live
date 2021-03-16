@@ -1,5 +1,7 @@
+import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/wallet/recovery_phrase_test.dart';
+import 'package:defichainwallet/ui/widgets/mnemonic_seed.dart';
 import 'package:flutter/material.dart';
 
 class RecoveryPhraseDisplayScreen extends StatefulWidget {
@@ -41,7 +43,9 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
     final split = mnemonic.split(" ");
 
     return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).wallet_recovery_phrase_title)),
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Text(S.of(context).wallet_recovery_phrase_title, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: Container(
@@ -54,27 +58,17 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
                     style: TextStyle(fontSize: 20),
                   )),
               SizedBox(height: 10),
-              Container(
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          alignment: WrapAlignment.center,
-                          runAlignment: WrapAlignment.center,
-                          direction: Axis.horizontal,
-                          children: buildChips(split)))),
-              SizedBox(height: 50),
-              if (widget.showNextButton)
-                Container(
-                    child: SizedBox(
-                        width: 300,
-                        child: ElevatedButton(
-                          child: Text(S.of(context).next),
-                          style: ElevatedButton.styleFrom(primary: Theme.of(context).primaryColor),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split)));
-                          },
-                        )))
+              Expanded(
+                  child: SingleChildScrollView(
+                      child: Container(
+                          child: MnemonicSeedWidget(
+                words: split,
+                readOnly: true,
+                showNextButton: widget.showNextButton,
+                onNext: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split)));
+                },
+              )))),
             ]))));
   }
 }

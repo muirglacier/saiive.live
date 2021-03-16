@@ -14,6 +14,10 @@
   "loading": "Loading...",
   "next": "Next",
   "later": "Later",
+  "ok": "Ok",
+  
+  "dark_mode": "Dark",
+  "light_mode": "Light",
 
   "wallet_home_network": "Network",
 
@@ -86,6 +90,9 @@
   "settings_disclaimer": "No one who is contributing to this project is taking any responsibility of what happens to your funds.",
   "settings_auth_biometric": "Biometric",
   "settings_auth_none": "None",
+  "settings_network_changed": "Network updated...",
+  "settings_change_network_title": "Danger!",
+  "settings_change_network_text": "Are you sure to switch to \"Mainnet\"? You alone are responsible for your funds!",
 
   "wallet_token_available_balance": "Available balance",
   "wallet_token_transactions": "Transactions",

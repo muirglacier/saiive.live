@@ -44,15 +44,8 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text(S.of(context).wallet_new_creating_title),
+          title: Text(S.of(context).wallet_new_creating_title, style: TextStyle(color: StateContainer.of(context).curTheme.primary)),
         ),
-        body: Padding(
-            padding: EdgeInsets.all(5),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                verticalDirection: VerticalDirection.up,
-                children: [LoadingWidget(text: S.of(context).wallet_new_creating)])));
+        body: Container(child: Card(child: LoadingWidget(text: S.of(context).wallet_new_creating))));
   }
 }

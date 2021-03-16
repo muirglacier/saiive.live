@@ -58,6 +58,9 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Addresses")), body: _buildWalletAddressList(context));
+    return Scaffold(
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Addresses", style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+        body: _buildWalletAddressList(context));
   }
 }

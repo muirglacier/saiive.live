@@ -86,7 +86,9 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).wallet_send)),
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Text(S.of(context).wallet_send, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [

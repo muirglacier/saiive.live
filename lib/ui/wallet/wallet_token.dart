@@ -61,6 +61,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     });
     _controller.forward();
     _balance = await BalanceHelper().getAccountBalance(widget.token);
+    await loadAccountHistory(includingRewards: _transactionIncludingRewards);
 
     await Future.delayed(const Duration(seconds: 1));
 

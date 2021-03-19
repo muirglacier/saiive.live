@@ -1,6 +1,7 @@
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/helper/poolpair.dart';
 import 'package:defichainwallet/helper/poolshare.dart';
 import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
@@ -52,59 +53,27 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       _isLoading = true;
     });
 
-    var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
-    var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
+    try {
+      var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
+      var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
 
-    setState(() {
-      _liquidity = liquidity;
-      _poolPairLiquidity = poolPairLiquidity;
-      _isLoading = false;
-    });
+      setState(() {
+        _liquidity = liquidity;
+        _poolPairLiquidity = poolPairLiquidity;
+        _isLoading = false;
+      });
 
-    sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadEnd", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
-  }
+      sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadEnd", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
+    } catch (e) {
+      LogHelper.instance.e("Error loading data", e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
 
-  Widget _buildMyLiquidityEntry(PoolShareLiquidity myLiquidity) {
-    return InkWell(
-        onTap: () async {
-          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => PoolShareScreen(myLiquidity)));
-        },
-        child: Card(
-            child: Padding(
-                padding: EdgeInsets.all(30),
-                child: Column(children: <Widget>[
-                  Container(decoration: new BoxDecoration(color: Colors.transparent), child: TokenPairIcon(myLiquidity.tokenA, myLiquidity.tokenB)),
-                  Container(
-                    child: Row(children: [
-                      Expanded(flex: 2, child: Text('APY', style: TextStyle(fontWeight: FontWeight.bold))),
-                      Expanded(
-                          flex: 10,
-                          child: Text(
-                            myLiquidity.apy.toStringAsFixed(2) + '%',
-                            textAlign: TextAlign.right,
-                            textScaleFactor: 2.5,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ))
-                    ]),
-                  ),
-                  Container(
-                    child: Row(children: [
-                      Expanded(flex: 4, child: Text(myLiquidity.tokenA)),
-                      Expanded(flex: 6, child: Text((myLiquidity.poolSharePercentage / 100 * myLiquidity.poolPair.reserveA).toStringAsFixed(8), textAlign: TextAlign.right))
-                    ]),
-                  ),
-                  Container(
-                    child: Row(children: [
-                      Expanded(flex: 4, child: Text(myLiquidity.tokenB)),
-                      Expanded(flex: 6, child: Text((myLiquidity.poolSharePercentage / 100 * myLiquidity.poolPair.reserveB).toStringAsFixed(8), textAlign: TextAlign.right))
-                    ]),
-                  ),
-                  Container(
-                      child: Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).liquitiy_pool_share_percentage)),
-                    Expanded(flex: 6, child: Text(myLiquidity.poolSharePercentage.toStringAsFixed(8) + '%', textAlign: TextAlign.right))
-                  ])),
-                ]))));
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Widget _buildPoolPairLiquidityEntry(PoolPairLiquidity liquidity) {

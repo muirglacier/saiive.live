@@ -62,8 +62,8 @@
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
     <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>-</string>
+    <string>Flutter Component uses it</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>-</string>
+    <string>Flutter Component uses it</string>
 </dict>
 </plist>

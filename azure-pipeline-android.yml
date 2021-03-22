@@ -2,6 +2,9 @@ trigger:
 - main
 name: $(BuildID)
 
+variables:
+- group: App
+
 stages:
 - stage: Android
   displayName: Android
@@ -51,7 +54,7 @@ stages:
         inputs:
           channel: 'stable'
           version: 'custom'
-          customVersion: '2.0.0'
+          customVersion: $(FlutterVersion) 
       - task: Bash@3
         displayName: "Flutter prepare"
         inputs:
@@ -80,7 +83,7 @@ stages:
         inputs:
           target: 'apk'
           projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
+          buildName: $(AppVersion)
           debugMode: true
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'dev'
@@ -107,7 +110,7 @@ stages:
         inputs:
           target: 'apk'
           projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
+          buildName: $(AppVersion)
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'dev'
           buildNumber: $(Build.BuildNumber)
@@ -134,7 +137,7 @@ stages:
         inputs:
           channel: 'stable'
           version: 'custom'
-          customVersion: '2.0.0'
+          customVersion: $(FlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter clean"
@@ -163,7 +166,7 @@ stages:
         inputs:
           target: 'apk'
           projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
+          buildName: $(AppVersion)'
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'staging'
           entryPoint: 'lib/main_staging.dart'
@@ -193,7 +196,7 @@ stages:
         inputs:
           channel: 'stable'
           version: 'custom'
-          customVersion: '2.0.0'
+          customVersion: $(FlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter clean"
@@ -222,7 +225,7 @@ stages:
         inputs:
           target: 'apk'
           projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: '0.1'
+          buildName: $(AppVersion)
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'prod'
           entryPoint: 'lib/main_prod.dart'

@@ -389,6 +389,7 @@ class Wallet extends IWallet {
           }
         }
         await _walletDatabase.removeUnspentTransactions(txHex.item2);
+        amount -= txHex.item3;
       }
 
       return await _createUtxoTransaction(amount, to, changeAddress);
@@ -471,7 +472,7 @@ class Wallet extends IWallet {
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
 
-    final checkAmount = amount + 10000;
+    final checkAmount = amount;
 
     var curAmount = 0.0;
     for (final tx in unspentTxs) {
@@ -558,7 +559,7 @@ class Wallet extends IWallet {
     return (inputs * 180) + (outputs * 34) + 50;
   }
 
-  Future<Tuple2<List<String>, List<tx.Transaction>>> prepareAccountToUtxosTransactions(String pubKey, int amount) async {
+  Future<Tuple3<List<String>, List<tx.Transaction>, int>> prepareAccountToUtxosTransactions(String pubKey, int amount) async {
     var tokenBalance = await _walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (tokenBalance == null || tokenBalance.balance == 0) {
@@ -640,7 +641,7 @@ class Wallet extends IWallet {
       throw new ArgumentError("should not happen at all now...");
     }
 
-    return Tuple2(txs, usedInputs);
+    return Tuple3(txs, usedInputs, fees * txs.length);
   }
 
   Future<TransactionData> prepareAccount(int amount, {StreamController<String> loadingStream}) async {

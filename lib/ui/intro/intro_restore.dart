@@ -44,7 +44,7 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).welcome_wallet_restore, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            title: Text(S.of(context).welcome_wallet_restore)),
         body: MnemonicSeedWidget(
           words: _phrase,
           onNext: () async {

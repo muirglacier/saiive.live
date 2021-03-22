@@ -441,7 +441,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).liquitiy_add, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            title: Text(S.of(context).liquitiy_add)),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [

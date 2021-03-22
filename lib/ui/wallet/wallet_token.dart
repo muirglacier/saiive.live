@@ -222,7 +222,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.token, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+          AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.token)),
       body: buildView(context),
     );
   }

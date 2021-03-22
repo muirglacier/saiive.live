@@ -136,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).settings, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            title: Text(S.of(context).settings)),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: CustomScrollView(

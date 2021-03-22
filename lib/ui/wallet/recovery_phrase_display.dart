@@ -45,7 +45,7 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).wallet_recovery_phrase_title, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            title: Text(S.of(context).wallet_recovery_phrase_title)),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: Container(

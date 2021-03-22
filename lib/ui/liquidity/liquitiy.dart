@@ -143,7 +143,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Text(S.of(context).liquitiy, style: TextStyle(color: StateContainer.of(context).curTheme.primary)),
+          title: Text(S.of(context).liquitiy),
           actions: [
             Padding(
                 padding: EdgeInsets.only(right: 20.0),

@@ -1,6 +1,11 @@
 trigger:
 - main
+- features/*
+- fix/*
 name: $(BuildID)
+
+variables:
+- group: App
 
 stages:
 - stage: iOS
@@ -68,7 +73,7 @@ stages:
         inputs:
           channel: 'stable'
           version: 'custom'
-          customVersion: '2.0.0'
+          customVersion: $(FlutterVersion) 
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -103,7 +108,7 @@ stages:
           entryPoint: 'lib/main_staging.dart'
           verboseMode: true
           debugMode: false
-          buildName: '0.2'
+          buildName: $(AppVersion)
           buildNumber: $(Build.BuildNumber)
 
       - task: Bash@3
@@ -155,7 +160,7 @@ stages:
         inputs:
           channel: 'stable'
           version: 'custom'
-          customVersion: '2.0.0'
+          customVersion: $(FlutterVersion) 
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -190,7 +195,7 @@ stages:
           entryPoint: 'lib/main_prod.dart'
           verboseMode: false
           debugMode: false
-          buildName: '0.2'
+          buildName: $(AppVersion)
           buildNumber: $(Build.BuildNumber)
 
       - task: Bash@3

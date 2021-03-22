@@ -1,5 +1,7 @@
 trigger:
 - main
+- features/*
+- fix/*
 name: $(BuildID)
 
 variables:

@@ -3,15 +3,18 @@ import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/account_service.dart';
 import 'package:defichainwallet/network/api_service.dart';
 import 'package:defichainwallet/network/balance_service.dart';
+import 'package:defichainwallet/network/healthcheck_service.dart';
 import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'mock/database_memory_mock.dart';
+import 'mock/health_service_mock.dart';
 import 'mock/http_service_mock.dart';
 import 'mock/vault_mock.dart';
 
@@ -42,6 +45,8 @@ void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<ITransactionService>(() => TransactionService());
   sl.registerLazySingleton<IBalanceService>(() => BalanceService());
   sl.registerLazySingleton<ITokenService>(() => TokenService());
+  sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckServiceMock());
+  sl.registerLazySingleton<IHealthService>(() => HealthServiceMock());
 
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(false));
 }

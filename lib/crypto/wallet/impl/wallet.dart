@@ -472,7 +472,7 @@ class Wallet extends IWallet {
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
 
-    final checkAmount = amount;
+    final checkAmount = amount + 10000;
 
     var curAmount = 0.0;
     for (final tx in unspentTxs) {

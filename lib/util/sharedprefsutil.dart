@@ -97,8 +97,13 @@ class SharedPrefsUtil {
   }
 
   Future<ChainNet> getChainNetwork() async {
-    final defaultNetworkString = env["DEFAULT_NETWORK"];
-    final defaultNetwork = ChainHelper.networkFromString(defaultNetworkString);
+    ChainNet defaultNetwork = ChainNet.Testnet;
+    try {
+      final defaultNetworkString = env["DEFAULT_NETWORK"];
+      defaultNetwork = ChainHelper.networkFromString(defaultNetworkString);
+    } catch (e) {
+      //ignore
+    }
 
     return ChainNet.values[await get(cur_net, defaultValue: defaultNetwork.index)];
   }

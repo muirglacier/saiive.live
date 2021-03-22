@@ -146,7 +146,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).welcome_wallet_restore, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            title: Text(S.of(context).welcome_wallet_restore)),
         body: Card(
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
           Container(

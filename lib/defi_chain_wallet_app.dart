@@ -87,6 +87,8 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
       StateContainer.of(context).curTheme.toolbarHeight = 80;
     }
 
+    ThemeData theme = ThemeData();
+
     return MaterialApp(
         localizationsDelegates: [
           S.delegate,
@@ -108,8 +110,13 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
                 shadowColor: shadowColor,
                 iconTheme: IconThemeData(color: appBarTextColor),
                 foregroundColor: appBarTextColor,
+                actionsIconTheme: IconThemeData(color: appBarTextColor),
                 toolbarTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
-                titleTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold)),
+                titleTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
+                textTheme: theme.textTheme.copyWith(
+                  headline6: theme.textTheme.headline6.copyWith(color: appBarTextColor, fontSize: 20.0),
+                ),
+            ),
             brightness: StateContainer.of(context).curTheme.brightness,
             primaryColor: StateContainer.of(context).curTheme.primary,
             scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,

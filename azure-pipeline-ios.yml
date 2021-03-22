@@ -103,7 +103,7 @@ stages:
           entryPoint: 'lib/main_staging.dart'
           verboseMode: true
           debugMode: false
-          buildName: '0.1'
+          buildName: '0.2'
           buildNumber: $(Build.BuildNumber)
 
       - task: Bash@3
@@ -190,7 +190,7 @@ stages:
           entryPoint: 'lib/main_prod.dart'
           verboseMode: false
           debugMode: false
-          buildName: '0.1'
+          buildName: '0.2'
           buildNumber: $(Build.BuildNumber)
 
       - task: Bash@3

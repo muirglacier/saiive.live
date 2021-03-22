@@ -503,7 +503,7 @@ class _DexScreen extends State<DexScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex)),
         body: SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.all(30),

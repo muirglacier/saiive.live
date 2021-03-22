@@ -74,7 +74,7 @@ class _TokensScreen extends State<TokensScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).home_tokens, style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            title: Text(S.of(context).home_tokens)),
         body: Scaffold(body: buildTokenScreen(context)));
   }
 }

@@ -222,14 +222,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_welcomeText, style: TextStyle(fontSize: 15, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.bold)),
+              Text(_welcomeText, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               Row(children: [
-                Text(_syncText, style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.bold)),
+                Text(_syncText, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                 if (_lastSyncBlockTip != null)
                   Text(" " + S.of(context).home_welcome_account_block_height,
-                      style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.w800)),
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
                 if (_lastSyncBlockTip != null)
-                  Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, color: Theme.of(context).appBarTheme.foregroundColor, fontWeight: FontWeight.w800)),
+                  Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
               ]),
             ],
           ),

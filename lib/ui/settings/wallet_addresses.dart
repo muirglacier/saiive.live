@@ -60,7 +60,7 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Addresses", style: TextStyle(color: StateContainer.of(context).curTheme.primary))),
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Addresses")),
         body: _buildWalletAddressList(context));
   }
 }

@@ -9,6 +9,7 @@ import 'package:defichainwallet/network/events/events.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
@@ -137,6 +138,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
     _wallet = sl.get<DeFiChainWallet>();
+
+    sl.get<IHealthService>().checkHealth(context);
+
     _syncEvents();
     _initWallet();
     _initLastSyncedBlock();
@@ -225,15 +229,12 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
               Text(_welcomeText, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               Row(children: [
                 Text(_syncText, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                if (_lastSyncBlockTip != null)
-                  Text(" " + S.of(context).home_welcome_account_block_height,
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-                if (_lastSyncBlockTip != null)
-                  Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                if (_lastSyncBlockTip != null) Text(" " + S.of(context).home_welcome_account_block_height, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                if (_lastSyncBlockTip != null) Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
               ]),
             ],
           ),
-          actionsIconTheme: Theme.of(context).iconTheme,
+          actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           actions: [
             Padding(
                 padding: EdgeInsets.only(right: 20.0),

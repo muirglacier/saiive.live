@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/ui/model/authentication_method.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:defichainwallet/ui/model/available_language.dart';
 import 'package:defichainwallet/ui/model/available_themes.dart';
@@ -96,7 +97,10 @@ class SharedPrefsUtil {
   }
 
   Future<ChainNet> getChainNetwork() async {
-    return ChainNet.values[await get(cur_net, defaultValue: ChainNet.Testnet.index)];
+    final defaultNetworkString = env["DEFAULT_NETWORK"];
+    final defaultNetwork = ChainHelper.networkFromString(defaultNetworkString);
+
+    return ChainNet.values[await get(cur_net, defaultValue: defaultNetwork.index)];
   }
 
   // For logging out

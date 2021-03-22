@@ -111,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Put the #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" word here"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" word"),
+    "wallet_offline" : MessageLookupByLibrary.simpleMessage("It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later..."),
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Building transaction"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creating auth tx"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparing account balance"),

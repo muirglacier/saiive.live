@@ -7,6 +7,7 @@ import 'package:defichainwallet/helper/poolshare.dart';
 import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/ui/widgets/responsive.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_add.dart';
 import 'package:defichainwallet/ui/liquidity/liquitiy_box.dart';
@@ -36,6 +37,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     super.initState();
 
     sl.get<AppCenterWrapper>().trackEvent("openLiquidityPage", <String, String>{});
+    sl.get<IHealthService>().checkHealth(context);
     _init();
   }
 

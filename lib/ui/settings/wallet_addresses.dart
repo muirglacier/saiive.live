@@ -1,11 +1,13 @@
+import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
+import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class WalletAddressesScreen extends StatefulWidget {
   @override
@@ -16,10 +18,17 @@ class WalletAddressesScreen extends StatefulWidget {
 
 class _WalletAddressesScreen extends State<WalletAddressesScreen> {
   List<WalletAddress> _walletAddresses = [];
+  List<String> _walletAddressesString = [];
 
   loadAddresses() async {
     final walletDb = sl.get<IWalletDatabase>();
     _walletAddresses = await walletDb.getWalletAddresses(0);
+
+    for (final address in _walletAddresses) {
+      var path = HdWalletUtil.derivePath(address.account, address.isChangeAddress, address.index);
+
+      _walletAddressesString.add(address.publicKey + " @ " + path);
+    }
 
     setState(() {});
   }
@@ -31,10 +40,8 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
     loadAddresses();
   }
 
-  _buildAddressEntry(BuildContext context, WalletAddress address) {
-    var path = HdWalletUtil.derivePath(address.account, address.isChangeAddress, address.index);
-
-    return Row(children: [Text(address.publicKey), Text(" @ "), Text(path)]);
+  _buildAddressEntry(BuildContext context, String address) {
+    return Row(children: [Text(address)]);
   }
 
   _buildWalletAddressList(BuildContext context) {
@@ -49,9 +56,9 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: _walletAddresses.length,
+                itemCount: _walletAddressesString.length,
                 itemBuilder: (context, index) {
-                  final account = _walletAddresses.elementAt(index);
+                  final account = _walletAddressesString.elementAt(index);
                   return _buildAddressEntry(context, account);
                 })));
   }
@@ -60,7 +67,27 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Addresses")),
+            actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
+            actions: [
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await ClipboardManager.copyToClipBoard(_walletAddressesString?.join("\r\n"));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(S.of(context).receive_address_copied_to_clipboard),
+                      ));
+
+                      Clipboard.setData(new ClipboardData(text: _walletAddressesString?.join("\r\n")));
+                    },
+                    child: Icon(
+                      Icons.copy,
+                      size: 26.0,
+                    ),
+                  ))
+            ],
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Text("Addresses")),
         body: _buildWalletAddressList(context));
   }
 }

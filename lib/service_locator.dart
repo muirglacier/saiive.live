@@ -12,12 +12,14 @@ import 'package:defichainwallet/network/coingecko_service.dart';
 import 'package:defichainwallet/network/defichain_service.dart';
 import 'package:defichainwallet/network/dex_service.dart';
 import 'package:defichainwallet/network/gov_service.dart';
+import 'package:defichainwallet/network/healthcheck_service.dart';
 import 'package:defichainwallet/network/http_service.dart';
 import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
+import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
 import 'package:defichainwallet/ui/utils/biometrics.dart';
 import 'package:defichainwallet/ui/utils/hapticutil.dart';
@@ -58,6 +60,8 @@ void setupServiceLocator() {
   sl.registerLazySingleton<BiometricUtil>(() => BiometricUtil());
   sl.registerLazySingleton<HapticUtil>(() => HapticUtil());
   sl.registerLazySingleton<AuthenticationHelper>(() => AuthenticationHelper());
+  sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckService());
+  sl.registerLazySingleton<IHealthService>(() => HealthService());
 
   sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
 

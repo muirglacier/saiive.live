@@ -24,7 +24,7 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
 
     final walletDb = sl.get<IWalletDatabase>();
     await walletDb.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
-    await walletDb.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
+    // await walletDb.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
 
     await wallet.init();
 

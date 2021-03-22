@@ -20,9 +20,8 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).wallet_receive
-            ),
-            actionsIconTheme: Theme.of(context).iconTheme,
+            title: Text(S.of(context).wallet_receive),
+            actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
             actions: [
               Padding(
                   padding: EdgeInsets.only(right: 20.0),

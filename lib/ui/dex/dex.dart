@@ -16,6 +16,7 @@ import 'package:defichainwallet/network/model/token_balance.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/pool_pair_service.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
@@ -62,6 +63,7 @@ class _DexScreen extends State<DexScreen> {
     _amountToController.addListener(handleChangeTo);
 
     sl.get<AppCenterWrapper>().trackEvent("openSwapPage", <String, String>{});
+    sl.get<IHealthService>().checkHealth(context);
 
     _init();
   }
@@ -502,8 +504,7 @@ class _DexScreen extends State<DexScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex)),
         body: SingleChildScrollView(
             child: Padding(
                 padding: EdgeInsets.all(30),

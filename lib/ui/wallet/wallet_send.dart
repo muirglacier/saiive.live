@@ -6,9 +6,11 @@ import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
@@ -78,17 +80,24 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   void initState() {
     super.initState();
 
+    sl.get<IHealthService>().checkHealth(context);
     sl.get<AppCenterWrapper>().trackEvent("openWalletSend", <String, String>{"coin": widget.token});
 
-    _addressController = TextEditingController(text: widget.toAddress ?? 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv');
+    var currentEnvironment = new EnvHelper().getEnvironment();
+
+    var toAddress = widget.toAddress;
+
+    if (currentEnvironment == EnvironmentType.Development) {
+      toAddress = widget.toAddress ?? 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv';
+    }
+
+    _addressController = TextEditingController(text: toAddress);
   }
 
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).wallet_send)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).wallet_send)),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: Column(mainAxisSize: MainAxisSize.min, children: [

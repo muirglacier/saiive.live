@@ -3,6 +3,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/wallet/wallet_init.dart';
+import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -20,6 +21,7 @@ class RecoveryPhraseTestScreen extends StatefulWidget {
 
 class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   _RecoveryPhraseTestScreen();
 
@@ -72,6 +74,9 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
   }
 
   Future saveSeed(bool seedIsBackedUp) async {
+    setState(() {
+      _isLoading = true;
+    });
     await sl.get<SharedPrefsUtil>().setSeedBackedUp(seedIsBackedUp);
     await sl.get<IVault>().setSeed(widget.mnemonic.join(" "));
 
@@ -79,6 +84,9 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
   }
 
   Widget buildScreen(BuildContext context) {
+    if (_isLoading) {
+      return LoadingWidget(text: S.of(context).loading);
+    }
     final randomWordsToTest = getRandomForTest(4, widget.mnemonic);
 
     final textEditControllerMap = new Map<int, TextEditingController>();

@@ -9,6 +9,13 @@ class AppStyles {
     );
   }
 
+  static TextStyle textStyleParagraphHeavy(BuildContext context) {
+    return TextStyle(
+      fontSize: AppFontSizes.medium,
+      fontWeight: FontWeight.normal,
+    );
+  }
+
   static TextStyle textStyleButtonPrimary(BuildContext context) {
     return TextStyle(
       fontSize: AppFontSizes.large,

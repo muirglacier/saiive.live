@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/version.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
+import 'package:defichainwallet/services/health_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../generated/l10n.dart';
@@ -23,10 +25,16 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   var _version = "";
   bool _hasCheckedLoggedIn;
   bool _retried;
+  bool _versionLoaded = false;
+
+  String _curNet = "";
 
   EnvironmentType _currentEnvironment;
 
   Future checkLoggedIn() async {
+    if (!_versionLoaded) {
+      return;
+    }
     if (!_hasCheckedLoggedIn) {
       _hasCheckedLoggedIn = true;
     } else {
@@ -58,6 +66,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       }
       // await sl.get<IWalletDatabase>().open();
 
+      await sl.get<IHealthService>().checkHealth(context);
+
       Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {
       await sl.get<IVault>().deleteAll();
@@ -73,13 +83,13 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   void _init() async {
     _currentEnvironment = EnvHelper().getEnvironment();
     _version = await VersionHelper().getVersion();
-  }
 
-  @override
-  void initState() {
-    super.initState();
+    final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    _curNet = ChainHelper.chainNetworkString(network);
 
-    _init();
+    setState(() {
+      _versionLoaded = true;
+    });
 
     WidgetsBinding.instance.addObserver(this);
     _hasCheckedLoggedIn = false;
@@ -87,6 +97,15 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) => checkLoggedIn());
     }
+
+    checkLoggedIn();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
   }
 
   @override
@@ -136,9 +155,18 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
               margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
               child: AutoSizeText(
                 _version,
-                style: AppStyles.textStyleParagraph(context),
+                style: AppStyles.textStyleParagraphHeavy(context),
                 maxLines: 4,
                 stepGranularity: 0.5,
+              ),
+            ),
+          ]),
+          Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              child: Text(
+                _curNet,
+                style: AppStyles.textStyleParagraphHeavy(context),
               ),
             ),
           ]),

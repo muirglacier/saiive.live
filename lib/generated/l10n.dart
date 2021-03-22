@@ -185,6 +185,16 @@ class S {
     );
   }
 
+  /// `It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...`
+  String get wallet_offline {
+    return Intl.message(
+      'It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...',
+      name: 'wallet_offline',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Create a new wallet`
   String get welcome_wallet_create {
     return Intl.message(

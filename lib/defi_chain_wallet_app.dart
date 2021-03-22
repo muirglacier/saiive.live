@@ -77,7 +77,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
 
     var shadowColor = Colors.black;
     var appBarColor = StateContainer.of(context).curTheme.primary;
-    var appBarTextColor = StateContainer.of(context).curTheme.text;
+    var appBarTextColor = StateContainer.of(context).curTheme.appBarText;
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       shadowColor = Colors.transparent;
@@ -106,16 +106,16 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
         title: "DeFiChain Wallet",
         theme: ThemeData(
             appBarTheme: AppBarTheme(
-                backgroundColor: appBarColor,
-                shadowColor: shadowColor,
-                iconTheme: IconThemeData(color: appBarTextColor),
-                foregroundColor: appBarTextColor,
-                actionsIconTheme: IconThemeData(color: appBarTextColor),
-                toolbarTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
-                titleTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
-                textTheme: theme.textTheme.copyWith(
-                  headline6: theme.textTheme.headline6.copyWith(color: appBarTextColor, fontSize: 20.0),
-                ),
+              backgroundColor: appBarColor,
+              shadowColor: shadowColor,
+              iconTheme: IconThemeData(color: appBarTextColor),
+              foregroundColor: appBarTextColor,
+              actionsIconTheme: IconThemeData(color: appBarTextColor),
+              toolbarTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
+              titleTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
+              textTheme: theme.textTheme.copyWith(
+                headline6: theme.textTheme.headline6.copyWith(color: appBarTextColor, fontSize: 20.0),
+              ),
             ),
             brightness: StateContainer.of(context).curTheme.brightness,
             primaryColor: StateContainer.of(context).curTheme.primary,

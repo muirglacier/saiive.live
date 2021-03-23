@@ -86,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_remove_seed" : MessageLookupByLibrary.simpleMessage("Seed löschen"),
     "settings_removed_seed" : MessageLookupByLibrary.simpleMessage("Seed gelöscht"),
     "settings_show_seed" : MessageLookupByLibrary.simpleMessage("Seed anzeigen"),
-    "title" : MessageLookupByLibrary.simpleMessage("DeFiChain Wallet"),
+    "title" : MessageLookupByLibrary.simpleMessage("Smart DeFi Wallet"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Dein Wallet ist leer!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Netzwerk"),

@@ -45,10 +45,10 @@ class S {
     );
   }
 
-  /// `DeFiChain Wallet`
+  /// `Smart DeFi Wallet`
   String get title {
     return Intl.message(
-      'DeFiChain Wallet',
+      'Smart DeFi Wallet',
       name: 'title',
       desc: '',
       args: [],

@@ -27,7 +27,7 @@ void run() async {
   setupServiceLocator();
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('Defichain Wallet App');
+    setWindowTitle('Smart DeFi Wallet');
     setWindowMinSize(const Size(700, 500));
     setWindowMaxSize(Size.infinite);
   }
@@ -103,7 +103,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
         locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
             ? null
             : StateContainer.of(context).curLanguage.getLocale(),
-        title: "DeFiChain Wallet",
+        title: "Smart DeFi Wallet",
         theme: ThemeData(
             appBarTheme: AppBarTheme(
               backgroundColor: appBarColor,

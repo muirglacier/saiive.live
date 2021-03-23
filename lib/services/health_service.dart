@@ -26,9 +26,7 @@ class HealthService implements IHealthService {
             onPressed: () async {
               final url = env["STATS_URL"];
 
-              if (await canLaunch(url)) {
-                await launch(url);
-              }
+              await launch(url);
             },
           )));
     }

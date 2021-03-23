@@ -21,6 +21,7 @@
 
   "wallet_home_network": "Network",
   "wallet_offline": "It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...",
+  "wallet_uptime_stats": "Show state",
 
   "welcome_wallet_create": "Create a new wallet",
   "welcome_wallet_restore": "Import existing wallet",

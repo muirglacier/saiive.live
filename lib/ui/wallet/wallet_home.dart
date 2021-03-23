@@ -48,6 +48,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
     }
 
+    sl.get<IHealthService>().checkHealth(context);
+
     _refreshController.refreshCompleted();
     final syncText = S.of(context).home_welcome_account_syncing;
     setState(() {
@@ -138,8 +140,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
     _wallet = sl.get<DeFiChainWallet>();
-
-    sl.get<IHealthService>().checkHealth(context);
 
     _syncEvents();
     _initWallet();

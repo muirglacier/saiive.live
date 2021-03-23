@@ -4,7 +4,9 @@
         {
             "name": "walletapp",
             "request": "launch",
+            "program": "lib/main.dart",
             "type": "dart",
+            
             "env": [
                 "ENVFILE=.env-Debug"
             ],
@@ -16,10 +18,27 @@
         {
             "name": "walletppp Staging",
             "request": "launch",
+            "program": "lib/main_staging.dart",
             "type": "dart",
+            "env": [
+                "ENVFILE=.env-Staging"
+            ],
             "args": [
                 "--flavor",
                 "staging"
+            ]
+        },
+        {
+            "name": "walletppp Production",
+            "request": "launch",
+            "program": "lib/main_prod.dart",
+            "type": "dart",
+            "env": [
+                "ENVFILE=.env-Prod"
+            ],
+            "args": [
+                "--flavor",
+                "prod"
             ]
         }
     ]

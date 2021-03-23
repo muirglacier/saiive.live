@@ -142,6 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_token_available_balance" : MessageLookupByLibrary.simpleMessage("Verfügbar"),
     "wallet_token_show_in_explorer" : MessageLookupByLibrary.simpleMessage("Im Explorer anzeigen"),
     "wallet_token_transactions" : MessageLookupByLibrary.simpleMessage("Transaktionen"),
+    "wallet_uptime_stats" : MessageLookupByLibrary.simpleMessage("Status anzeigen"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Willkommen"),
     "welcome_wallet_create" : MessageLookupByLibrary.simpleMessage("Neues Wallet anlegen"),
     "welcome_wallet_info" : MessageLookupByLibrary.simpleMessage("Erstelle dein DeFiChain Wallet und behalte die Kontrolle deiner Privaten Schlüssel!"),

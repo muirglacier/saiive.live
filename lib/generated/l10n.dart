@@ -195,6 +195,16 @@ class S {
     );
   }
 
+  /// `Show state`
+  String get wallet_uptime_stats {
+    return Intl.message(
+      'Show state',
+      name: 'wallet_uptime_stats',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Create a new wallet`
   String get welcome_wallet_create {
     return Intl.message(

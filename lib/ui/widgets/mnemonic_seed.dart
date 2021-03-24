@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class MnemonicSeedWidget extends StatefulWidget {
   final List<String> words;
-  final VoidCallback onNext;
+  final Function(String) onNext;
   final bool readOnly;
   final bool showNextButton;
 
@@ -89,7 +89,7 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
                                   return;
                                 }
 
-                                widget.onNext();
+                                widget.onNext(phrase);
                               }
                             },
                           )

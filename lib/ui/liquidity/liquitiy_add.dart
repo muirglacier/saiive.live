@@ -18,6 +18,7 @@ import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
+import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
@@ -42,6 +43,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   double _conversionRate;
 
   bool _insufficientFunds = false;
+  bool _isLoading = true;
 
   List<TokenBalance> _fromTokens = [];
   List<TokenBalance> _toTokens = [];
@@ -146,6 +148,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     setState(() {
       _fromTokens = tokenMap;
       _toTokens = tokenMap;
+      _isLoading = false;
     });
   }
 
@@ -436,173 +439,177 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     super.dispose();
   }
 
+  Widget _buildAddLmPage(BuildContext context) {
+    if (_isLoading) {
+      return LoadingWidget(text: S.of(context).loading);
+    }
+
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        Expanded(
+            flex: 1,
+            child: Container(
+                height: 60,
+                child: DropdownButton<TokenBalance>(
+                  isExpanded: true,
+                  hint: Text(S.of(context).liquitiy_add_token_a),
+                  value: _selectedTokenA,
+                  items: _fromTokens.map((e) {
+                    return new DropdownMenuItem<TokenBalance>(
+                      value: e,
+                      child: _buildDropdownListItem(e),
+                    );
+                  }).toList(),
+                  onChanged: (TokenBalance val) {
+                    setState(() {
+                      filter(val, _selectedTokenB);
+
+                      _selectedTokenA = val;
+
+                      findPoolPair(_selectedTokenA, _selectedTokenB);
+                      handleChangeTokenASelection();
+                    });
+                  },
+                ))),
+        SizedBox(width: 20),
+        ButtonTheme(
+            height: 30,
+            minWidth: 40,
+            child: ElevatedButton(
+                child: Text(S.of(context).liquitiy_add_max),
+                onPressed: () {
+                  handleSetMaxTokenA();
+                }))
+      ]),
+      TextField(
+        controller: _amountTokenAController,
+        decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+      ),
+      Row(children: [
+        Expanded(
+            flex: 1,
+            child: Container(
+                height: 60,
+                child: DropdownButton<TokenBalance>(
+                  isExpanded: true,
+                  hint: Text(S.of(context).liquitiy_add_token_b),
+                  value: _selectedTokenB,
+                  items: _toTokens.map((e) {
+                    return new DropdownMenuItem<TokenBalance>(
+                      value: e,
+                      child: _buildDropdownListItem(e),
+                    );
+                  }).toList(),
+                  onChanged: (TokenBalance val) {
+                    setState(() {
+                      filter(_selectedTokenA, val);
+
+                      _selectedTokenB = val;
+
+                      findPoolPair(_selectedTokenA, _selectedTokenB);
+                      handleChangeTokenBSelection();
+                    });
+                  },
+                ))),
+        SizedBox(width: 20),
+        ButtonTheme(
+            height: 30,
+            minWidth: 40,
+            child: ElevatedButton(
+                child: Text(S.of(context).liquitiy_add_max),
+                onPressed: () {
+                  handleSetMaxTokenB();
+                }))
+      ]),
+      TextField(
+        controller: _amountTokenBController,
+        decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_b),
+      ),
+      if (_insufficientFunds)
+        Column(children: [
+          Padding(padding: EdgeInsets.only(top: 10)),
+          Text(S.of(context).liquitiy_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
+        ]),
+      if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false)
+        Column(children: [
+          SizedBox(height: 10),
+          Row(children: [
+            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_price)),
+            Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                        (_poolPairCondition == true ? _selectedPoolPair.reserveBDivReserveA.toString() : _selectedPoolPair.reserveADivReserveB.toString()) +
+                            ' ' +
+                            _selectedTokenB.hash +
+                            ' per ' +
+                            _selectedTokenA.hash,
+                        textAlign: TextAlign.right),
+                    Text(
+                        (_poolPairCondition == true ? _selectedPoolPair.reserveADivReserveB.toString() : _selectedPoolPair.reserveBDivReserveA.toString()) +
+                            ' ' +
+                            _selectedTokenA.hash +
+                            ' per ' +
+                            _selectedTokenB.hash,
+                        textAlign: TextAlign.right),
+                  ],
+                )),
+          ]),
+          Divider(
+            thickness: 2,
+          ),
+          Row(children: [
+            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_pool_share)),
+            Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(_poolSharePercentage.toStringAsFixed(8) + '%'),
+                  ],
+                )),
+          ]),
+          Row(children: [
+            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenA.hash)),
+            Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(_selectedPoolPair.reserveA.toStringAsFixed(8)),
+                  ],
+                )),
+          ]),
+          Divider(
+            thickness: 2,
+          ),
+          Row(children: [
+            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenB.hash)),
+            Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(_selectedPoolPair.reserveB.toStringAsFixed(8)),
+                  ],
+                )),
+          ]),
+          ElevatedButton(
+            child: Text(S.of(context).liquitiy_add),
+            onPressed: () async {
+              await addLiquidity();
+            },
+          )
+        ])
+    ]);
+  }
+
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).liquitiy_add)),
-        body: Padding(
-            padding: EdgeInsets.all(30),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        height: 60,
-                        child: DropdownButton<TokenBalance>(
-                          isExpanded: true,
-                          hint: Text(S.of(context).liquitiy_add_token_a),
-                          value: _selectedTokenA,
-                          items: _fromTokens.map((e) {
-                            return new DropdownMenuItem<TokenBalance>(
-                              value: e,
-                              child: _buildDropdownListItem(e),
-                            );
-                          }).toList(),
-                          onChanged: (TokenBalance val) {
-                            setState(() {
-                              filter(val, _selectedTokenB);
-
-                              _selectedTokenA = val;
-
-                              findPoolPair(_selectedTokenA, _selectedTokenB);
-                              handleChangeTokenASelection();
-                            });
-                          },
-                        ))),
-                SizedBox(width: 20),
-                ButtonTheme(
-                    height: 30,
-                    minWidth: 40,
-                    child: ElevatedButton(
-                        child: Text(S.of(context).liquitiy_add_max),
-                        onPressed: () {
-                          handleSetMaxTokenA();
-                        }))
-              ]),
-              TextField(
-                controller: _amountTokenAController,
-                decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-              ),
-              Row(children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        height: 60,
-                        child: DropdownButton<TokenBalance>(
-                          isExpanded: true,
-                          hint: Text(S.of(context).liquitiy_add_token_b),
-                          value: _selectedTokenB,
-                          items: _toTokens.map((e) {
-                            return new DropdownMenuItem<TokenBalance>(
-                              value: e,
-                              child: _buildDropdownListItem(e),
-                            );
-                          }).toList(),
-                          onChanged: (TokenBalance val) {
-                            setState(() {
-                              filter(_selectedTokenA, val);
-
-                              _selectedTokenB = val;
-
-                              findPoolPair(_selectedTokenA, _selectedTokenB);
-                              handleChangeTokenBSelection();
-                            });
-                          },
-                        ))),
-                SizedBox(width: 20),
-                ButtonTheme(
-                    height: 30,
-                    minWidth: 40,
-                    child: ElevatedButton(
-                        child: Text(S.of(context).liquitiy_add_max),
-                        onPressed: () {
-                          handleSetMaxTokenB();
-                        }))
-              ]),
-              TextField(
-                controller: _amountTokenBController,
-                decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_b),
-              ),
-              if (_insufficientFunds)
-                Column(children: [
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Text(S.of(context).liquitiy_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
-                ]),
-              if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false)
-                Column(children: [
-                  SizedBox(height: 10),
-                  Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_price)),
-                    Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                                (_poolPairCondition == true ? _selectedPoolPair.reserveBDivReserveA.toString() : _selectedPoolPair.reserveADivReserveB.toString()) +
-                                    ' ' +
-                                    _selectedTokenB.hash +
-                                    ' per ' +
-                                    _selectedTokenA.hash,
-                                textAlign: TextAlign.right),
-                            Text(
-                                (_poolPairCondition == true ? _selectedPoolPair.reserveADivReserveB.toString() : _selectedPoolPair.reserveBDivReserveA.toString()) +
-                                    ' ' +
-                                    _selectedTokenA.hash +
-                                    ' per ' +
-                                    _selectedTokenB.hash,
-                                textAlign: TextAlign.right),
-                          ],
-                        )),
-                  ]),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_pool_share)),
-                    Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_poolSharePercentage.toStringAsFixed(8) + '%'),
-                          ],
-                        )),
-                  ]),
-                  Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenA.hash)),
-                    Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_selectedPoolPair.reserveA.toStringAsFixed(8)),
-                          ],
-                        )),
-                  ]),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenB.hash)),
-                    Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(_selectedPoolPair.reserveB.toStringAsFixed(8)),
-                          ],
-                        )),
-                  ]),
-                  ElevatedButton(
-                    child: Text(S.of(context).liquitiy_add),
-                    onPressed: () async {
-                      await addLiquidity();
-                    },
-                  )
-                ])
-            ])));
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquitiy_add)),
+        body: Padding(padding: EdgeInsets.all(30), child: _buildAddLmPage(context)));
   }
 }

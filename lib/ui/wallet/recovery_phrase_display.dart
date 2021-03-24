@@ -43,9 +43,7 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
     final split = mnemonic.split(" ");
 
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).wallet_recovery_phrase_title)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).wallet_recovery_phrase_title)),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: Container(
@@ -65,7 +63,7 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
                 words: split,
                 readOnly: true,
                 showNextButton: widget.showNextButton,
-                onNext: () {
+                onNext: (seed) {
                   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split)));
                 },
               )))),

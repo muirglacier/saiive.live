@@ -18,13 +18,9 @@ class IntroRestoreScreen extends StatefulWidget {
 class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
   List<String> _phrase = [];
 
-  String getPhrase() {
-    return _phrase.join(" ");
-  }
-
-  Future saveSeed() async {
+  Future saveSeed(String seed) async {
     await sl.get<SharedPrefsUtil>().setSeedBackedUp(true);
-    await sl.get<IVault>().setSeed(getPhrase());
+    await sl.get<IVault>().setSeed(seed);
   }
 
   @override
@@ -35,20 +31,18 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
       if (Platform.isAndroid || Platform.isWindows) {
         demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
       }
-
+      demoWords2 = "";
       //WOLFI
       //demoWords2 = "glad village quantum off rely pretty emerge predict clump orphan crater space monster sleep trip remain cute into village drip proud siren clean middle";
       _phrase = demoWords2.split(" ");
     }
 
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).welcome_wallet_restore)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
         body: MnemonicSeedWidget(
           words: _phrase,
-          onNext: () async {
-            await saveSeed();
+          onNext: (seed) async {
+            await saveSeed(seed);
             Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
           },
         ));

@@ -59,7 +59,7 @@ class _TestRunInfoScreen extends State<TestRunInfoScreen> {
                               'GITHUB',
                               style: TextStyle(color: StateContainer.of(context).curTheme.primary),
                             ),
-                            onTap: () => launch('https://github.com/DeFiCh-WalletApp/WalletApp/issues/new'))),
+                            onTap: () => launch('https://github.com/DeFiCh-WalletApp/WalletApp/issues/new/choose'))),
                   ],
                 )),
               ]))

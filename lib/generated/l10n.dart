@@ -175,6 +175,56 @@ class S {
     );
   }
 
+  /// `Thanks for testing!`
+  String get test_info {
+    return Intl.message(
+      'Thanks for testing!',
+      name: 'test_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!`
+  String get test_info_test {
+    return Intl.message(
+      'Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!',
+      name: 'test_info_test',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We recomment you staying in the testnet. You will receive some funds from us. We provided a form for that here:`
+  String get test_info_funds {
+    return Intl.message(
+      'We recomment you staying in the testnet. You will receive some funds from us. We provided a form for that here:',
+      name: 'test_info_funds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you have any questions, we have created a Telegram group for that:`
+  String get test_info_telegram {
+    return Intl.message(
+      'If you have any questions, we have created a Telegram group for that:',
+      name: 'test_info_telegram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you want to provide feedback, or found any bugs, please create a GitHub issue here:`
+  String get test_info_feedback {
+    return Intl.message(
+      'If you want to provide feedback, or found any bugs, please create a GitHub issue here:',
+      name: 'test_info_feedback',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Network`
   String get wallet_home_network {
     return Intl.message(

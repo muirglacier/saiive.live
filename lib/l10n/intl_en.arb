@@ -19,6 +19,12 @@
   "dark_mode": "Dark",
   "light_mode": "Light",
 
+  "test_info": "Thanks for testing!",
+  "test_info_test": "Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!",
+  "test_info_funds": "We recomment you staying in the testnet. You will receive some funds from us. We provided a form for that here:",
+  "test_info_telegram": "If you have any questions, we have created a Telegram group for that:",
+  "test_info_feedback": "If you want to provide feedback, or found any bugs, please create a GitHub issue here:",
+
   "wallet_home_network": "Network",
   "wallet_offline": "It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...",
   "wallet_uptime_stats": "Show state",

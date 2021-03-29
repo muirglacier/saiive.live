@@ -17,6 +17,7 @@ class SharedPrefsUtil {
   static const String cur_net = 'cur_net';
   static const String auth_method = 'defi_auth_method';
   static const String last_block = 'defi_last_block';
+  static const String test_mode_page = 'test_mode_page';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -60,6 +61,10 @@ class SharedPrefsUtil {
 
   Future<bool> getFirstLaunch() async {
     return await get(first_launch_key, defaultValue: true);
+  }
+
+  Future<bool> getShowTestModePage() async {
+    return await get(test_mode_page, defaultValue: true);
   }
 
   Future<void> setLastSyncedBlock(Block block) async {

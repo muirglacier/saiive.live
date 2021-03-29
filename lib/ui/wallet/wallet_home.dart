@@ -11,7 +11,9 @@ import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
+import 'package:defichainwallet/ui/testrun/test_run_service.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
+import 'package:defichainwallet/ui/testrun/test_run_info.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
@@ -133,6 +135,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     });
   }
 
+  _initInternals() async {
+    await sl.get<ITestInfoService>().showTestInfoPage(context);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -140,6 +146,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
     _wallet = sl.get<DeFiChainWallet>();
+
+    _initInternals();
 
     _syncEvents();
     _initWallet();

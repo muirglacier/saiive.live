@@ -20,6 +20,7 @@ import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
 import 'package:defichainwallet/services/health_service.dart';
+import 'package:defichainwallet/ui/testrun/test_run_service.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
 import 'package:defichainwallet/ui/utils/biometrics.dart';
 import 'package:defichainwallet/ui/utils/hapticutil.dart';
@@ -62,6 +63,7 @@ void setupServiceLocator() {
   sl.registerLazySingleton<AuthenticationHelper>(() => AuthenticationHelper());
   sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckService());
   sl.registerLazySingleton<IHealthService>(() => HealthService());
+  sl.registerLazySingleton<ITestInfoService>(() => TestInfoService());
 
   sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
 

@@ -225,6 +225,16 @@ class S {
     );
   }
 
+  /// `The app has for sure some bugs, if you get an error creating a transaction, just retry it a couple times. Don't forget to create a GitHub issue. You can provide us all your publicKey addresses as well, just copy them from the Settings page!`
+  String get test_info_epilogue {
+    return Intl.message(
+      'The app has for sure some bugs, if you get an error creating a transaction, just retry it a couple times. Don\'t forget to create a GitHub issue. You can provide us all your publicKey addresses as well, just copy them from the Settings page!',
+      name: 'test_info_epilogue',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Network`
   String get wallet_home_network {
     return Intl.message(

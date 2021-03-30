@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_removed_seed" : MessageLookupByLibrary.simpleMessage("Removed saved seed"),
     "settings_show_seed" : MessageLookupByLibrary.simpleMessage("Show Seed"),
     "test_info" : MessageLookupByLibrary.simpleMessage("Thanks for testing!"),
+    "test_info_epilogue" : MessageLookupByLibrary.simpleMessage("The app has for sure some bugs, if you get an error creating a transaction, just retry it a couple times. Don\'t forget to create a GitHub issue. You can provide us all your publicKey addresses as well, just copy them from the Settings page!"),
     "test_info_feedback" : MessageLookupByLibrary.simpleMessage("If you want to provide feedback, or found any bugs, please create a GitHub issue here:"),
     "test_info_funds" : MessageLookupByLibrary.simpleMessage("We recomment you staying in the testnet. You will receive some funds from us. We provided a form for that here:"),
     "test_info_telegram" : MessageLookupByLibrary.simpleMessage("If you have any questions, we have created a Telegram group for that:"),

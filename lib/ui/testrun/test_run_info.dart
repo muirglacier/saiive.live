@@ -60,6 +60,10 @@ class _TestRunInfoScreen extends State<TestRunInfoScreen> {
                               style: TextStyle(color: StateContainer.of(context).curTheme.primary),
                             ),
                             onTap: () => launch('https://github.com/DeFiCh-WalletApp/WalletApp/issues/new/choose'))),
+                    SizedBox(height: 40),
+                    Text(S.of(context).test_info_epilogue),
+                    SizedBox(height: 40),
+                    Text(S.of(context).test_info, style: TextStyle(fontWeight: FontWeight.bold))
                   ],
                 )),
               ]))

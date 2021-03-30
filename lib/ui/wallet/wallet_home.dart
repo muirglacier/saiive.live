@@ -13,7 +13,6 @@ import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/testrun/test_run_service.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
-import 'package:defichainwallet/ui/testrun/test_run_info.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';

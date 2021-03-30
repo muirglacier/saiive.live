@@ -534,17 +534,29 @@ class Wallet extends IWallet {
   }
 
   Future<TransactionData> createTxAndWait(String txHex, {StreamController<String> loadingStream}) async {
-    final txId = await _apiService.transactionService.sendRawTransaction("DFI", txHex);
+    final r = RetryOptions(maxAttempts: 15, maxDelay: Duration(seconds: 15));
+    final txId = await r.retry(() async {
+      return await _apiService.transactionService.sendRawTransaction("DFI", txHex);
+    }, retryIf: (e) {
+      if (e is HttpException) {
+        if (e.error.error.contains("txn-mempool-conflict")) {
+          return true;
+        }
+        return false;
+      }
+      return false;
+    }, onRetry: (e) {
+      LogHelper.instance.e("error create tx", e);
+    });
 
-    final r = RetryOptions(maxAttempts: 15, maxDelay: Duration(seconds: 5));
-    final response = await r.retry(
-        () async {
-          return await _apiService.transactionService.getWithTxId("DFI", txId);
-        },
-        retryIf: (e) => e is HttpException || e is ErrorResponse,
-        onRetry: (e) {
-          LogHelper.instance.e("error get tx", e);
-        });
+    final response = await r.retry(() async {
+      return await _apiService.transactionService.getWithTxId("DFI", txId);
+    }, retryIf: (e) {
+      if (e is HttpException || e is ErrorResponse) return true;
+      return false;
+    }, onRetry: (e) {
+      LogHelper.instance.e("error get tx", e);
+    });
 
     return response;
   }

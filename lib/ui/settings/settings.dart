@@ -62,6 +62,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void doDeleteSeed() async {
     sl.get<AppCenterWrapper>().trackEvent("settingsDeleteSeed", {});
 
+    await sl.get<IWalletDatabase>().clearTransactions();
+    await sl.get<IWalletDatabase>().clearUnspentTransactions();
+
     await sl.get<IWalletDatabase>().destroy();
     await sl.get<IVault>().setSeed(null);
     await sl.get<DeFiChainWallet>().close();
@@ -134,9 +137,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).settings)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).settings)),
         body: Padding(
             padding: EdgeInsets.all(30),
             child: CustomScrollView(

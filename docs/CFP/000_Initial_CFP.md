@@ -9,11 +9,11 @@ The goal of this project is not just to provide a mobile application to the Defi
  - Requester: Dominik and Patrik Pfaffenbauer
  - Amount: 530.000 DFI
     - In Total
-       - Payout plan see below
+       - Payout plan/calculation see below
     - Calculated at current DFI price
-    - The amount for 2021 does not depend on a USD price. For the following years: We will create on-chain CFPs, depending on the current USD price. At know we assume a price of 3USD
+    - The amount for 2021 does not depend on a USD price. For the following years: We will create on-chain CFPs, depending on the current USD price. At now we assume a price of $3,-.
  - Address: dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs
- - We will create a 2nd funding proposal after the pink paper is presented and also implemented. Therefore we will propose only 100.000 DFI initially. For step 1 and 2 (see disbursement plan). After that we will create a consensus funding proposal on the blockchain.
+ - We will create several funding proposal after the pink paper is presented and also implemented. Therefore we will propose only 100.000 DFI initially. For step 1 and 2 (see disbursement plan). After that we will create the CFPs on the blockchain.
 
 # Offering
 ## Step 1 - Current Status
@@ -51,7 +51,7 @@ For the app to be functional, we also provide the necessary infrastructure which
  - Supernode as our Web3 API
 
 ## Step 2 - Atomic Swap
-The longterm goal of **Smart DeFi Wallet** is to be compatible with the Foundation provided application. That also means that our **Smart DeFi Wallet** needs to implement the same core functions. The next one on our roadmap is the Atomic Swap. We already prepared our infrastructure to also allow us to run a full bitcoin node and communicate with it.
+The long term goal of **Smart DeFi Wallet** is to be compatible with the Foundation provided application. That also means that our **Smart DeFi Wallet** needs to implement the same core functions. The next one on our roadmap is the Atomic Swap. We already prepared our infrastructure to also allow us to run a full bitcoin node and communicate with it.
 
 ## Step 3 - Stock / Securities
 **Smart DeFi Wallet** also allows trading with Stocks / Securities. This is one of the most important steps for user adaptions. We don't have a KYC and we don't know the user. So our app is private as can be.

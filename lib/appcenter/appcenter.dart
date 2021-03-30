@@ -19,14 +19,13 @@ class AppCenterWrapper {
     final android = env["APPCENTER_ANDROID_ID"];
     final iOs = env["APPCENTER_IOS_ID"];
     await AppCenter.startAsync(
-      appSecretAndroid: android,
-      appSecretIOS: iOs,
-      enableAnalytics: true,
-      enableCrashes: true,
-      enableDistribute: true,
-      usePrivateDistributeTrack: false,
-      disableAutomaticCheckForUpdate: false,
-    );
+        appSecretAndroid: android,
+        appSecretIOS: iOs,
+        enableAnalytics: true,
+        enableCrashes: true,
+        enableDistribute: true,
+        usePrivateDistributeTrack: false,
+        disableAutomaticCheckForUpdate: true);
 
     try {
       final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();

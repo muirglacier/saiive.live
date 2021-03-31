@@ -27,6 +27,21 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
     return _textFields.values.map((e) => e.controller.text).join(" ");
   }
 
+  void importSeed() {
+    if (_formKey.currentState.validate()) {
+      var phrase = getPhrase();
+
+      if (!validateMnemonic(phrase)) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(S.of(context).wallet_restore_invalidMnemonic),
+        ));
+        return;
+      }
+
+      widget.onNext(phrase);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
@@ -44,7 +59,7 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
             ),
             hintText: S.of(context).wallet_restore_word_hint),
         textInputAction: i == 23 ? TextInputAction.done : TextInputAction.next,
-        onEditingComplete: () => i == 23 ? node.unfocus() : node.nextFocus(),
+        onEditingComplete: () => i == 23 ? importSeed() : node.nextFocus(),
         validator: (value) {
           if (value.isEmpty) {
             return S.of(context).wallet_restore_word_empty;
@@ -61,6 +76,7 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
 
       _textFields[i] = textField;
     }
+
 
     return LayoutBuilder(builder: (_, builder) {
       var row = Responsive.buildResponsive<TextFormField>(context, _textFields.values.toList(), 300, (el) => el);
@@ -79,18 +95,7 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
                           ElevatedButton(
                             child: Text(S.of(context).next),
                             onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                var phrase = getPhrase();
-
-                                if (!validateMnemonic(phrase)) {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content: Text(S.of(context).wallet_restore_invalidMnemonic),
-                                  ));
-                                  return;
-                                }
-
-                                widget.onNext(phrase);
-                              }
+                              importSeed();
                             },
                           )
                       ])))));

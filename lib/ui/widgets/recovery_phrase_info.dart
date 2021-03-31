@@ -44,9 +44,8 @@ class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
         context,
         "",
         S.of(context).wallet_new_info3_header,
-        S.of(context).wallet_new_info4_text,
+        S.of(context).wallet_new_info3_text,
       ),
-      buildInfoWidget(context, "", S.of(context).wallet_new_info1_header, S.of(context).wallet_new_info1_text),
       Column(children: <Widget>[buildInfoWidget(context, "", S.of(context).wallet_new_info4_header, S.of(context).wallet_new_info4_text)])
     ];
   }
@@ -93,7 +92,7 @@ class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
             }).toList(),
           )
         ]),
-        if (_current == 4)
+        if (_current == carouselItems.length - 1)
           Container(
               child: SizedBox(
                   width: 300,

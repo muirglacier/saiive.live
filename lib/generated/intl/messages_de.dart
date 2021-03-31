@@ -81,7 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_change_network_text" : MessageLookupByLibrary.simpleMessage("Bist du sicher ins \"Mainnet\" zu wechseln? Du bist allein für deine Funds verantwortlich!"),
     "settings_change_network_title" : MessageLookupByLibrary.simpleMessage("Achtung!"),
     "settings_disclaimer" : MessageLookupByLibrary.simpleMessage("No one who is contributing to this project is taking any responsibility of what happens to your funds."),
-    "settings_donate" : MessageLookupByLibrary.simpleMessage("Wenn du uns helfen willst die App nocht besser machen, kannst du uns gerne DFI spenden:"),
+    "settings_donate" : MessageLookupByLibrary.simpleMessage("Wenn du uns helfen willst die App noch besser machen, kannst du uns gerne DFI spenden:"),
     "settings_network_changed" : MessageLookupByLibrary.simpleMessage("Netzwerk wurde geändert..."),
     "settings_remove_seed" : MessageLookupByLibrary.simpleMessage("Seed löschen"),
     "settings_removed_seed" : MessageLookupByLibrary.simpleMessage("Seed gelöscht"),

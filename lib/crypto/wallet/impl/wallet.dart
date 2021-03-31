@@ -535,11 +535,21 @@ class Wallet extends IWallet {
 
   Future<TransactionData> createTxAndWait(String txHex, {StreamController<String> loadingStream}) async {
     final r = RetryOptions(maxAttempts: 15, maxDelay: Duration(seconds: 15));
+    int createTxRetryCount = 0;
+    bool ensureUtxoCalled = false;
+
+    LogHelper.instance.d("commiting tx $txHex");
     final txId = await r.retry(() async {
+      createTxRetryCount++;
       return await _apiService.transactionService.sendRawTransaction("DFI", txHex);
-    }, retryIf: (e) {
+    }, retryIf: (e) async {
       if (e is HttpException) {
         if (e.error.error.contains("txn-mempool-conflict")) {
+          return true;
+        }
+        if (e.error.error.contains("Missing inputs") && !ensureUtxoCalled) {
+          ensureUtxoCalled = true;
+          await _ensureUtxo(loadingStream: loadingStream);
           return true;
         }
         return false;
@@ -548,6 +558,8 @@ class Wallet extends IWallet {
     }, onRetry: (e) {
       LogHelper.instance.e("error create tx", e);
     });
+
+    LogHelper.instance.i("commited tx with id " + txId);
 
     final response = await r.retry(() async {
       return await _apiService.transactionService.getWithTxId("DFI", txId);
@@ -666,6 +678,16 @@ class Wallet extends IWallet {
         if (await _walletDatabase.isOwnAddress(out.address)) {
           await _walletDatabase.addUnspentTransaction(out);
         }
+      }
+
+      for (var input in txData.details.inputs) {
+        final accBalance = new Account(
+            address: input.address,
+            balance: amount,
+            token: DeFiConstants.DefiAccountSymbol,
+            chain: ChainHelper.chainTypeString(_chain),
+            network: ChainHelper.chainNetworkString(_network));
+        _walletDatabase.setAccountBalance(accBalance);
       }
 
       return txData;

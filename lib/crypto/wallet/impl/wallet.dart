@@ -535,23 +535,21 @@ class Wallet extends IWallet {
 
   Future<TransactionData> createTxAndWait(String txHex, {StreamController<String> loadingStream}) async {
     final r = RetryOptions(maxAttempts: 15, maxDelay: Duration(seconds: 15));
-    int createTxRetryCount = 0;
-    bool ensureUtxoCalled = false;
+    // bool ensureUtxoCalled = false;
 
     LogHelper.instance.d("commiting tx $txHex");
     final txId = await r.retry(() async {
-      createTxRetryCount++;
       return await _apiService.transactionService.sendRawTransaction("DFI", txHex);
     }, retryIf: (e) async {
       if (e is HttpException) {
         if (e.error.error.contains("txn-mempool-conflict")) {
           return true;
         }
-        if (e.error.error.contains("Missing inputs") && !ensureUtxoCalled) {
-          ensureUtxoCalled = true;
-          await _ensureUtxo(loadingStream: loadingStream);
-          return true;
-        }
+        // if (e.error.error.contains("Missing inputs") && !ensureUtxoCalled) {
+        //   ensureUtxoCalled = true;
+        //   await _ensureUtxo(loadingStream: loadingStream);
+        //   return true;
+        // }
         return false;
       }
       return false;

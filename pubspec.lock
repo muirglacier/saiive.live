@@ -42,7 +42,7 @@ packages:
       name: bip32_defichain
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0+1"
+    version: "2.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -126,7 +126,7 @@ packages:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1+4"
+    version: "2.2.1+5"
   device_info:
     dependency: "direct main"
     description:
@@ -524,7 +524,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "3.0.1"
   process:
     dependency: transitive
     description:

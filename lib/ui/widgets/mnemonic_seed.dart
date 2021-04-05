@@ -21,6 +21,7 @@ class MnemonicSeedWidget extends StatefulWidget {
 
 class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
   Map<int, TextFormField> _textFields = new Map<int, TextFormField>();
+  Map<int, TextEditingController> _textControllers = new Map<int, TextEditingController>();
   final _formKey = GlobalKey<FormState>();
 
   String getPhrase() {
@@ -42,12 +43,23 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
     }
   }
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    for (var i = 0; i < 24; i++) {
+      _textControllers[i] = TextEditingController();
+      _textControllers[i].text = widget.words.length > i ? widget.words[i] : "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
 
     for (var i = 0; i < 24; i++) {
-      var controller = TextEditingController();
+      var controller = _textControllers[i];
       var textField = TextFormField(
         controller: controller,
         readOnly: widget.readOnly,
@@ -72,11 +84,9 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
           return null;
         },
       );
-      controller.text = widget.words.length > i ? widget.words[i] : "";
 
       _textFields[i] = textField;
     }
-
 
     return LayoutBuilder(builder: (_, builder) {
       var row = Responsive.buildResponsive<TextFormField>(context, _textFields.values.toList(), 300, (el) => el);

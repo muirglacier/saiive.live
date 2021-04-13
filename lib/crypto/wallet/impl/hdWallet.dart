@@ -22,6 +22,8 @@ class HdWallet extends IHdWallet {
   final String _seed;
   final ApiService _apiService;
 
+  int _localNextIndex = 0;
+
   HdWallet(this._password, this._account, this._chain, this._network, this._seed, this._apiService);
 
   Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase) async {
@@ -68,8 +70,10 @@ class HdWallet extends IHdWallet {
 
   @override
   Future<String> nextFreePublicKey(IWalletDatabase database, bool isChangeAddress) async {
-    final nextIndex = await database.getNextFreeIndex(_account.account);
+    var nextIndex = await database.getNextFreeIndex(_account.account);
+    _localNextIndex++;
 
+    nextIndex += _localNextIndex;
     if (!await database.addressExists(_account.account, isChangeAddress, nextIndex)) {
       throw ArgumentError("not allowed to happen for now");
     }

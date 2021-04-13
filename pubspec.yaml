@@ -29,13 +29,13 @@ dependencies:
   cupertino_icons: ^1.0.1
   intl: ^0.17.0
   path_provider: ^2.0.1
-  url_launcher: ^6.0.2
+  url_launcher: ^6.0.3
 
   flutter_dotenv: ^3.1.0
   flutter_config: ^1.0.8
-  shared_preferences: ^2.0.4
+  shared_preferences: ^2.0.5
   package_info_plus  : ^1.0.0
-  permission_handler: ^6.1.0
+  permission_handler: ^6.1.1
 
   #cryto libs
   defichaindart: ^2.2.1+5
@@ -51,11 +51,11 @@ dependencies:
   
   #ui libs
   carousel_slider: ^3.0.0
-  flutter_typeahead: ^3.0.0-nullsafety.0
+  flutter_typeahead: ^3.1.1
   pull_to_refresh: ^1.6.4
   auto_size_text: ^2.1.0
   qr_flutter: ^4.0.0
-  flutter_qr_reader: ^1.0.3
+  flutter_qr_reader: 1.0.3
   flutter_launcher_icons: ^0.9.0
   clipboard_manager: ^0.0.4
   flutter_icons: ^1.1.0
@@ -73,10 +73,10 @@ dependencies:
   flutter_secure_storage: ^4.1.0
 
   # Flare for animations
-  flare_flutter: ^2.0.6
+  flare_flutter: ^3.0.0
 
   # HTTP client
-  http: ^0.13.0
+  http: ^0.13.1
 
   #database
   sembast: ^3.0.0+4
@@ -88,11 +88,11 @@ dependencies:
   flutter_vibrate: ^1.0.0
 
   #appcenter
-  flutter_appcenter_bundle: ^3.2.0+2
+  flutter_appcenter_bundle: 3.2.0+2
   device_info: ^2.0.0
 
   # TouchID/FaceID
-  local_auth: ^1.1.0
+  local_auth: ^1.1.2
   
 dev_dependencies:
   flutter_test:

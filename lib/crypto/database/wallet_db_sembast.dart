@@ -53,7 +53,10 @@ class SembastWalletDatabase extends IWalletDatabase {
     await close();
     _database = null;
 
-    final file = File(_path);
+    final instanceId = await SharedPrefsUtil().getInstanceId();
+    final path = join(_path, "wallet_$instanceId.db");
+
+    final file = File(path);
 
     if (await file.exists()) {
       await file.delete();

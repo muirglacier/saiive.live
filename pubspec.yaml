@@ -80,6 +80,7 @@ dependencies:
 
   #database
   sembast: ^3.0.0+4
+  sqflite: ^2.0.0+3
 
   # Eventbus
   event_taxi: ^1.0.0

@@ -49,7 +49,7 @@ class _TestRunInfoScreen extends State<TestRunInfoScreen> {
                               'TELEGRAM GROUP',
                               style: TextStyle(color: StateContainer.of(context).curTheme.primary),
                             ),
-                            onTap: () => launch('https://t.me/joinchat/kv_LwJoiRYViNDVk'))),
+                            onTap: () => launch('https://t.me/SmartDefiWallet'))),
                     SizedBox(height: 40),
                     Text(S.of(context).test_info_feedback),
                     SizedBox(height: 10),

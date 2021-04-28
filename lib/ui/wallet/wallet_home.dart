@@ -252,10 +252,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
                   },
-                  child: Icon(
-                    Icons.arrow_downward,
-                    size: 26.0,
-                  ),
+                  child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.iconTheme.color),
                 )),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
@@ -263,10 +260,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsScreen()));
                   },
-                  child: Icon(
-                    Icons.settings,
-                    size: 26.0,
-                  ),
+                  child: Icon(Icons.settings, size: 26.0, color: Theme.of(context).appBarTheme.iconTheme.color),
                 ))
           ],
         ),

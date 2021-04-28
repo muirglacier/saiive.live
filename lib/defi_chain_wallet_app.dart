@@ -21,13 +21,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger_flutter/logger_flutter.dart';
 import 'package:window_size/window_size.dart';
 
+const String APP_TITLE = "Smart DeFi Wallet";
+
 void run() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   setupServiceLocator();
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('Smart DeFi Wallet');
+    setWindowTitle(APP_TITLE);
     setWindowMinSize(const Size(700, 500));
     setWindowMaxSize(Size.infinite);
   }
@@ -78,11 +80,13 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
     var shadowColor = Colors.black;
     var appBarColor = StateContainer.of(context).curTheme.primary;
     var appBarTextColor = StateContainer.of(context).curTheme.appBarText;
+    var appBarActionColor = StateContainer.of(context).curTheme.lightColor;
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       shadowColor = Colors.transparent;
       appBarColor = StateContainer.of(context).curTheme.lightColor;
       appBarTextColor = StateContainer.of(context).curTheme.primary;
+      appBarActionColor = StateContainer.of(context).curTheme.primary;
 
       StateContainer.of(context).curTheme.toolbarHeight = 80;
     }
@@ -103,12 +107,12 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
         locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
             ? null
             : StateContainer.of(context).curLanguage.getLocale(),
-        title: "Smart DeFi Wallet",
+        title: APP_TITLE,
         theme: ThemeData(
             appBarTheme: AppBarTheme(
               backgroundColor: appBarColor,
               shadowColor: shadowColor,
-              iconTheme: IconThemeData(color: appBarTextColor),
+              iconTheme: IconThemeData(color: appBarActionColor),
               foregroundColor: appBarTextColor,
               actionsIconTheme: IconThemeData(color: appBarTextColor),
               toolbarTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),

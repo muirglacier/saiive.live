@@ -3,7 +3,7 @@ import 'package:defichainwallet/helper/constants.dart';
 class Account {
   final String token;
   final String address;
-  final int balance;
+  int balance;
   final String raw;
   String chain;
   String network;
@@ -15,7 +15,12 @@ class Account {
 
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(
-        token: json['token'], address: json['address'] ?? '', balance: double.parse(json['balance'].toString()).round(), raw: json['raw'] ?? '', chain: json['chain'], network: json['network']);
+        token: json['token'],
+        address: json['address'] ?? '',
+        balance: double.parse(json['balance'].toString()).round(),
+        raw: json['raw'] ?? '',
+        chain: json['chain'],
+        network: json['network']);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{'token': token, 'address': address, 'balance': balance, 'raw': raw, 'chain': chain, 'network': network};

@@ -64,6 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     await sl.get<IWalletDatabase>().clearTransactions();
     await sl.get<IWalletDatabase>().clearUnspentTransactions();
+    await sl.get<SharedPrefsUtil>().resetInstanceId();
 
     await sl.get<IWalletDatabase>().destroy();
     await sl.get<IVault>().setSeed(null);

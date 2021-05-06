@@ -672,6 +672,7 @@ class Wallet extends IWallet {
       var txData = await createTxAndWait(txHex.item1, loadingStream: loadingStream);
 
       _walletDatabase.removeUnspentTransactions(txHex.item2);
+
       for (var out in txData.details.outputs) {
         if (await _walletDatabase.isOwnAddress(out.address)) {
           await _walletDatabase.addUnspentTransaction(out);

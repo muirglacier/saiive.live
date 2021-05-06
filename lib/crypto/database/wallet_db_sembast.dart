@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:path/path.dart';
 
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
@@ -51,7 +53,10 @@ class SembastWalletDatabase extends IWalletDatabase {
     await close();
     _database = null;
 
-    final file = File(_path);
+    final instanceId = await SharedPrefsUtil().getInstanceId();
+    final path = join(_path, "wallet_$instanceId.db");
+
+    final file = File(path);
 
     if (await file.exists()) {
       await file.delete();
@@ -133,7 +138,11 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   Future<Database> get database async {
     if (_database != null) return _database;
-    _database = await databaseFactoryIo.openDatabase(_path);
+
+    final instanceId = await SharedPrefsUtil().getInstanceId();
+    final path = join(_path, "wallet_$instanceId.db");
+
+    _database = await databaseFactoryIo.openDatabase(path);
     return _database;
   }
 
@@ -234,7 +243,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     var dbStore = _unspentStoreInstance;
 
     final db = await database;
-    final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('spentTxId', null), sortOrders: [SortOrder("value", false)]));
+    final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('spentTxId', null) | Filter.equals('spentTxId', ""), sortOrders: [SortOrder("value", false)]));
 
     final data = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
 
@@ -286,17 +295,6 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future<AccountBalance> getAccountBalance(String token) async {
-    if (token == DeFiConstants.DefiTokenSymbol) {
-      final unspentTx = await getUnspentTransactions();
-      var value = 0;
-
-      for (final tx in unspentTx) {
-        value += tx.value;
-      }
-
-      return AccountBalance(balance: value == null ? 0 : value, token: DeFiConstants.DefiTokenSymbol);
-    }
-
     var dbStore = _balancesStoreInstance;
 
     var finder = Finder(filter: Filter.equals('token', token));
@@ -357,7 +355,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future<List<AccountBalance>> getTotalBalances() async {
     var dbStore = _balancesStoreInstance;
 
-    final accounts = await dbStore.find(await database);
+    var finder = Finder(filter: Filter.notEquals('token', DeFiConstants.DefiTokenSymbol));
+    final accounts = await dbStore.find(await database, finder: finder);
 
     final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
 
@@ -370,7 +369,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     });
 
     List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value)).toList();
-
+    balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol));
     return balances;
   }
 

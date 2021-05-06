@@ -70,10 +70,8 @@ class HdWallet extends IHdWallet {
 
   @override
   Future<String> nextFreePublicKey(IWalletDatabase database, bool isChangeAddress) async {
-    var nextIndex = await database.getNextFreeIndex(_account.account);
-    _localNextIndex++;
+    final nextIndex = await database.getNextFreeIndex(_account.account);
 
-    nextIndex += _localNextIndex;
     if (!await database.addressExists(_account.account, isChangeAddress, nextIndex)) {
       throw ArgumentError("not allowed to happen for now");
     }

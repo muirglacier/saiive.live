@@ -20,6 +20,8 @@ class SharedPrefsUtil {
   static const String last_block = 'defi_last_block';
   static const String test_mode_page = 'test_mode_page';
   static const String instance_id = 'instance_id';
+  static const String change_address_index = 'chg_addr_index';
+  static const String address_index = 'addr_index';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -65,6 +67,18 @@ class SharedPrefsUtil {
 
   Future<bool> getFirstLaunch() async {
     return await get(first_launch_key, defaultValue: true);
+  }
+
+  Future<void> setAddressIndex(int index, bool isChangeAddress) async {
+    return await set(isChangeAddress ? change_address_index : address_index, index);
+  }
+
+  Future<int> getAddressIndex(bool isChangeAddress) async {
+    var curIndex = await get(isChangeAddress ? change_address_index : address_index, defaultValue: 0);
+
+    await setAddressIndex(curIndex + 1, isChangeAddress);
+
+    return curIndex;
   }
 
   Future<void> resetInstanceId() async {

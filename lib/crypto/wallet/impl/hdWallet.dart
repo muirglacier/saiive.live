@@ -11,6 +11,7 @@ import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:hex/hex.dart';
 import 'package:tuple/tuple.dart';
 
@@ -69,11 +70,13 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<String> nextFreePublicKey(IWalletDatabase database, bool isChangeAddress) async {
-    final nextIndex = await database.getNextFreeIndex(_account.account);
+  Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress) async {
+    var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
 
     if (!await database.addressExists(_account.account, isChangeAddress, nextIndex)) {
-      throw ArgumentError("not allowed to happen for now");
+      //overflow indexes....start again with 0
+      await sharedPrefs.setAddressIndex(0, isChangeAddress);
+      nextIndex = 0;
     }
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, nextIndex);
 

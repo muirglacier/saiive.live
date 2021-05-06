@@ -295,6 +295,16 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future<AccountBalance> getAccountBalance(String token) async {
+    if (token == DeFiConstants.DefiTokenSymbol) {
+      final unspentTx = await getUnspentTransactions();
+      var amount = 0;
+
+      for (final unspent in unspentTx) {
+        amount += unspent.value;
+      }
+
+      return new AccountBalance(balance: amount, token: token);
+    }
     var dbStore = _balancesStoreInstance;
 
     var finder = Finder(filter: Filter.equals('token', token));

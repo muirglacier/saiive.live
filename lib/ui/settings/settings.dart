@@ -214,7 +214,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorSecondary),
                             child: Text(
                               S.of(context).settings_remove_seed,
                               style: TextStyle(color: StateContainer.of(context).curTheme.darkColor),
@@ -228,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorSecondary),
                             child: Text(S.of(context).settings_show_seed, style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               sl.get<AuthenticationHelper>().forceAuth(context, () {
@@ -239,7 +239,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorSecondary),
                             child: Text("Show logs", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole(showCloseButton: true, dark: _theme == 1)));
@@ -248,7 +248,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SizedBox(height: 5),
                           Container(
                               child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
+                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorSecondary),
                             child: Text("Show wallet addresses", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
                             onPressed: () async {
                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));

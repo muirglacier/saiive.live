@@ -37,7 +37,7 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
 
       // demoWords2 = "entry sight penalty liquid wet draw lizard ozone carpet onion meat squeeze clay spare swim buzz escape satoshi tongue kit weekend alone budget half";
 
-      demoWords2 = "easily three name skate piece rain remove invest make try noise dizzy flight easily lonely orphan grow eagle gas grab lecture energy prepare online";
+      // demoWords2 = "easily three name skate piece rain remove invest make try noise dizzy flight easily lonely orphan grow eagle gas grab lecture energy prepare online";
       _phrase = demoWords2.split(" ");
     }
 

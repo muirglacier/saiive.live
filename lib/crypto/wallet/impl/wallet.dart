@@ -208,8 +208,7 @@ class Wallet extends IWallet {
     try {
       var addLiq = await addPoolLiquidity(tokenA, amountA, tokenB, amountB, shareAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
-      throw "";
-      // return await createTxAndWait(addLiq, loadingStream: loadingStream);
+      return await _createTxAndWait(addLiq, loadingStream: loadingStream);
     } finally {
       _walletMutex.release();
     }

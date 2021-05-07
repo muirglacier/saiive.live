@@ -1,12 +1,12 @@
 Release Notes
 **Build Number**: {{buildDetails.id}}
 
-# Associated Pull Requests ({{pullRequests.length}})
+# Pull Requests ({{pullRequests.length}})
 {{#forEach pullRequests}}
 * {this.title}}
 {{/forEach}}
 
-# Global list of commits ({{commits.length}})
+# Commits ({{commits.length}})
 {{#forEach commits}}
 * {{this.message}}
 {{/forEach}}

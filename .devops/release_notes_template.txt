@@ -1,21 +1,12 @@
-# Notes for release  {{releaseDetails.releaseDefinition.name}}    
-**Release Number**  : {{releaseDetails.name}}
-**Release completed** : {{releaseDetails.modifiedOn}}     
+Release Notes
 **Build Number**: {{buildDetails.id}}
-**Compared Release Number**  : {{compareReleaseDetails.name}}    
-**Build Trigger PR Number**: {{lookup buildDetails.triggerInfo 'pr.number'}} 
 
 # Associated Pull Requests ({{pullRequests.length}})
 {{#forEach pullRequests}}
-{{#if isFirst}}### Associated Pull Requests (only shown if  PR) {{/if}}
-*  **{{this.pullRequestId}}** {{this.title}}
+* {this.title}}
 {{/forEach}}
 
-
-# Global list of CS ({{commits.length}})
+# Global list of commits ({{commits.length}})
 {{#forEach commits}}
-{{#if isFirst}}### Associated commits{{/if}}
-* ** ID{{this.id}}** 
-   -  **Message:** {{this.message}}
-   -  **Commited by:** {{this.author.displayName}} 
+* {{this.message}}
 {{/forEach}}

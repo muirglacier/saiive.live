@@ -59,7 +59,8 @@ void main() async {
           value: 26999795496,
           confirmations: -1));
 
-      final dfiToken = Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
+      final dfiToken =
+          Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiToken);
     }
@@ -134,7 +135,8 @@ void main() async {
           value: 26999794496,
           confirmations: -1));
 
-      final dfiToken = Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
+      final dfiToken =
+          Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiToken);
     }
@@ -153,7 +155,7 @@ void main() async {
       final tx = await wallet.createSendTransaction(1000000000, "\$DFI", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
 
       expect(tx.item1,
-          "020000000001020c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f9010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f90000000017160014f5baba69ac8107ca3f47bf3a0d7afef76c5d2d4bffffffff02622950490600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702483045022100d109e5981b9ebafeb8c302c6a8623fc6afa8bf8f923e084bc1a797c5547ffd760220526fcedca72b2ebeeea6c76a3ed0a5cbb819f84283b1a0e4de1e9132f9338c84012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c02473044022069a01f006f8066a687b6dced6632e0eb34cd536f17a7d3c568f026e150f0002502200c8b0ff13db80bd9b42064bc1bdfa7382a786cb303d1c18452881490dba0b2ca012103d9692afdab3120cb1b9d848de7d72c97cc2e21c00af07d0d5a98df1a4498359600000000");
+          "020000000001020c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f9010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f90000000017160014f5baba69ac8107ca3f47bf3a0d7afef76c5d2d4bffffffff02622950490600000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa87024830450221009eb4d352512302fb87ad37c3daf86eb60229a685d57bfc03a399c3b573b373b902203073880512df6eeba3095386eed5d7db72cc3a1099486d02aaf1bec2893beb67012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c0247304402203d0d8de2778f293bcab716d3ca8b109de508f8bc1ab9b2cf98444f8b663f9a4a022075d4c94ffb016a4f510546fdd258999050d0950243a8094e0badf07c8caa766f012103d9692afdab3120cb1b9d848de7d72c97cc2e21c00af07d0d5a98df1a4498359600000000");
 
       await destroyTest();
     });

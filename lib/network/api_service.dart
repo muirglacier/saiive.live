@@ -10,7 +10,7 @@ class ApiService {
   AccountService _accountService;
   TransactionService _transactionService;
   BalanceService _balanceService;
-  TokenService _tokenService;
+  ITokenService _tokenService;
   IHealthCheckService _healthService;
 
   AccountService get accountService => _accountService;

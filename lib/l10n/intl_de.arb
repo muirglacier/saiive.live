@@ -85,6 +85,9 @@
   "wallet_operation_refresh_tx": "Aktualisiere Transaktionen ({from}/{to})",
   "wallet_operation_create_auth_tx": "Erstelle Auth TX",
   "wallet_operation_create_pepare_acc_tx": "Account wird vorbereitet",
+  "wallet_operation_mempool_conflict_retry": "Es befinden sich noch Transaktionen in der Warteschlange, wir versuchen auf diese zu Warten, dies kann etwas dauern!",
+  "wallet_operation_mempool_conflict": "Bitte warte bis deine Transaktion dem nächsten Block hinzugefügt wurde, bevor du mit einer neuen Transaktion fortfährst.",
+  "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
   "settings": "Einstellungen",
   "settings_remove_seed": "Seed löschen",

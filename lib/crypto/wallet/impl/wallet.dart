@@ -8,6 +8,8 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/from_account.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/errors/MempoolConflictError.dart';
+import 'package:defichainwallet/crypto/errors/MissingInputsError.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
@@ -569,37 +571,51 @@ class Wallet extends IWallet {
     // bool ensureUtxoCalled = false;
 
     LogHelper.instance.d("commiting tx $txHex");
-    final txId = await r.retry(() async {
-      return await _apiService.transactionService.sendRawTransaction("DFI", txHex);
-    }, retryIf: (e) async {
+    try {
+      final txId = await r.retry(() async {
+        return await _apiService.transactionService.sendRawTransaction("DFI", txHex);
+      }, retryIf: (e) async {
+        if (e is HttpException) {
+          if (e.error.error.contains("txn-mempool-conflict")) {
+            loadingStream?.add(S.current.wallet_operation_mempool_conflict_retry);
+            return true;
+          }
+          // if (e.error.error.contains("Missing inputs") && !ensureUtxoCalled) {
+          //   ensureUtxoCalled = true;
+          //   await _ensureUtxo(loadingStream: loadingStream);
+          //   return true;
+          // }
+          return false;
+        }
+        return false;
+      }, onRetry: (e) {
+        LogHelper.instance.e("error create tx", e);
+      });
+
+      LogHelper.instance.i("commited tx with id " + txId);
+
+      final response = await r.retry(() async {
+        return await _apiService.transactionService.getWithTxId("DFI", txId);
+      }, retryIf: (e) {
+        if (e is HttpException || e is ErrorResponse) return true;
+        return false;
+      }, onRetry: (e) {
+        LogHelper.instance.e("error get tx", e);
+      });
+
+      return response;
+    } catch (e) {
       if (e is HttpException) {
         if (e.error.error.contains("txn-mempool-conflict")) {
-          return true;
+          throw new MemPoolConflictError(S.current.wallet_operation_mempool_conflict);
         }
-        // if (e.error.error.contains("Missing inputs") && !ensureUtxoCalled) {
-        //   ensureUtxoCalled = true;
-        //   await _ensureUtxo(loadingStream: loadingStream);
-        //   return true;
-        // }
-        return false;
+        if (e.error.error.contains("Missing inputs")) {
+          throw new MissingInputsError(S.current.wallet_operation_missing_inputs);
+        }
       }
-      return false;
-    }, onRetry: (e) {
-      LogHelper.instance.e("error create tx", e);
-    });
 
-    LogHelper.instance.i("commited tx with id " + txId);
-
-    final response = await r.retry(() async {
-      return await _apiService.transactionService.getWithTxId("DFI", txId);
-    }, retryIf: (e) {
-      if (e is HttpException || e is ErrorResponse) return true;
-      return false;
-    }, onRetry: (e) {
-      LogHelper.instance.e("error get tx", e);
-    });
-
-    return response;
+      throw e;
+    }
   }
 
   @override

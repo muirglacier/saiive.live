@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/errors/TransactionError.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/balance.dart';
@@ -458,6 +459,21 @@ class _DexScreen extends State<DexScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error occured commiting the tx...($errorMsg)'),
+      ));
+      sl.get<AppCenterWrapper>().trackEvent("swawFailureHandled", <String, String>{
+        "fromToken": _selectedValueFrom.hash,
+        "toToken": _selectedValueTo.hash,
+        "valueFrom": valueFrom.toString(),
+        "walletTo": walletTo,
+        "maxPrice": maxPrice.toString(),
+        "error": errorMsg
+      });
+    } on TransactionError catch (e) {
+      final errorMsg = e.error;
+      LogHelper.instance.e("Tx Error...($errorMsg)");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorMsg),
       ));
       sl.get<AppCenterWrapper>().trackEvent("swawFailureHandled", <String, String>{
         "fromToken": _selectedValueFrom.hash,

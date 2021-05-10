@@ -775,6 +775,36 @@ class S {
     );
   }
 
+  /// `We found some pending transactions. We try to wait for them, this could take some time!`
+  String get wallet_operation_mempool_conflict_retry {
+    return Intl.message(
+      'We found some pending transactions. We try to wait for them, this could take some time!',
+      name: 'wallet_operation_mempool_conflict_retry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please wait for your transaction to be reflected in the next block before proceeding with a new transaction.`
+  String get wallet_operation_mempool_conflict {
+    return Intl.message(
+      'Please wait for your transaction to be reflected in the next block before proceeding with a new transaction.',
+      name: 'wallet_operation_mempool_conflict',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wallet is not synced. Please retry your transaction.`
+  String get wallet_operation_missing_inputs {
+    return Intl.message(
+      'Wallet is not synced. Please retry your transaction.',
+      name: 'wallet_operation_missing_inputs',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(

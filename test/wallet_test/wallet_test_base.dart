@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'mock/database_memory_mock.dart';
 import 'mock/health_service_mock.dart';
 import 'mock/http_service_mock.dart';
+import 'mock/token_service_mock.dart';
 import 'mock/vault_mock.dart';
 
 Future testSetup(String seed) async {
@@ -44,7 +45,7 @@ void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<IAccountService>(() => AccountService());
   sl.registerLazySingleton<ITransactionService>(() => TransactionService());
   sl.registerLazySingleton<IBalanceService>(() => BalanceService());
-  sl.registerLazySingleton<ITokenService>(() => TokenService());
+  sl.registerLazySingleton<ITokenService>(() => TokenServiceMock());
   sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckServiceMock());
   sl.registerLazySingleton<IHealthService>(() => HealthServiceMock());
 

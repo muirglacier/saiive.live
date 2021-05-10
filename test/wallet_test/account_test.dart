@@ -28,7 +28,8 @@ void main() async {
       await db.addTransaction(tx);
       await db.addUnspentTransaction(tx);
 
-      final account = Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 17447697269, raw: "174.47697269@DFI", chain: "DFI", network: "testnet");
+      final account = Account(
+          token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 17447697269, raw: "174.47697269@DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(account);
 
@@ -86,7 +87,7 @@ void main() async {
       await wallet.init();
       final tx = await wallet.createSendTransaction(1 * 100000000, "BTC", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
       expect(tx.item1,
-          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a9141084ef98bacfecbc9f140496b26516ae55d79bfa87010100000000e1f5050000000048a023fc0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f87024730440220517ee8aff9f7f8b3cfa5ccef85a9a2118d93c7839fe9a17e1a81b17e9175e10302201ae90709694f8174080f43349425285a1d910a1db1899d4206bc739b0abe1820012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a9141084ef98bacfecbc9f140496b26516ae55d79bfa87010100000000e1f5050000000048a023fc0600000017a9149cc76b954b69473e492db73ff8694dd39991bd9b870247304402207dc705c498f262f592e0d51ff09aa1885ffd3756068e16380d4556c4196a579f02202d5212d091fc39eec5716fe21c073c8d9064ff45f914e1ae5ec6c186709c4ad2012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
   });

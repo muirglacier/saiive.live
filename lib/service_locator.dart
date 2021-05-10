@@ -70,7 +70,7 @@ void setupServiceLocator() {
   sl.registerSingletonAsync<IWalletDatabase>(() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
 
-    final path = join(documentsDirectory.path, "db", "wallet.db");
+    final path = join(documentsDirectory.path, "db");
     var db = SembastWalletDatabase(path);
     await db.open();
     return db;

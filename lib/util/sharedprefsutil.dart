@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/network/model/block.dart';
@@ -18,6 +19,9 @@ class SharedPrefsUtil {
   static const String auth_method = 'defi_auth_method';
   static const String last_block = 'defi_last_block';
   static const String test_mode_page = 'test_mode_page';
+  static const String instance_id = 'instance_id';
+  static const String change_address_index = 'chg_addr_index';
+  static const String address_index = 'addr_index';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -30,12 +34,14 @@ class SharedPrefsUtil {
       sharedPreferences.setDouble(key, value);
     } else if (value is int) {
       sharedPreferences.setInt(key, value);
+    } else if (value == null) {
+      sharedPreferences.remove(key);
     }
   }
 
   Future<dynamic> get(String key, {dynamic defaultValue}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return await sharedPreferences.get(key) ?? defaultValue;
+    return sharedPreferences.get(key) ?? defaultValue;
   }
 
   // Key-specific helpers
@@ -61,6 +67,39 @@ class SharedPrefsUtil {
 
   Future<bool> getFirstLaunch() async {
     return await get(first_launch_key, defaultValue: true);
+  }
+
+  Future<void> setAddressIndex(int index, bool isChangeAddress) async {
+    return await set(isChangeAddress ? change_address_index : address_index, index);
+  }
+
+  Future<int> getAddressIndex(bool isChangeAddress) async {
+    var curIndex = await get(isChangeAddress ? change_address_index : address_index, defaultValue: 0);
+
+    await setAddressIndex(curIndex + 1, isChangeAddress);
+
+    return curIndex;
+  }
+
+  Future<void> resetInstanceId() async {
+    return await set(instance_id, null);
+  }
+
+  Future<String> getInstanceId() async {
+    final rand = getRandString(10);
+    final value = await get(instance_id, defaultValue: null);
+
+    if (value == null) {
+      await set(instance_id, rand);
+      return rand;
+    }
+    return value;
+  }
+
+  String getRandString(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) => random.nextInt(255));
+    return base64UrlEncode(values);
   }
 
   Future<bool> getShowTestModePage() async {

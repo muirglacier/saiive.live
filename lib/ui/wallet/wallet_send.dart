@@ -32,6 +32,7 @@ class WalletSendScreen extends StatefulWidget {
 class _WalletSendScreen extends State<WalletSendScreen> {
   var _addressController;
   var _amountController = TextEditingController(text: '1');
+  EnvironmentType _currentEnvironment;
 
   Future sendFunds(StreamController<String> stream) async {
     try {
@@ -41,6 +42,44 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
       final tx = await sl.get<DeFiChainWallet>().createAndSend(totalAmount, widget.token, _addressController.text, loadingStream: stream);
+
+      final txId = tx.txId;
+      LogHelper.instance.d("sent tx $txId");
+
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(txId),
+      ));
+
+      sl
+          .get<AppCenterWrapper>()
+          .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
+    } catch (e) {
+      LogHelper.instance.e("Error creating tx", e);
+      if (e is ErrorResponse) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.error),
+        ));
+
+        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailureHandled", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.error});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()),
+        ));
+
+        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
+      }
+    }
+  }
+
+  Future utxoToAccount(StreamController<String> stream) async {
+    try {
+      final amount = double.parse(_amountController.text);
+      final totalAmount = (amount * DefiChainConstants.COIN).toInt();
+
+      sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
+
+      final tx = await sl.get<DeFiChainWallet>().prepareAccount(totalAmount, loadingStream: stream);
 
       final txId = tx.txId;
       LogHelper.instance.d("sent tx $txId");
@@ -83,11 +122,11 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     sl.get<IHealthService>().checkHealth(context);
     sl.get<AppCenterWrapper>().trackEvent("openWalletSend", <String, String>{"coin": widget.token});
 
-    var currentEnvironment = new EnvHelper().getEnvironment();
+    _currentEnvironment = new EnvHelper().getEnvironment();
 
     var toAddress = widget.toAddress;
 
-    if (currentEnvironment == EnvironmentType.Development) {
+    if (_currentEnvironment == EnvironmentType.Development) {
       toAddress = widget.toAddress ?? 'tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv';
     }
 
@@ -158,7 +197,24 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         overlay.during(sendFunds(streamController));
                       });
                     },
-                  ))
+                  )),
+              if (_currentEnvironment == EnvironmentType.Development)
+                Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                        width: 250,
+                        child: ElevatedButton(
+                          child: Text("UTXO_TO_ACCOUNT", style: TextStyle(color: StateContainer.of(context).curTheme.text)),
+                          style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
+                          onPressed: () async {
+                            sl.get<AuthenticationHelper>().forceAuth(context, () {
+                              final streamController = new StreamController<String>();
+                              final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+
+                              overlay.during(utxoToAccount(streamController));
+                            });
+                          },
+                        )))
             ])));
   }
 }

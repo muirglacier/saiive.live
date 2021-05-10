@@ -61,7 +61,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     });
     _controller.forward();
     _balance = await BalanceHelper().getAccountBalance(widget.token);
-    await loadAccountHistory(includingRewards: _transactionIncludingRewards);
+    loadAccountHistory(includingRewards: _transactionIncludingRewards);
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -221,8 +221,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.token)),
+      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.token)),
       body: buildView(context),
     );
   }

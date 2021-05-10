@@ -85,6 +85,9 @@
   "wallet_operation_refresh_tx": "Refreshing transactions ({from}/{to})",
   "wallet_operation_create_auth_tx": "Creating auth tx",
   "wallet_operation_create_pepare_acc_tx": "Preparing account balance",
+  "wallet_operation_mempool_conflict_retry": "We found some pending transactions. We try to wait for them, this could take some time!",
+  "wallet_operation_mempool_conflict": "Please wait for your transaction to be reflected in the next block before proceeding with a new transaction.",
+  "wallet_operation_missing_inputs": "Wallet is not synced. Please retry your transaction.",
 
   "wallet_send": "Send",
   "wallet_send_address": "Address",

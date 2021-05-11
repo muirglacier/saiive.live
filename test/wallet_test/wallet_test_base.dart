@@ -16,9 +16,9 @@ import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'mock/database_memory_mock.dart';
 import 'mock/health_service_mock.dart';
 import 'mock/http_service_mock.dart';
+import 'mock/memory_database_factory_mock.dart';
 import 'mock/token_service_mock.dart';
 import 'mock/vault_mock.dart';
 
@@ -27,18 +27,12 @@ Future testSetup(String seed) async {
 
   setupTestServiceLocator(seed);
 
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   await sl.allReady();
 }
 
 void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
   sl.registerLazySingleton<IVault>(() => VaultMock(seed));
-
-  sl.registerSingletonAsync<IWalletDatabase>(() async {
-    return new MemoryDatabaseMock();
-  });
 
   sl.registerSingletonAsync<IHttpService>(() async {
     var service = MockHttpService();
@@ -54,7 +48,7 @@ void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckServiceMock());
   sl.registerLazySingleton<IHealthService>(() => HealthServiceMock());
 
-  sl.registerLazySingleton<IWalletDatabaseFactory>(() => WalletDatabaseFactory());
+  sl.registerLazySingleton<IWalletDatabaseFactory>(() => WalletDatabaseFactoryMock());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(false));
   sl.registerLazySingleton<BitcoinWallet>(() => BitcoinWallet(false));
 }

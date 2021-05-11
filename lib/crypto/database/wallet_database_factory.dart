@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 
 abstract class IWalletDatabaseFactory {
   Future<IWalletDatabase> getDatabase(ChainType chain);
+  Future<IWalletDatabase> createInstance(ChainType chain);
 
   Future destroy(ChainType chain);
 }
@@ -18,13 +19,18 @@ class WalletDatabaseFactory implements IWalletDatabaseFactory {
     _databases = Map<ChainType, IWalletDatabase>();
   }
 
+  Future<IWalletDatabase> createInstance(ChainType chain) async {
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    final path = join(documentsDirectory.path, "db_" + ChainHelper.chainTypeString(chain));
+    var db = SembastWalletDatabase(path);
+    await db.open();
+    return db;
+  }
+
   @override
   Future<IWalletDatabase> getDatabase(ChainType chain) async {
     if (!_databases.containsKey(chain)) {
-      final documentsDirectory = await getApplicationDocumentsDirectory();
-      final path = join(documentsDirectory.path, "db_" + ChainHelper.chainTypeString(chain));
-      var db = SembastWalletDatabase(path);
-      await db.open();
+      final db = await createInstance(chain);
       _databases.putIfAbsent(chain, () => db);
     }
 

@@ -89,9 +89,7 @@ void main() async {
 
   group("#2 create 2nd tx", () {
     initTest() async {
-      final defiWallet = sl.get<DeFiChainWallet>();
-      final db = defiWallet.getDatabase();
-
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain);
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       await db.addTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3d",
@@ -146,10 +144,10 @@ void main() async {
     }
 
     destroyTest() async {
-      final defiWallet = sl.get<DeFiChainWallet>();
-      final db = defiWallet.getDatabase();
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain);
 
-      await db.destroy();
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.close();
     }
 
     test("#1 create 2nd tx", () async {

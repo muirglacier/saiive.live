@@ -84,6 +84,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   @override
   Future<AccountBalance> getAccountBalance(String token) async {
     var balance = 0;
+    _accounts.sort((a, b) => b.balance.compareTo(a.balance));
 
     for (var acc in _accounts) {
       if (acc.token == token) {
@@ -101,6 +102,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<List<WalletAccount>> getAccounts() {
+    _walletAccounts.sort((a, b) => b.balance.compareTo(a.balance));
     return Future.value(_walletAccounts);
   }
 
@@ -133,6 +135,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<List<Transaction>> getUnspentTransactions() {
+    _transactions.sort((a, b) => b.valueRaw.compareTo(a.valueRaw));
     return Future.value(_transactions);
   }
 
@@ -140,6 +143,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount) async {
     var ret = List<Transaction>.empty(growable: true);
 
+    _unspentTransactions.sort((a, b) => a.valueRaw.compareTo(b.valueRaw));
     for (final tx in _unspentTransactions) {
       if (tx.address == pubKey && tx.value >= minAmount) {
         ret.add(tx);

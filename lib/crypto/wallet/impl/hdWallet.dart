@@ -133,16 +133,18 @@ class HdWallet extends IHdWallet {
     await _syncWallet(database, (addresses, pos, max) async {
       loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
       final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
-      final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
-
       utxo.forEach((element) async {
         await database.addUnspentTransaction(element);
       });
 
-      for (final acc in balances) {
-        acc.accounts.forEach((element) async {
-          await database.setAccountBalance(element);
-        });
+      if (_chain == ChainType.DeFiChain) {
+        final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
+
+        for (final acc in balances) {
+          acc.accounts.forEach((element) async {
+            await database.setAccountBalance(element);
+          });
+        }
       }
     }, loadingStream: loadingStream);
 

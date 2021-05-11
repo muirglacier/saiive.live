@@ -142,7 +142,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
-    _wallet = sl.get<WalletService>();
+    _wallet = sl.get<IWalletService>();
 
     _initInternals();
 

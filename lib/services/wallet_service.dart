@@ -42,6 +42,8 @@ class WalletService implements IWalletService {
   Future init() async {
     _bitcoinWallet = sl.get<BitcoinWallet>();
     _defiWallet = sl.get<DeFiChainWallet>();
+
+    await Future.wait([_bitcoinWallet.init(), _defiWallet.init()]);
   }
 
   @override

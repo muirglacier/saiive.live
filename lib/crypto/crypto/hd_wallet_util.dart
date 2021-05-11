@@ -291,18 +291,15 @@ class HdWalletUtil {
 
   static Future<List<String>> derivePublicKeys(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, int count) async {
     final list = List<String>.empty(growable: true);
-    print("derivePublicKey");
     for (int i = 0; i < count; i++) {
       final key = await derivePublicKey(seed, account, changeAddress, index + i, chainType, network);
       list.add(key);
     }
-    print("derivePublicKey...done");
     return list;
   }
 
   static Future<List<String>> derivePublicKeysWithChange(Uint8List seed, int account, int index, ChainType chainType, ChainNet network, int count) async {
     final list = List<String>.empty(growable: true);
-    print("derivePublicKeysWithChange");
     for (int i = 0; i < count; i++) {
       final key = await derivePublicKey(seed, account, false, index + i, chainType, network);
       list.add(key);
@@ -311,7 +308,6 @@ class HdWalletUtil {
       final changeKey = await derivePublicKey(seed, account, true, index + i, chainType, network);
       list.add(changeKey);
     }
-    print("derivePublicKeyderivePublicKeysWithChangedone");
     return list;
   }
 

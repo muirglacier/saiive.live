@@ -13,6 +13,7 @@ import 'package:defichainwallet/network/transaction_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'mock/database_memory_mock.dart';
@@ -25,6 +26,8 @@ Future testSetup(String seed) async {
   SharedPreferences.setMockInitialValues({});
 
   setupTestServiceLocator(seed);
+
+  TestWidgetsFlutterBinding.ensureInitialized();
 
   await sl.allReady();
 }

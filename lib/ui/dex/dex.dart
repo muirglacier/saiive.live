@@ -525,162 +525,163 @@ class _DexScreen extends State<DexScreen> {
     if (_isLoading) {
       return LoadingWidget(text: S.of(context).loading);
     } else {
-      return Column(mainAxisSize: MainAxisSize.min, children: [
-        Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Expanded(
-              flex: 1,
-              child: Container(
-                  height: 60,
-                  child: DropdownButton<TokenBalance>(
-                    isExpanded: true,
-                    hint: Text(S.of(context).dex_from_token),
-                    value: _selectedValueFrom,
-                    items: _fromTokens.map((e) {
-                      return new DropdownMenuItem<TokenBalance>(
-                        value: e,
-                        child: _buildDropdownListItem(e),
-                      );
-                    }).toList(),
-                    onChanged: (TokenBalance val) {
-                      setState(() {
-                        filter(val, _selectedValueTo);
+      return SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.all(30),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                          height: 60,
+                          child: DropdownButton<TokenBalance>(
+                            isExpanded: true,
+                            hint: Text(S.of(context).dex_from_token),
+                            value: _selectedValueFrom,
+                            items: _fromTokens.map((e) {
+                              return new DropdownMenuItem<TokenBalance>(
+                                value: e,
+                                child: _buildDropdownListItem(e),
+                              );
+                            }).toList(),
+                            onChanged: (TokenBalance val) {
+                              setState(() {
+                                filter(val, _selectedValueTo);
 
-                        _selectedValueFrom = val;
+                                _selectedValueFrom = val;
 
-                        findPoolPair(_selectedValueFrom, _selectedValueTo);
-                        handleChangeFromToken();
-                      });
-                    },
-                  ))),
-          SizedBox(width: 20),
-          ButtonTheme(
-              height: 30,
-              minWidth: 40,
-              child: ElevatedButton(
-                  child: Text(S.of(context).dex_add_max),
-                  onPressed: () {
-                    handleSetMaxFrom();
-                  }))
-        ]),
-        TextField(
-          controller: _amountFromController,
-          decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
-        ),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-              SizedBox(width: 10),
-              Text(
-                '<->',
-                style: TextStyle(color: StateContainer.of(context).curTheme.text),
-              ),
-            ]),
-            onPressed: () {
-              interchangeSymbols();
-            }),
-        Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Expanded(
-              flex: 1,
-              child: Container(
-                  height: 60,
-                  child: DropdownButton<TokenBalance>(
-                    isExpanded: true,
-                    hint: Text(S.of(context).dex_to_token),
-                    value: _selectedValueTo,
-                    items: _toTokens.map((e) {
-                      return new DropdownMenuItem<TokenBalance>(
-                        value: e,
-                        child: _buildDropdownListItem(e),
-                      );
-                    }).toList(),
-                    onChanged: (TokenBalance val) {
-                      setState(() {
-                        filter(_selectedValueFrom, val);
+                                findPoolPair(_selectedValueFrom, _selectedValueTo);
+                                handleChangeFromToken();
+                              });
+                            },
+                          ))),
+                  SizedBox(width: 20),
+                  ButtonTheme(
+                      height: 30,
+                      minWidth: 40,
+                      child: ElevatedButton(
+                          child: Text(S.of(context).dex_add_max),
+                          onPressed: () {
+                            handleSetMaxFrom();
+                          }))
+                ]),
+                TextField(
+                  controller: _amountFromController,
+                  decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                      SizedBox(width: 10),
+                      Text(
+                        '<->',
+                        style: TextStyle(color: StateContainer.of(context).curTheme.text),
+                      ),
+                    ]),
+                    onPressed: () {
+                      interchangeSymbols();
+                    }),
+                Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                          height: 60,
+                          child: DropdownButton<TokenBalance>(
+                            isExpanded: true,
+                            hint: Text(S.of(context).dex_to_token),
+                            value: _selectedValueTo,
+                            items: _toTokens.map((e) {
+                              return new DropdownMenuItem<TokenBalance>(
+                                value: e,
+                                child: _buildDropdownListItem(e),
+                              );
+                            }).toList(),
+                            onChanged: (TokenBalance val) {
+                              setState(() {
+                                filter(_selectedValueFrom, val);
 
-                        _selectedValueTo = val;
+                                _selectedValueTo = val;
 
-                        findPoolPair(_selectedValueFrom, _selectedValueTo);
-                        handleChangeToToken();
-                      });
-                    },
-                  ))),
-          SizedBox(width: 20),
-          ButtonTheme(
-              height: 30,
-              minWidth: 40,
-              child: ElevatedButton(
-                  child: Text(S.of(context).dex_add_max),
-                  onPressed: () {
-                    handleSetMaxTo();
-                  }))
-        ]),
-        TextField(
-          controller: _amountToController,
-          decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
-        ),
-        if (_insufficientFunds)
-          Column(children: [
-            Padding(padding: EdgeInsets.only(top: 10)),
-            Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
-          ]),
-        if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
-          Column(children: [
-            SizedBox(height: 10),
-            Row(children: [
-              Expanded(flex: 4, child: Text(S.of(context).dex_price)),
-              Expanded(
-                  flex: 6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(_conversionRate.toStringAsFixed(8) + ' ' + _selectedValueTo.hash + ' per ' + _selectedValueFrom.hash, textAlign: TextAlign.right),
-                      Text((1 / _conversionRate).toStringAsFixed(8) + ' ' + _selectedValueFrom.hash + ' per ' + _selectedValueTo.hash, textAlign: TextAlign.right),
-                    ],
-                  )),
-            ]),
-            Divider(
-              thickness: 2,
-            ),
-            Row(children: [
-              Expanded(flex: 4, child: Text(S.of(context).dex_amount)),
-              Expanded(
-                  flex: 6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(_amountTo.toString()),
-                    ],
-                  )),
-            ]),
-            Divider(
-              thickness: 2,
-            ),
-            Row(children: [
-              Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
-              Expanded(
-                  flex: 6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(_selectedPoolPair.commission.toString()),
-                    ],
-                  )),
-            ]),
-            ElevatedButton(
-              child: Text(S.of(context).dex_swap),
-              onPressed: () async {
-                await doSwap();
-              },
-            )
-          ])
-      ]);
+                                findPoolPair(_selectedValueFrom, _selectedValueTo);
+                                handleChangeToToken();
+                              });
+                            },
+                          ))),
+                  SizedBox(width: 20),
+                  ButtonTheme(
+                      height: 30,
+                      minWidth: 40,
+                      child: ElevatedButton(
+                          child: Text(S.of(context).dex_add_max),
+                          onPressed: () {
+                            handleSetMaxTo();
+                          }))
+                ]),
+                TextField(
+                  controller: _amountToController,
+                  decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
+                ),
+                if (_insufficientFunds)
+                  Column(children: [
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
+                  ]),
+                if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
+                  Column(children: [
+                    SizedBox(height: 10),
+                    Row(children: [
+                      Expanded(flex: 4, child: Text(S.of(context).dex_price)),
+                      Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(_conversionRate.toStringAsFixed(8) + ' ' + _selectedValueTo.hash + ' per ' + _selectedValueFrom.hash, textAlign: TextAlign.right),
+                              Text((1 / _conversionRate).toStringAsFixed(8) + ' ' + _selectedValueFrom.hash + ' per ' + _selectedValueTo.hash, textAlign: TextAlign.right),
+                            ],
+                          )),
+                    ]),
+                    Divider(
+                      thickness: 2,
+                    ),
+                    Row(children: [
+                      Expanded(flex: 4, child: Text(S.of(context).dex_amount)),
+                      Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(_amountTo.toString()),
+                            ],
+                          )),
+                    ]),
+                    Divider(
+                      thickness: 2,
+                    ),
+                    Row(children: [
+                      Expanded(flex: 4, child: Text(S.of(context).dex_commission)),
+                      Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(_selectedPoolPair.commission.toString()),
+                            ],
+                          )),
+                    ]),
+                    ElevatedButton(
+                      child: Text(S.of(context).dex_swap),
+                      onPressed: () async {
+                        await doSwap();
+                      },
+                    )
+                  ])
+              ])));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex)),
-        body: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(30), child: _buildDexPage(context))));
+    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex)), body: _buildDexPage(context));
   }
 }

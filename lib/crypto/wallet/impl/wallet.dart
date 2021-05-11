@@ -7,6 +7,7 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/from_account.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
 import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
 import 'package:defichainwallet/crypto/errors/MempoolConflictError.dart';
 import 'package:defichainwallet/crypto/errors/MissingInputsError.dart';
@@ -69,13 +70,7 @@ class Wallet extends IWallet {
       return;
     }
     _apiService = sl.get<ApiService>();
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
-    final path = join(documentsDirectory.path, "db_" + ChainHelper.chainTypeString(_chain));
-    var db = SembastWalletDatabase(path);
-    await db.open();
-
-    _walletDatabase = db;
+    _walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(_chain);
 
     _password = ""; // TODO
     _seed = await sl.get<IVault>().getSeed();

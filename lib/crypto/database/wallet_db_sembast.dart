@@ -306,9 +306,9 @@ class SembastWalletDatabase extends IWalletDatabase {
       return new AccountBalance(balance: amount, token: token);
     }
     var dbStore = _balancesStoreInstance;
-
+    final db = await database;
     var finder = Finder(filter: Filter.equals('token', token));
-    final accounts = await dbStore.find(await database, finder: finder);
+    final accounts = await dbStore.find(db, finder: finder);
 
     final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
 

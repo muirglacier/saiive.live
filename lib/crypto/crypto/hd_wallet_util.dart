@@ -226,7 +226,7 @@ class HdWalletUtil {
       final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
       final input = inputTxs[index].mintTxId;
       final witnessValue = inputTxs[index].valueRaw;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey withnessValue. $witnessValue");
+      LogHelper.instance.d("sign tx $input with privateKey from $pubKey witnessValue. $witnessValue");
 
       txb.sign(vin: index, keyPair: key, witnessValue: witnessValue, redeemScript: redeemScript);
       index++;
@@ -276,7 +276,7 @@ class HdWalletUtil {
       final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
       final input = inputTxs[index].mintTxId;
       final witnessValue = inputTxs[index].valueRaw;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey withnessValue. $witnessValue");
+      LogHelper.instance.d("sign tx $input with privateKey from $pubKey witnessValue. $witnessValue");
 
       txb.sign(vin: index, keyPair: key, witnessValue: witnessValue, redeemScript: redeemScript);
       index++;

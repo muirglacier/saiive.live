@@ -1,4 +1,5 @@
 import 'package:defichainwallet/appcenter/appcenter.dart';
+import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
 import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/account_history_service.dart';
@@ -62,6 +63,8 @@ void setupServiceLocator() {
   sl.registerLazySingleton<ITestInfoService>(() => TestInfoService());
 
   sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
+
+  sl.registerLazySingleton<IWalletDatabaseFactory>(() => WalletDatabaseFactory());
 
   sl.registerLazySingleton<IWalletService>(() => WalletService());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(true));

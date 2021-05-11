@@ -1,3 +1,4 @@
+import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,8 +12,7 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final defiWallet = sl.get<DeFiChainWallet>();
-      final db = defiWallet.getDatabase();
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain);
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "6022346c779edc3b789bc5b9",
@@ -43,9 +43,10 @@ void main() async {
     }
 
     Future destoryTest() async {
-      final defiWallet = sl.get<DeFiChainWallet>();
-      final db = defiWallet.getDatabase();
-      await db.destroy();
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain);
+
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.close();
     }
 
     test("#1 test invalid utxo and account for DFI", () async {

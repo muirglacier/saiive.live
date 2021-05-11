@@ -1,4 +1,6 @@
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
+import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/account_service.dart';
 import 'package:defichainwallet/network/api_service.dart';
@@ -49,5 +51,7 @@ void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckServiceMock());
   sl.registerLazySingleton<IHealthService>(() => HealthServiceMock());
 
+  sl.registerLazySingleton<IWalletDatabaseFactory>(() => WalletDatabaseFactory());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(false));
+  sl.registerLazySingleton<BitcoinWallet>(() => BitcoinWallet(false));
 }

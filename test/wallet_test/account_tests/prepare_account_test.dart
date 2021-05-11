@@ -1,3 +1,4 @@
+import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,8 +12,7 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final defiWallet = sl.get<DeFiChainWallet>();
-      final db = defiWallet.getDatabase();
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain);
 
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
@@ -27,6 +27,7 @@ void main() async {
           value: 66904421465,
           confirmations: -1);
       await db.addTransaction(tx);
+      await db.addUnspentTransaction(tx);
 
       final dfiAccount = Account(
           token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 24262150804, raw: "242.62150804@DFI", chain: "DFI", network: "testnet");
@@ -39,10 +40,10 @@ void main() async {
     }
 
     Future destoryTest() async {
-      final defiWallet = sl.get<DeFiChainWallet>();
-      final db = defiWallet.getDatabase();
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain);
 
-      await db.destroy();
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.close();
     }
 
     test("has enough acc", () async {

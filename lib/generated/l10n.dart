@@ -45,10 +45,10 @@ class S {
     );
   }
 
-  /// `Smart DeFi Wallet`
+  /// `saiive.live`
   String get title {
     return Intl.message(
-      'Smart DeFi Wallet',
+      'saiive.live',
       name: 'title',
       desc: '',
       args: [],
@@ -185,10 +185,10 @@ class S {
     );
   }
 
-  /// `Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!`
+  /// `Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!`
   String get test_info_test {
     return Intl.message(
-      'Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!',
+      'Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!',
       name: 'test_info_test',
       desc: '',
       args: [],

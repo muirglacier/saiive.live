@@ -1,9 +1,8 @@
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
@@ -20,11 +19,10 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
   _WalletInitScreenScreen();
 
   Future initWallet() async {
-    final wallet = sl.get<DeFiChainWallet>();
+    final wallet = sl.get<IWalletService>();
 
-    final walletDb = sl.get<IWalletDatabase>();
-    await walletDb.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
-    // await walletDb.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
+    await wallet.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
+    await wallet.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
 
     await wallet.init();
 

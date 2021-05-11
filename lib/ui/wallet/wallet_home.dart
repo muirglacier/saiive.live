@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/network/events/events.dart';
@@ -10,8 +10,8 @@ import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/block.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/services/health_service.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
-import 'package:defichainwallet/ui/testrun/test_run_service.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
@@ -42,7 +42,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   List<AccountBalance> _accountBalance;
   RefreshController _refreshController = RefreshController(initialRefresh: true);
 
-  DeFiChainWallet _wallet;
+  WalletService _wallet;
 
   _refresh() async {
     if (await _wallet.hasAccounts()) {
@@ -134,9 +134,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     });
   }
 
-  _initInternals() async {
-    await sl.get<ITestInfoService>().showTestInfoPage(context);
-  }
+  _initInternals() async {}
 
   @override
   void initState() {
@@ -144,7 +142,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
-    _wallet = sl.get<DeFiChainWallet>();
+    _wallet = sl.get<WalletService>();
 
     _initInternals();
 
@@ -196,7 +194,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
         )
       ]),
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain)));
       },
     ));
   }
@@ -247,12 +245,12 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
                   onTap: () async {
-                    var wallet = sl.get<DeFiChainWallet>();
-                    var pubKey = await wallet.getPublicKey();
+                    var wallet = sl.get<IWalletService>();
+                    var pubKey = await wallet.getPublicKey(ChainType.DeFiChain);
 
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
                   },
-                  child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.iconTheme.color),
+                  child: Icon(Icons.arrow_downward, size: 26.0, color: StateContainer.of(context).curTheme.appBarText),
                 )),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
@@ -260,7 +258,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsScreen()));
                   },
-                  child: Icon(Icons.settings, size: 26.0, color: Theme.of(context).appBarTheme.iconTheme.color),
+                  child: Icon(Icons.settings, size: 26.0, color: StateContainer.of(context).curTheme.appBarText),
                 ))
           ],
         ),

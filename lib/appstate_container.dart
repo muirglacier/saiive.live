@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/block_service.dart';
 import 'package:defichainwallet/network/model/block.dart';
-import 'package:defichainwallet/ui/testrun/test_run_info.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +75,7 @@ class StateContainerState extends State<StateContainer> {
 
   _registerBus() {
     _walletInitSubscribe = EventTaxiImpl.singleton().registerTo<WalletInitStartEvent>().listen((event) async {
-      var wallet = sl.get<DeFiChainWallet>();
+      var wallet = sl.get<IWalletService>();
 
       try {
         await wallet.init();
@@ -91,7 +90,7 @@ class StateContainerState extends State<StateContainer> {
         if (_walletSyncing) {
           return;
         }
-        var wallet = sl.get<DeFiChainWallet>();
+        var wallet = sl.get<IWalletService>();
         logger.i("Start wallet sync....");
         _walletSyncing = true;
         await wallet.init();
@@ -127,6 +126,10 @@ class StateContainerState extends State<StateContainer> {
     }
     if (_walletSyncSubscribe != null) {
       _walletSyncSubscribe.cancel();
+    }
+
+    if (_walletSyncDoneSubscibre != null) {
+      _walletSyncDoneSubscibre.cancel();
     }
   }
 

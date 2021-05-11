@@ -13,7 +13,7 @@ class Sizes {
 }
 
 abstract class BaseTheme {
-  static const pink = Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF);
+  static const pink = Color(0xFF00ADB5);
   static const black = Color(0xFF000000);
   static const white = Color(0xFFFFFFFF);
 
@@ -39,7 +39,7 @@ abstract class BaseTheme {
 
 class DefiThemeLight extends BaseTheme {
   Color primary = BaseTheme.pink;
-  Color disabled = Color.fromARGB(0xCC, 0xCC, 0x00, 0xAF);
+  Color disabled = Colors.grey;
   Color backgroundColor = Colors.grey[200];
   Color cardBackgroundColor = Color(0xffd3d3d3);
 

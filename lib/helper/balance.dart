@@ -1,32 +1,33 @@
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/service_locator.dart';
 
 class BalanceHelper {
   Future<AccountBalance> getAccountBalance(String token) async {
+    var walletService = sl.get<DeFiChainWallet>();
     if (DeFiConstants.isDfiToken(token)) {
-      var accountBalance = await sl.get<IWalletDatabase>().getAccountBalance(DeFiConstants.DefiAccountSymbol);
-      var tokenBalance = await sl.get<IWalletDatabase>().getAccountBalance(DeFiConstants.DefiTokenSymbol);
+      var accountBalance = await walletService.getDatabase().getAccountBalance(DeFiConstants.DefiAccountSymbol);
+      var tokenBalance = await walletService.getDatabase().getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
       accountBalance.balance += tokenBalance.balance;
 
       return accountBalance;
     }
 
-    var accountBalance = await sl.get<IWalletDatabase>().getAccountBalance(token);
+    var accountBalance = await walletService.getDatabase().getAccountBalance(token);
 
     return accountBalance;
   }
 
   Future<List<AccountBalance>> getDisplayAccountBalance() async {
-    var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
+    var walletService = sl.get<DeFiChainWallet>();
+    var accountBalance = await walletService.getDatabase().getTotalBalances();
 
     if (accountBalance.isNotEmpty) {
       var dollarDFI =
           accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiTokenSymbol, orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiTokenSymbol));
-      var hasDfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol,
-          orElse: () => null);
+      var hasDfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null);
       var dfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol,
           orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiAccountSymbol));
 

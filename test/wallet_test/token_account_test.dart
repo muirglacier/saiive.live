@@ -2,7 +2,6 @@ import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'wallet_test_base.dart';
@@ -12,7 +11,9 @@ void main() async {
 
   group("#1 create tx", () {
     initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
+
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       await db.addTransaction(Transaction(
           id: "601496faf1963a034ec57842",
@@ -66,7 +67,9 @@ void main() async {
     }
 
     Future destroyTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
+
       await db.destroy();
     }
 
@@ -86,7 +89,9 @@ void main() async {
 
   group("#2 create 2nd tx", () {
     initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
+
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       await db.addTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3d",
@@ -141,7 +146,9 @@ void main() async {
     }
 
     destroyTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
+
       await db.destroy();
     }
 

@@ -1,6 +1,6 @@
 {
   "helloWorld": "Hallo Welt!",
-  "title": "Smart DeFi Wallet",
+  "title": "saiive.live",
   "version": "Version",
   "home_wallet": "Wallet",
   "home_liquitiy": "Liquidity",
@@ -16,7 +16,7 @@
   
   
   "test_info": "Danke fürs Testen!",
-  "test_info_test": "Danke für deine Hilfe das Smart DeFi Wallet für alle verfügbar zu machen. Dein Feedback hilft uns sehr!",
+  "test_info_test": "Danke für deine Hilfe das saiive.live für alle verfügbar zu machen. Dein Feedback hilft uns sehr!",
   "test_info_funds": "Wir bitten dich im testnet zu bleiben. Du bekommst von uns gerne Funds zum testen. Für dies haben wir ein Forumlar erstellt welches du hier findest:",
   "test_info_telegram": "Für fragen haben wir eine Telegram Gruppe erstellt, diese findest du hier:",
   "test_info_feedback": "Möchtest du uns feedback geben, oder hast einen Bug gefunden, leg bitte einen Issue bei GitHub an:",

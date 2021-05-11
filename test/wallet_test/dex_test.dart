@@ -1,7 +1,6 @@
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/crypto/chain.dart';
@@ -12,7 +11,8 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
@@ -42,20 +42,24 @@ void main() async {
       await db.addTransaction(tx2);
       await db.addUnspentTransaction(tx2);
 
-      await db.setAccountBalance(Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 26735666535, chain: "DFI", network: "testnet"));
+      await db.setAccountBalance(
+          Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 26735666535, chain: "DFI", network: "testnet"));
 
       await db.setAccountBalance(Account(token: "BTC", address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 20773327806, chain: "DFI", network: "testnet"));
 
-      await db.setAccountBalance(Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, chain: "DFI", network: "testnet"));
+      await db
+          .setAccountBalance(Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, chain: "DFI", network: "testnet"));
 
       await db.setAccountBalance(Account(token: DeFiConstants.DefiTokenSymbol, address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN", balance: 200000, chain: "DFI", network: "testnet"));
 
       await db.setAccountBalance(Account(token: "BTC", address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", balance: 942767, chain: "DFI", network: "testnet"));
-      await db.setAccountBalance(Account(token: DeFiConstants.DefiTokenSymbol, address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", balance: 66905804465, chain: "DFI", network: "testnet"));
+      await db
+          .setAccountBalance(Account(token: DeFiConstants.DefiTokenSymbol, address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", balance: 66905804465, chain: "DFI", network: "testnet"));
     }
 
     Future destoryTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
       await db.destroy();
     }
 

@@ -1,7 +1,6 @@
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/crypto/chain.dart';
@@ -12,7 +11,8 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "6022346c779edc3b789bc5b9",
@@ -43,7 +43,8 @@ void main() async {
     }
 
     Future destoryTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
       await db.destroy();
     }
 
@@ -64,7 +65,7 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      final tx = await wallet.createSendTransaction(1 * 100000000, DeFiConstants.DefiTokenSymbol, "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+      await wallet.createSendTransaction(1 * 100000000, DeFiConstants.DefiTokenSymbol, "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
 
       await destoryTest();
     });

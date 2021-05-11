@@ -3,7 +3,7 @@ The current implementation is still a work in progress.
 
 We wanted to let the community to know about it. We are working hard on it, and we want to release it as soon as possible. 
 
-# Smart DeFi Wallet
+# saiive.live
 ## Key Features
 * Ready to use right after installation. Blockchain is managed by a server (like Mycelium).
 * No custodial wallet - you still **OWN YOUR PRIVATE KEYS**

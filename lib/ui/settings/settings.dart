@@ -1,14 +1,13 @@
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/version.dart';
 import 'package:defichainwallet/network/ihttp_service.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/model/available_themes.dart';
 import 'package:defichainwallet/ui/settings/settings_seed.dart';
 import 'package:defichainwallet/ui/settings/wallet_addresses.dart';
@@ -62,13 +61,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void doDeleteSeed() async {
     sl.get<AppCenterWrapper>().trackEvent("settingsDeleteSeed", {});
 
-    await sl.get<IWalletDatabase>().clearTransactions();
-    await sl.get<IWalletDatabase>().clearUnspentTransactions();
-    await sl.get<SharedPrefsUtil>().resetInstanceId();
-
-    await sl.get<IWalletDatabase>().destroy();
     await sl.get<IVault>().setSeed(null);
-    await sl.get<DeFiChainWallet>().close();
+    await sl.get<IWalletService>().close();
+    await sl.get<IWalletService>().destroy();
 
     Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
 
@@ -84,9 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _curNet = net;
     });
 
-    await sl.get<IWalletDatabase>().close();
-    await sl.get<IWalletDatabase>().destroy();
-    await sl.get<DeFiChainWallet>().close();
+    await sl.get<IWalletService>().close();
     await sl.get<IHttpService>().init();
 
     Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
@@ -276,8 +269,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               maxLines: 1,
                             ),
                             onPressed: () async {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen('DFI', toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) => WalletSendScreen('DFI', ChainType.DeFiChain, toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
                             },
                           )),
                           SizedBox(height: 20),

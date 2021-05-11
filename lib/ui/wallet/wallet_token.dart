@@ -1,6 +1,5 @@
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
@@ -9,6 +8,7 @@ import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/account_history.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/service_locator.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_send.dart';
 import 'package:defichainwallet/ui/widgets/buttons.dart';
@@ -20,7 +20,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class WalletTokenScreen extends StatefulWidget {
   final String token;
-  WalletTokenScreen(this.token);
+  final ChainType chainType;
+  WalletTokenScreen(this.token, this.chainType);
 
   @override
   State<StatefulWidget> createState() {
@@ -46,7 +47,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
       _transactionsLoading = true;
     });
 
-    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+    var pubKeyList = await sl.get<IWalletService>().getPublicKeys(widget.chainType);
     var history = await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, widget.token, !includingRewards);
 
     setState(() {
@@ -178,13 +179,13 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
           Padding(
               padding: EdgeInsets.only(right: 10),
               child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 10, onPressed: () async {
-                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token)));
+                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
 
                 Navigator.of(context).pop();
               })),
           AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
-            var wallet = sl.get<DeFiChainWallet>();
-            var pubKey = await wallet.getPublicKey();
+            var wallet = sl.get<IWalletService>();
+            var pubKey = await wallet.getPublicKey(widget.chainType);
             await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
           })
         ],

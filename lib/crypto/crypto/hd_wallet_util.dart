@@ -4,7 +4,6 @@ import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart' as tx;
-import 'package:hex/hex.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 
 import 'from_account.dart';
@@ -43,7 +42,7 @@ class HdWalletUtil {
     final networkType = _getNetwork(chainType, network);
 
     final path = derivePath(account, isChangeAddress, index);
-    final seedHex = HEX.encode(seed);
+
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
     final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
     final keyPair = ECPair.fromPrivateKey(xMasterPriv.derivePath(path).privateKey, network: getNetworkType(chainType, network));

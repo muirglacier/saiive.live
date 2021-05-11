@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:defichainwallet/bus/accounts_loaded_event.dart';
-import 'package:defichainwallet/bus/key_account_wrappers_loaded_event.dart';
-import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/network/model/account_history.dart';
-import 'package:defichainwallet/network/model/key_account_wrapper.dart';
 import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/network/request/addresses_request.dart';
 import 'package:defichainwallet/network/response/error_response.dart';

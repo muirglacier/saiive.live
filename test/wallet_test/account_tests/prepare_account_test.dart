@@ -1,7 +1,6 @@
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/network/model/account.dart';
 import 'package:defichainwallet/crypto/chain.dart';
@@ -12,7 +11,9 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
+
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
@@ -27,17 +28,20 @@ void main() async {
           confirmations: -1);
       await db.addTransaction(tx);
 
-      final dfiAccount =
-          Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 24262150804, raw: "242.62150804@DFI", chain: "DFI", network: "testnet");
+      final dfiAccount = Account(
+          token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 24262150804, raw: "242.62150804@DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiAccount);
-      final dfiToken = Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, raw: "100000000@\$DFI", chain: "DFI", network: "testnet");
+      final dfiToken = Account(
+          token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, raw: "100000000@\$DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiToken);
     }
 
     Future destoryTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final defiWallet = sl.get<DeFiChainWallet>();
+      final db = defiWallet.getDatabase();
+
       await db.destroy();
     }
 

@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
+import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/account_history_service.dart';
 import 'package:defichainwallet/network/account_service.dart';
@@ -20,16 +17,15 @@ import 'package:defichainwallet/network/pool_share_service.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/network/transaction_service.dart';
 import 'package:defichainwallet/services/health_service.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/testrun/test_run_service.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
 import 'package:defichainwallet/ui/utils/biometrics.dart';
 import 'package:defichainwallet/ui/utils/hapticutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:path/path.dart';
 
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:defichainwallet/network/model/vault.dart';
-import 'package:path_provider/path_provider.dart';
 import 'network/api_service.dart';
 import 'network/ihttp_service.dart';
 import 'network/model/ivault.dart';
@@ -67,14 +63,7 @@ void setupServiceLocator() {
 
   sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
 
-  sl.registerSingletonAsync<IWalletDatabase>(() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
-    final path = join(documentsDirectory.path, "db");
-    var db = SembastWalletDatabase(path);
-    await db.open();
-    return db;
-  });
-
+  sl.registerLazySingleton<IWalletService>(() => WalletService());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(true));
+  sl.registerLazySingleton<BitcoinWallet>(() => BitcoinWallet(true));
 }

@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:io';
 import 'dart:core';
 
-import 'package:async/async.dart';
 import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/crypto/from_account.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
 import 'package:defichainwallet/crypto/errors/MempoolConflictError.dart';
 import 'package:defichainwallet/crypto/errors/MissingInputsError.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
@@ -28,7 +28,9 @@ import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:retry/retry.dart';
+import 'package:path/path.dart';
 import 'dart:math';
 
 import 'package:tuple/tuple.dart';
@@ -67,7 +69,13 @@ class Wallet extends IWallet {
       return;
     }
     _apiService = sl.get<ApiService>();
-    _walletDatabase = sl.get<IWalletDatabase>();
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
+    final path = join(documentsDirectory.path, "db_" + ChainHelper.chainTypeString(_chain));
+    var db = SembastWalletDatabase(path);
+    await db.open();
+
+    _walletDatabase = db;
 
     _password = ""; // TODO
     _seed = await sl.get<IVault>().getSeed();
@@ -834,5 +842,10 @@ class Wallet extends IWallet {
 
   Future syncAll({StreamController<String> loadingStream}) async {
     await _syncAll(loadingStream: loadingStream);
+  }
+
+  @override
+  IWalletDatabase getDatabase() {
+    return _walletDatabase;
   }
 }

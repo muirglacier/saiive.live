@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/ui/model/available_language.dart';
 import 'package:defichainwallet/ui/intro/intro_wallet_new.dart';
 import 'package:defichainwallet/ui/splash.dart';
@@ -12,7 +11,6 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/routes.dart';
 import 'package:defichainwallet/ui/widgets/restore_accounts.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 
 import 'package:flutter/material.dart';
@@ -21,7 +19,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger_flutter/logger_flutter.dart';
 import 'package:window_size/window_size.dart';
 
-const String APP_TITLE = "Smart DeFi Wallet";
+const String APP_TITLE = "saiive.live";
 
 void run() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,14 +44,7 @@ class DefiChainWalletApp extends StatefulWidget {
 }
 
 class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
-  ChainNet _network;
-
-  void init() async {
-    final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
-    setState(() {
-      _network = network;
-    });
-
+  void init() {
     LogConsole.init();
   }
 
@@ -171,7 +162,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
               );
             case '/intro_accounts_restore':
               return NoTransitionRoute(
-                builder: (_) => RestoreAccountsScreen(ChainType.DeFiChain),
+                builder: (_) => RestoreAccountsScreen(),
                 settings: settings,
               );
             case '/intro_wallet_new':

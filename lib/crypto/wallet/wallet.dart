@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/network/model/transaction.dart';
@@ -14,6 +15,8 @@ abstract class IWallet {
   Future init();
   Future close();
   bool isLocked();
+
+  IWalletDatabase getDatabase();
 
   Future<Transaction> getTransaction(String id);
 

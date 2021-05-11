@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
@@ -11,6 +12,7 @@ import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/response/error_response.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/services/health_service.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
 import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
 import 'package:defichainwallet/ui/utils/authentication_helper.dart';
@@ -20,8 +22,9 @@ import 'package:permission_handler/permission_handler.dart';
 class WalletSendScreen extends StatefulWidget {
   final String token;
   final String toAddress;
+  final ChainType chainType;
 
-  WalletSendScreen(this.token, {this.toAddress});
+  WalletSendScreen(this.token, this.chainType, {this.toAddress});
 
   @override
   State<StatefulWidget> createState() {
@@ -41,7 +44,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<DeFiChainWallet>().createAndSend(totalAmount, widget.token, _addressController.text, loadingStream: stream);
+      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, loadingStream: stream);
 
       final txId = tx.txId;
       LogHelper.instance.d("sent tx $txId");
@@ -198,7 +201,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                       });
                     },
                   )),
-              if (_currentEnvironment == EnvironmentType.Development)
+              if (_currentEnvironment == EnvironmentType.Development && widget.chainType == ChainType.DeFiChain)
                 Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: SizedBox(

@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/helper/env.dart';
 import 'package:defichainwallet/helper/version.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/services/health_service.dart';
+import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../generated/l10n.dart';
@@ -61,10 +61,9 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       await sl.allReady();
 
       if (hasSeedGenerated) {
-        final wallet = sl.get<DeFiChainWallet>();
+        final wallet = sl.get<IWalletService>();
         await wallet.init();
       }
-      // await sl.get<IWalletDatabase>().open();
 
       await sl.get<IHealthService>().checkHealth(context);
 
@@ -132,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height * 0.6;
+    var height = MediaQuery.of(context).size.height * 0.4;
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       height = height / 2;
@@ -144,12 +143,14 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            S.of(context).title,
-            style: TextStyle(fontSize: 30, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800),
-          ),
+          Padding(
+              padding: EdgeInsets.only(top: 70),
+              child: Text(
+                S.of(context).title,
+                style: TextStyle(fontSize: 50, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800),
+              )),
           Container(child: Image.asset('assets/logo.png', height: height)),
-          SizedBox(height: 20),
+          SizedBox(height: 15),
           Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),

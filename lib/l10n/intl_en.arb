@@ -3,7 +3,7 @@
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
   },
-  "title": "Smart DeFi Wallet",
+  "title": "saiive.live",
   "version": "Version",
   "home_wallet": "Wallet",
   "home_liquitiy": "Liquidity",
@@ -20,7 +20,7 @@
   "light_mode": "Light",
 
   "test_info": "Thanks for testing!",
-  "test_info_test": "Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!",
+  "test_info_test": "Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!",
   "test_info_funds": "We recomment you staying in the testnet. You will receive some funds from us. We provided a form for that here:",
   "test_info_telegram": "If you have any questions, we have created a Telegram group for that:",
   "test_info_feedback": "If you want to provide feedback, or found any bugs, please create a GitHub issue here:",

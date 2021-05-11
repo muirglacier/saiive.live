@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:defichaindart/defichaindart.dart';
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';

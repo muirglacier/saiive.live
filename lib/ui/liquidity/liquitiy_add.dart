@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/errors/TransactionError.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
@@ -387,6 +388,21 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       ));
 
       Navigator.of(context).pop();
+    } on TransactionError catch (e) {
+      final errorMsg = e.error;
+      LogHelper.instance.e("addpool-tx error...($errorMsg)");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorMsg),
+      ));
+      sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
+        "tokenA": _selectedTokenA.hash,
+        "amountA": amountTokenA.toString(),
+        "tokenB": _selectedTokenB.hash,
+        "amountB": amountTokenB.toString(),
+        "shareAddress": walletTo,
+        "error": e.error
+      });
     } catch (e) {
       LogHelper.instance.e("Error creating addpool-tx", e);
       if (e is ErrorResponse) {

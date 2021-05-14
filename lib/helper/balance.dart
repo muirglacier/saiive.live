@@ -1,6 +1,7 @@
 import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
+import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 
 class BalanceHelper {
@@ -21,35 +22,52 @@ class BalanceHelper {
 
   Future<List<AccountBalance>> getDisplayAccountBalance() async {
     var accountBalance = await sl.get<IWalletDatabase>().getTotalBalances();
+    var tokens = await sl.get<ITokenService>().getTokens(DeFiConstants.DefiAccountSymbol);
 
     if (accountBalance.isNotEmpty) {
       var dollarDFI =
           accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiTokenSymbol, orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiTokenSymbol));
-      var hasDfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol,
-          orElse: () => null);
       var dfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol,
-          orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiAccountSymbol));
+          orElse: () => MixedAccountBalance(balance: 0, token: DeFiConstants.DefiAccountSymbol));
 
-      if (dfi != null && dollarDFI != null) {
-        accountBalance.remove(dollarDFI);
+      var dfiBalance = new MixedAccountBalance(
+          token: "DFI",
+          balance: ((dollarDFI != null ? dollarDFI.balance : 0) + (dfi != null ? dfi.balance : 0)),
+          utxoBalance: dollarDFI != null ? dollarDFI.balance : 0,
+          tokenBalance: dfi != null ? dfi.balance : 0
+      );
 
-        dfi.balance += dollarDFI.balance;
+      if (dfi != null) {
+        accountBalance.remove(dfi);
       }
 
-      accountBalance.sort((a, b) {
-        if (a.token == 'DFI') {
-          return -1;
+      if (dollarDFI != null) {
+        accountBalance.remove(dollarDFI);
+      }
+
+      accountBalance.forEach((element) {
+        var token = tokens.firstWhere((tokenElement) => tokenElement.symbol == element.token, orElse: () => null);
+
+        if (token != null) {
+          element.isDAT = token.isDAT;
+          element.isLPS = token.isLPS;
         }
-        if (b.token == 'DFI') {
+      });
+
+      accountBalance.sort((a, b) {
+        if (a.isLPS && b.isDAT) {
           return 1;
         }
 
-        return a.token.compareTo(b.token);
+        if (b.isLPS && a.isDAT) {
+          return -1;
+        }
+
+        return 0;
       });
 
-      if (hasDfi == null) {
-        accountBalance.add(dfi);
-      }
+      accountBalance.insert(0, dfiBalance);
+
     }
 
     return accountBalance;

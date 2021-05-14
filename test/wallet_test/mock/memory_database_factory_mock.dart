@@ -6,7 +6,7 @@ import 'database_memory_mock.dart';
 
 class WalletDatabaseFactoryMock extends WalletDatabaseFactory {
   @override
-  Future<IWalletDatabase> createInstance(ChainType chain) async {
+  Future<IWalletDatabase> createInstance(ChainType chain, ChainNet network) async {
     return MemoryDatabaseMock();
   }
 }

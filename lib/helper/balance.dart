@@ -1,24 +1,34 @@
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/token_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 
 class BalanceHelper {
-  Future<AccountBalance> getAccountBalance(String token) async {
-    var walletService = sl.get<DeFiChainWallet>();
-    if (DeFiConstants.isDfiToken(token)) {
-      var accountBalance = await walletService.getDatabase().getAccountBalance(DeFiConstants.DefiAccountSymbol);
-      var tokenBalance = await walletService.getDatabase().getAccountBalance(DeFiConstants.DefiTokenSymbol);
+  Future<AccountBalance> getAccountBalance(String token, ChainType chain) async {
+    if (chain == ChainType.DeFiChain) {
+      var walletService = sl.get<DeFiChainWallet>();
 
-      accountBalance.balance += tokenBalance.balance;
+      if (DeFiConstants.isDfiToken(token)) {
+        var accountBalance = await walletService.getDatabase().getAccountBalance(DeFiConstants.DefiAccountSymbol);
+        var tokenBalance = await walletService.getDatabase().getAccountBalance(DeFiConstants.DefiTokenSymbol);
+
+        accountBalance.balance += tokenBalance.balance;
+
+        return accountBalance;
+      }
+
+      var accountBalance = await walletService.getDatabase().getAccountBalance(token);
 
       return accountBalance;
+    } else if (chain == ChainType.Bitcoin) {
+      var btcWalletService = sl.get<BitcoinWallet>();
+
+      return btcWalletService.getDatabase().getAccountBalance("BTC");
     }
 
-    var accountBalance = await walletService.getDatabase().getAccountBalance(token);
-
-    return accountBalance;
+    return null;
   }
 
   Future<List<AccountBalance>> getDisplayAccountBalance() async {
@@ -26,19 +36,17 @@ class BalanceHelper {
     var accountBalance = await walletService.getDatabase().getTotalBalances();
     var tokens = await sl.get<ITokenService>().getTokens(DeFiConstants.DefiAccountSymbol);
 
+    var btcWalletService = sl.get<BitcoinWallet>();
+    var btcAccountBalance = await btcWalletService.getDatabase().getTotalBalances();
+
     if (accountBalance.isNotEmpty) {
-      var dollarDFI =
-          accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiTokenSymbol, orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiTokenSymbol, chain: ChainType.DeFiChain));
+      var dollarDFI = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiTokenSymbol,
+          orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiTokenSymbol, chain: ChainType.DeFiChain));
       var dfi = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol,
           orElse: () => AccountBalance(balance: 0, token: DeFiConstants.DefiAccountSymbol, chain: ChainType.DeFiChain));
 
-      var dfiBalance = new MixedAccountBalance(
-          token: "DFI",
-          balance: dollarDFI.balance + dfi.balance,
-          utxoBalance: dollarDFI.balance,
-          tokenBalance: dfi.balance,
-          chain: ChainType.DeFiChain
-      );
+      var dfiBalance =
+          new MixedAccountBalance(token: "DFI", balance: dollarDFI.balance + dfi.balance, utxoBalance: dollarDFI.balance, tokenBalance: dfi.balance, chain: ChainType.DeFiChain);
 
       if (dfi != null) {
         accountBalance.remove(dfi);
@@ -70,7 +78,7 @@ class BalanceHelper {
       });
 
       accountBalance.insert(0, dfiBalance);
-
+      accountBalance.insert(1, btcAccountBalance.first);
     }
 
     return accountBalance;

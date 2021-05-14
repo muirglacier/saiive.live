@@ -12,7 +12,7 @@ void main() async {
 
   group("#1 create tx", () {
     initTest() async {
-      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain);
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       await db.addTransaction(Transaction(
@@ -67,7 +67,7 @@ void main() async {
     }
 
     Future destroyTest() async {
-      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain);
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
 
       final wallet = sl.get<DeFiChainWallet>();
       await wallet.close();
@@ -89,7 +89,7 @@ void main() async {
 
   group("#2 create 2nd tx", () {
     initTest() async {
-      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain);
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       await db.addTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3d",
@@ -144,7 +144,7 @@ void main() async {
     }
 
     destroyTest() async {
-      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain);
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
 
       final wallet = sl.get<DeFiChainWallet>();
       await wallet.close();

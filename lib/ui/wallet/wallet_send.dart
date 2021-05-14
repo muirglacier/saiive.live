@@ -114,7 +114,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   }
 
   handleSetMax() async {
-    var tokenAmount = await BalanceHelper().getAccountBalance(widget.token);
+    var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
     _amountController.text = (tokenAmount.balance / DefiChainConstants.COIN).toString();
   }
 

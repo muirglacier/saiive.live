@@ -92,7 +92,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
       }
     }
 
-    return AccountBalance(balance: balance, token: token);
+    return AccountBalance(balance: balance, token: token, chain: ChainType.DeFiChain);
   }
 
   @override

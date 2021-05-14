@@ -12,7 +12,7 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain);
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "603148cfb47e4ea74f55d98d",
@@ -76,7 +76,7 @@ void main() async {
     }
 
     Future destoryTest() async {
-      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain);
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
 
       final wallet = sl.get<DeFiChainWallet>();
       await wallet.close();

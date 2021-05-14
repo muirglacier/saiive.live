@@ -6,10 +6,10 @@ import 'wallet_db_sembast.dart';
 import 'package:path/path.dart';
 
 abstract class IWalletDatabaseFactory {
-  Future<IWalletDatabase> getDatabase(ChainType chain);
-  Future<IWalletDatabase> createInstance(ChainType chain);
+  Future<IWalletDatabase> getDatabase(ChainType chain, ChainNet network);
+  Future<IWalletDatabase> createInstance(ChainType chain, ChainNet network);
 
-  Future destroy(ChainType chain);
+  Future destroy(ChainType chain, ChainNet network);
 }
 
 class WalletDatabaseFactory implements IWalletDatabaseFactory {
@@ -19,18 +19,18 @@ class WalletDatabaseFactory implements IWalletDatabaseFactory {
     _databases = Map<ChainType, IWalletDatabase>();
   }
 
-  Future<IWalletDatabase> createInstance(ChainType chain) async {
+  Future<IWalletDatabase> createInstance(ChainType chain, ChainNet network) async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, "db_" + ChainHelper.chainTypeString(chain));
-    var db = SembastWalletDatabase(path);
+    final path = join(documentsDirectory.path, "db_" + ChainHelper.chainTypeString(chain) + ChainHelper.chainNetworkString(network));
+    var db = SembastWalletDatabase(path, chain);
     await db.open();
     return db;
   }
 
   @override
-  Future<IWalletDatabase> getDatabase(ChainType chain) async {
+  Future<IWalletDatabase> getDatabase(ChainType chain, ChainNet network) async {
     if (!_databases.containsKey(chain)) {
-      final db = await createInstance(chain);
+      final db = await createInstance(chain, network);
       _databases.putIfAbsent(chain, () => db);
     }
 
@@ -38,12 +38,12 @@ class WalletDatabaseFactory implements IWalletDatabaseFactory {
   }
 
   @override
-  Future destroy(ChainType chain) async {
+  Future destroy(ChainType chain, ChainNet network) async {
     if (!_databases.containsKey(chain)) {
       return;
     }
 
-    final db = await getDatabase(chain);
+    final db = await getDatabase(chain, network);
     await db.destroy();
 
     _databases.remove(chain);

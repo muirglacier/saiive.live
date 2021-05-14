@@ -47,8 +47,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
       _transactionsLoading = true;
     });
 
-    var pubKeyList = await sl.get<IWalletService>().getPublicKeys(widget.chainType);
-    var history = await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, widget.token, !includingRewards);
+    var history = await sl.get<IWalletService>().getAccountHistory(widget.chainType, widget.token, includingRewards);
 
     setState(() {
       _history = history;
@@ -61,7 +60,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
       _balanceRefreshing = true;
     });
     _controller.forward();
-    _balance = await BalanceHelper().getAccountBalance(widget.token);
+    _balance = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
     loadAccountHistory(includingRewards: _transactionIncludingRewards);
 
     await Future.delayed(const Duration(seconds: 1));

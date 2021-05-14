@@ -8,7 +8,6 @@ import 'package:defichainwallet/crypto/crypto/from_account.dart';
 import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
 import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
-import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
 import 'package:defichainwallet/crypto/errors/MempoolConflictError.dart';
 import 'package:defichainwallet/crypto/errors/MissingInputsError.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
@@ -29,9 +28,7 @@ import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:retry/retry.dart';
-import 'package:path/path.dart';
 import 'dart:math';
 
 import 'package:tuple/tuple.dart';
@@ -70,12 +67,13 @@ class Wallet extends IWallet {
       return;
     }
     _apiService = sl.get<ApiService>();
-    _walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(_chain);
+    _sharedPrefsUtil = sl.get<SharedPrefsUtil>();
+
+    _network = await _sharedPrefsUtil.getChainNetwork();
+    _walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(_chain, _network);
 
     _password = ""; // TODO
     _seed = await sl.get<IVault>().getSeed();
-    _sharedPrefsUtil = sl.get<SharedPrefsUtil>();
-    _network = await _sharedPrefsUtil.getChainNetwork();
     _account = 0; //default account, for now only 0!
 
     final accounts = await _walletDatabase.getAccounts();

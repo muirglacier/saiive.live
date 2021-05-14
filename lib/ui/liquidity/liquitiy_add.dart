@@ -133,14 +133,18 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
     if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
       var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
 
-      tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId)));
+      if (account != null) {
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
+      } else {
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: tokenId));
+      }
     });
 
     _poolPairs = pairs;
@@ -326,7 +330,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
         Expanded(
             flex: 1,
             child: AutoSizeText(
-              e.hash,
+              e.displayName,
               style: Theme.of(context).textTheme.headline3,
               maxLines: 1,
             )),

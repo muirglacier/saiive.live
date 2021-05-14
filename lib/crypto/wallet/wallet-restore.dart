@@ -63,7 +63,7 @@ class WalletRestore {
         var path = HdWalletUtil.derivePathsWithChange(account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
-        LogHelper.instance.d("found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
+        LogHelper.instance.d("(${chain}) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
         for (final tx in transactions) {
           final keyIndex = publicKeys.indexWhere((item) => item == tx.address);

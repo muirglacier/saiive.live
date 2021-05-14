@@ -40,7 +40,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   Stream<List<WalletAccount>> get accountStream => _accountStreamController.stream;
 
   final String _path;
-  SembastWalletDatabase(this._path);
+  final ChainType _chain;
+  SembastWalletDatabase(this._path, this._chain);
 
   Future destroy() async {
     var db = await database;
@@ -303,7 +304,15 @@ class SembastWalletDatabase extends IWalletDatabase {
         amount += unspent.value;
       }
 
-      return new AccountBalance(balance: amount, token: token);
+      return new AccountBalance(balance: amount, token: token, chain: this._chain);
+    } else if (token == null) {
+      final unspentTx = await getUnspentTransactions();
+      var amount = 0;
+
+      for (final unspent in unspentTx) {
+        amount += unspent.value;
+      }
+      return new AccountBalance(balance: amount, token: ChainHelper.chainTypeString(_chain), chain: this._chain);
     }
     var dbStore = _balancesStoreInstance;
     final db = await database;
@@ -321,7 +330,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     });
 
     var sumBalance = sumMap[token];
-    return AccountBalance(balance: sumBalance == null ? 0 : sumBalance, token: token);
+    return AccountBalance(balance: sumBalance == null ? 0 : sumBalance, token: token, chain: this._chain);
   }
 
   @override
@@ -378,8 +387,8 @@ class SembastWalletDatabase extends IWalletDatabase {
       sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
     });
 
-    List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value)).toList();
-    balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol));
+    List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value, chain: this._chain)).toList();
+    balances.add(await getAccountBalance(null));
     return balances;
   }
 

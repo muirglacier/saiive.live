@@ -174,87 +174,84 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
     if (balance is MixedAccountBalance) {
       return Card(
           child: ListTile(
-            leading: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [TokenIcon(balance.token)]),
-            title: Column(children: [
-              Row(children: [
-                Text(
-                    balance.token,
-                    style: Theme.of(context).textTheme.headline3,
-                ),
-                Expanded(
-                  child: AutoSizeText(
-                    balance.balanceDisplayRounded.toString(),
-                    style: Theme.of(context).textTheme.headline3,
-                    textAlign: TextAlign.right,
-                    maxLines: 1,
-                  )
-                ),
-              ]),
-              Container(height: 10),
-              Row(children: [
-                Text(
-                  'UTXO',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-                Expanded(
-                    child: AutoSizeText(
-                      balance.utxoBalanceDisplayRounded.toString(),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      textAlign: TextAlign.right,
-                      maxLines: 1,
-                    )
-                ),
-              ]),
-              Row(children: [
-                Text(
-                  'Token',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-                Expanded(
-                    child: AutoSizeText(
-                      balance.tokenBalanceDisplayRounded.toString(),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      textAlign: TextAlign.right,
-                      maxLines: 1,
-                    )
-                ),
-              ]),
-            ]),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain)));
-            },
-          ));
-    }
-
-    return Card(
-        child: ListTile(
-          leading: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [TokenIcon(balance.token)]),
-          title: Row(children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                (balance.isDAT && !balance.isLPS ? "d" : "") + balance.token,
-                style: Theme.of(context).textTheme.headline3,
-              ),
-              if (balance.isLPS || balance.isDAT)
-              Chip(
-                  label: Text(
-                    balance.isLPS ? "LP" : "DST",
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  backgroundColor: Theme.of(context).primaryColor
-              )
-            ]),
-            Expanded(child: AutoSizeText(
+        leading: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [TokenIcon(balance.token)]),
+        title: Column(children: [
+          Row(children: [
+            Text(
+              balance.token,
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            Expanded(
+                child: AutoSizeText(
               balance.balanceDisplayRounded.toString(),
               style: Theme.of(context).textTheme.headline3,
               textAlign: TextAlign.right,
               maxLines: 1,
             )),
           ]),
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain)));
-          },
-        ));
+          Container(height: 10),
+          Row(children: [
+            Text(
+              'UTXO',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            Expanded(
+                child: AutoSizeText(
+              balance.utxoBalanceDisplayRounded.toString(),
+              style: Theme.of(context).textTheme.bodyText1,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+            )),
+          ]),
+          Row(children: [
+            Text(
+              'Token',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            Expanded(
+                child: AutoSizeText(
+              balance.tokenBalanceDisplayRounded.toString(),
+              style: Theme.of(context).textTheme.bodyText1,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+            )),
+          ]),
+        ]),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain)));
+        },
+      ));
+    }
+
+    return Card(
+        child: ListTile(
+      leading: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [TokenIcon(balance.token)]),
+      title: Row(children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            balance.tokenDisplay,
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          if (balance.additionalDisplay != null)
+            Chip(
+                label: Text(
+                  balance.additionalDisplay,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                backgroundColor: Theme.of(context).primaryColor)
+        ]),
+        Expanded(
+            child: AutoSizeText(
+          balance.balanceDisplayRounded.toString(),
+          style: Theme.of(context).textTheme.headline3,
+          textAlign: TextAlign.right,
+          maxLines: 1,
+        )),
+      ]),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain)));
+      },
+    ));
   }
 
   buildWalletScreen(BuildContext context) {
@@ -268,40 +265,36 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
     return Padding(
         padding: EdgeInsets.all(30),
-        child:
-        CustomScrollView(
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                      final account = _accountBalance.elementAt(index);
-                      return _buildAccountEntry(account);
-                  },
-                  childCount: _accountBalance.length,
-                ),
-              )
-            ]));
+        child: CustomScrollView(physics: BouncingScrollPhysics(), scrollDirection: Axis.vertical, slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                final account = _accountBalance.elementAt(index);
+                return _buildAccountEntry(account);
+              },
+              childCount: _accountBalance.length,
+            ),
+          )
+        ]));
 
-        // SliverList(
-        //     delegate: SliverChildBuilderDelegate(
-        //           (BuildContext context, int index) {
-        //         final account = _accountBalance.elementAt(index);
-        //         return _buildAccountEntry(account);
-        //       },
-        //       childCount: _accountBalance.length,
-        //     ),
-            // child: ListView.builder(
-            //     physics: BouncingScrollPhysics(),
-            //     scrollDirection: Axis.vertical,
-            //     shrinkWrap: true,
-            //     itemExtent: 100.0,
-            //     itemCount: _accountBalance.length,
-            //     itemBuilder: (context, index) {
-            //       final account = _accountBalance.elementAt(index);
-            //       return _buildAccountEntry(account);
-            //     })));
+    // SliverList(
+    //     delegate: SliverChildBuilderDelegate(
+    //           (BuildContext context, int index) {
+    //         final account = _accountBalance.elementAt(index);
+    //         return _buildAccountEntry(account);
+    //       },
+    //       childCount: _accountBalance.length,
+    //     ),
+    // child: ListView.builder(
+    //     physics: BouncingScrollPhysics(),
+    //     scrollDirection: Axis.vertical,
+    //     shrinkWrap: true,
+    //     itemExtent: 100.0,
+    //     itemCount: _accountBalance.length,
+    //     itemBuilder: (context, index) {
+    //       final account = _accountBalance.elementAt(index);
+    //       return _buildAccountEntry(account);
+    //     })));
   }
 
   @override

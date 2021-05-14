@@ -23,7 +23,10 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
 
     final walletService = sl.get<IWalletService>();
 
+    await walletService.init();
     var result = await walletService.restore(network);
+
+    await walletService.syncAll();
 
     var ret = List<WalletAccount>.empty(growable: true);
 

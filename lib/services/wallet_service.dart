@@ -7,7 +7,9 @@ import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
 import 'package:defichainwallet/crypto/wallet/wallet.dart';
+import 'package:defichainwallet/network/account_history_service.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/network/model/account_history.dart';
 import 'package:defichainwallet/network/model/ivault.dart';
 import 'package:defichainwallet/network/model/transaction_data.dart';
 import 'package:defichainwallet/service_locator.dart';
@@ -32,6 +34,7 @@ abstract class IWalletService {
   Future destroy();
 
   Future<WalletAccount> addAccount({String name, int account, ChainType chain});
+  Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards);
 }
 
 class WalletService implements IWalletService {
@@ -111,9 +114,17 @@ class WalletService implements IWalletService {
   @override
   Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network) {
     var restoreBtc = _restoreWallet(ChainType.Bitcoin, network, _bitcoinWallet);
-    var restoreDefi = _restoreWallet(ChainType.Bitcoin, network, _defiWallet);
+    var restoreDefi = _restoreWallet(ChainType.DeFiChain, network, _defiWallet);
 
     return Future.wait([restoreBtc, restoreDefi]);
+  }
+
+  Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards) async {
+    if (chain == ChainType.DeFiChain) {
+      var pubKeyList = await _defiWallet.getPublicKeys();
+      return await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, token, !includeRewards);
+    }
+    return List<AccountHistory>.empty();
   }
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet) async {

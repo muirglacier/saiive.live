@@ -235,7 +235,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           title: Row(children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                (balance.isDAT ? "d" : "") + balance.token,
+                (balance.isDAT && !balance.isLPS ? "d" : "") + balance.token,
                 style: Theme.of(context).textTheme.headline3,
               ),
               if (balance.isLPS || balance.isDAT)

@@ -25,7 +25,7 @@ class BalanceHelper {
     } else if (chain == ChainType.Bitcoin) {
       var btcWalletService = sl.get<BitcoinWallet>();
 
-      return btcWalletService.getDatabase().getAccountBalance("BTC");
+      return btcWalletService.getDatabase().getAccountBalance(null);
     }
 
     return null;

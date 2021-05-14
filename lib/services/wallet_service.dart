@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:defichainwallet/crypto/chain.dart';
+import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
 import 'package:defichainwallet/crypto/model/wallet_account.dart';
 import 'package:defichainwallet/crypto/model/wallet_address.dart';
 import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
@@ -113,8 +114,11 @@ class WalletService implements IWalletService {
 
   @override
   Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network) {
-    var restoreBtc = _restoreWallet(ChainType.Bitcoin, network, _bitcoinWallet);
-    var restoreDefi = _restoreWallet(ChainType.DeFiChain, network, _defiWallet);
+    var bitcoinWallet = sl.get<BitcoinWallet>();
+    var defiWallet = sl.get<DeFiChainWallet>();
+
+    var restoreBtc = _restoreWallet(ChainType.Bitcoin, network, bitcoinWallet);
+    var restoreDefi = _restoreWallet(ChainType.DeFiChain, network, defiWallet);
 
     return Future.wait([restoreBtc, restoreDefi]);
   }
@@ -138,7 +142,7 @@ class WalletService implements IWalletService {
     var result = await compute(_searchAccounts, dataMap);
 
     var isFirst = true;
-    var db = wallet.getDatabase();
+    var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
     for (var element in result.item1) {
       await db.addAccount(name: element.name, account: element.account, chain: chain, isSelected: isFirst);
 
@@ -151,6 +155,9 @@ class WalletService implements IWalletService {
     if (result.item1.length == 0) {
       await db.addAccount(name: ChainHelper.chainTypeString(chain), account: 0, chain: chain);
     }
+
+    await wallet.init();
+    await wallet.syncAll();
     return result;
   }
 

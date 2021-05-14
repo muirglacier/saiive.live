@@ -392,7 +392,7 @@ class Wallet extends IWallet {
   Future<Tuple3<String, List<tx.Transaction>, String>> createSendTransaction(int amount, String token, String to) async {
     final changeAddress = await this.getPublicKeyFromAccount(_account, true);
 
-    if (DeFiConstants.isDfiToken(token)) {
+    if (_chain == ChainType.Bitcoin || DeFiConstants.isDfiToken(token)) {
       var txHex = await prepareAccountToUtxosTransactions(changeAddress, amount);
 
       if (txHex != null) {
@@ -574,7 +574,7 @@ class Wallet extends IWallet {
     LogHelper.instance.d("commiting tx $txHex");
     try {
       final txId = await r.retry(() async {
-        return await _apiService.transactionService.sendRawTransaction("DFI", txHex);
+        return await _apiService.transactionService.sendRawTransaction(ChainHelper.chainTypeString(_chain), txHex);
       }, retryIf: (e) async {
         if (e is HttpException) {
           if (e.error.error.contains("txn-mempool-conflict")) {
@@ -596,7 +596,7 @@ class Wallet extends IWallet {
       LogHelper.instance.i("commited tx with id " + txId);
 
       final response = await r.retry(() async {
-        return await _apiService.transactionService.getWithTxId("DFI", txId);
+        return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId);
       }, retryIf: (e) {
         if (e is HttpException || e is ErrorResponse) return true;
         return false;

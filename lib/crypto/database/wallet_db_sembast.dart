@@ -296,7 +296,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future<AccountBalance> getAccountBalance(String token) async {
-    if (token == DeFiConstants.DefiTokenSymbol) {
+    if (token == DeFiConstants.DefiTokenSymbol && _chain == ChainType.DeFiChain) {
       final unspentTx = await getUnspentTransactions();
       var amount = 0;
 
@@ -305,7 +305,7 @@ class SembastWalletDatabase extends IWalletDatabase {
       }
 
       return new AccountBalance(balance: amount, token: token, chain: this._chain);
-    } else if (token == null) {
+    } else if (_chain == ChainType.Bitcoin) {
       final unspentTx = await getUnspentTransactions();
       var amount = 0;
 
@@ -388,7 +388,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     });
 
     List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value, chain: this._chain)).toList();
-    balances.add(await getAccountBalance(null));
+    balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol));
     return balances;
   }
 

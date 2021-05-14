@@ -15,6 +15,7 @@ abstract class IWallet {
   Future init();
   Future close();
   bool isLocked();
+  Future syncAll({StreamController<String> loadingStream});
 
   IWalletDatabase getDatabase();
 

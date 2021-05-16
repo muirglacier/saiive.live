@@ -11,6 +11,8 @@ import 'package:defichainwallet/crypto/wallet/wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
 import 'package:defichainwallet/network/api_service.dart';
+import 'package:defichainwallet/network/model/key_account_wrapper.dart';
+import 'package:defichainwallet/network/model/transaction.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
 import 'package:hex/hex.dart';
 import 'package:tuple/tuple.dart';
@@ -125,28 +127,34 @@ class HdWallet extends IHdWallet {
 
   @override
   Future syncWallet(IWalletDatabase database, {StreamController<String> loadingStream}) async {
-    await database.clearUnspentTransactions();
-    await database.clearAccountBalances();
-
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
+
+    var newUtxos = List<Transaction>.empty(growable: true);
+    var newBalance = List<KeyAccountWrapper>.empty(growable: true);
 
     await _syncWallet(database, (addresses, pos, max) async {
       loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
       final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
-      utxo.forEach((element) async {
-        await database.addUnspentTransaction(element);
-      });
+
+      newUtxos.addAll(utxo);
 
       if (_chain == ChainType.DeFiChain) {
         final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
-
-        for (final acc in balances) {
-          acc.accounts.forEach((element) async {
-            await database.setAccountBalance(element);
-          });
-        }
+        newBalance.addAll(balances);
       }
     }, loadingStream: loadingStream);
+
+    await database.clearUnspentTransactions();
+    newUtxos.forEach((element) async {
+      await database.addUnspentTransaction(element);
+    });
+
+    await database.clearAccountBalances();
+    for (final acc in newBalance) {
+      acc.accounts.forEach((element) async {
+        await database.setAccountBalance(element);
+      });
+    }
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
   }

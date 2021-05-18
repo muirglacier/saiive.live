@@ -64,6 +64,8 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
         controller: controller,
         readOnly: widget.readOnly,
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        autocorrect: false,
+        enableSuggestions: false,
         decoration: InputDecoration(
             prefixIcon: new Padding(
               padding: const EdgeInsets.only(top: 15, left: 5, right: 0, bottom: 15),

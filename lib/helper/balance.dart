@@ -31,7 +31,7 @@ class BalanceHelper {
     return null;
   }
 
-  Future<List<AccountBalance>> getDisplayAccountBalance() async {
+  Future<List<AccountBalance>> getDisplayAccountBalance({bool onlyDfi = false}) async {
     var walletService = sl.get<DeFiChainWallet>();
     var accountBalance = await walletService.getDatabase().getTotalBalances();
     var tokens = await sl.get<ITokenService>().getTokens(DeFiConstants.DefiAccountSymbol);
@@ -78,7 +78,9 @@ class BalanceHelper {
       });
 
       accountBalance.insert(0, dfiBalance);
-      accountBalance.insert(1, btcAccountBalance.first);
+      if (!onlyDfi) {
+        accountBalance.insert(1, btcAccountBalance.first);
+      }
     }
 
     return accountBalance;

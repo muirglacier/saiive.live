@@ -100,7 +100,7 @@ class _DexScreen extends State<DexScreen> {
       }
     }
 
-    var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+    var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
     var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
     if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
@@ -114,7 +114,7 @@ class _DexScreen extends State<DexScreen> {
       if (account != null) {
         tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
       } else {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: tokenId));
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
       }
     });
 

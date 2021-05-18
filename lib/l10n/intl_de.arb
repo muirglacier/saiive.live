@@ -148,6 +148,9 @@
   "liqudity_add_successfull": "Hinzufügen war erfolgreich",
   "liqudity_your_liquidity": "Deine Liquidität",
   "liqudity_pool_pairs": "Pool Paare",
+  "liquitiy_remove": "Entfernen",
+  "liquitiy_remove_price": "Preis",
+  "liquitiy_remove_of": "von",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

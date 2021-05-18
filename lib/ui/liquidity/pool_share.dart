@@ -1,6 +1,7 @@
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
+import 'package:defichainwallet/ui/liquidity/liquitiy_remove.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,17 @@ class _PoolShareScreen extends State<PoolShareScreen> {
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           title: Text(widget.liquidity.tokenA + ' - ' + widget.liquidity.tokenB),
+          actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
+          actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityRemoveScreen(widget.liquidity)));
+                  },
+                  child: Icon(Icons.remove_circle_outline_outlined, size: 26.0, color: StateContainer.of(context).curTheme.appBarText),
+                )),
+          ],
         ),
         body: Padding(
             padding: EdgeInsets.all(10),

@@ -1365,6 +1365,36 @@ class S {
     );
   }
 
+  /// `Remove Liquidity`
+  String get liquitiy_remove {
+    return Intl.message(
+      'Remove Liquidity',
+      name: 'liquitiy_remove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get liquitiy_remove_price {
+    return Intl.message(
+      'Price',
+      name: 'liquitiy_remove_price',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `of`
+  String get liquitiy_remove_of {
+    return Intl.message(
+      'of',
+      name: 'liquitiy_remove_of',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Biometric Authentification Error`
   String get biometric_auth_error {
     return Intl.message(

@@ -1,10 +1,10 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:defichainwallet/appstate_container.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/ui/widgets/wallet_receive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class WalletReceiveScreen extends StatefulWidget {
   final String pubKey;
@@ -21,15 +21,19 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
             title: Text(S.of(context).wallet_receive),
-            actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
+            actionsIconTheme: IconThemeData(
+                color: StateContainer.of(context).curTheme.appBarText),
             actions: [
               Padding(
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () {
-                      ClipboardManager.copyToClipBoard(widget.pubKey).then((result) {
+                      ClipboardManager.copyToClipBoard(widget.pubKey)
+                          .then((result) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(S.of(context).receive_address_copied_to_clipboard),
+                          content: Text(S
+                              .of(context)
+                              .receive_address_copied_to_clipboard),
                         ));
                       });
                       Clipboard.setData(new ClipboardData(text: widget.pubKey));
@@ -40,21 +44,6 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
                     ),
                   ))
             ]),
-        body: Padding(
-            padding: EdgeInsets.all(30),
-            child: Center(
-              child: Column(children: [
-                Container(
-                    child: Column(children: [
-                  ConstrainedBox(
-                      constraints: BoxConstraints(minWidth: 100, maxWidth: 400),
-                      child: QrImage(
-                        data: widget.pubKey,
-                        foregroundColor: StateContainer.of(context).curTheme.text,
-                      )),
-                  SelectableText(widget.pubKey)
-                ]))
-              ]),
-            )));
+        body: WalletReceiveWidget(pubKey: widget.pubKey));
   }
 }

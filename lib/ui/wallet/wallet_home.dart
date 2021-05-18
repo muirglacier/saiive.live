@@ -13,6 +13,7 @@ import 'package:defichainwallet/services/health_service.dart';
 import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
+import 'package:defichainwallet/ui/wallet/wallet_home_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
@@ -321,9 +322,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                 child: GestureDetector(
                   onTap: () async {
                     var wallet = sl.get<IWalletService>();
-                    var pubKey = await wallet.getPublicKey(ChainType.DeFiChain);
+                    var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain);
+                    var pubKeyBTC = await wallet.getPublicKey(ChainType.Bitcoin);
 
-                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey)));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletHomeReceiveScreen(pubKeyDFI: pubKeyDFI, pubKeyBTC: pubKeyBTC)));
                   },
                   child: Icon(Icons.arrow_downward, size: 26.0, color: StateContainer.of(context).curTheme.appBarText),
                 )),

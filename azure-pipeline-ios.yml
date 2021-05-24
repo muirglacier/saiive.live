@@ -5,8 +5,6 @@ trigger:
 name: $(BuildID)
 
 variables:
-  keyVaultConnection: 'saiive Pay-As-You-Go (b207e678-0c82-4ed5-8cd7-3be5888d64e8)'
-  keyVaultName: 'defichain-wallet'
 - group: saiive.live
 
 stages:
@@ -54,8 +52,8 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: $(keyVaultConnection)
-          KeyVaultName: $(keyVaultName)
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
           SecretsFilter: 'apple-adhoc-cert-password'
           RunAsPreJob: true
 
@@ -141,8 +139,8 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: $(keyVaultConnection)
-          KeyVaultName: $(keyVaultName)
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
           SecretsFilter: 'apple-adhoc-cert-password'
           RunAsPreJob: true
 

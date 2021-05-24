@@ -60,7 +60,7 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletMacOSDeveloperID.p12'
+          certSecureFile: 'DPDistMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
@@ -170,7 +170,7 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletMacOSDeveloperID.p12'
+          certSecureFile: 'DPDistMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
@@ -280,7 +280,7 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletMacOSDeveloperID.p12'
+          certSecureFile: 'DPDistMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 

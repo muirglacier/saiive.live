@@ -59,7 +59,7 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletAdHoc.p12'
+          certSecureFile: 'DPDist.p12'
           certPwd: '$(apple-adhoc-cert-password)'
           keychain: 'temp'
 
@@ -146,7 +146,7 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletAdHoc.p12'
+          certSecureFile: 'DPDist.p12'
           certPwd: '$(apple-adhoc-cert-password)'
           keychain: 'temp'
 

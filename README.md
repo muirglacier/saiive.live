@@ -1,12 +1,15 @@
-# defichainwallet
+# saiive.live
 Android
-[![Build Status Android](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.Android?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=6&branchName=main)
+[![Build Status Adnroid](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.droid?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=15&branchName=main)
 
 iOS
-[![Build Status iOS](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.iOS?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=7&branchName=main)
+[![Build Status](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.ios?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=16&branchName=main)
 
 Windows
-[![Build Status](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.Windows?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=8&branchName=main)
+[![Build Status Android](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.win?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=18&branchName=main)
+
+MacOS
+[![Build Status MacOS](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.mac?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=17&branchName=main)
 
 A mobile application for [DeFiChain](https://defichain.com/).
 
@@ -44,8 +47,8 @@ Mistakes and bugs happen, but with your help in resolving and reporting, togethe
 ## Wallet
 * View Funds
   * Sync your wallet
-  * See all funds ($DFI, DST)
-* Send $DFI funds
+  * See all funds ($DFI, DATs)
+* Send funds
 * Swap Tokens
 * Add Liquidity 
 

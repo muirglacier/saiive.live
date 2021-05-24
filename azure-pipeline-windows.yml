@@ -6,7 +6,7 @@ trigger:
 name: $(BuildID)
 
 variables:
-- group: App
+- group: saiive.live
 
 stages:
 - stage: Windows

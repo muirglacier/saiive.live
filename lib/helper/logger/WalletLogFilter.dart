@@ -9,13 +9,13 @@ class WalletLogFilter extends LogFilter {
     var currentEnvironment = EnvironmentType.Unknonw;
     var packageInfo = await PackageInfo.fromPlatform();
     switch (packageInfo.packageName) {
-      case "com.defichain.wallet.dev":
+      case "at.saiive.live.dev":
         currentEnvironment = EnvironmentType.Development;
         break;
-      case "com.defichain.wallet.staging":
+      case "at.saiive.live.staging":
         currentEnvironment = EnvironmentType.Staging;
         break;
-      case "com.defichain.wallet":
+      case "at.saiive.live":
         currentEnvironment = EnvironmentType.Production;
         break;
     }

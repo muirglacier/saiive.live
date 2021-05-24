@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.defichain.wallet">
+    package="at.saiive.live">
    <application
         android:label="saiive.live"
         android:icon="@mipmap/ic_launcher"

@@ -67,7 +67,7 @@ stages:
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -177,7 +177,7 @@ stages:
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -287,7 +287,7 @@ stages:
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"

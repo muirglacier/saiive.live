@@ -438,8 +438,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AppStore Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Distribution MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Profile;
@@ -567,8 +567,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet Development MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live Development MacOS";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -590,8 +590,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AdHoc Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc Distribution MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -681,8 +681,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AdHoc Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc Distribution MacOS";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -765,8 +765,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AdHoc Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc Distribution MacOS";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -842,8 +842,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AppStore Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Distribution MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Release-staging";
@@ -918,8 +918,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AppStore Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Distribution MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Release-production";
@@ -994,8 +994,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AppStore Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Distribution MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Profile-staging";
@@ -1070,8 +1070,8 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.defichain.wallet;
-				PROVISIONING_PROFILE_SPECIFIER = "com.defichain.wallet AppStore Distribution MacOS";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Distribution MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Profile-production";

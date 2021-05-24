@@ -1,4 +1,4 @@
-package com.defichain.wallet
+package at.saiive.live
 
 import io.flutter.embedding.android.FlutterActivity
 

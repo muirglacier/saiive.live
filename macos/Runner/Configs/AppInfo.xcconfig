@@ -8,7 +8,7 @@
 PRODUCT_NAME = walletapp
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.defichain.walletapp
+PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2021 com.defichain. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2021 at.saiive.live. All rights reserved.

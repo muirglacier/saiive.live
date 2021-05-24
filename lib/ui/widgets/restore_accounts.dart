@@ -30,6 +30,8 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
       ret.addAll(res.item1);
     }
 
+    await walletService.init();
+
     return ret;
   }
 

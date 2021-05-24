@@ -71,7 +71,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
     var shadowColor = Colors.black;
     var appBarColor = StateContainer.of(context).curTheme.primary;
     var appBarTextColor = StateContainer.of(context).curTheme.appBarText;
-    var appBarActionColor = StateContainer.of(context).curTheme.lightColor;
+    var appBarActionColor = Colors.white;
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       shadowColor = Colors.transparent;

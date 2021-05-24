@@ -52,7 +52,7 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: 'b207e678-0c82-4ed5-8cd7-3be5888d64e8'
+          azureSubscription: 'saiive Pay-As-You-Go (b207e678-0c82-4ed5-8cd7-3be5888d64e8)'
           KeyVaultName: 'saiive-wallet'
           SecretsFilter: 'apple-adhoc-cert-password'
           RunAsPreJob: true
@@ -139,7 +139,7 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: 'b207e678-0c82-4ed5-8cd7-3be5888d64e8'
+          azureSubscription: 'saiive Pay-As-You-Go (b207e678-0c82-4ed5-8cd7-3be5888d64e8)'
           KeyVaultName: 'saiive-wallet'
           SecretsFilter: 'apple-adhoc-cert-password'
           RunAsPreJob: true

@@ -79,13 +79,13 @@ flutter build web //for web
 Everything is just early preview!
 
 ![Home](./screenshots/home_ios.png)
+![History](./screenshots/history_ios.png)
+![Receive](./screenshots/receive_ios.png)
 ![Token](./screenshots/token_ios.png)
 ![Dex (iOS)](./screenshots/dex_ios.png)
 ![Home iOS](./screenshots/home_ios.png)
-![Token iOS](./screenshots/token_ios.png)
-![Tokens iOS](./screenshots/tokens_ios.png)
 ![Liquidity iOS](./screenshots/liquidity_ios.png)
-![Liquidity iOS](./screenshots/liquidity_detail_ios.png)
+![Liquidity Detail iOS](./screenshots/liquidity_detail_ios.png)
 
 
 

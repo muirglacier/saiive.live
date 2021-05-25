@@ -31,7 +31,7 @@ class _PoolShareScreen extends State<PoolShareScreen> {
                   onTap: () async {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityRemoveScreen(widget.liquidity)));
                   },
-                  child: Icon(Icons.remove_circle_outline_outlined, size: 26.0, color: StateContainer.of(context).curTheme.appBarText),
+                  child: Icon(Icons.remove_circle_outline_outlined, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
           ],
         ),

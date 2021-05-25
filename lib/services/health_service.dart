@@ -29,10 +29,11 @@ class HealthService implements IHealthService {
         deadChains.write(",");
       }
     }
-    var deadChainsString = deadChains.toString();
-    deadChainsString = deadChainsString.toString().substring(0, deadChainsString.length - 1);
 
     if (!allAlive) {
+      var deadChainsString = deadChains.toString();
+      deadChainsString = deadChainsString.substring(0, deadChainsString.length - 1);
+
       // var message = S.of(context).wallet_offline
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_offline(deadChainsString)),

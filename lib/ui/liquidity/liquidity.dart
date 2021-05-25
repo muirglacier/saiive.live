@@ -152,10 +152,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   onTap: () async {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityAddScreen()));
                   },
-                  child: Icon(
-                    Icons.add,
-                    size: 26.0,
-                  ),
+                  child: Icon(Icons.add, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
@@ -163,10 +160,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   onTap: () async {
                     _refresh();
                   },
-                  child: Icon(
-                    Icons.refresh,
-                    size: 26.0,
-                  ),
+                  child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
           ],
         ),

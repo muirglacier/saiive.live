@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "walletapp")
+set(BINARY_NAME "saiive-live")
 set(APPLICATION_ID "at.saiive.live")
 
 cmake_policy(SET CMP0063 NEW)

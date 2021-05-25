@@ -50,7 +50,7 @@ class PoolShareHelper {
       var poolPair = await sl.get<IPoolPairService>().getPoolPair(coin, poolShare.poolID);
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;
-      var allPoolShares = poolShares.where((element) => element.poolID == poolShare.poolID);
+      var allPoolShares = poolShares.where((element) => element.poolID == poolShare.poolID).toList();
 
       var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
       var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
@@ -113,27 +113,26 @@ class PoolShareHelper {
       var apy = poolStats.containsKey(idTokenA + '_' + idTokenB) ? poolStats[idTokenA + '_' + idTokenB].apy : 0;
 
       return new PoolShareLiquidity(
-        tokenA: tokenA.symbol,
-        tokenB: tokenB.symbol,
-        poolPair: poolPair,
-        poolShare: poolShare,
-        totalLiquidityInUSDT: totalLiquidity,
-        yearlyPoolReward: yearlyPoolReward,
-        poolSharePercentage: poolSharePercentage,
-        apy: apy,
-        coin: dfiCoin,
-        blockReward: rewardPerBlock,
-        minuteReward: minuteReward,
-        hourlyReword: hourlyReword,
-        dailyReward: dailyReward,
-        yearlyReward: yearlyReward,
-        blockRewardFiat: blockRewardFiat,
-        minuteRewardFiat: minuteRewardFiat,
-        hourlyRewordFiat: hourlyRewordFiat,
-        dailyRewardFiat: dailyRewardFiat,
-        yearlyRewardFiat: yearlyRewardFiat,
-        poolShares: allPoolShares
-      );
+          tokenA: tokenA.symbol,
+          tokenB: tokenB.symbol,
+          poolPair: poolPair,
+          poolShare: poolShare,
+          totalLiquidityInUSDT: totalLiquidity,
+          yearlyPoolReward: yearlyPoolReward,
+          poolSharePercentage: poolSharePercentage,
+          apy: apy,
+          coin: dfiCoin,
+          blockReward: rewardPerBlock,
+          minuteReward: minuteReward,
+          hourlyReword: hourlyReword,
+          dailyReward: dailyReward,
+          yearlyReward: yearlyReward,
+          blockRewardFiat: blockRewardFiat,
+          minuteRewardFiat: minuteRewardFiat,
+          hourlyRewordFiat: hourlyRewordFiat,
+          dailyRewardFiat: dailyRewardFiat,
+          yearlyRewardFiat: yearlyRewardFiat,
+          poolShares: allPoolShares);
     });
 
     for (Future<PoolShareLiquidity> f in result) {

@@ -22,6 +22,8 @@ class LiquidityRemoveScreen extends StatefulWidget {
 }
 
 class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
+  double totalAmount = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +36,10 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
     toRemoveTokenA = myReserveA;
     toRemoveTokenB = myReserveB;
 
+    for (final share in widget.liquidity.poolShares) {
+      totalAmount += share.amount;
+    }
+
     _percentageTextController.addListener(handleChangePercentage);
   }
 
@@ -42,6 +48,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
   double toRemoveTokenB = 0;
   double myReserveA = 0;
   double myReserveB = 0;
+  double amountToRemove = 0;
 
   var _percentageTextController = TextEditingController(text: '100');
 
@@ -56,12 +63,13 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
   handleChangePercentage() {
     double amount = double.tryParse(_percentageTextController.text);
 
-    if (null == amount) {
+    if (amount == null) {
       return;
     }
 
     setState(() {
       percentage = amount;
+      amountToRemove = (totalAmount / 100) * amount;
     });
 
     calculateRemoveValues();

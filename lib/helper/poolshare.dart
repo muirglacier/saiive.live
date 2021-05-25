@@ -50,6 +50,7 @@ class PoolShareHelper {
       var poolPair = await sl.get<IPoolPairService>().getPoolPair(coin, poolShare.poolID);
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;
+      var allPoolShares = poolShares.where((element) => element.poolID == poolShare.poolID);
 
       var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
       var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
@@ -131,6 +132,7 @@ class PoolShareHelper {
         hourlyRewordFiat: hourlyRewordFiat,
         dailyRewardFiat: dailyRewardFiat,
         yearlyRewardFiat: yearlyRewardFiat,
+        poolShares: allPoolShares
       );
     });
 

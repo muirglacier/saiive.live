@@ -11,6 +11,7 @@ class PoolShareLiquidity extends PoolPair {
   final double yearlyPoolReward;
   final double poolSharePercentage;
   final double apy;
+  final List<PoolShare> poolShares;
 
   final double blockReward;
   final double minuteReward;
@@ -45,5 +46,7 @@ class PoolShareLiquidity extends PoolPair {
       this.minuteRewardFiat,
       this.hourlyRewordFiat,
       this.dailyRewardFiat,
-      this.yearlyRewardFiat});
+      this.yearlyRewardFiat,
+      this.poolShares
+    });
 }

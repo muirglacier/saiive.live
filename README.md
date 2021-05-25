@@ -78,8 +78,8 @@ flutter build web //for web
 # Screenshots
 Everything is just early preview!
 
-![Home](./screenshots/home_ios.jpg)
-![Token](./screenshots/token_ios.jpg)
+![Home](./screenshots/home_ios.png)
+![Token](./screenshots/token_ios.png)
 ![Dex (iOS)](./screenshots/dex_ios.png)
 ![Home iOS](./screenshots/home_ios.png)
 ![Token iOS](./screenshots/token_ios.png)

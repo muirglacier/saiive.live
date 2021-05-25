@@ -46,6 +46,7 @@ stages:
           script: |
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content windows/runner/Runner.rc)
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"

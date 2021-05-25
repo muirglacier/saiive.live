@@ -60,17 +60,17 @@ IDI_APP_ICON            ICON                    "resources\\app_icon.ico"
 // Version
 //
 
-//#ifdef FLUTTER_BUILD_NUMBER
-//#define VERSION_AS_NUMBER FLUTTER_BUILD_NUMBER
-//#else
+#ifdef FLUTTER_BUILD_NUMBER
+#define VERSION_AS_NUMBER FLUTTER_BUILD_NUMBER
+#else
 #define VERSION_AS_NUMBER 99,99,99
-//#endif
+#endif
 
-//#ifdef FLUTTER_BUILD_NAME
-//#define VERSION_AS_STRING #FLUTTER_BUILD_NAME
-//#else
-#define VERSION_AS_STRING 99.99.99
-//#endif
+#ifdef FLUTTER_BUILD_NAME
+#define VERSION_AS_STRING #FLUTTER_BUILD_NAME
+#else
+#define VERSION_AS_STRING "99.99.99"
+#endif
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION VERSION_AS_NUMBER

@@ -25,7 +25,7 @@ class _WalletReceiveWidgetState extends State<WalletReceiveWidget> {
                 child: Column(children: [
               Text(S.of(context).wallet_receive_warning(ChainHelper.chainTypeString(widget.chain)), style: TextStyle(fontWeight: FontWeight.bold)),
               ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 100, maxWidth: 400),
+                  constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: QrImage(
                     data: widget.pubKey,
                     foregroundColor: StateContainer.of(context).curTheme.text,

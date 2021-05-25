@@ -25,6 +25,7 @@ class _WalletHomeReceiveState extends State<WalletHomeReceiveScreen> {
           return Scaffold(
             appBar: AppBar(
                 bottom: TabBar(
+                  indicatorColor: StateContainer.of(context).curTheme.primary,
                   tabs: [
                     Tab(text: 'DFI'),
                     Tab(text: 'BTC'),

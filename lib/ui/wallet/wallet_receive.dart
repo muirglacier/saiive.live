@@ -1,5 +1,6 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/widgets/wallet_receive.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +9,9 @@ import 'package:flutter/services.dart';
 
 class WalletReceiveScreen extends StatefulWidget {
   final String pubKey;
+  final ChainType chain;
 
-  WalletReceiveScreen({this.pubKey});
+  WalletReceiveScreen({this.pubKey, this.chain});
 
   _WalletReceiveState createState() => _WalletReceiveState();
 }
@@ -37,6 +39,6 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
                     child: Icon(Icons.copy, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   ))
             ]),
-        body: WalletReceiveWidget(pubKey: widget.pubKey));
+        body: WalletReceiveWidget(pubKey: widget.pubKey, chain: widget.chain));
   }
 }

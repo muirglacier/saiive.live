@@ -1,5 +1,5 @@
 # Overview
-Dominik und Patrik Pfaffenbauer are actively developing a Light, non custodial Wallet for iOS, Android, Mac, Windows and Linux.  (https://github.com/DeFiCh-WalletApp).
+Dominik und Patrik Pfaffenbauer are actively developing a Light, non custodial Wallet for iOS, Android, Mac, Windows and Linux.  (https://github.com/saiive).
 
 **Smart DeFi Wallet** is a non-custodial light wallet Application that runs on iOS, Android, Windows, Mac and Linux. In it's current stage, it is fully functional and already working.
 

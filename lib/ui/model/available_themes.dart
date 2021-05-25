@@ -1,6 +1,6 @@
-import 'package:defichainwallet/ui/model/settings_item.dart';
+import 'package:saiive.live/ui/model/settings_item.dart';
 import 'package:flutter/material.dart';
-import 'package:defichainwallet/themes.dart';
+import 'package:saiive.live/themes.dart';
 
 enum ThemeOptions { DEFI_LIGHT, DEFI_DARK }
 

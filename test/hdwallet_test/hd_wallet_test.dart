@@ -1,7 +1,7 @@
 import 'package:defichaindart/defichaindart.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart' as defichain;

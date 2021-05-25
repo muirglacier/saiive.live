@@ -1,5 +1,5 @@
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -59,7 +59,7 @@ class _TestRunInfoScreen extends State<TestRunInfoScreen> {
                               'GITHUB',
                               style: TextStyle(color: StateContainer.of(context).curTheme.primary),
                             ),
-                            onTap: () => launch('https://github.com/DeFiCh-WalletApp/WalletApp/issues/new/choose'))),
+                            onTap: () => launch('https://github.com/saiive/saiive.live/issues/new/choose'))),
                     SizedBox(height: 40),
                     Text(S.of(context).test_info_epilogue),
                     SizedBox(height: 40),

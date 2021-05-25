@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "walletapp",
+            "name": "saiive.live",
             "request": "launch",
             "program": "lib/main.dart",
             "type": "dart",
@@ -16,7 +16,7 @@
             ]
         },
         {
-            "name": "walletppp Staging",
+            "name": "saiive.live Staging",
             "request": "launch",
             "program": "lib/main_staging.dart",
             "type": "dart",
@@ -29,7 +29,7 @@
             ]
         },
         {
-            "name": "walletppp Production",
+            "name": "saiive.live Production",
             "request": "launch",
             "program": "lib/main_prod.dart",
             "type": "dart",

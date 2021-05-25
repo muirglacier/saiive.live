@@ -1,4 +1,4 @@
-import 'package:defichainwallet/network/model/balance.dart';
+import 'package:saiive.live/network/model/balance.dart';
 import 'package:event_taxi/event_taxi.dart';
 
 class BalanceLoadedEvent implements Event {

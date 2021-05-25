@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/network/model/transaction_data.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class IWallet {

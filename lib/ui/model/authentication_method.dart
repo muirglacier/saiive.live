@@ -1,5 +1,5 @@
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/ui/model/settings_item.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/ui/model/settings_item.dart';
 import 'package:flutter/material.dart';
 
 enum AuthMethod { NONE, BIOMETRICS }

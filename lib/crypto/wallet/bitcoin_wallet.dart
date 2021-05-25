@@ -1,4 +1,4 @@
-import 'package:defichainwallet/crypto/chain.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'impl/wallet.dart';
 
 class BitcoinWallet extends Wallet {

@@ -1,7 +1,7 @@
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/services/wallet_service.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';

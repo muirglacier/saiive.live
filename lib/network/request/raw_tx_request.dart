@@ -1,4 +1,4 @@
-import 'package:defichainwallet/network/base_request.dart';
+import 'package:saiive.live/network/base_request.dart';
 
 class RawTxRequest extends BaseRequest {
   final String rawTx;

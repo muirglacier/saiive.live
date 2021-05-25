@@ -1,5 +1,5 @@
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'wallet_db_sembast.dart';

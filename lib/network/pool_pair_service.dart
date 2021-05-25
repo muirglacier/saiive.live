@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:defichainwallet/bus/pool_pair_loaded_event.dart';
-import 'package:defichainwallet/bus/pool_pairs_loaded_event.dart';
-import 'package:defichainwallet/network/model/pool_pair.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
+import 'package:saiive.live/bus/pool_pair_loaded_event.dart';
+import 'package:saiive.live/bus/pool_pairs_loaded_event.dart';
+import 'package:saiive.live/network/model/pool_pair.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/response/error_response.dart';
 
 abstract class IPoolPairService {
   Future<List<PoolPair>> getPoolPairs(String coin);

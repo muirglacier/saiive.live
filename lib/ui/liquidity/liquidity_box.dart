@@ -1,7 +1,7 @@
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
-import 'package:defichainwallet/ui/liquidity/pool_share.dart';
-import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/model/pool_share_liquidity.dart';
+import 'package:saiive.live/ui/liquidity/pool_share.dart';
+import 'package:saiive.live/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
 
 class LiquidityBoxWidget extends StatefulWidget {

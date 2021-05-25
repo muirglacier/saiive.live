@@ -1,10 +1,10 @@
-import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/wallet/defichain_wallet.dart';
+import 'package:saiive.live/network/model/account.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/crypto/chain.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'wallet_test_base.dart';
 
 void main() async {

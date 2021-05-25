@@ -1,9 +1,9 @@
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/network/model/account_balance.dart';
-import 'package:defichainwallet/network/token_service.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
+import 'package:saiive.live/crypto/wallet/defichain_wallet.dart';
+import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/token_service.dart';
+import 'package:saiive.live/service_locator.dart';
 
 class BalanceHelper {
   Future<AccountBalance> getAccountBalance(String token, ChainType chain) async {

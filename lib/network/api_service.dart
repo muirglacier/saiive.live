@@ -1,7 +1,7 @@
-import 'package:defichainwallet/network/account_service.dart';
-import 'package:defichainwallet/network/healthcheck_service.dart';
-import 'package:defichainwallet/network/token_service.dart';
-import 'package:defichainwallet/network/transaction_service.dart';
+import 'package:saiive.live/network/account_service.dart';
+import 'package:saiive.live/network/healthcheck_service.dart';
+import 'package:saiive.live/network/token_service.dart';
+import 'package:saiive.live/network/transaction_service.dart';
 
 import '../service_locator.dart';
 import 'balance_service.dart';

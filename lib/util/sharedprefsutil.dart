@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/network/model/block.dart';
-import 'package:defichainwallet/ui/model/authentication_method.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:defichainwallet/ui/model/available_language.dart';
-import 'package:defichainwallet/ui/model/available_themes.dart';
+import 'package:saiive.live/ui/model/available_language.dart';
+import 'package:saiive.live/ui/model/available_themes.dart';
 
 class SharedPrefsUtil {
   // Keys

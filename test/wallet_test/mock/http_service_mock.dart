@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:defichainwallet/network/base_request.dart';
-import 'package:defichainwallet/network/ihttp_service.dart';
+import 'package:saiive.live/network/base_request.dart';
+import 'package:saiive.live/network/ihttp_service.dart';
 import 'package:http/http.dart' as http;
 
 class MockHttpService extends IHttpService {

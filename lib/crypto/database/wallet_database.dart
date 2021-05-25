@@ -1,9 +1,9 @@
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/network/model/account_balance.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/network/model/account.dart';
+import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/transaction.dart';
 import 'package:flutter/cupertino.dart';
 
 abstract class IWalletDatabase {

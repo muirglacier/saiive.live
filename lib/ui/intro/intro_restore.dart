@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/network/model/ivault.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/widgets/mnemonic_seed.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/model/ivault.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/widgets/mnemonic_seed.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

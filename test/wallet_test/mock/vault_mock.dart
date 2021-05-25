@@ -1,4 +1,4 @@
-import 'package:defichainwallet/network/model/ivault.dart';
+import 'package:saiive.live/network/model/ivault.dart';
 
 class VaultMock extends IVault {
   String _seed;

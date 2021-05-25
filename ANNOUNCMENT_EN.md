@@ -10,7 +10,7 @@ We wanted to let the community to know about it. We are working hard on it, and 
 * Send/Receive DFI+DAT Tokens
 * Liquidity Mining - Add & Remove Liquitidy shares
 * DEX - Swap pairs on the go
-* [OpenSource](https://github.com/DeFiCh-WalletApp/WalletApp)
+* [OpenSource](https://github.com/saiive/saiive.live)
 * Cross Platform (Flutter)
 
 
@@ -19,12 +19,12 @@ What is implemented, and should be (list is prioritized).
 * See funds
 * Send DFI 
 * Send token (currently in work, should be finished the next couple days)
-* DEX (TODO)
-* Liqudity Mining (TODO)
-* Tokens (TODO)
+* DEX
+* Liqudity Mining
+* Tokens
 
 ## Screenshots
-Can be found in the app repository [here](https://github.com/DeFiCh-WalletApp/WalletApp).
+Can be found in the app repository [here](https://github.com/saiive/saiive.live).
 
 ## Feedback
 

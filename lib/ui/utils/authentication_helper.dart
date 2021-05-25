@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/model/authentication_method.dart';
-import 'package:defichainwallet/ui/utils/biometrics.dart';
-import 'package:defichainwallet/ui/utils/hapticutil.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/model/authentication_method.dart';
+import 'package:saiive.live/ui/utils/biometrics.dart';
+import 'package:saiive.live/ui/utils/hapticutil.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 
 class AuthenticationHelper {

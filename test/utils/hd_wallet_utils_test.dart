@@ -1,4 +1,4 @@
-import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() async {

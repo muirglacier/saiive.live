@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/version.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/dex/dex.dart';
-import 'package:defichainwallet/ui/liquidity/liquidity.dart';
-import 'package:defichainwallet/ui/tokens/tokens.dart';
-import 'package:defichainwallet/ui/wallet/wallet_home.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/version.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/dex/dex.dart';
+import 'package:saiive.live/ui/liquidity/liquidity.dart';
+import 'package:saiive.live/ui/tokens/tokens.dart';
+import 'package:saiive.live/ui/wallet/wallet_home.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

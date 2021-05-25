@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:defichainwallet/bus/fee_estimate_loaded_event.dart';
-import 'package:defichainwallet/network/model/feeEstimate.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
+import 'package:saiive.live/bus/fee_estimate_loaded_event.dart';
+import 'package:saiive.live/network/model/feeEstimate.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/response/error_response.dart';
 
 class FeeService extends NetworkService {
   Future<FeeEstimate> getFee(String coin) async {

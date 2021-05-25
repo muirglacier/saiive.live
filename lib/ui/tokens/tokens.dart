@@ -1,10 +1,10 @@
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/network/model/token.dart';
-import 'package:defichainwallet/network/token_service.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/utils/token_icon.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/model/token.dart';
+import 'package:saiive.live/network/token_service.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
 class TokensScreen extends StatefulWidget {

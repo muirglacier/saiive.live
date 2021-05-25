@@ -1,7 +1,7 @@
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/ui/wallet/recovery_phrase_test.dart';
-import 'package:defichainwallet/ui/widgets/mnemonic_seed.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/ui/wallet/recovery_phrase_test.dart';
+import 'package:saiive.live/ui/widgets/mnemonic_seed.dart';
 import 'package:flutter/material.dart';
 
 class RecoveryPhraseDisplayScreen extends StatefulWidget {

@@ -1,21 +1,21 @@
 import 'dart:async';
 
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/balance.dart';
-import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/helper/env.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/services/health_service.dart';
-import 'package:defichainwallet/services/wallet_service.dart';
-import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
-import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
-import 'package:defichainwallet/ui/utils/authentication_helper.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/wallet/defichain_wallet.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/balance.dart';
+import 'package:saiive.live/helper/constants.dart';
+import 'package:saiive.live/helper/env.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/response/error_response.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/utils/qr_code_scan.dart';
+import 'package:saiive.live/ui/widgets/loading_overlay.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 

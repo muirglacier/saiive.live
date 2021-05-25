@@ -1,5 +1,5 @@
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/helper/constants.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/helper/constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class AccountBalance {

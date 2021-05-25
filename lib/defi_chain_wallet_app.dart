@@ -1,16 +1,16 @@
 import 'dart:io';
 
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/ui/model/available_language.dart';
-import 'package:defichainwallet/ui/intro/intro_wallet_new.dart';
-import 'package:defichainwallet/ui/splash.dart';
-import 'package:defichainwallet/ui/home.dart';
-import 'package:defichainwallet/ui/intro/intro_welcome.dart';
-import 'package:defichainwallet/ui/intro/intro_restore.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/utils/routes.dart';
-import 'package:defichainwallet/ui/widgets/restore_accounts.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/ui/model/available_language.dart';
+import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
+import 'package:saiive.live/ui/splash.dart';
+import 'package:saiive.live/ui/home.dart';
+import 'package:saiive.live/ui/intro/intro_welcome.dart';
+import 'package:saiive.live/ui/intro/intro_restore.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/routes.dart';
+import 'package:saiive.live/ui/widgets/restore_accounts.dart';
 import 'package:event_taxi/event_taxi.dart';
 
 import 'package:flutter/material.dart';
@@ -34,16 +34,16 @@ void run() async {
 
   // Run app
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
-    runApp(new StateContainer(child: new DefiChainWalletApp()));
+    runApp(new StateContainer(child: new SaiiveLiveApp()));
   });
 }
 
-class DefiChainWalletApp extends StatefulWidget {
+class SaiiveLiveApp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _DefiChainWalletAppState();
+  State<StatefulWidget> createState() => _SaiiveLiveAppState();
 }
 
-class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
+class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
   void init() {
     LogConsole.init();
   }

@@ -1,4 +1,4 @@
-import 'package:defichainwallet/crypto/chain.dart';
+import 'package:saiive.live/crypto/chain.dart';
 
 class DefiChainConstants {
   static const String MnemonicKey = "mnemonic";

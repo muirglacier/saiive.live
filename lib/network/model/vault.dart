@@ -1,7 +1,7 @@
 import 'dart:convert' as utf;
 import 'dart:io';
 
-import 'package:defichainwallet/network/model/ivault.dart';
+import 'package:saiive.live/network/model/ivault.dart';
 import 'package:flutter/services.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

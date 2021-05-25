@@ -1,4 +1,4 @@
-import 'package:defichainwallet/network/model/account.dart';
+import 'package:saiive.live/network/model/account.dart';
 import 'package:flutter/foundation.dart';
 
 class KeyAccountWrapper {

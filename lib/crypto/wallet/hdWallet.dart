@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class IHdWallet {

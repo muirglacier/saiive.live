@@ -1,8 +1,8 @@
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
-import 'package:defichainwallet/ui/liquidity/liquidity_remove.dart';
-import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/model/pool_share_liquidity.dart';
+import 'package:saiive.live/ui/liquidity/liquidity_remove.dart';
+import 'package:saiive.live/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
 
 import 'liquidity_add.dart';

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_appcenter_bundle/flutter_appcenter_bundle.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
 
 class AppCenterWrapper {
   AndroidDeviceInfo _android;

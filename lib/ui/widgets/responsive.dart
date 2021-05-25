@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:defichainwallet/util/chunks.dart';
+import 'package:saiive.live/util/chunks.dart';
 
 class Responsive {
   // Primary button builder

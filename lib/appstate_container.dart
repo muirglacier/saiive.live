@@ -1,20 +1,20 @@
 import 'dart:async';
 
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/network/block_service.dart';
-import 'package:defichainwallet/network/model/block.dart';
-import 'package:defichainwallet/services/wallet_service.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/network/block_service.dart';
+import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:defichainwallet/themes.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/model/available_language.dart';
-import 'package:defichainwallet/ui/model/available_themes.dart';
+import 'package:saiive.live/themes.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/model/available_language.dart';
+import 'package:saiive.live/ui/model/available_themes.dart';
 import 'package:logger/logger.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
 
 import 'network/events/events.dart';
 

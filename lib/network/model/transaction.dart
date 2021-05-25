@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 
-import 'package:defichainwallet/helper/constants.dart';
+import 'package:saiive.live/helper/constants.dart';
 
 Future<List<Transaction>> transactionsFromJson(dynamic input) async {
   return json.decode(input.body).map<Transaction>((data) => Transaction.fromJson(data)).toList();

@@ -1,7 +1,7 @@
 import 'package:defichaindart/defichaindart.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/bip39/english.dart';
-import 'package:defichainwallet/ui/widgets/responsive.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/bip39/english.dart';
+import 'package:saiive.live/ui/widgets/responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

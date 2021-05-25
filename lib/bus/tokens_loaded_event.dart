@@ -1,4 +1,4 @@
-import 'package:defichainwallet/network/model/token.dart';
+import 'package:saiive.live/network/model/token.dart';
 import 'package:event_taxi/event_taxi.dart';
 
 class TokensLoadedEvent implements Event {

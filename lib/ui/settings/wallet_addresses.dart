@@ -1,9 +1,9 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/services/wallet_service.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

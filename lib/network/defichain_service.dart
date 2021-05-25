@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:defichainwallet/network/model/yield_farming.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
+import 'package:saiive.live/network/model/yield_farming.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/response/error_response.dart';
 
 abstract class IDefichainService {
   Future<List<YieldFarming>> getStatsYieldFarming(String coin);

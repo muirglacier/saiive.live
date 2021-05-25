@@ -121,7 +121,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/walletapp.app
+            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/saiive.live.app
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -131,22 +131,22 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "defichainwallet-debug" \
+              --volname "saiive-live-debug" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/walletapp.app" 260 250 \
-              --hide-extension "walletapp.app" \
+              --icon "build/macos/Build/Products/Release/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
-              "walletapp.dmg" \
-              "build/macos/Build/Products/Release/walletapp.app"
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Release/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: 'walletapp.dmg'
+          contents: 'saiive.live.dmg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/debug'
 
       - task: PublishBuildArtifacts@1
@@ -231,7 +231,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/walletapp.app
+            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/saiive.live.app
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -241,22 +241,22 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "defichainwallet-staging" \
+              --volname "saiive-live-staging" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/walletapp.app" 260 250 \
-              --hide-extension "walletapp.app" \
+              --icon "build/macos/Build/Products/Release/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
-              "walletapp.dmg" \
-              "build/macos/Build/Products/Release/walletapp.app"
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Release/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: 'walletapp.dmg'
+          contents: 'saiive.live.dmg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/staging'
 
       - task: PublishBuildArtifacts@1
@@ -341,7 +341,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/walletapp.app
+            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/saiive.live.app
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -351,22 +351,22 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "defichainwallet-staging" \
+              --volname "saiive-live-staging" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/walletapp.app" 260 250 \
-              --hide-extension "walletapp.app" \
+              --icon "build/macos/Build/Products/Release/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
-              "walletapp.dmg" \
-              "build/macos/Build/Products/Release/walletapp.app"
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Release/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: 'walletapp.dmg'
+          contents: 'saiive.live.dmg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/staging'
 
       - task: PublishBuildArtifacts@1

@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/helper/env.dart';
-import 'package:defichainwallet/helper/version.dart';
-import 'package:defichainwallet/network/model/ivault.dart';
-import 'package:defichainwallet/services/health_service.dart';
-import 'package:defichainwallet/services/wallet_service.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/helper/env.dart';
+import 'package:saiive.live/helper/version.dart';
+import 'package:saiive.live/network/model/ivault.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../generated/l10n.dart';
 
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
-import 'package:defichainwallet/ui/styles.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
+import 'package:saiive.live/ui/styles.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

@@ -47,10 +47,14 @@ Mistakes and bugs happen, but with your help in resolving and reporting, togethe
 ## Wallet
 * View Funds
   * Sync your wallet
-  * See all funds ($DFI, DATs)
-* Send funds
-* Swap Tokens
+  * See all funds ($DFI, DATs and BTC)
+* Send funds - $DFI, DATs and BTC
+* Receive funds - $DFI, DATs and BTC
+* Swap Tokens - $DFI <-> DATs
 * Add Liquidity 
+* Remove Liquidity
+* List Tokens
+* List History
 
 
 # Development
@@ -67,6 +71,9 @@ flutter pub get
 flutter build apk //for android
 flutter build ios //for iOS
 flutter build web //for web
+flutter build macos //for macos
+flutter build windows //for windows
+flutter build linux //for linux
 ```
 
 # Contributors

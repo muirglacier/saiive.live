@@ -1,9 +1,6 @@
-import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class WalletReceiveWidget extends StatefulWidget {

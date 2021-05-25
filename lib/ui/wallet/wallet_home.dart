@@ -14,7 +14,6 @@ import 'package:defichainwallet/services/wallet_service.dart';
 import 'package:defichainwallet/ui/settings/settings.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
 import 'package:defichainwallet/ui/wallet/wallet_home_receive.dart';
-import 'package:defichainwallet/ui/wallet/wallet_receive.dart';
 import 'package:defichainwallet/ui/wallet/wallet_token.dart';
 import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';
@@ -327,7 +326,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletHomeReceiveScreen(pubKeyDFI: pubKeyDFI, pubKeyBTC: pubKeyBTC)));
                   },
-                  child: Icon(Icons.arrow_downward, size: 26.0, color: StateContainer.of(context).curTheme.appBarText),
+                  child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
@@ -335,7 +334,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsScreen()));
                   },
-                  child: Icon(Icons.settings, size: 26.0, color: StateContainer.of(context).curTheme.appBarText),
+                  child: Icon(Icons.settings, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 ))
           ],
         ),

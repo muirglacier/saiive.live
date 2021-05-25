@@ -6,7 +6,6 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -48,6 +47,10 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
 
   Future removeLiquidity() async {
     //TBD
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('TODO'),
+    ));
   }
 
   handleChangePercentage() {
@@ -84,14 +87,9 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
             child: TextField(
               keyboardType: TextInputType.number,
               maxLength: 3,
-              inputFormatters: [
-                FilteringTextInputFormatter(
-                    RegExp(r"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"),
-                    allow: true)
-              ],
+              inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
               textAlign: TextAlign.right,
-              decoration: InputDecoration(
-                  labelText: '', counterText: '', suffix: Text('%')),
+              decoration: InputDecoration(labelText: '', counterText: '', suffix: Text('%')),
               controller: _percentageTextController,
             ),
           ),
@@ -117,21 +115,13 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         Row(children: [
           Expanded(
               flex: 4,
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                TokenIcon(widget.liquidity.tokenA),
-                SizedBox(width: 5),
-                Text(widget.liquidity.tokenA)
-              ])),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [TokenIcon(widget.liquidity.tokenA), SizedBox(width: 5), Text(widget.liquidity.tokenA)])),
           Expanded(
               flex: 6,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                      toRemoveTokenA.toStringAsFixed(8) + ' ' + S.of(context).liquitiy_remove_of + ' ' + myReserveA.toStringAsFixed(8),
-                      textAlign: TextAlign.right
-                  ),
+                  Text(toRemoveTokenA.toStringAsFixed(8) + ' ' + S.of(context).liquitiy_remove_of + ' ' + myReserveA.toStringAsFixed(8), textAlign: TextAlign.right),
                 ],
               )),
         ]),
@@ -141,21 +131,13 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         Row(children: [
           Expanded(
               flex: 4,
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                TokenIcon(widget.liquidity.tokenB),
-                SizedBox(width: 5),
-                Text(widget.liquidity.tokenB)
-              ])),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [TokenIcon(widget.liquidity.tokenB), SizedBox(width: 5), Text(widget.liquidity.tokenB)])),
           Expanded(
               flex: 6,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                      toRemoveTokenB.toStringAsFixed(8) + ' ' + S.of(context).liquitiy_remove_of + ' ' + myReserveB.toStringAsFixed(8),
-                      textAlign: TextAlign.right
-                  ),
+                  Text(toRemoveTokenB.toStringAsFixed(8) + ' ' + S.of(context).liquitiy_remove_of + ' ' + myReserveB.toStringAsFixed(8), textAlign: TextAlign.right),
                 ],
               )),
         ]),
@@ -169,25 +151,21 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    widget.liquidity.poolPair.reserveADivReserveB.toStringAsFixed(8) + " " + widget.liquidity.tokenA + " per " + widget.liquidity.tokenB,
-                    textAlign: TextAlign.right
-                  ),
-                  Text(
-                      widget.liquidity.poolPair.reserveBDivReserveA.toStringAsFixed(8) + " " + widget.liquidity.tokenB + " per " + widget.liquidity.tokenA,
-                      textAlign: TextAlign.right
-                  )
+                  Text(widget.liquidity.poolPair.reserveADivReserveB.toStringAsFixed(8) + " " + widget.liquidity.tokenA + " per " + widget.liquidity.tokenB,
+                      textAlign: TextAlign.right),
+                  Text(widget.liquidity.poolPair.reserveBDivReserveA.toStringAsFixed(8) + " " + widget.liquidity.tokenB + " per " + widget.liquidity.tokenA,
+                      textAlign: TextAlign.right)
                 ],
               )),
         ]),
         SizedBox(height: 10),
         if (percentage > 0)
-        ElevatedButton(
-          child: Text(S.of(context).liquitiy_remove),
-          onPressed: () async {
-            await removeLiquidity();
-          },
-        )
+          ElevatedButton(
+            child: Text(S.of(context).liquitiy_remove),
+            onPressed: () async {
+              await removeLiquidity();
+            },
+          )
       ])
     ]);
   }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:core';
 
 import 'package:defichaindart/defichaindart.dart';
@@ -98,6 +97,16 @@ class Wallet extends IWallet {
   bool isLocked() {
     return _walletMutex.isLocked;
   }
+
+  @override
+  Future<bool> isAlive() async {
+    var isAlive = await _apiService.healthService.isAlive(ChainHelper.chainTypeString(_chain));
+
+    return isAlive;
+  }
+
+  @override
+  String get walletType => ChainHelper.chainTypeString(_chain);
 
   @override
   void setWorkingAccount(int account) {

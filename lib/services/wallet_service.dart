@@ -36,16 +36,24 @@ abstract class IWalletService {
 
   Future<WalletAccount> addAccount({String name, int account, ChainType chain});
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards);
+
+  Future<Map<String, bool>> getIsAlive();
 }
 
 class WalletService implements IWalletService {
   BitcoinWallet _bitcoinWallet;
   DeFiChainWallet _defiWallet;
 
+  List<IWallet> _wallets = List<IWallet>.empty(growable: true);
+
   @override
   Future init() async {
+    _wallets.clear();
     _bitcoinWallet = sl.get<BitcoinWallet>();
     _defiWallet = sl.get<DeFiChainWallet>();
+
+    _wallets.add(_bitcoinWallet);
+    _wallets.add(_defiWallet);
 
     await Future.wait([_bitcoinWallet.init(), _defiWallet.init()]);
   }
@@ -177,5 +185,18 @@ class WalletService implements IWalletService {
   Future destroy() async {
     await _bitcoinWallet.getDatabase().destroy();
     await _defiWallet.getDatabase().destroy();
+  }
+
+  @override
+  Future<Map<String, bool>> getIsAlive() async {
+    var ret = Map<String, bool>();
+
+    for (final wallet in _wallets) {
+      var isAlive = await wallet.isAlive();
+
+      ret.putIfAbsent(wallet.walletType, () => isAlive);
+    }
+
+    return ret;
   }
 }

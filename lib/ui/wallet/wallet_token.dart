@@ -3,7 +3,6 @@ import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/network/account_history_service.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/account_history.dart';
 import 'package:defichainwallet/network/model/transaction.dart';

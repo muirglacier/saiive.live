@@ -30,8 +30,4 @@ class AuthenticationMethod extends SettingSelectionItem {
   int getIndex() {
     return method.index;
   }
-
-  @override
-  // TODO: implement hashCode
-  int get hashCode => super.hashCode ^ getIndex();
 }

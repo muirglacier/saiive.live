@@ -19,9 +19,11 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(from, to) => "Refreshing addresses (${from}/${to})";
+  static m0(chains) => "It seems we are having some problems with the supernode (${chains}), we are working hard to restore our services. Check back later...";
 
-  static m1(from, to) => "Refreshing transactions (${from}/${to})";
+  static m1(from, to) => "Refreshing addresses (${from}/${to})";
+
+  static m2(from, to) => "Refreshing transactions (${from}/${to})";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -120,7 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Put the #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" word here"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" word"),
-    "wallet_offline" : MessageLookupByLibrary.simpleMessage("It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later..."),
+    "wallet_offline" : m0,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Building transaction"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creating auth tx"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparing account balance"),
@@ -128,8 +130,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict" : MessageLookupByLibrary.simpleMessage("Please wait for your transaction to be reflected in the next block before proceeding with a new transaction."),
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("We found some pending transactions. We try to wait for them, this could take some time!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Wallet is not synced. Please retry your transaction."),
-    "wallet_operation_refresh_addresses" : m0,
-    "wallet_operation_refresh_tx" : m1,
+    "wallet_operation_refresh_addresses" : m1,
+    "wallet_operation_refresh_tx" : m2,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refreshing utxo..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("Refreshing utxo...done"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Sending transaction"),

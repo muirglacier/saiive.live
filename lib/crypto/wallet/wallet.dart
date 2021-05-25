@@ -12,9 +12,13 @@ abstract class IWallet {
   static const int MaxUnusedIndexScan = 2;
   static const int KeysPerQuery = 30;
 
+  String get walletType;
+
   Future init();
   Future close();
   bool isLocked();
+  Future<bool> isAlive();
+
   Future syncAll({StreamController<String> loadingStream});
 
   IWalletDatabase getDatabase();

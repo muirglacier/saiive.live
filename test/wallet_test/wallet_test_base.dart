@@ -1,4 +1,3 @@
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
 import 'package:defichainwallet/crypto/database/wallet_database_factory.dart';
 import 'package:defichainwallet/crypto/wallet/bitcoin_wallet.dart';
 import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';

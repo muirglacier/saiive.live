@@ -245,13 +245,13 @@ class S {
     );
   }
 
-  /// `It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...`
-  String get wallet_offline {
+  /// `It seems we are having some problems with the supernode ({chains}), we are working hard to restore our services. Check back later...`
+  String wallet_offline(Object chains) {
     return Intl.message(
-      'It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...',
+      'It seems we are having some problems with the supernode ($chains), we are working hard to restore our services. Check back later...',
       name: 'wallet_offline',
       desc: '',
-      args: [],
+      args: [chains],
     );
   }
 

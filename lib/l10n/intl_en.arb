@@ -27,7 +27,7 @@
   "test_info_epilogue": "The app has for sure some bugs, if you get an error creating a transaction, just retry it a couple times. Don't forget to create a GitHub issue. You can provide us all your publicKey addresses as well, just copy them from the Settings page!",
 
   "wallet_home_network": "Network",
-  "wallet_offline": "It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...",
+  "wallet_offline": "It seems we are having some problems with the supernode ({chains}), we are working hard to restore our services. Check back later...",
   "wallet_uptime_stats": "Show state",
 
   "welcome_wallet_create": "Create a new wallet",

@@ -6,7 +6,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/version.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/dex/dex.dart';
-import 'package:defichainwallet/ui/liquidity/liquitiy.dart';
+import 'package:defichainwallet/ui/liquidity/liquidity.dart';
 import 'package:defichainwallet/ui/tokens/tokens.dart';
 import 'package:defichainwallet/ui/wallet/wallet_home.dart';
 import 'package:defichainwallet/util/sharedprefsutil.dart';

@@ -76,10 +76,10 @@ class S {
   }
 
   /// `Liquidity`
-  String get home_liquitiy {
+  String get home_liquidity {
     return Intl.message(
       'Liquidity',
-      name: 'home_liquitiy',
+      name: 'home_liquidity',
       desc: '',
       args: [],
     );
@@ -1216,120 +1216,120 @@ class S {
   }
 
   /// `Liquidity`
-  String get liquitiy {
+  String get liquidity {
     return Intl.message(
       'Liquidity',
-      name: 'liquitiy',
+      name: 'liquidity',
       desc: '',
       args: [],
     );
   }
 
   /// `Pool-Share`
-  String get liquitiy_pool_share_percentage {
+  String get liquidity_pool_share_percentage {
     return Intl.message(
       'Pool-Share',
-      name: 'liquitiy_pool_share_percentage',
+      name: 'liquidity_pool_share_percentage',
       desc: '',
       args: [],
     );
   }
 
   /// `Add Liquidity`
-  String get liquitiy_add {
+  String get liquidity_add {
     return Intl.message(
       'Add Liquidity',
-      name: 'liquitiy_add',
+      name: 'liquidity_add',
       desc: '',
       args: [],
     );
   }
 
   /// `max`
-  String get liquitiy_add_max {
+  String get liquidity_add_max {
     return Intl.message(
       'max',
-      name: 'liquitiy_add_max',
+      name: 'liquidity_add_max',
       desc: '',
       args: [],
     );
   }
 
   /// `Token A`
-  String get liquitiy_add_token_a {
+  String get liquidity_add_token_a {
     return Intl.message(
       'Token A',
-      name: 'liquitiy_add_token_a',
+      name: 'liquidity_add_token_a',
       desc: '',
       args: [],
     );
   }
 
   /// `Token B`
-  String get liquitiy_add_token_b {
+  String get liquidity_add_token_b {
     return Intl.message(
       'Token B',
-      name: 'liquitiy_add_token_b',
+      name: 'liquidity_add_token_b',
       desc: '',
       args: [],
     );
   }
 
   /// `Amount A`
-  String get liquitiy_add_amount_a {
+  String get liquidity_add_amount_a {
     return Intl.message(
       'Amount A',
-      name: 'liquitiy_add_amount_a',
+      name: 'liquidity_add_amount_a',
       desc: '',
       args: [],
     );
   }
 
   /// `Amount B`
-  String get liquitiy_add_amount_b {
+  String get liquidity_add_amount_b {
     return Intl.message(
       'Amount B',
-      name: 'liquitiy_add_amount_b',
+      name: 'liquidity_add_amount_b',
       desc: '',
       args: [],
     );
   }
 
   /// `Pool Share`
-  String get liquitiy_add_pool_share {
+  String get liquidity_add_pool_share {
     return Intl.message(
       'Pool Share',
-      name: 'liquitiy_add_pool_share',
+      name: 'liquidity_add_pool_share',
       desc: '',
       args: [],
     );
   }
 
   /// `Totally pooled`
-  String get liquitiy_add_total_pooled {
+  String get liquidity_add_total_pooled {
     return Intl.message(
       'Totally pooled',
-      name: 'liquitiy_add_total_pooled',
+      name: 'liquidity_add_total_pooled',
       desc: '',
       args: [],
     );
   }
 
   /// `Insufficient Funds for LM`
-  String get liquitiy_add_insufficient_funds {
+  String get liquidity_add_insufficient_funds {
     return Intl.message(
       'Insufficient Funds for LM',
-      name: 'liquitiy_add_insufficient_funds',
+      name: 'liquidity_add_insufficient_funds',
       desc: '',
       args: [],
     );
   }
 
   /// `Price`
-  String get liquitiy_add_price {
+  String get liquidity_add_price {
     return Intl.message(
       'Price',
-      name: 'liquitiy_add_price',
+      name: 'liquidity_add_price',
       desc: '',
       args: [],
     );
@@ -1366,30 +1366,40 @@ class S {
   }
 
   /// `Remove Liquidity`
-  String get liquitiy_remove {
+  String get liquidity_remove {
     return Intl.message(
       'Remove Liquidity',
-      name: 'liquitiy_remove',
+      name: 'liquidity_remove',
       desc: '',
       args: [],
     );
   }
 
   /// `Price`
-  String get liquitiy_remove_price {
+  String get liquidity_remove_price {
     return Intl.message(
       'Price',
-      name: 'liquitiy_remove_price',
+      name: 'liquidity_remove_price',
       desc: '',
       args: [],
     );
   }
 
   /// `of`
-  String get liquitiy_remove_of {
+  String get liquidity_remove_of {
     return Intl.message(
       'of',
-      name: 'liquitiy_remove_of',
+      name: 'liquidity_remove_of',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Removed liquidity successfull`
+  String get liquidity_remove_successfull {
+    return Intl.message(
+      'Removed liquidity successfull',
+      name: 'liquidity_remove_successfull',
       desc: '',
       args: [],
     );

@@ -2,13 +2,25 @@ import 'dart:async';
 
 import 'package:defichainwallet/appcenter/appcenter.dart';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/errors/TransactionError.dart';
+import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
 import 'package:defichainwallet/generated/l10n.dart';
+import 'package:defichainwallet/helper/constants.dart';
+import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:defichainwallet/network/events/wallet_sync_liquidity_data.dart';
+import 'package:defichainwallet/network/events/wallet_sync_start_event.dart';
 import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
+import 'package:defichainwallet/network/model/transaction_data.dart';
+import 'package:defichainwallet/network/network_service.dart';
 import 'package:defichainwallet/service_locator.dart';
 import 'package:defichainwallet/ui/utils/token_icon.dart';
+import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
+import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LiquidityRemoveScreen extends StatefulWidget {
   final PoolShareLiquidity liquidity;
@@ -53,11 +65,73 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
   var _percentageTextController = TextEditingController(text: '100');
 
   Future removeLiquidity() async {
-    //TBD
+    final wallet = sl.get<DeFiChainWallet>();
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('TODO'),
-    ));
+    var totalToRemove = amountToRemove;
+    var hasError = false;
+
+    dynamic lastError;
+    TransactionData lastTx;
+    for (final poolShare in widget.liquidity.poolShares) {
+      var amount = poolShare.amount;
+
+      if (totalToRemove < amount) {
+        amount = totalToRemove;
+      }
+
+      var streamController = StreamController<String>();
+      var createRemoveFuture = wallet.createAndSendRemovePoolLiquidity(int.parse(poolShare.poolID), (amount * 100000000).toInt(), poolShare.owner, loadingStream: streamController);
+      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+
+      try {
+        lastTx = await overlay.during(createRemoveFuture);
+      } catch (error) {
+        LogHelper.instance.e("addpool-tx error...($error)");
+        hasError = true;
+        lastError = error;
+      } finally {
+        streamController.close();
+      }
+
+      totalToRemove -= amount;
+
+      if (totalToRemove <= 0) {
+        break;
+      }
+    }
+
+    if (hasError || totalToRemove > 0) {
+      var errorMsg = lastError.toString();
+
+      if (lastError is HttpException) {
+        errorMsg = lastError.error.error;
+      } else if (lastError is TransactionError) {
+        errorMsg = lastError.error;
+      }
+
+      LogHelper.instance.e("Error saving tx...($errorMsg)");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error occured commiting the tx...($errorMsg)'),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(S.of(context).liquidity_remove_successfull),
+        action: SnackBarAction(
+          label: S.of(context).dex_swap_show_transaction,
+          onPressed: () async {
+            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+            var url = DefiChainConstants.getExplorerUrl(_chainNet, lastTx.txId);
+
+            if (await canLaunch(url)) {
+              await launch(url);
+            }
+          },
+        ),
+      ));
+      EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
+      Navigator.popUntil(context, ModalRoute.withName('/home'));
+    }
   }
 
   handleChangePercentage() {
@@ -129,7 +203,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(toRemoveTokenA.toStringAsFixed(8) + ' ' + S.of(context).liquitiy_remove_of + ' ' + myReserveA.toStringAsFixed(8), textAlign: TextAlign.right),
+                  Text(toRemoveTokenA.toStringAsFixed(8) + ' ' + S.of(context).liquidity_remove_of + ' ' + myReserveA.toStringAsFixed(8), textAlign: TextAlign.right),
                 ],
               )),
         ]),
@@ -145,7 +219,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(toRemoveTokenB.toStringAsFixed(8) + ' ' + S.of(context).liquitiy_remove_of + ' ' + myReserveB.toStringAsFixed(8), textAlign: TextAlign.right),
+                  Text(toRemoveTokenB.toStringAsFixed(8) + ' ' + S.of(context).liquidity_remove_of + ' ' + myReserveB.toStringAsFixed(8), textAlign: TextAlign.right),
                 ],
               )),
         ]),
@@ -153,7 +227,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
           thickness: 2,
         ),
         Row(children: [
-          Expanded(flex: 4, child: Text(S.of(context).liquitiy_remove_price)),
+          Expanded(flex: 4, child: Text(S.of(context).liquidity_remove_price)),
           Expanded(
               flex: 6,
               child: Column(
@@ -169,7 +243,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         SizedBox(height: 10),
         if (percentage > 0)
           ElevatedButton(
-            child: Text(S.of(context).liquitiy_remove),
+            child: Text(S.of(context).liquidity_remove),
             onPressed: () async {
               await removeLiquidity();
             },
@@ -181,7 +255,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquitiy_remove)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquidity_remove)),
         body: Padding(padding: EdgeInsets.all(30), child: _buildRemoveLmPage(context)));
   }
 }

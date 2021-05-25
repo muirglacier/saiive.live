@@ -212,6 +212,20 @@ class Wallet extends IWallet {
     }
   }
 
+  @override
+  Future<TransactionData> createAndSendRemovePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream}) async {
+    await _ensureUtxo(loadingStream: loadingStream);
+    await _walletMutex.acquire();
+
+    try {
+      var addLiq = await removePoolLiquidity(token, amount, shareAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      return await createTxAndWait(addLiq, loadingStream: loadingStream);
+    } finally {
+      _walletMutex.release();
+    }
+  }
+
   Future<TransactionData> createAndSendAddPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
       {StreamController<String> loadingStream}) async {
     await _ensureUtxo(loadingStream: loadingStream);
@@ -224,6 +238,36 @@ class Wallet extends IWallet {
     } finally {
       _walletMutex.release();
     }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> removePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream}) async {
+    var fees = await getTxFee(0, 0);
+    await prepareAccount(fees, loadingStream: loadingStream);
+
+    final key = mnemonicToSeed(_seed);
+
+    final txb = await _createBaseTransaction(0, shareAddress, shareAddress, fees, (txb, inputTxs, nw) async {
+      var tx = await _getAuthInputsSmart(shareAddress, fees);
+
+      txb.addRemoveLiquidityOutput(token, amount, shareAddress);
+
+      final addressInfo = await _walletDatabase.getWalletAddress(tx.address);
+
+      final keyPair = HdWalletUtil.getKeyPair(
+          key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
+
+      final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
+      if (inputContainsAuthTx.isEmpty) {
+        var vin = txb.addInput(tx.mintTxId, tx.mintIndex);
+        txb.addOutput(tx.address, tx.value);
+        final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;
+        final redeemScript = p2wpkh.output;
+
+        txb.sign(vin: vin, keyPair: keyPair, witnessValue: tx.value, redeemScript: redeemScript);
+      }
+    });
+
+    return txb;
   }
 
   Future<String> addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress, {StreamController<String> loadingStream}) async {
@@ -394,7 +438,6 @@ class Wallet extends IWallet {
         }
       }
     });
-
     return txb;
   }
 

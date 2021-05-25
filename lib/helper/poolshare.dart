@@ -41,7 +41,7 @@ class PoolShareHelper {
       if (!combinedPoolShares.containsKey(poolShare.poolID)) {
         combinedPoolShares[poolShare.poolID] = poolShare;
       } else {
-        combinedPoolShares[poolShare.poolID].amount += poolShare.amount;
+        combinedPoolShares[poolShare.poolID].displayAmount += poolShare.displayAmount;
       }
     }
 
@@ -55,7 +55,7 @@ class PoolShareHelper {
       var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
       var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
 
-      var poolSharePercentage = (poolShare.amount / poolShare.totalLiquidity) * 100;
+      var poolSharePercentage = (poolShare.displayAmount / poolShare.totalLiquidity) * 100;
 
       var dfiCoin = priceData.firstWhere((element) => element.idToken == '0', orElse: () => null);
       var priceA = priceData.firstWhere((element) => element.idToken == poolPair.idTokenA, orElse: () => null);

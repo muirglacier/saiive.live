@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initMenu(BuildContext context) {
     _navigationEntries = [
       _NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen()),
-      _NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquitiy, page: LiquidityScreen()),
+      _NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen()),
       _NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen()),
       _NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen())
     ];

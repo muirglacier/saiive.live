@@ -2,9 +2,11 @@ class PoolShare {
   final String key;
   final String poolID;
   final String owner;
-  double amount;
-  double percent;
-  double totalLiquidity;
+  final double amount;
+  final double percent;
+  final double totalLiquidity;
+
+  double displayAmount;
 
   PoolShare({
     this.key,
@@ -13,7 +15,9 @@ class PoolShare {
     this.amount,
     this.percent,
     this.totalLiquidity,
-  });
+  }) {
+    displayAmount = this.amount;
+  }
 
   factory PoolShare.fromJson(Map<String, dynamic> json) {
     return PoolShare(

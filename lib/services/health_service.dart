@@ -37,7 +37,7 @@ class HealthService implements IHealthService {
       // var message = S.of(context).wallet_offline
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_offline(deadChainsString)),
-          duration: Duration(days: 1),
+          // duration: Duration(days: 1),
           action: SnackBarAction(
             label: S.of(context).wallet_uptime_stats,
             onPressed: () async {

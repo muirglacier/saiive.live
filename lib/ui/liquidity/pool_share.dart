@@ -5,6 +5,8 @@ import 'package:defichainwallet/ui/liquidity/liquidity_remove.dart';
 import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
 
+import 'liquidity_add.dart';
+
 class PoolShareScreen extends StatefulWidget {
   final PoolShareLiquidity liquidity;
 
@@ -25,6 +27,14 @@ class _PoolShareScreen extends State<PoolShareScreen> {
           title: Text(widget.liquidity.tokenA + ' - ' + widget.liquidity.tokenB),
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityAddScreen()));
+                  },
+                  child: Icon(Icons.add, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
@@ -74,7 +84,7 @@ class _PoolShareScreen extends State<PoolShareScreen> {
                         ),
                         Container(
                             child: Row(children: [
-                          Expanded(flex: 4, child: Text(S.of(context).liquitiy_pool_share_percentage)),
+                          Expanded(flex: 4, child: Text(S.of(context).liquidity_pool_share_percentage)),
                           Expanded(flex: 6, child: Text(widget.liquidity.poolSharePercentage.toStringAsFixed(8) + '%', textAlign: TextAlign.right))
                         ])),
                         Column(children: <Widget>[

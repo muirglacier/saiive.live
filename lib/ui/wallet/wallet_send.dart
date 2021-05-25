@@ -181,7 +181,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                     height: 30,
                     minWidth: 40,
                     child: ElevatedButton(
-                        child: Text(S.of(context).liquitiy_add_max),
+                        child: Text(S.of(context).liquidity_add_max),
                         onPressed: () {
                           handleSetMax();
                         }))

@@ -9,6 +9,7 @@ import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/helper/balance.dart';
 import 'package:defichainwallet/helper/constants.dart';
 import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:defichainwallet/network/events/wallet_sync_liquidity_data.dart';
 import 'package:defichainwallet/network/events/wallet_sync_start_event.dart';
 import 'package:defichainwallet/network/model/account_balance.dart';
 import 'package:defichainwallet/network/model/pool_pair.dart';
@@ -383,15 +384,16 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
           onPressed: () async {
             var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
             var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-            EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+
             if (await canLaunch(url)) {
               await launch(url);
             }
           },
         ),
       ));
-
-      Navigator.of(context).pop();
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
+      Navigator.popUntil(context, ModalRoute.withName('/home'));
     } on TransactionError catch (e) {
       final errorMsg = e.error;
       LogHelper.instance.e("addpool-tx error...($errorMsg)");
@@ -472,7 +474,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 height: 60,
                 child: DropdownButton<TokenBalance>(
                   isExpanded: true,
-                  hint: Text(S.of(context).liquitiy_add_token_a),
+                  hint: Text(S.of(context).liquidity_add_token_a),
                   value: _selectedTokenA,
                   items: _fromTokens.map((e) {
                     return new DropdownMenuItem<TokenBalance>(
@@ -496,14 +498,14 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             height: 30,
             minWidth: 40,
             child: ElevatedButton(
-                child: Text(S.of(context).liquitiy_add_max),
+                child: Text(S.of(context).liquidity_add_max),
                 onPressed: () {
                   handleSetMaxTokenA();
                 }))
       ]),
       TextField(
         controller: _amountTokenAController,
-        decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+        decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
       ),
       Row(children: [
         Expanded(
@@ -512,7 +514,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 height: 60,
                 child: DropdownButton<TokenBalance>(
                   isExpanded: true,
-                  hint: Text(S.of(context).liquitiy_add_token_b),
+                  hint: Text(S.of(context).liquidity_add_token_b),
                   value: _selectedTokenB,
                   items: _toTokens.map((e) {
                     return new DropdownMenuItem<TokenBalance>(
@@ -536,25 +538,25 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             height: 30,
             minWidth: 40,
             child: ElevatedButton(
-                child: Text(S.of(context).liquitiy_add_max),
+                child: Text(S.of(context).liquidity_add_max),
                 onPressed: () {
                   handleSetMaxTokenB();
                 }))
       ]),
       TextField(
         controller: _amountTokenBController,
-        decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_b),
+        decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b),
       ),
       if (_insufficientFunds)
         Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
-          Text(S.of(context).liquitiy_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
+          Text(S.of(context).liquidity_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
         ]),
       if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false)
         Column(children: [
           SizedBox(height: 10),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_price)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_price)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -581,7 +583,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             thickness: 2,
           ),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_pool_share)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_pool_share)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -592,7 +594,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 )),
           ]),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenA.hash)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + _selectedTokenA.hash)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -606,7 +608,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             thickness: 2,
           ),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenB.hash)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + _selectedTokenB.hash)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -617,7 +619,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 )),
           ]),
           ElevatedButton(
-            child: Text(S.of(context).liquitiy_add),
+            child: Text(S.of(context).liquidity_add),
             onPressed: () async {
               await addLiquidity();
             },
@@ -629,7 +631,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquitiy_add)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquidity_add)),
         body: Padding(padding: EdgeInsets.all(30), child: _buildAddLmPage(context)));
   }
 }

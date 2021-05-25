@@ -450,13 +450,13 @@ class _DexScreen extends State<DexScreen> {
           onPressed: () async {
             var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
             var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-            EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
             if (await canLaunch(url)) {
               await launch(url);
             }
           },
         ),
       ));
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
     } on HttpException catch (e) {
       final errorMsg = e.error.error;
       LogHelper.instance.e("Error saving tx...($errorMsg)");

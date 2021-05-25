@@ -56,7 +56,7 @@ class _LiquidityBoxWidget extends State<LiquidityBoxWidget> {
                   ),
                   Container(
                       child: Row(children: [
-                    Expanded(flex: 4, child: Text(S.of(context).liquitiy_pool_share_percentage)),
+                    Expanded(flex: 4, child: Text(S.of(context).liquidity_pool_share_percentage)),
                     Expanded(flex: 6, child: Text(widget.liquidity.poolSharePercentage.toStringAsFixed(8) + '%', textAlign: TextAlign.right))
                   ])),
                 ]))));

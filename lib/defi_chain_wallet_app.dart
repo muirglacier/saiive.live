@@ -130,6 +130,7 @@ class _DefiChainWalletAppState extends State<DefiChainWalletApp> {
                 )),
             buttonColor: StateContainer.of(context).curTheme.primary,
             fontFamily: 'Helvetica, Arial, sans-serif',
+            tabBarTheme: TabBarTheme(labelColor: appBarTextColor),
             elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary))),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {

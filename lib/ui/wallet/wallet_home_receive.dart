@@ -1,5 +1,6 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:defichainwallet/appstate_container.dart';
+import 'package:defichainwallet/crypto/chain.dart';
 import 'package:defichainwallet/generated/l10n.dart';
 import 'package:defichainwallet/ui/widgets/wallet_receive.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,21 +47,16 @@ class _WalletHomeReceiveState extends State<WalletHomeReceiveScreen> {
                           });
                           Clipboard.setData(new ClipboardData(text: pubKey));
                         },
-                        child: Icon(
-                          Icons.copy,
-                          size: 26.0,
-                        ),
+                        child: Icon(Icons.copy, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                       ))
-                ]
-            ),
+                ]),
             body: TabBarView(
               children: [
-                WalletReceiveWidget(pubKey: widget.pubKeyDFI),
-                WalletReceiveWidget(pubKey: widget.pubKeyBTC),
+                WalletReceiveWidget(pubKey: widget.pubKeyDFI, chain: ChainType.DeFiChain),
+                WalletReceiveWidget(pubKey: widget.pubKeyBTC, chain: ChainType.Bitcoin),
               ],
             ),
           );
-      })
-    );
+        }));
   }
 }

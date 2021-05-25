@@ -675,6 +675,16 @@ class S {
     );
   }
 
+  /// `Send only {coin} to this address. Sending coin or token other than {coin} to this address may result in the loss of your deposit!`
+  String wallet_receive_warning(Object coin) {
+    return Intl.message(
+      'Send only $coin to this address. Sending coin or token other than $coin to this address may result in the loss of your deposit!',
+      name: 'wallet_receive_warning',
+      desc: '',
+      args: [coin],
+    );
+  }
+
   /// `Wallet is synchronising right now!`
   String get wallet_locked {
     return Intl.message(

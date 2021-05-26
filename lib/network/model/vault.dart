@@ -1,6 +1,7 @@
 import 'dart:convert' as utf;
 import 'dart:io';
 
+import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:flutter/services.dart';
 import 'package:crypto/crypto.dart';
@@ -17,11 +18,11 @@ class Vault extends IVault {
   Future<String> _write(String key, String value) async {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       var sharedPreferences = await SharedPreferences.getInstance();
-
+      var currentEnvironment = EnvHelper.getEnvironment();
       if (value == null) {
-        sharedPreferences.remove(key);
+        sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
       } else {
-        sharedPreferences.setString(key, value);
+        sharedPreferences.setString(EnvHelper.environmentToString(currentEnvironment) + "_" + key, value);
       }
     } else {
       await secureStorage.write(key: key, value: value);
@@ -32,7 +33,8 @@ class Vault extends IVault {
   Future<String> _read(String key, {String defaultValue}) async {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       var sharedPreferences = await SharedPreferences.getInstance();
-      return sharedPreferences.getString(key) ?? defaultValue;
+      var currentEnvironment = EnvHelper.getEnvironment();
+      return sharedPreferences.getString(EnvHelper.environmentToString(currentEnvironment) + "_" + key) ?? defaultValue;
     } else {
       return await secureStorage.read(key: key) ?? defaultValue;
     }
@@ -40,7 +42,8 @@ class Vault extends IVault {
 
   Future deleteAll() async {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-      return await Future.delayed(Duration(milliseconds: 1));
+      await _write(seedKey, null);
+      await _write(encryptionKey, null);
     } else {
       return await secureStorage.deleteAll();
     }

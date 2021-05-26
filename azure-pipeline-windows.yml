@@ -324,6 +324,14 @@ stages:
           entryPoint: 'lib/main_prod.dart'
           buildNumber: $(Build.BuildNumber)
 
+          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:

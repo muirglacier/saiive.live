@@ -118,7 +118,9 @@ stages:
         inputs:
           script: |
             cd $(Build.SourcesDirectory)
+            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
             $(FlutterToolPath)\flutter pub run msix:create
+            $(FlutterToolPath)\flutter pub get
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -149,7 +151,9 @@ stages:
         inputs:
           script: |
             cd $(Build.SourcesDirectory)
+            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
             $(FlutterToolPath)\flutter pub run msix:create
+            $(FlutterToolPath)\flutter pub get
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -221,7 +225,9 @@ stages:
         inputs:
           script: |
             cd $(Build.SourcesDirectory)
+            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
             $(FlutterToolPath)\flutter pub run msix:create
+            $(FlutterToolPath)\flutter pub get
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -289,6 +295,16 @@ stages:
           buildFlavour: 'prod'
           entryPoint: 'lib/main_prod.dart'
           buildNumber: $(Build.BuildNumber)
+          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+            $(FlutterToolPath)\flutter pub run msix:create
+            $(FlutterToolPath)\flutter pub get
+
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"

@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,7 +33,7 @@ class SharedPrefsUtil {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-      var currentEnvironment = EnvHelper.getEnvironment();
+      var currentEnvironment = await sl.get<IEnvironmentService>().getCurrentEnvironment();
 
       key = EnvHelper.environmentToString(currentEnvironment) + "_" + key;
     }
@@ -53,7 +55,7 @@ class SharedPrefsUtil {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-      var currentEnvironment = EnvHelper.getEnvironment();
+      var currentEnvironment = await sl.get<IEnvironmentService>().getCurrentEnvironment();
 
       key = EnvHelper.environmentToString(currentEnvironment) + "_" + key;
     }

@@ -10,11 +10,13 @@ import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/network/token_service.dart';
 import 'package:saiive.live/network/transaction_service.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'mock/environment_service_mock.dart';
 import 'mock/health_service_mock.dart';
 import 'mock/http_service_mock.dart';
 import 'mock/memory_database_factory_mock.dart';
@@ -46,6 +48,7 @@ void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<ITokenService>(() => TokenServiceMock());
   sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckServiceMock());
   sl.registerLazySingleton<IHealthService>(() => HealthServiceMock());
+  sl.registerLazySingleton<IEnvironmentService>(() => EnvironmentServiceMock());
 
   sl.registerLazySingleton<IWalletDatabaseFactory>(() => WalletDatabaseFactoryMock());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(false));

@@ -17,6 +17,7 @@ import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/pool_share_service.dart';
 import 'package:saiive.live/network/token_service.dart';
 import 'package:saiive.live/network/transaction_service.dart';
+import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/testrun/test_run_service.dart';
@@ -69,4 +70,6 @@ void setupServiceLocator() {
   sl.registerLazySingleton<IWalletService>(() => WalletService());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(true));
   sl.registerLazySingleton<BitcoinWallet>(() => BitcoinWallet(true));
+
+  sl.registerLazySingleton<IEnvironmentService>(() => EnvironmentService());
 }

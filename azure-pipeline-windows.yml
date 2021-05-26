@@ -110,7 +110,13 @@ stages:
           entryPoint: 'lib/main.dart'
           buildNumber: $(Build.BuildNumber)
 
-          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -134,6 +140,13 @@ stages:
           buildName: $(AppVersion)
           buildFlavour: 'dev'
           buildNumber: $(Build.BuildNumber)
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -199,6 +212,13 @@ stages:
           buildFlavour: 'staging'
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
+          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"

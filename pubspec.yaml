@@ -99,6 +99,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  msix: ^2.1.2
 
 flutter_intl:
   enabled: true
@@ -118,3 +119,13 @@ flutter:
     - assets/image/
 
 
+msix_config:
+  display_name: saiive.live - DeFi Wallet
+  publisher_display_name: saiive.live
+  publisher: CN=saiive.live
+  identity_name: at.saiive.live
+  msix_version: 99.99.99.99
+  icons_background_color: "#00ADB5"
+  architecture: x64
+  # See https://docs.microsoft.com/en-us/windows/uwp/packaging/app-capability-declarations
+  capabilities: "internetClient"

@@ -55,13 +55,13 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(apple-macos-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1

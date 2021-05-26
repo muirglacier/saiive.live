@@ -2,6 +2,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,13 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
     await walletService.init();
 
     return ret;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    sl.get<IHealthService>().checkHealth(context);
   }
 
   Widget _buildAccountEntry(WalletAccount account) {

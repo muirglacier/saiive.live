@@ -4,6 +4,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/ui/widgets/mnemonic_seed.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +25,19 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    sl.get<IHealthService>().checkHealth(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (env["ENV"] == "dev") {
       var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
 
       if (Platform.isAndroid || Platform.isWindows) {
-       // demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+        // demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
       }
       // demoWords2 = "";
       //WOLFI

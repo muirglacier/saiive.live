@@ -51,6 +51,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
       totalAmount += share.amount;
     }
 
+    handleChangePercentage();
     _percentageTextController.addListener(handleChangePercentage);
   }
 

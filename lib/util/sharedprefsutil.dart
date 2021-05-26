@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/model/block.dart';
 import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -27,6 +29,13 @@ class SharedPrefsUtil {
   // For plain-text data
   Future<void> set(String key, value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      var currentEnvironment = EnvHelper.getEnvironment();
+
+      key = EnvHelper.environmentToString(currentEnvironment) + "_" + key;
+    }
+
     if (value is bool) {
       sharedPreferences.setBool(key, value);
     } else if (value is String) {
@@ -42,6 +51,13 @@ class SharedPrefsUtil {
 
   Future<dynamic> get(String key, {dynamic defaultValue}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      var currentEnvironment = EnvHelper.getEnvironment();
+
+      key = EnvHelper.environmentToString(currentEnvironment) + "_" + key;
+    }
+
     return sharedPreferences.get(key) ?? defaultValue;
   }
 

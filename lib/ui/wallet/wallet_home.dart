@@ -317,6 +317,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(
+                  onTap: () {
+                    _refresh();
+                  },
+                  child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
                   onTap: () async {
                     var wallet = sl.get<IWalletService>();
                     var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain);

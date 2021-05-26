@@ -20,12 +20,13 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
 
   Future initWallet() async {
     final wallet = sl.get<IWalletService>();
+    await wallet.init();
 
     await wallet.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
     await wallet.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
+    await wallet.close();
 
     await wallet.init();
-
     Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
   }
 

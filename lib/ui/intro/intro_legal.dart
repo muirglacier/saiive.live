@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/ui/utils/legal_entities.dart';
 import 'package:saiive.live/ui/utils/webview.dart';
 import 'package:saiive.live/ui/widgets/buttons.dart';
 import 'package:flutter/material.dart';
@@ -58,13 +59,7 @@ class _IntroLegalState extends State<IntroLegalScreen> {
         SizedBox(height: 20),
         Container(padding: EdgeInsets.only(left: marginLeft, right: marginRight), child: Text(S.of(context).welcome_legal_text)),
         SizedBox(height: 20),
-        Container(
-            padding: EdgeInsets.only(left: marginLeft, right: marginRight), child: createLegalItem(S.of(context).welcome_legal_tos, S.of(context).welcome_legal_tos_link, context)),
-        SizedBox(height: 10),
-        Container(
-            padding: EdgeInsets.only(left: marginLeft, right: marginRight),
-            child: createLegalItem(S.of(context).welcome_legal_privacy, S.of(context).welcome_legal_privacy_link, context)),
-        SizedBox(height: 10),
+        LegalEntitiesWidget(EdgeInsets.only(left: marginLeft, right: marginRight)),
         Container(
           padding: EdgeInsets.only(left: marginLeft, right: marginRight),
           child: CheckboxListTile(

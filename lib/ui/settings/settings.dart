@@ -12,6 +12,7 @@ import 'package:saiive.live/ui/model/available_themes.dart';
 import 'package:saiive.live/ui/settings/settings_seed.dart';
 import 'package:saiive.live/ui/settings/wallet_addresses.dart';
 import 'package:saiive.live/ui/styles.dart';
+import 'package:saiive.live/ui/utils/legal_entities.dart';
 import 'package:saiive.live/ui/wallet/wallet_send.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/model/authentication_method.dart';
@@ -205,6 +206,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             }).toList(),
                           )),
                           SizedBox(height: 5),
+                          LegalEntitiesWidget(EdgeInsets.only(left: 0, right: 0)),
                           Container(
                               child: ElevatedButton(
                             style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),

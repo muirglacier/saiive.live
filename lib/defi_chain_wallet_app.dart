@@ -12,6 +12,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/utils/routes.dart';
 import 'package:saiive.live/ui/widgets/restore_accounts.dart';
 import 'package:event_taxi/event_taxi.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -85,6 +86,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     ThemeData theme = ThemeData();
 
     return MaterialApp(
+        debugShowCheckedModeBanner: env["ENV"] == "dev",
         localizationsDelegates: [
           S.delegate,
           GlobalMaterialLocalizations.delegate,

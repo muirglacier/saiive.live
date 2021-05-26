@@ -20,7 +20,9 @@ import 'package:url_launcher/url_launcher.dart';
 class WalletTokenScreen extends StatefulWidget {
   final String token;
   final ChainType chainType;
-  WalletTokenScreen(this.token, this.chainType);
+  final String displayName;
+  final AccountBalance accountBalance;
+  WalletTokenScreen(this.token, this.chainType, this.displayName, this.accountBalance);
 
   @override
   State<StatefulWidget> createState() {
@@ -220,7 +222,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.token)),
+      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.displayName)),
       body: buildView(context),
     );
   }

@@ -216,7 +216,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           ]),
         ]),
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain, balance.tokenDisplay, balance)));
         },
       ));
     }
@@ -247,7 +247,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
         )),
       ]),
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain)));
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain, balance.tokenDisplay, balance)));
       },
     ));
   }

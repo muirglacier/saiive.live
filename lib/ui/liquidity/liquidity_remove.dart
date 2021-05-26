@@ -8,7 +8,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
-import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
 import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/network/network_service.dart';

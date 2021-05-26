@@ -64,6 +64,12 @@ stages:
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPInstallerMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
@@ -121,7 +127,8 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/saiive.live.app
+            /usr/bin/codesign --force --deep -s "Developer ID Application: Dominik Pfaffenbauer (5QAM4Z73EV)" ./build/macos/Build/Products/Release/saiive.live.app
+            /usr/bin/codesign --verify ./build/macos/Build/Products/Release/saiive.live.app
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -143,11 +150,27 @@ stages:
               "saiive.live.dmg" \
               "build/macos/Build/Products/Release/saiive.live.app"
 
+      - task: Bash@3
+        displayName: 'Create .pkg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            /usr/bin/productbuild \
+              --component build/macos/Build/Products/Release/saiive.live.app /Applications \
+              --sign "3rd Party Mac Developer Installer: Dominik Pfaffenbauer (5QAM4Z73EV)" \
+              --product macos/Runner/Info.plist build/macos/Build/Products/Release/saiive.live.pkg
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
           contents: 'saiive.live.dmg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/debug'
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'saiive.live.pkg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod'
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
@@ -171,6 +194,12 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPInstallerMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
@@ -231,7 +260,8 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/saiive.live.app
+            /usr/bin/codesign --force --deep -s "Developer ID Application: Dominik Pfaffenbauer (5QAM4Z73EV)" ./build/macos/Build/Products/Release/saiive.live.app
+            /usr/bin/codesign --verify ./build/macos/Build/Products/Release/saiive.live.app
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -253,11 +283,27 @@ stages:
               "saiive.live.dmg" \
               "build/macos/Build/Products/Release/saiive.live.app"
 
+      - task: Bash@3
+        displayName: 'Create .pkg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            /usr/bin/productbuild \
+              --component build/macos/Build/Products/Release/saiive.live.app /Applications \
+              --sign "3rd Party Mac Developer Installer: Dominik Pfaffenbauer (5QAM4Z73EV)" \
+              --product macos/Runner/Info.plist build/macos/Build/Products/Release/saiive.live.pkg
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
           contents: 'saiive.live.dmg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/staging'
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'saiive.live.pkg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod'
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
@@ -281,6 +327,12 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPInstallerMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
@@ -341,7 +393,8 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/saiive.live.app
+            /usr/bin/codesign --force --deep -s "Developer ID Application: Dominik Pfaffenbauer (5QAM4Z73EV)" ./build/macos/Build/Products/Release/saiive.live.app
+            /usr/bin/codesign --verify ./build/macos/Build/Products/Release/saiive.live.app
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -363,10 +416,26 @@ stages:
               "saiive.live.dmg" \
               "build/macos/Build/Products/Release/saiive.live.app"
 
+      - task: Bash@3
+        displayName: 'Create .pkg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            /usr/bin/productbuild \
+              --component build/macos/Build/Products/Release/saiive.live.app /Applications \
+              --sign "3rd Party Mac Developer Installer: Dominik Pfaffenbauer (5QAM4Z73EV)" \
+              --product macos/Runner/Info.plist build/macos/Build/Products/Release/saiive.live.pkg
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
           contents: 'saiive.live.dmg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod'
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'saiive.live.pkg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/prod'
 
       - task: PublishBuildArtifacts@1

@@ -7,6 +7,7 @@ import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
+import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
@@ -43,6 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
       _NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen()),
       _NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen())
     ];
+
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      _navigationEntries.add(_NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen()));
+    }
   }
 
   void _onItemTapped(int index) {

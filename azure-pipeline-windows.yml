@@ -123,7 +123,7 @@ stages:
           buildFlavour: 'dev'
           entryPoint: 'lib/main.dart'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target='lib/main.dart'
+          extraArgs: --target=lib/main.dart
 
       - task: CmdLine@2
         displayName: "Flutter run msix"
@@ -238,7 +238,7 @@ stages:
           buildFlavour: 'staging'
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target='lib/main_staging.dart'
+          extraArgs: --target=lib/main_staging.dart
 
       - task: CmdLine@2
         displayName: "Flutter run msix"
@@ -325,7 +325,7 @@ stages:
           buildFlavour: 'prod'
           entryPoint: 'lib/main_prod.dart'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target='lib/main_prod.dart'
+          extraArgs: --target=lib/main_prod.dart
 
           
       - task: CmdLine@2

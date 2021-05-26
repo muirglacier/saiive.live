@@ -315,6 +315,76 @@ class S {
     );
   }
 
+  /// `I've read and accepted the Termns of Service and Privacy Notice`
+  String get welcome_accept_terms_and_privacy {
+    return Intl.message(
+      'I\'ve read and accepted the Termns of Service and Privacy Notice',
+      name: 'welcome_accept_terms_and_privacy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Legal`
+  String get welcome_legal {
+    return Intl.message(
+      'Legal',
+      name: 'welcome_legal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please review the saiive.live Terms of Service and Private Notice.`
+  String get welcome_legal_text {
+    return Intl.message(
+      'Please review the saiive.live Terms of Service and Private Notice.',
+      name: 'welcome_legal_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Service`
+  String get welcome_legal_tos {
+    return Intl.message(
+      'Terms of Service',
+      name: 'welcome_legal_tos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Private Notice`
+  String get welcome_legal_privacy {
+    return Intl.message(
+      'Private Notice',
+      name: 'welcome_legal_privacy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://static.saiive.live/tos.html`
+  String get welcome_legal_tos_link {
+    return Intl.message(
+      'https://static.saiive.live/tos.html',
+      name: 'welcome_legal_tos_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://static.saiive.live/privacy.html`
+  String get welcome_legal_privacy_link {
+    return Intl.message(
+      'https://static.saiive.live/privacy.html',
+      name: 'welcome_legal_privacy_link',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Reveal my recovery phrase`
   String get wallet_new_reveal {
     return Intl.message(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/crypto/wallet/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
@@ -57,6 +58,14 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       sl
           .get<AppCenterWrapper>()
           .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
+    } on TransactionError catch (e) {
+      final errorMsg = e.error;
+      LogHelper.instance.e("Tx Error...($errorMsg)");
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorMsg),
+      ));
+      sl.get<AppCenterWrapper>().trackEvent("sendTokenFailureHandled", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.error});
     } catch (e) {
       LogHelper.instance.e("Error creating tx", e);
       if (e is ErrorResponse) {

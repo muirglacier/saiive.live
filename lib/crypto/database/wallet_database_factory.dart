@@ -1,6 +1,7 @@
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:saiive.live/helper/env.dart';
 
 import 'wallet_db_sembast.dart';
 import 'package:path/path.dart';
@@ -21,7 +22,10 @@ class WalletDatabaseFactory implements IWalletDatabaseFactory {
 
   Future<IWalletDatabase> createInstance(ChainType chain, ChainNet network) async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, "db_" + ChainHelper.chainTypeString(chain) + ChainHelper.chainNetworkString(network));
+
+    var currentEnvironment = EnvHelper.getEnvironment();
+    final path = join(
+        documentsDirectory.path, "saiive.live", EnvHelper.environmentToString(currentEnvironment), ChainHelper.chainTypeString(chain), ChainHelper.chainNetworkString(network));
     var db = SembastWalletDatabase(path, chain);
     await db.open();
     return db;

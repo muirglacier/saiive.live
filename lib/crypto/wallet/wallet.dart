@@ -18,6 +18,7 @@ abstract class IWallet {
   Future close();
   bool isLocked();
   Future<bool> isAlive();
+  Future<bool> hasAccounts();
 
   Future syncAll({StreamController<String> loadingStream});
 

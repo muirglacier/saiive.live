@@ -125,7 +125,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     sl.get<IHealthService>().checkHealth(context);
     sl.get<AppCenterWrapper>().trackEvent("openWalletSend", <String, String>{"coin": widget.token});
 
-    _currentEnvironment = new EnvHelper().getEnvironment();
+    _currentEnvironment = EnvHelper.getEnvironment();
 
     var toAddress = widget.toAddress;
 

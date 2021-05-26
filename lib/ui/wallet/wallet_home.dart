@@ -45,9 +45,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
   WalletService _wallet;
 
   _refresh() async {
-    if (await _wallet.hasAccounts()) {
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-    }
+    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
     sl.get<IHealthService>().checkHealth(context);
 

@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
@@ -65,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _init() async {
     _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
     _version = await VersionHelper().getVersion();
+
     setState(() {});
   }
 
@@ -76,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();
+    var currentEnvironment = EnvHelper.getEnvironment();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -102,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
                         Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(height: 5),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(ChainHelper.chainNetworkString(_currentNet)), Text(_version)])
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(ChainHelper.chainNetworkString(_currentNet)), Text(_version)]),
+                        if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
                       ]),
                     ),
                     Divider(color: StateContainer.of(context).curTheme.backgroundColor)

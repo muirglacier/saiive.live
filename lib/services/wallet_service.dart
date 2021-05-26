@@ -15,11 +15,12 @@ import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter/foundation.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class IWalletService {
   Future init();
-
+  Future<bool> isRestoreNeeded();
   Future syncAll();
 
   Future<bool> hasAccounts();
@@ -55,7 +56,24 @@ class WalletService implements IWalletService {
     _wallets.add(_bitcoinWallet);
     _wallets.add(_defiWallet);
 
+    for (final wallet in _wallets) {
+      await wallet.close();
+    }
+
     await Future.wait([_bitcoinWallet.init(), _defiWallet.init()]);
+  }
+
+  Future<bool> isRestoreNeeded() async {
+    var hasAnyoneMissingAccounts = false;
+    for (var wallet in _wallets) {
+      var hasAccounts = await wallet.hasAccounts();
+
+      if (!hasAccounts) {
+        hasAnyoneMissingAccounts = true;
+        break;
+      }
+    }
+    return hasAnyoneMissingAccounts;
   }
 
   @override

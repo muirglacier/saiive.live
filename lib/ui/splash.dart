@@ -63,6 +63,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       if (hasSeedGenerated) {
         final wallet = sl.get<IWalletService>();
         await wallet.init();
+
+        if (await wallet.isRestoreNeeded()) {
+          route = "/intro_accounts_restore";
+        }
       }
 
       await sl.get<IHealthService>().checkHealth(context);
@@ -80,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   void _init() async {
-    _currentEnvironment = EnvHelper().getEnvironment();
+    _currentEnvironment = EnvHelper.getEnvironment();
     _version = await VersionHelper().getVersion();
 
     final network = await sl.get<SharedPrefsUtil>().getChainNetwork();

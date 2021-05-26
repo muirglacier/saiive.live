@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _init() async {
-    var currentEnvironment = new EnvHelper().getEnvironment();
+    var currentEnvironment = EnvHelper.getEnvironment();
     var version = await new VersionHelper().getVersion();
     var authMethod = await sl.get<SharedPrefsUtil>().getAuthMethod();
     var theme = await sl.get<SharedPrefsUtil>().getTheme();

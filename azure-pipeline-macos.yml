@@ -329,7 +329,7 @@ stages:
           generateCodeCoverageReport: true
 
       - task: Bash@3
-        displayName: "Build MacOS Staging"
+        displayName: "Build MacOS Prod"
         inputs:
           targetType: 'inline'
           script: |
@@ -351,7 +351,7 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "saiive-live-staging" \
+              --volname "saiive.live" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \
@@ -367,9 +367,9 @@ stages:
         displayName: "Copy artifacts"
         inputs:
           contents: 'saiive.live.dmg'
-          targetFolder: '$(build.artifactStagingDirectory)/macos/staging'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod'
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
-          ArtifactName: 'staging-macos'
+          ArtifactName: 'prod-macos'

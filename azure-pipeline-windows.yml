@@ -47,7 +47,6 @@ stages:
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
 
@@ -78,6 +77,18 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter doctor -v
             $(FlutterToolPath)\flutter precache
+
+          
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
       
       - task: CmdLine@2
         displayName: "Flutter enable windows"
@@ -118,9 +129,7 @@ stages:
         inputs:
           script: |
             cd $(Build.SourcesDirectory)
-            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
             $(FlutterToolPath)\flutter pub run msix:create
-            $(FlutterToolPath)\flutter pub get
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -151,9 +160,7 @@ stages:
         inputs:
           script: |
             cd $(Build.SourcesDirectory)
-            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
             $(FlutterToolPath)\flutter pub run msix:create
-            $(FlutterToolPath)\flutter pub get
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -185,6 +192,17 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter clean
+                  
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
            
       - task: CmdLine@2
         displayName: "Flutter enable windows"
@@ -225,9 +243,7 @@ stages:
         inputs:
           script: |
             cd $(Build.SourcesDirectory)
-            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
             $(FlutterToolPath)\flutter pub run msix:create
-            $(FlutterToolPath)\flutter pub get
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -263,6 +279,18 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter clean
 
+                  
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+
       - task: CmdLine@2
         displayName: "Flutter enable windows"
         inputs:
@@ -295,16 +323,6 @@ stages:
           buildFlavour: 'prod'
           entryPoint: 'lib/main_prod.dart'
           buildNumber: $(Build.BuildNumber)
-          
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-            $(FlutterToolPath)\flutter pub run msix:create
-            $(FlutterToolPath)\flutter pub get
-
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"

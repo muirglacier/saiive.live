@@ -1,6 +1,6 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
-import 'package:saiive.live/crypto/wallet/defichain_wallet.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/network/account_service.dart';
 import 'package:saiive.live/network/api_service.dart';
 import 'package:saiive.live/network/balance_service.dart';

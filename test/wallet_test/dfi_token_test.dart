@@ -1,5 +1,5 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
-import 'package:saiive.live/crypto/wallet/defichain_wallet.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';

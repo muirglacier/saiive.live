@@ -35,10 +35,6 @@ abstract class IWallet {
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 
+  Future<Tuple3<String, List<Transaction>, String>> createSendTransaction(int amount, String token, String to);
   Future<TransactionData> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream});
-  Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
-      {StreamController<String> loadingStream});
-
-  Future<TransactionData> createAndSendAddPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress, {StreamController<String> loadingStream});
-  Future<TransactionData> createAndSendRemovePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream});
 }

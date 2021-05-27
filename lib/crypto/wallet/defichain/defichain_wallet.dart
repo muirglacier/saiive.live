@@ -338,6 +338,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       curAmount += tx.balance;
     }
 
+    if (inputTxs.isEmpty) {
+      return null;
+    }
+
     final changeAddress = await getPublicKeyFromAccount(account, true);
     final txb = await HdWalletUtil.buildAccountToAccountTransaction(inputTxs, useAccounts, keys, tokenType.id, to, amount, fee, changeAddress, chain, network);
 

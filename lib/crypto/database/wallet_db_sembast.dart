@@ -292,10 +292,11 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future setAccountBalance(Account balance) async {
-    await _balancesStoreInstance.record(balance.key).put(await database, balance.toJson());
+    var db = await database;
+    await _balancesStoreInstance.record(balance.key).put(db, balance.toJson());
   }
 
-  Future<AccountBalance> getAccountBalance(String token) async {
+  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
     if (token == DeFiConstants.DefiTokenSymbol && _chain == ChainType.DeFiChain) {
       final unspentTx = await getUnspentTransactions();
       var amount = 0;
@@ -326,7 +327,14 @@ class SembastWalletDatabase extends IWalletDatabase {
     Map sumMap = Map<String, int>();
 
     ret.forEach((k, v) {
-      sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
+      sumMap[k] = v.fold(0, (prev, element) {
+        if (excludeAddresses != null && !excludeAddresses.contains(element.address)) {
+          return prev + element.balance;
+        } else if (excludeAddresses == null) {
+          return prev + element.balance;
+        }
+        return 0;
+      });
     });
 
     var sumBalance = sumMap[token];

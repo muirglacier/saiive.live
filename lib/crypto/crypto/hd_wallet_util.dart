@@ -190,7 +190,9 @@ class HdWalletUtil {
 
     if (totalInputValue > (amount)) {
       var changeAmount = totalInputValue - amount - fee;
-      txb.addOutput(returnAddress, changeAmount);
+      if (changeAmount > 0) {
+        txb.addOutput(returnAddress, changeAmount);
+      }
       LogHelper.instance.d("set tx output (change) $returnAddress value is $changeAmount");
     }
     if (amount > 0) {

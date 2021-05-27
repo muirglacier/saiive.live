@@ -152,10 +152,11 @@ class HdWallet extends IHdWallet {
 
     await database.clearAccountBalances();
     for (final acc in newBalance) {
-      acc.accounts.forEach((element) async {
+      for (final element in acc.accounts) {
         await database.setAccountBalance(element);
-      });
+      }
     }
+    var balances = await database.getAccountBalances();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
   }

@@ -29,15 +29,18 @@ class WalletHomeScreen extends StatefulWidget {
   }
 }
 
-class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
+class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProviderStateMixin {
   StreamSubscription<WalletInitDoneEvent> _walletInitDoneSubscription;
   StreamSubscription<WalletSyncDoneEvent> _walletSyncDoneSubscription;
   StreamSubscription<BlockTipUpdatedEvent> _blockTipUpdatedEvent;
+
+  AnimationController _controller;
 
   Block _lastSyncBlockTip;
 
   String _welcomeText = "";
   String _syncText = " ";
+  bool _isSyncing = false;
 
   List<AccountBalance> _accountBalance;
   RefreshController _refreshController = RefreshController(initialRefresh: true);
@@ -51,8 +54,12 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
     _refreshController.refreshCompleted();
     final syncText = S.of(context).home_welcome_account_syncing;
+
+    _controller.forward();
     setState(() {
       _syncText = syncText;
+
+      _isSyncing = true;
     });
   }
 
@@ -86,6 +93,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
         var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
 
         setState(() {
+          _controller.stop();
+          _controller.reset();
+
+          _isSyncing = false;
+
           _syncText = S.of(context).home_welcome_account_synced;
           _accountBalance = accountBalance;
         });
@@ -136,6 +148,17 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
 
   @override
   void initState() {
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _controller.addListener(() {
+      if (_controller.isCompleted && _isSyncing) {
+        _controller.repeat();
+      }
+    });
+
     super.initState();
 
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
@@ -316,12 +339,16 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> {
           actions: [
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {
-                    _refresh();
-                  },
-                  child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                )),
+                child: RotationTransition(
+                    turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+                    child: IconButton(
+                      icon: Icon(Icons.refresh, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                      onPressed: !_isSyncing
+                          ? () async {
+                              await _refresh();
+                            }
+                          : null,
+                    ))),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
                 child: GestureDetector(

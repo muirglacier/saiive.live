@@ -201,7 +201,7 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<TransactionData> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream}) async {
+  Future<TransactionData> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
     isInitialzed();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
@@ -211,7 +211,7 @@ abstract class Wallet extends IWallet {
 
     try {
       loadingStream?.add(S.current.wallet_operation_build_tx);
-      var txData = await createSendTransaction(amount, token, to);
+      var txData = await createSendTransaction(amount, token, to, sendMax: sendMax);
 
       loadingStream?.add(S.current.wallet_operation_send_tx);
       var tx = await createTxAndWait(txData);
@@ -231,14 +231,15 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future<Tuple3<String, List<tx.Transaction>, String>> createUtxoTransaction(int amount, String to, String changeAddress) async {
-    final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {});
+  Future<Tuple3<String, List<tx.Transaction>, String>> createUtxoTransaction(int amount, String to, String changeAddress, {bool sendMax = false}) async {
+    final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax);
     return txb;
   }
 
   @protected
   Future<Tuple3<String, List<tx.Transaction>, String>> createBaseTransaction(
-      int amount, String to, String changeAddress, int additionalFees, Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional) async {
+      int amount, String to, String changeAddress, int additionalFees, Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional,
+      {bool sendMax = false}) async {
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (amount > tokenBalance?.balance) {
@@ -250,7 +251,7 @@ abstract class Wallet extends IWallet {
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
 
-    final checkAmount = amount + 10000;
+    final checkAmount = amount + 10000 + additionalFees;
 
     var curAmount = 0.0;
     for (final tx in unspentTxs) {
@@ -278,6 +279,10 @@ abstract class Wallet extends IWallet {
 
     var fees = await getTxFee(useTxs.length, 2);
     fees += additionalFees;
+
+    if (sendMax) {
+      fees *= -1;
+    }
 
     if (amount == tokenBalance?.balance) {
       amount -= fees;
@@ -349,7 +354,7 @@ abstract class Wallet extends IWallet {
         if (e is HttpException || e is ErrorResponse) return true;
         return false;
       }, onRetry: (e) {
-        LogHelper.instance.e("error get tx", e);
+        LogHelper.instance.e("error get tx ($txId)", e);
       });
 
       return response;
@@ -382,7 +387,7 @@ abstract class Wallet extends IWallet {
     await walletMutex.acquire();
 
     try {
-      ensureUtxoUnsafe(loadingStream: loadingStream);
+      await ensureUtxoUnsafe(loadingStream: loadingStream);
     } on Exception catch (e) {
       LogHelper.instance.e("Error syncing wallet", e);
     } finally {

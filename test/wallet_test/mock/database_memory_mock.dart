@@ -82,7 +82,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<AccountBalance> getAccountBalance(String token) async {
+  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
     var balance = 0;
     _accounts.sort((a, b) => b.balance.compareTo(a.balance));
 

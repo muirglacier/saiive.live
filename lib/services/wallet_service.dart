@@ -15,7 +15,6 @@ import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter/foundation.dart';
-import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class IWalletService {
@@ -27,7 +26,7 @@ abstract class IWalletService {
   Future<List<WalletAccount>> getAccounts();
 
   Future<String> getPublicKey(ChainType chainType);
-  Future<TransactionData> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream});
+  Future<TransactionData> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
   Future<List<String>> getPublicKeys(ChainType chainType);
 
   Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network);
@@ -83,11 +82,11 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<TransactionData> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream}) {
+  Future<TransactionData> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) {
     if (chainType == ChainType.DeFiChain) {
-      return _defiWallet.createAndSend(amount, token, to, loadingStream: loadingStream);
+      return _defiWallet.createAndSend(amount, token, to, loadingStream: loadingStream, sendMax: sendMax);
     }
-    return _bitcoinWallet.createAndSend(amount, token, to, loadingStream: loadingStream);
+    return _bitcoinWallet.createAndSend(amount, token, to, loadingStream: loadingStream, sendMax: sendMax);
   }
 
   @override

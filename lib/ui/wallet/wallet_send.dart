@@ -43,9 +43,13 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
 
+      var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
+
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, loadingStream: stream);
+      final tx = await sl
+          .get<IWalletService>()
+          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
       final txId = tx.txId;
       LogHelper.instance.d("sent tx $txId");

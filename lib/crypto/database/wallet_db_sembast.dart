@@ -318,9 +318,14 @@ class SembastWalletDatabase extends IWalletDatabase {
     var dbStore = _balancesStoreInstance;
     final db = await database;
     var finder = Finder(filter: Filter.equals('token', token));
+
     final accounts = await dbStore.find(db, finder: finder);
 
     final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+
+    if (excludeAddresses != null && excludeAddresses.isNotEmpty) {
+      data.removeWhere((element) => excludeAddresses.contains(element.address));
+    }
 
     final ret = groupBy(data, (e) => e.token);
 
@@ -328,12 +333,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     ret.forEach((k, v) {
       sumMap[k] = v.fold(0, (prev, element) {
-        if (excludeAddresses != null && !excludeAddresses.contains(element.address)) {
-          return prev + element.balance;
-        } else if (excludeAddresses == null) {
-          return prev + element.balance;
-        }
-        return 0;
+        return prev + element.balance;
       });
     });
 

@@ -223,8 +223,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     if (fromAmount > fromAccount.balance) {
-      var accountTxA =
-          await createAccountTransaction(DeFiConstants.DefiAccountSymbol, fromAmount - fromAccount.balance, fromAccount.address, excludeAddresses: [fromAccount.address]);
+      var accountTxA = await createAccountTransaction(fromToken, fromAmount - fromAccount.balance, fromAccount.address, excludeAddresses: [fromAccount.address]);
 
       loadingStream?.add(S.current.wallet_operation_send_tx);
       await createTxAndWait(accountTxA);

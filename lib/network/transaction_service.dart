@@ -107,6 +107,9 @@ class TransactionService extends NetworkService implements ITransactionService {
     if (response is ErrorResponse) {
       this.handleError(response);
     }
+    if (response == null) {
+      return null;
+    }
 
     final decodedBody = json.decode(response.body);
     return decodedBody["txId"];

@@ -428,9 +428,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
         checkAmount -= needAmount;
       });
-      if (checkAmount <= 0) {
-        break;
-      }
 
       var txData = await createTxAndWait(txs, loadingStream: loadingStream);
 
@@ -444,6 +441,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
               network: ChainHelper.chainNetworkString(network));
           await walletDatabase.setAccountBalance(accBalance);
         }
+      }
+      if (checkAmount <= 0) {
+        break;
       }
     }
   }

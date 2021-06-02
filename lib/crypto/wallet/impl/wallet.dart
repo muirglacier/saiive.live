@@ -281,7 +281,7 @@ abstract class Wallet extends IWallet {
     fees += additionalFees;
 
     if (sendMax) {
-      fees *= -1;
+      //fees *= -1;
     }
 
     if (amount == tokenBalance?.balance) {

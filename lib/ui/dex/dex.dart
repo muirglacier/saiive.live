@@ -59,6 +59,22 @@ class _DexScreen extends State<DexScreen> {
   var _amountFromController = TextEditingController(text: '');
   var _amountToController = TextEditingController(text: '');
 
+  void resetForm() {
+    setState(() {
+      _selectedPoolPair = null;
+
+      _selectedValueTo = null;
+      _selectedValueFrom = null;
+
+      _amountFrom = 0;
+      _amountTo = 0;
+      _conversionRate = 0;
+
+      _amountFromController.clear();
+      _amountToController.clear();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -457,6 +473,7 @@ class _DexScreen extends State<DexScreen> {
         ),
       ));
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      resetForm();
     } on HttpException catch (e) {
       final errorMsg = e.error.error;
       LogHelper.instance.e("Error saving tx...($errorMsg)");
@@ -630,7 +647,7 @@ class _DexScreen extends State<DexScreen> {
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
                   ]),
-                if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
+                if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && !_insufficientFunds)
                   Column(children: [
                     SizedBox(height: 10),
                     Row(children: [

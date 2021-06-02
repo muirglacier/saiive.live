@@ -197,7 +197,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<Tuple3<String, List<tx.Transaction>, String>> createSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
       {StreamController<String> loadingStream}) async {
     if (DeFiConstants.isDfiToken(fromToken)) {
-      await prepareAccount(fromAmount);
+      await prepareAccount(fromAmount, loadingStream: loadingStream);
     }
 
     final changeAddress = await getPublicKeyFromAccount(account, true);
@@ -435,7 +435,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         if (await walletDatabase.isOwnAddress(input.address)) {
           final accBalance = new Account(
               address: input.address,
-              balance: amount,
+              balance: needAmount,
               token: DeFiConstants.DefiAccountSymbol,
               chain: ChainHelper.chainTypeString(chain),
               network: ChainHelper.chainNetworkString(network));

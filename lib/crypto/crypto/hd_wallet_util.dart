@@ -93,7 +93,7 @@ class HdWalletUtil {
       totalInputValue += tx.valueRaw;
     }
 
-    txb.addAddLiquidityOutput(tokenA, authA.address, authA.amount, tokenB, authB.address, authB.amount, shareAddress);
+    txb.addAddLiquidityOutput(tokenA, authA.address, amountA, tokenB, authB.address, amountB, shareAddress);
 
     var changeAmount = totalInputValue - fee;
     txb.addOutput(returnAddress, changeAmount);

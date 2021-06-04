@@ -152,12 +152,12 @@ stages:
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/saiive.live.app" 260 250 \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
               --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
               "saiive.live.dmg" \
-              "build/macos/Build/Products/Release/saiive.live.app"
+              "build/macos/Build/Products/Debug/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -278,12 +278,12 @@ stages:
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/saiive.live.app" 260 250 \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
               --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
               "saiive.live.dmg" \
-              "build/macos/Build/Products/Release/saiive.live.app"
+              "build/macos/Build/Products/Debug/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -517,12 +517,12 @@ stages:
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/saiive.live.app" 260 250 \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
               --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
               "saiive.live.dmg" \
-              "build/macos/Build/Products/Release/saiive.live.app"
+              "build/macos/Build/Products/Debug/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts dmg"

@@ -137,7 +137,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --release --target=lib/main.dart --build-name=$(AppVersion) --verbose --develop
+            $(FlutterToolPath)/flutter build macos --release --target=lib/main.dart --build-name=$(AppVersion) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -263,7 +263,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --target=lib/main_staging.dart --build-name=$(AppVersion) --verbose --develop
+            $(FlutterToolPath)/flutter build macos --target=lib/main_staging.dart --build-name=$(AppVersion) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -502,7 +502,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --develop
+            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'

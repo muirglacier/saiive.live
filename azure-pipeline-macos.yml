@@ -60,19 +60,19 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
           certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
-          keychain: 'temp'
-
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'DPInstallerMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
-          keychain: 'temp'
-
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'DPAppStoreMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
@@ -180,19 +180,19 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
           certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
-          keychain: 'temp'
-
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'DPInstallerMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
-          keychain: 'temp'
-
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'DPAppStoreMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
@@ -300,19 +300,19 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
           certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
-          keychain: 'temp'
-
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'DPInstallerMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
-          keychain: 'temp'
-
-      - task: InstallAppleCertificate@2
-        inputs:
-          certSecureFile: 'DPAppStoreMacOS.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 

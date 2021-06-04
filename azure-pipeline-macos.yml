@@ -81,6 +81,11 @@ stages:
           provisioningProfileLocation: 'secureFiles'
           provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
 
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -121,7 +126,7 @@ stages:
           generateCodeCoverageReport: true
 
       - task: Bash@3
-        displayName: "Build MacOS Staging"
+        displayName: "Build MacOS DEV"
         inputs:
           targetType: 'inline'
           script: |
@@ -195,6 +200,11 @@ stages:
         inputs:
           provisioningProfileLocation: 'secureFiles'
           provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -310,6 +320,11 @@ stages:
         inputs:
           provisioningProfileLocation: 'secureFiles'
           provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"

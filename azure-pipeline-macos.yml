@@ -76,6 +76,12 @@ stages:
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
@@ -196,6 +202,12 @@ stages:
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
@@ -313,6 +325,12 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 

@@ -417,7 +417,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live Development";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live Development v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -550,7 +550,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live Development";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live Development v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -577,7 +577,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -658,7 +658,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -737,7 +737,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -813,7 +813,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -891,7 +891,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -972,7 +972,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1049,7 +1049,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

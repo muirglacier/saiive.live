@@ -378,10 +378,23 @@ stages:
               "saiive.live.dmg" \
               "build/macos/Build/Products/Release/saiive.live.app"
 
+      - task: Bash@3
+        displayName: 'Create .pkg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            /usr/bin/productbuild --component build/macos/Build/Products/Release/saiive.live.app /Applications --sign E220D8D5B09C6C7C345DE6EF780C0FBB9CA0EA08 build/macos/Build/Products/Release/saiive.live.pkg
+
       - task: CopyFiles@2
-        displayName: "Copy artifacts"
+        displayName: "Copy artifacts dmg"
         inputs:
           contents: 'saiive.live.dmg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod'
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts pkg"
+        inputs:
+          contents: 'saiive.live.pkg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/prod'
 
       - task: PublishBuildArtifacts@1

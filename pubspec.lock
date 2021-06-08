@@ -64,13 +64,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  bs58check_dart:
-    dependency: transitive
-    description:
-      name: bs58check_dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0+1"
   carousel_slider:
     dependency: "direct main"
     description:
@@ -140,7 +133,7 @@ packages:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.1+1"
+    version: "3.0.1"
   device_info:
     dependency: "direct main"
     description:
@@ -552,7 +545,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.1.1"
   process:
     dependency: transitive
     description:

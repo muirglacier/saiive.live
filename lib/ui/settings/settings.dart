@@ -1,6 +1,7 @@
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
@@ -74,14 +75,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ));
   }
 
-  Future doChainNetSwitch(ChainNet net) async {
+  Future doChainNetSwitch(ChainNet net, ChainNet old) async {
     sl.get<SharedPrefsUtil>().setNetwork(net);
 
     setState(() {
       _curNet = net;
     });
 
+    await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, old);
+    await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, old);
     await sl.get<IWalletService>().close();
+    await sl.get<IWalletService>().destroy();
     await sl.get<IHttpService>().init();
 
     Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
@@ -97,14 +101,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     if (net == ChainNet.Testnet) {
-      await doChainNetSwitch(net);
+      await doChainNetSwitch(net, _curNet);
       return;
     }
 
     Widget okButton = TextButton(
       child: Text(S.of(context).ok),
       onPressed: () async {
-        await doChainNetSwitch(net);
+        await doChainNetSwitch(net, _curNet);
       },
     );
     Widget cancelButton = TextButton(

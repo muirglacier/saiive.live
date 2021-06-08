@@ -27,6 +27,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   DeFiChainWallet(bool checkUtxo) : super(ChainType.DeFiChain, checkUtxo);
 
   final int AuthTxMin = 200000;
+  final int MinKeepUTXO = 2000000;
 
   @override
   Future<TransactionData> createAndSendRemovePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream}) async {
@@ -422,8 +423,14 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     for (final input in useTxs) {
       var needAmount = min(checkAmount, input.value);
+      var burnFees = needAmount + fee;
 
-      final txs = await createBaseTransaction(0, changeAddress, changeAddress, fee + needAmount, (txb, inputTxs, nw) {
+      if (fee + needAmount > input.value) {
+        needAmount -= fee;
+        burnFees = input.value;
+      }
+
+      final txs = await createBaseTransaction(0, changeAddress, changeAddress, burnFees, (txb, inputTxs, nw) {
         txb.addUtxosToAccountOutput(tokenType.id, input.address, needAmount, nw);
 
         checkAmount -= needAmount;

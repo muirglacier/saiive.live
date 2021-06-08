@@ -196,11 +196,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   });
                                 },
                               ))),
-                          CardItemWidget(S.of(context).welcome_legal, null, backgroundColor: Colors.transparent),
-                          LegalEntitiesWidget(EdgeInsets.only(left: itemPaddingLeft, right: 0)),
                           SizedBox(height: 5),
-                          CardItemWidget(S.of(context).settings_wallet, null, backgroundColor: Colors.transparent),
-                          SizedBox(height: 5),
+                          CardItemWidget(S.of(context).settings_network, null, backgroundColor: Colors.transparent),
                           Padding(
                               padding: EdgeInsets.only(left: itemPaddingLeft + 5),
                               child: Container(
@@ -218,6 +215,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   );
                                 }).toList(),
                               ))),
+                          CardItemWidget(S.of(context).settings_wallet, null, backgroundColor: Colors.transparent),
+                          SizedBox(height: 5),
                           CardItemWidget(S.of(context).settings_remove_seed, () async {
                             sl.get<AuthenticationHelper>().forceAuth(context, () {
                               doDeleteSeed();
@@ -243,6 +242,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           CardLinkItemWidget(S.of(context).settings_support_reddit, "https://www.reddit.com/r/defiblockchain/", padding: EdgeInsets.only(left: itemPaddingLeft)),
                           CardLinkItemWidget(S.of(context).settings_support_github, "https://github.com/saiive/saiive.live", padding: EdgeInsets.only(left: itemPaddingLeft)),
                           CardLinkItemWidget(S.of(context).settings_support_defichain, "https://defichain.com", padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).welcome_legal, null, backgroundColor: Colors.transparent),
+                          LegalEntitiesWidget(EdgeInsets.only(left: itemPaddingLeft, right: 0)),
                         ],
                       )),
                       Container(

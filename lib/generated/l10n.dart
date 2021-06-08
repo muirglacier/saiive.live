@@ -1035,6 +1035,16 @@ class S {
     );
   }
 
+  /// `Network`
+  String get settings_network {
+    return Intl.message(
+      'Network',
+      name: 'settings_network',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Remove Seed`
   String get settings_remove_seed {
     return Intl.message(

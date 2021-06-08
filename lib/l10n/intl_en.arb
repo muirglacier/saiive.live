@@ -116,6 +116,7 @@
   "settings_support_github": "GitHub",
   "settings_support_defichain": "Defichain.com",
 
+  "settings_network": "Network",
   "settings_remove_seed": "Remove Seed",
   "settings_show_logs": "Show logs",
   "settings_show_wallet_addresses": "Wallet addresses",

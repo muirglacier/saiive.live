@@ -12,6 +12,7 @@ import 'package:saiive.live/ui/model/available_themes.dart';
 import 'package:saiive.live/ui/settings/settings_seed.dart';
 import 'package:saiive.live/ui/settings/wallet_addresses.dart';
 import 'package:saiive.live/ui/styles.dart';
+import 'package:saiive.live/ui/utils/card-link.widget.dart';
 import 'package:saiive.live/ui/utils/legal_entities.dart';
 import 'package:saiive.live/ui/wallet/wallet_send.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
@@ -131,6 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const itemPaddingLeft = 10.0;
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).settings)),
         body: Padding(
@@ -145,110 +147,102 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Container(
-                              child: DropdownButton<int>(
-                            isExpanded: true,
-                            value: _authMethod,
-                            items: AuthenticationMethod.all().map((e) {
-                              return new DropdownMenuItem<int>(
-                                value: e.getIndex(),
-                                child: Text(e.getDisplayName(context)),
-                              );
-                            }).toList(),
-                            onChanged: (int val) {
-                              setState(() {
-                                _authMethod = val;
-                              });
+                          CardItemWidget(S.of(context).settings_common, null, backgroundColor: Colors.transparent),
+                          Padding(
+                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
+                              child: Container(
+                                  child: DropdownButton<int>(
+                                isExpanded: true,
+                                value: _authMethod,
+                                items: AuthenticationMethod.all().map((e) {
+                                  return new DropdownMenuItem<int>(
+                                    value: e.getIndex(),
+                                    child: Text(e.getDisplayName(context)),
+                                  );
+                                }).toList(),
+                                onChanged: (int val) {
+                                  setState(() {
+                                    _authMethod = val;
+                                  });
 
-                              sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
-                            },
-                          )),
+                                  sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
+                                },
+                              ))),
                           SizedBox(height: 5),
-                          Container(
-                              child: DropdownButton<int>(
-                            isExpanded: true,
-                            value: _theme,
-                            items: ThemeSetting.all().map((e) {
-                              return new DropdownMenuItem<int>(
-                                value: e.getIndex(),
-                                child: Text(e.getDisplayName(context)),
-                              );
-                            }).toList(),
-                            onChanged: (int val) {
-                              setState(() {
-                                _theme = val;
-                              });
+                          Padding(
+                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
+                              child: Container(
+                                  child: DropdownButton<int>(
+                                isExpanded: true,
+                                value: _theme,
+                                items: ThemeSetting.all().map((e) {
+                                  return new DropdownMenuItem<int>(
+                                    value: e.getIndex(),
+                                    child: Text(e.getDisplayName(context)),
+                                  );
+                                }).toList(),
+                                onChanged: (int val) {
+                                  setState(() {
+                                    _theme = val;
+                                  });
 
-                              final theme = ThemeSetting(ThemeOptions.values[val]);
-                              sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
+                                  final theme = ThemeSetting(ThemeOptions.values[val]);
+                                  sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
 
-                              sl.get<SharedPrefsUtil>().setTheme(theme).then((result) {
-                                setState(() {
-                                  StateContainer.of(context).updateTheme(theme);
-                                });
-                              });
-                            },
-                          )),
+                                  sl.get<SharedPrefsUtil>().setTheme(theme).then((result) {
+                                    setState(() {
+                                      StateContainer.of(context).updateTheme(theme);
+                                    });
+                                  });
+                                },
+                              ))),
+                          CardItemWidget(S.of(context).welcome_legal, null, backgroundColor: Colors.transparent),
+                          LegalEntitiesWidget(EdgeInsets.only(left: itemPaddingLeft, right: 0)),
                           SizedBox(height: 5),
-                          Container(
-                              child: DropdownButton<ChainNet>(
-                            isExpanded: true,
-                            disabledHint: Text('testnet'),
-                            value: _curNet,
-                            onChanged: (e) async {
-                              await doChangeChainNet(e);
-                            },
-                            items: ChainNet.values.map((e) {
-                              return new DropdownMenuItem<ChainNet>(
-                                value: e,
-                                child: Text(ChainHelper.chainNetworkString(e)),
-                              );
-                            }).toList(),
-                          )),
+                          CardItemWidget(S.of(context).settings_wallet, null, backgroundColor: Colors.transparent),
                           SizedBox(height: 5),
-                          LegalEntitiesWidget(EdgeInsets.only(left: 0, right: 0)),
-                          Container(
-                              child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
-                            child: Text(
-                              S.of(context).settings_remove_seed,
-                              style: TextStyle(color: StateContainer.of(context).curTheme.darkColor),
-                            ),
-                            onPressed: () async {
-                              sl.get<AuthenticationHelper>().forceAuth(context, () {
-                                doDeleteSeed();
-                              });
-                            },
-                          )),
-                          SizedBox(height: 5),
-                          Container(
-                              child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
-                            child: Text(S.of(context).settings_show_seed, style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
-                            onPressed: () async {
-                              sl.get<AuthenticationHelper>().forceAuth(context, () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
-                              });
-                            },
-                          )),
-                          SizedBox(height: 5),
-                          Container(
-                              child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
-                            child: Text("Show logs", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
-                            onPressed: () async {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole(showCloseButton: true, dark: _theme == 1)));
-                            },
-                          )),
-                          SizedBox(height: 5),
-                          Container(
-                              child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.buttonColorPrimary),
-                            child: Text("Show wallet addresses", style: TextStyle(color: StateContainer.of(context).curTheme.darkColor)),
-                            onPressed: () async {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
-                            },
-                          ))
+                          Padding(
+                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
+                              child: Container(
+                                  child: DropdownButton<ChainNet>(
+                                isExpanded: true,
+                                disabledHint: Text('testnet'),
+                                value: _curNet,
+                                onChanged: (e) async {
+                                  await doChangeChainNet(e);
+                                },
+                                items: ChainNet.values.map((e) {
+                                  return new DropdownMenuItem<ChainNet>(
+                                    value: e,
+                                    child: Text(ChainHelper.chainNetworkString(e)),
+                                  );
+                                }).toList(),
+                              ))),
+                          CardItemWidget(S.of(context).settings_remove_seed, () async {
+                            sl.get<AuthenticationHelper>().forceAuth(context, () {
+                              doDeleteSeed();
+                            });
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).settings_show_seed, () async {
+                            sl.get<AuthenticationHelper>().forceAuth(context, () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
+                            });
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).settings_show_logs, () async {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole(showCloseButton: true, dark: _theme == 1)));
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).settings_show_wallet_addresses, () async {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).settings_support, null, backgroundColor: Colors.transparent),
+                          CardLinkItemWidget(S.of(context).settings_support_telegram_live, "https://t.me/SmartDefiWallet", padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardLinkItemWidget(S.of(context).settings_support_telegram_defichain_de, "https://t.me/defiblockchain_DE",
+                              padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardLinkItemWidget(S.of(context).settings_support_telegram_defichain_en, "https://t.me/defiblockchain", padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardLinkItemWidget(S.of(context).settings_support_wiki, "https://www.defichain-wiki.com", padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardLinkItemWidget(S.of(context).settings_support_reddit, "https://www.reddit.com/r/defiblockchain/", padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardLinkItemWidget(S.of(context).settings_support_github, "https://github.com/saiive/saiive.live", padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardLinkItemWidget(S.of(context).settings_support_defichain, "https://defichain.com", padding: EdgeInsets.only(left: itemPaddingLeft)),
                         ],
                       )),
                       Container(
@@ -300,109 +294,5 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ],
             )));
-
-    return Scaffold(
-        appBar: AppBar(title: Text(S.of(context).settings)),
-        body: SingleChildScrollView(
-            child: Padding(
-                padding: EdgeInsets.all(30),
-                child: Column(children: [
-                  (Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                          child: DropdownButton<int>(
-                        isExpanded: true,
-                        value: _authMethod,
-                        items: AuthenticationMethod.all().map((e) {
-                          return new DropdownMenuItem<int>(
-                            value: e.getIndex(),
-                            child: Text(e.getDisplayName(context)),
-                          );
-                        }).toList(),
-                        onChanged: (int val) {
-                          setState(() {
-                            _authMethod = val;
-                          });
-
-                          sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
-                        },
-                      )),
-                      Container(
-                          child: DropdownButton<int>(
-                        isExpanded: true,
-                        value: _theme,
-                        items: ThemeSetting.all().map((e) {
-                          return new DropdownMenuItem<int>(
-                            value: e.getIndex(),
-                            child: Text(e.getDisplayName(context)),
-                          );
-                        }).toList(),
-                        onChanged: (int val) {
-                          setState(() {
-                            _theme = val;
-                          });
-
-                          final theme = ThemeSetting(ThemeOptions.values[val]);
-                          sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
-
-                          sl.get<SharedPrefsUtil>().setTheme(theme).then((result) {
-                            setState(() {
-                              StateContainer.of(context).updateTheme(theme);
-                            });
-                          });
-                        },
-                      )),
-                      Container(
-                          child: DropdownButton<String>(
-                        isExpanded: true,
-                        disabledHint: Text('testnet'),
-                        value: null,
-                        items: ['testnet', 'mainnet'].map((e) {
-                          return new DropdownMenuItem<String>(
-                            value: e,
-                            child: Text(e),
-                          );
-                        }).toList(),
-                      )),
-                      Container(
-                          child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                        child: Text(S.of(context).settings_remove_seed),
-                        onPressed: () async {
-                          sl.get<AuthenticationHelper>().forceAuth(context, () {
-                            doDeleteSeed();
-                          });
-                        },
-                      )),
-                      Container(
-                          child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                        child: Text(S.of(context).settings_show_seed),
-                        onPressed: () async {
-                          sl.get<AuthenticationHelper>().forceAuth(context, () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsSeedScreen()));
-                          });
-                        },
-                      )),
-                      Container(
-                          child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                        child: Text("Show logs"),
-                        onPressed: () async {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole()));
-                        },
-                      )),
-                      Container(
-                          child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Theme.of(context).backgroundColor),
-                        child: Text("Show wallet addresses"),
-                        onPressed: () async {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));
-                        },
-                      ))
-                    ],
-                  )),
-                ]))));
   }
 }

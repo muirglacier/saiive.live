@@ -104,7 +104,21 @@
   "wallet_send_amount": "Amount",
 
   "settings": "Settings",
+  "settings_wallet": "Wallet",
+  "settings_common": "Common",
+
+  "settings_support": "Support",
+  "settings_support_telegram_live": "Telegram saiive.live",
+  "settings_support_telegram_defichain_en": "Telegram DeFiChain [en]",
+  "settings_support_telegram_defichain_de": "Telegram DeFiChain [de]",
+  "settings_support_wiki": "Wiki",
+  "settings_support_reddit": "Reddit",
+  "settings_support_github": "GitHub",
+  "settings_support_defichain": "Defichain.com",
+
   "settings_remove_seed": "Remove Seed",
+  "settings_show_logs": "Show logs",
+  "settings_show_wallet_addresses": "Wallet addresses",
   "settings_show_seed": "Show Seed",
   "settings_removed_seed": "Removed saved seed",
   "settings_donate": "If you want to help making the App even better, you can donate $DFI here:",

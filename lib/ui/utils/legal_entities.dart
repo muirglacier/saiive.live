@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:saiive.live/ui/utils/card-link.widget.dart';
 import 'package:saiive.live/ui/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,36 +24,14 @@ class _LegalEntitiesWidgetState extends State<LegalEntitiesWidget> {
   }
 
   Widget createLegalItem(String name, String uri, BuildContext context) {
-    return GestureDetector(
-        onTap: () async {
-          if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-            if (await canLaunch(uri)) {
-              await launch(uri);
-            }
-          } else {
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WebViewScreen(uri, name)));
-          }
-        },
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            children: [
-              ListTile(
-                trailing: Icon(Icons.arrow_right),
-                title: Text(name),
-              ),
-            ],
-          ),
-        ));
+    return CardLinkItemWidget(name, uri);
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.start, verticalDirection: VerticalDirection.down, children: <Widget>[
       Container(padding: widget.padding, child: createLegalItem(S.of(context).welcome_legal_tos, S.of(context).welcome_legal_tos_link, context)),
-      SizedBox(height: 10),
       Container(padding: widget.padding, child: createLegalItem(S.of(context).welcome_legal_privacy, S.of(context).welcome_legal_privacy_link, context)),
-      SizedBox(height: 10),
     ]);
   }
 }

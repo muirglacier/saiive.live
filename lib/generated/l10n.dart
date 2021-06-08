@@ -935,11 +935,131 @@ class S {
     );
   }
 
+  /// `Wallet`
+  String get settings_wallet {
+    return Intl.message(
+      'Wallet',
+      name: 'settings_wallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Common`
+  String get settings_common {
+    return Intl.message(
+      'Common',
+      name: 'settings_common',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support`
+  String get settings_support {
+    return Intl.message(
+      'Support',
+      name: 'settings_support',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram saiive.live`
+  String get settings_support_telegram_live {
+    return Intl.message(
+      'Telegram saiive.live',
+      name: 'settings_support_telegram_live',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram DeFiChain [en]`
+  String get settings_support_telegram_defichain_en {
+    return Intl.message(
+      'Telegram DeFiChain [en]',
+      name: 'settings_support_telegram_defichain_en',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram DeFiChain [de]`
+  String get settings_support_telegram_defichain_de {
+    return Intl.message(
+      'Telegram DeFiChain [de]',
+      name: 'settings_support_telegram_defichain_de',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wiki`
+  String get settings_support_wiki {
+    return Intl.message(
+      'Wiki',
+      name: 'settings_support_wiki',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reddit`
+  String get settings_support_reddit {
+    return Intl.message(
+      'Reddit',
+      name: 'settings_support_reddit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GitHub`
+  String get settings_support_github {
+    return Intl.message(
+      'GitHub',
+      name: 'settings_support_github',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Defichain.com`
+  String get settings_support_defichain {
+    return Intl.message(
+      'Defichain.com',
+      name: 'settings_support_defichain',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Remove Seed`
   String get settings_remove_seed {
     return Intl.message(
       'Remove Seed',
       name: 'settings_remove_seed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show logs`
+  String get settings_show_logs {
+    return Intl.message(
+      'Show logs',
+      name: 'settings_show_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wallet addresses`
+  String get settings_show_wallet_addresses {
+    return Intl.message(
+      'Wallet addresses',
+      name: 'settings_show_wallet_addresses',
       desc: '',
       args: [],
     );

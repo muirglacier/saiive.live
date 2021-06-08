@@ -9,7 +9,7 @@
     <key>provisioningProfiles</key>
     <dict>
     	<key>at.saiive.live</key>
-    	<string>at.saiive.live AdHoc</string>
+    	<string>at.saiive.live AdHoc v2</string>
     </dict>
     <key>signingCertificate</key>
     <string>Apple Distribution</string>

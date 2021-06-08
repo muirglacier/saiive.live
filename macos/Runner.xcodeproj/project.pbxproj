@@ -444,7 +444,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Profile;
@@ -575,7 +575,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -588,7 +588,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Release.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 5QAM4Z73EV;
@@ -600,7 +600,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Mac Distribution v2";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -693,7 +693,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -779,7 +779,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -858,7 +858,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Release-staging";
@@ -924,7 +924,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Release.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 5QAM4Z73EV;
@@ -935,7 +935,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Mac Distribution v2";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Release-production";
@@ -1012,7 +1012,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Profile-staging";
@@ -1089,7 +1089,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Profile-production";

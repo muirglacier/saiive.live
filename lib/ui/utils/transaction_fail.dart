@@ -1,17 +1,17 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/network_service.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TransactionFailScreen extends StatelessWidget {
   final String text;
 
   final String additional;
-  final Error error;
+  final dynamic error;
 
   String _errorText;
   String _stackTrace;

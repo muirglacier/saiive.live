@@ -18,6 +18,7 @@ import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/response/error_response.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
@@ -339,7 +340,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             )),
         Expanded(
           flex: 1,
-          child: AutoSizeText(e.balanceDisplayRounded, maxLines: 1, textAlign: TextAlign.right),
+          child: AutoSizeText(FundFormatter.format(e.balance / DefiChainConstants.COIN), maxLines: 1, textAlign: TextAlign.right),
         )
       ],
     );
@@ -548,7 +549,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(_selectedPoolPair.reserveA.toStringAsFixed(8)),
+                    Text(FundFormatter.format(_selectedPoolPair.reserveA)),
                   ],
                 )),
           ]),
@@ -562,7 +563,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(_selectedPoolPair.reserveB.toStringAsFixed(8)),
+                    Text(FundFormatter.format(_selectedPoolPair.reserveB)),
                   ],
                 )),
           ]),

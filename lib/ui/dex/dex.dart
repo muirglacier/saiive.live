@@ -18,6 +18,7 @@ import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
@@ -508,7 +509,7 @@ class _DexScreen extends State<DexScreen> {
             maxLines: 1,
           ),
         ),
-        Expanded(flex: 1, child: AutoSizeText(e.balanceDisplayRounded, style: Theme.of(context).textTheme.headline3, maxLines: 1, textAlign: TextAlign.right))
+        Expanded(flex: 1, child: AutoSizeText(FundFormatter.format(e.balance / DefiChainConstants.COIN), style: Theme.of(context).textTheme.headline3, maxLines: 1, textAlign: TextAlign.right))
       ],
     );
   }
@@ -628,8 +629,8 @@ class _DexScreen extends State<DexScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(_conversionRate.toStringAsFixed(8) + ' ' + _selectedValueTo.hash + ' per ' + _selectedValueFrom.hash, textAlign: TextAlign.right),
-                              Text((1 / _conversionRate).toStringAsFixed(8) + ' ' + _selectedValueFrom.hash + ' per ' + _selectedValueTo.hash, textAlign: TextAlign.right),
+                              Text(FundFormatter.format(_conversionRate) + ' ' + _selectedValueTo.hash + ' per ' + _selectedValueFrom.hash, textAlign: TextAlign.right),
+                              Text(FundFormatter.format(1 / _conversionRate) + ' ' + _selectedValueFrom.hash + ' per ' + _selectedValueTo.hash, textAlign: TextAlign.right),
                             ],
                           )),
                     ]),

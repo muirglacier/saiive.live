@@ -8,6 +8,7 @@ import 'package:saiive.live/network/model/account_history.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/wallet/wallet_receive.dart';
 import 'package:saiive.live/ui/wallet/wallet_send.dart';
 import 'package:saiive.live/ui/widgets/buttons.dart';
@@ -105,7 +106,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
               title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(S.of(context).wallet_token_available_balance, style: TextStyle(fontSize: 12)),
                 SizedBox(height: 5),
-                Text((_balance.balanceDisplay).toStringAsFixed(8), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
+                Text(FundFormatter.format(_balance.balanceDisplay), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
               ]),
               trailing: RotationTransition(
                   turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
@@ -129,7 +130,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(child: Text(history.type), flex: 1),
-                    Expanded(child: Text((history.getBalance(widget.token) / DefiChainConstants.COIN).toStringAsFixed(8), textAlign: TextAlign.right), flex: 2),
+                    Expanded(child: Text(FundFormatter.format(history.getBalance(widget.token) / DefiChainConstants.COIN), textAlign: TextAlign.right), flex: 2),
                     if (history.txid != null)
                       Expanded(
                           child: InkWell(

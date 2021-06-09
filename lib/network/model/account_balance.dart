@@ -11,7 +11,6 @@ class AccountBalance {
   ChainType chain;
 
   double get balanceDisplay => balance / DefiChainConstants.COIN;
-  String get balanceDisplayRounded => (balance / DefiChainConstants.COIN).toStringAsFixed(8);
 
   bool get isNativeToken {
     if (DeFiConstants.isDfiToken(token)) {
@@ -50,10 +49,7 @@ class MixedAccountBalance extends AccountBalance {
   int tokenBalance = 0;
 
   double get utxoBalanceDisplay => utxoBalance / DefiChainConstants.COIN;
-  String get utxoBalanceDisplayRounded => (utxoBalance / DefiChainConstants.COIN).toStringAsFixed(8);
-
   double get tokenBalanceDisplay => tokenBalance / DefiChainConstants.COIN;
-  String get tokenBalanceDisplayRounded => (tokenBalance / DefiChainConstants.COIN).toStringAsFixed(8);
 
   MixedAccountBalance({String token, int balance, ChainType chain, this.utxoBalance, this.tokenBalance}) : super(token: token, balance: balance, chain: chain);
 }

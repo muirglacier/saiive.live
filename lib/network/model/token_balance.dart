@@ -8,7 +8,5 @@ class TokenBalance {
   final bool isPopularToken;
   final String displayName;
 
-  String get balanceDisplayRounded => (balance / DefiChainConstants.COIN).toStringAsFixed(8);
-
   TokenBalance({this.hash, this.idToken, this.balance, this.isPopularToken, @required this.displayName});
 }

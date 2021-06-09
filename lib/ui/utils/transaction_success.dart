@@ -43,7 +43,7 @@ class TransactionSuccessScreen extends StatelessWidget {
         backgroundColor: Color(0xFF1EBCA3),
         body: Center(
             child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(Icons.check_circle_outline_outlined, size: 50),
+          Icon(Icons.check_circle_outline_outlined, size: 50, color: Colors.white),
           Text(
             text,
             style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w800),

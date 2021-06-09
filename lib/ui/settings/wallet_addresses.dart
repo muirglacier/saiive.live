@@ -49,7 +49,7 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
   }
 
   _buildAddressEntry(BuildContext context, String address) {
-    return Row(children: [Text(address)]);
+    return Row(children: [SelectableText(address)]);
   }
 
   _buildWalletAddressList(BuildContext context) {

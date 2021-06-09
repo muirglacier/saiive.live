@@ -33,9 +33,13 @@ class TransactionFailScreen extends StatelessWidget {
       _errorText = error.toString();
     }
 
-    LogHelper.instance.e(_errorText);
+    if (error is Error) {
+      _stackTrace = (error as Error).stackTrace.toString();
+    } else {
+      _stackTrace = "";
+    }
 
-    _stackTrace = error.stackTrace.toString();
+    LogHelper.instance.e(_errorText);
   }
 
   @override
@@ -72,7 +76,7 @@ class TransactionFailScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           if (error != null) SizedBox(height: 30),
-          if (error != null)
+          if (_stackTrace != null)
             SelectableText(
               _stackTrace,
               style: TextStyle(color: Colors.white, fontSize: 10),

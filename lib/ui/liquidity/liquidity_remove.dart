@@ -12,6 +12,7 @@ import 'package:saiive.live/network/model/pool_share_liquidity.dart';
 import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
@@ -185,7 +186,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(toRemoveTokenA.toStringAsFixed(8) + ' ' + S.of(context).liquidity_remove_of + ' ' + myReserveA.toStringAsFixed(8), textAlign: TextAlign.right),
+                  Text(FundFormatter.format(toRemoveTokenA) + ' ' + S.of(context).liquidity_remove_of + ' ' + FundFormatter.format(myReserveA), textAlign: TextAlign.right),
                 ],
               )),
         ]),
@@ -201,7 +202,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(toRemoveTokenB.toStringAsFixed(8) + ' ' + S.of(context).liquidity_remove_of + ' ' + myReserveB.toStringAsFixed(8), textAlign: TextAlign.right),
+                  Text(FundFormatter.format(toRemoveTokenB) + ' ' + S.of(context).liquidity_remove_of + ' ' + FundFormatter.format(myReserveB), textAlign: TextAlign.right),
                 ],
               )),
         ]),
@@ -215,9 +216,9 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(widget.liquidity.poolPair.reserveADivReserveB.toStringAsFixed(8) + " " + widget.liquidity.tokenA + " per " + widget.liquidity.tokenB,
+                  Text(FundFormatter.format(widget.liquidity.poolPair.reserveADivReserveB) + " " + widget.liquidity.tokenA + " per " + widget.liquidity.tokenB,
                       textAlign: TextAlign.right),
-                  Text(widget.liquidity.poolPair.reserveBDivReserveA.toStringAsFixed(8) + " " + widget.liquidity.tokenB + " per " + widget.liquidity.tokenA,
+                  Text(FundFormatter.format(widget.liquidity.poolPair.reserveBDivReserveA) + " " + widget.liquidity.tokenB + " per " + widget.liquidity.tokenA,
                       textAlign: TextAlign.right)
                 ],
               )),

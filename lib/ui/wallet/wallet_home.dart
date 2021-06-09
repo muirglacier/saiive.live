@@ -12,6 +12,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/wallet/wallet_home_receive.dart';
 import 'package:saiive.live/ui/wallet/wallet_token.dart';
@@ -204,7 +205,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
             ),
             Expanded(
                 child: AutoSizeText(
-              balance.balanceDisplayRounded.toString(),
+              FundFormatter.format(balance.balanceDisplay),
               style: Theme.of(context).textTheme.headline3,
               textAlign: TextAlign.right,
               maxLines: 1,
@@ -218,7 +219,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
             ),
             Expanded(
                 child: AutoSizeText(
-              balance.utxoBalanceDisplayRounded.toString(),
+              FundFormatter.format(balance.utxoBalanceDisplay),
               style: Theme.of(context).textTheme.bodyText1,
               textAlign: TextAlign.right,
               maxLines: 1,
@@ -231,7 +232,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
             ),
             Expanded(
                 child: AutoSizeText(
-              balance.tokenBalanceDisplayRounded.toString(),
+              FundFormatter.format(balance.tokenBalanceDisplay),
               style: Theme.of(context).textTheme.bodyText1,
               textAlign: TextAlign.right,
               maxLines: 1,
@@ -263,7 +264,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
         ]),
         Expanded(
             child: AutoSizeText(
-          balance.balanceDisplayRounded.toString(),
+          FundFormatter.format(balance.balanceDisplay),
           style: Theme.of(context).textTheme.headline3,
           textAlign: TextAlign.right,
           maxLines: 1,

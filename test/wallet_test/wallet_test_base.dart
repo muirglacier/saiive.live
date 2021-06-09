@@ -21,6 +21,7 @@ import 'mock/health_service_mock.dart';
 import 'mock/http_service_mock.dart';
 import 'mock/memory_database_factory_mock.dart';
 import 'mock/token_service_mock.dart';
+import 'mock/transaction_service_mock.dart';
 import 'mock/vault_mock.dart';
 
 Future testSetup(String seed) async {
@@ -41,9 +42,12 @@ void setupTestServiceLocator(String seed) {
     return service;
   });
 
+  var transactionServiceMock = new TransactionServiceMock();
+
   sl.registerLazySingleton(() => ApiService());
   sl.registerLazySingleton<IAccountService>(() => AccountService());
-  sl.registerLazySingleton<ITransactionService>(() => TransactionService());
+  sl.registerLazySingleton<ITransactionService>(() => transactionServiceMock);
+  sl.registerLazySingleton<TransactionServiceMock>(() => transactionServiceMock);
   sl.registerLazySingleton<IBalanceService>(() => BalanceService());
   sl.registerLazySingleton<ITokenService>(() => TokenServiceMock());
   sl.registerLazySingleton<IHealthCheckService>(() => HealthCheckServiceMock());

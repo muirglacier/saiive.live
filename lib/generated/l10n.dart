@@ -605,6 +605,36 @@ class S {
     );
   }
 
+  /// `Transaction failed :(`
+  String get wallet_operation_failed {
+    return Intl.message(
+      'Transaction failed :(',
+      name: 'wallet_operation_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction was successful :)`
+  String get wallet_operation_success {
+    return Intl.message(
+      'Transaction was successful :)',
+      name: 'wallet_operation_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show transaction in the explorer...`
+  String get wallet_operation_show_tx {
+    return Intl.message(
+      'Show transaction in the explorer...',
+      name: 'wallet_operation_show_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `We did not found a used account, but we have created on for you!`
   String get wallet_restore_noAccountFound {
     return Intl.message(

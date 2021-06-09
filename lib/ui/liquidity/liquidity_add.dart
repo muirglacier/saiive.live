@@ -19,6 +19,8 @@ import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/response/error_response.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
@@ -376,81 +378,27 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       });
 
       streamController.close();
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(S.of(context).liqudity_add_successfull),
-        action: SnackBarAction(
-          label: S.of(context).dex_swap_show_transaction,
-          onPressed: () async {
-            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-
-            if (await canLaunch(url)) {
-              await launch(url);
-            }
-          },
-        ),
-      ));
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
       EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
-      Navigator.popUntil(context, ModalRoute.withName('/home'));
-    } on TransactionError catch (e) {
-      final errorMsg = e.error;
-      LogHelper.instance.e("addpool-tx error...($errorMsg)");
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(errorMsg),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).liqudity_add_successfull),
       ));
-      sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
+
+      Navigator.popUntil(context, ModalRoute.withName('/home'));
+    } catch (e) {
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+      ));
+
+      sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailure", <String, String>{
         "tokenA": _selectedTokenA.hash,
         "amountA": amountTokenA.toString(),
         "tokenB": _selectedTokenB.hash,
         "amountB": amountTokenB.toString(),
         "shareAddress": walletTo,
-        "error": e.error
+        "error": e.toString()
       });
-    } catch (e) {
-      LogHelper.instance.e("Error creating addpool-tx", e);
-      if (e is ErrorResponse) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.error),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
-          "tokenA": _selectedTokenA.hash,
-          "amountA": amountTokenA.toString(),
-          "tokenB": _selectedTokenB.hash,
-          "amountB": amountTokenB.toString(),
-          "shareAddress": walletTo,
-          "error": e.error
-        });
-      } else if (e is HttpException) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.error.error),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
-          "tokenA": _selectedTokenA.hash,
-          "amountA": amountTokenA.toString(),
-          "tokenB": _selectedTokenB.hash,
-          "amountB": amountTokenB.toString(),
-          "shareAddress": walletTo,
-          "error": e.error.error
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.toString()),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailure", <String, String>{
-          "tokenA": _selectedTokenA.hash,
-          "amountA": amountTokenA.toString(),
-          "tokenB": _selectedTokenB.hash,
-          "amountB": amountTokenB.toString(),
-          "shareAddress": walletTo,
-          "error": e.toString()
-        });
-      }
     }
   }
 

@@ -16,11 +16,27 @@ class WalletAddressesScreen extends StatefulWidget {
 }
 
 class _WalletAddressesScreen extends State<WalletAddressesScreen> {
+  List<String> _dfiWalletAddresses = [];
+  List<String> _btcWalletAddresses = [];
+
   List<String> _walletAddresses = [];
 
   loadAddresses() async {
     final walletService = sl.get<IWalletService>();
-    _walletAddresses = await walletService.getPublicKeys(ChainType.DeFiChain);
+    _dfiWalletAddresses = await walletService.getPublicKeys(ChainType.DeFiChain);
+    _btcWalletAddresses = await walletService.getPublicKeys(ChainType.Bitcoin);
+
+    _walletAddresses.add("");
+    _walletAddresses.add("DeFiChain");
+    _walletAddresses.add("");
+    _walletAddresses.add("");
+    _walletAddresses.addAll(_dfiWalletAddresses);
+    _walletAddresses.add("");
+    _walletAddresses.add("");
+    _walletAddresses.add("Bitcoin");
+    _walletAddresses.add("");
+    _walletAddresses.addAll(_btcWalletAddresses);
+    _walletAddresses.add("");
 
     setState(() {});
   }

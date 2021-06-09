@@ -201,7 +201,7 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<TransactionData> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
+  Future<String> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
     isInitialzed();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
@@ -211,13 +211,9 @@ abstract class Wallet extends IWallet {
 
     try {
       loadingStream?.add(S.current.wallet_operation_build_tx);
-      var txData = await createSendTransaction(amount, token, to, sendMax: sendMax);
+      var txData = await createSendTransaction(amount, token, to, sendMax: sendMax, loadingStream: loadingStream);
 
-      loadingStream?.add(S.current.wallet_operation_send_tx);
-      var tx = await createTxAndWait(txData);
-
-      await walletDatabase.removeUnspentTransactions(txData.item2);
-      return tx;
+      return txData;
     } catch (error) {
       if (error is HttpException) {
         LogHelper.instance.e("Error creating tx..." + error.error.error, error.error);
@@ -231,9 +227,14 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future<Tuple3<String, List<tx.Transaction>, String>> createUtxoTransaction(int amount, String to, String changeAddress, {bool sendMax = false}) async {
+  Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false}) async {
     final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax);
-    return txb;
+
+    var tx = await createTxAndWait(txb);
+
+    loadingStream?.add(S.current.wallet_operation_send_tx);
+
+    return tx.txId;
   }
 
   @protected

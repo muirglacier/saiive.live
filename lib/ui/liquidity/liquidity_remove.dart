@@ -13,6 +13,8 @@ import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
@@ -100,36 +102,16 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
       }
     }
 
+    EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
     if (hasError || totalToRemove > 0) {
-      var errorMsg = lastError.toString();
-
-      if (lastError is HttpException) {
-        errorMsg = lastError.error.error;
-      } else if (lastError is TransactionError) {
-        errorMsg = lastError.error;
-      }
-
-      LogHelper.instance.e("Error saving tx...($errorMsg)");
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error occured commiting the tx...($errorMsg)'),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: lastError),
       ));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(S.of(context).liquidity_remove_successfull),
-        action: SnackBarAction(
-          label: S.of(context).dex_swap_show_transaction,
-          onPressed: () async {
-            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-            var url = DefiChainConstants.getExplorerUrl(_chainNet, lastTx.txId);
-
-            if (await canLaunch(url)) {
-              await launch(url);
-            }
-          },
-        ),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(lastTx.txId, S.of(context).liquidity_remove_successfull),
       ));
-      EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
+
       Navigator.popUntil(context, ModalRoute.withName('/home'));
     }
   }

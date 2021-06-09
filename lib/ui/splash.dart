@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
+import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/network/model/ivault.dart';
@@ -9,6 +11,8 @@ import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import '../generated/l10n.dart';
 
 import 'package:saiive.live/service_locator.dart';

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -10,11 +11,14 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/response/error_response.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/utils/qr_code_scan.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
@@ -51,40 +55,23 @@ class _WalletSendScreen extends State<WalletSendScreen> {
           .get<IWalletService>()
           .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
-      final txId = tx.txId;
+      final txId = tx;
       LogHelper.instance.d("sent tx $txId");
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(txId),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(txId, S.of(context).wallet_operation_success),
       ));
 
+      Navigator.of(context).pop();
       sl
           .get<AppCenterWrapper>()
           .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
-    } on TransactionError catch (e) {
-      final errorMsg = e.error;
-      LogHelper.instance.e("Tx Error...($errorMsg)");
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(errorMsg),
-      ));
-      sl.get<AppCenterWrapper>().trackEvent("sendTokenFailureHandled", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.error});
     } catch (e) {
-      LogHelper.instance.e("Error creating tx", e);
-      if (e is ErrorResponse) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.error),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailureHandled", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.error});
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.toString()),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
-      }
+      sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+      ));
     }
   }
 
@@ -95,19 +82,14 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<DeFiChainWallet>().prepareAccount(totalAmount, loadingStream: stream);
-
-      final txId = tx.txId;
-      LogHelper.instance.d("sent tx $txId");
+      await sl.get<DeFiChainWallet>().prepareAccount(totalAmount, loadingStream: stream);
 
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(txId),
+        content: Text("done"),
       ));
 
-      sl
-          .get<AppCenterWrapper>()
-          .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
+      sl.get<AppCenterWrapper>().trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
     } catch (e) {
       LogHelper.instance.e("Error creating tx", e);
       if (e is ErrorResponse) {

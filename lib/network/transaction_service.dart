@@ -14,6 +14,7 @@ abstract class ITransactionService {
   Future<List<Transaction>> getAddressesTransactions(String coin, List<String> addresses);
   Future<List<Transaction>> getUnspentTransactionOutputs(String coin, List<String> addresses);
   Future<TransactionData> getWithTxId(String coin, String txId);
+  Future<String> sendRawTransaction(String coin, String rawTxHex);
 }
 
 class TransactionService extends NetworkService implements ITransactionService {

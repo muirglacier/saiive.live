@@ -83,9 +83,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, old);
-    await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, old);
+    await sl.get<IWalletDatabaseFactory>().destroy(ChainType.Bitcoin, old);
     await sl.get<IWalletService>().close();
-    await sl.get<IWalletService>().destroy();
     await sl.get<IHttpService>().init();
 
     Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);

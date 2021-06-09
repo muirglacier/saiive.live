@@ -19,6 +19,8 @@ import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
@@ -235,7 +237,12 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _amountFromController.text = (_selectedValueFrom.balance / DefiChainConstants.COIN).toString();
+    if (DeFiConstants.isDfiToken(_selectedValueFrom.hash)) {
+      final value = _selectedValueFrom.balance - DeFiChainWallet.MinKeepUTXO;
+      _amountFromController.text = (value / DefiChainConstants.COIN).toString();
+    } else {
+      _amountFromController.text = (_selectedValueFrom.balance / DefiChainConstants.COIN).toString();
+    }
 
     handleChangeFrom();
   }
@@ -245,7 +252,12 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _amountToController.text = (_selectedValueTo.balance / DefiChainConstants.COIN).toString();
+    if (DeFiConstants.isDfiToken(_selectedValueTo.hash)) {
+      final value = _selectedValueTo.balance - DeFiChainWallet.MinKeepUTXO;
+      _amountFromController.text = (value / DefiChainConstants.COIN).toString();
+    } else {
+      _amountFromController.text = (_selectedValueTo.balance / DefiChainConstants.COIN).toString();
+    }
 
     handleChangeTo();
   }
@@ -459,56 +471,15 @@ class _DexScreen extends State<DexScreen> {
 
       streamController.close();
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(S.of(context).dex_swap_successfull),
-        action: SnackBarAction(
-          label: S.of(context).dex_swap_show_transaction,
-          onPressed: () async {
-            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-            if (await canLaunch(url)) {
-              await launch(url);
-            }
-          },
-        ),
-      ));
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).dex_swap_successfull),
+      ));
+
       resetForm();
-    } on HttpException catch (e) {
-      final errorMsg = e.error.error;
-      LogHelper.instance.e("Error saving tx...($errorMsg)");
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error occured commiting the tx...($errorMsg)'),
-      ));
-      sl.get<AppCenterWrapper>().trackEvent("swawFailureHandled", <String, String>{
-        "fromToken": _selectedValueFrom.hash,
-        "toToken": _selectedValueTo.hash,
-        "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo,
-        "maxPrice": maxPrice.toString(),
-        "error": errorMsg
-      });
-    } on TransactionError catch (e) {
-      final errorMsg = e.error;
-      LogHelper.instance.e("Tx Error...($errorMsg)");
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(errorMsg),
-      ));
-      sl.get<AppCenterWrapper>().trackEvent("swawFailureHandled", <String, String>{
-        "fromToken": _selectedValueFrom.hash,
-        "toToken": _selectedValueTo.hash,
-        "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo,
-        "maxPrice": maxPrice.toString(),
-        "error": errorMsg
-      });
     } catch (e) {
-      LogHelper.instance.e("Error...", e);
-      final errorMsg = e.toString();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error occured commiting the tx...($errorMsg)'),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
       ));
 
       sl.get<AppCenterWrapper>().trackEvent("swapFailure", <String, String>{

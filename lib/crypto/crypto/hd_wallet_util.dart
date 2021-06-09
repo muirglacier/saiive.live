@@ -121,8 +121,8 @@ class HdWalletUtil {
     return txb;
   }
 
-  static Future<TransactionBuilder> buildAccountToAccountTransaction(List<tx.Transaction> inputTxs, List<FromAccount> authAddresses, List<ECPair> keys, int token, String to,
-      int amount, int fee, String returnAddress, ChainType chain, ChainNet net) async {
+  static Future<TransactionBuilder> buildAccountToAccountTransaction(List<tx.Transaction> inputTxs, FromAccount authAddresse, List<ECPair> keys, int token, String to, int amount,
+      int fee, String returnAddress, ChainType chain, ChainNet net) async {
     var network = getNetworkType(chain, net);
 
     assert(inputTxs.length == keys.length);
@@ -137,9 +137,7 @@ class HdWalletUtil {
 
       totalInputValue += tx.valueRaw;
     }
-    for (final auth in authAddresses) {
-      txb.addAccountToAccountOutput(token, auth.address, to, auth.amount);
-    }
+    txb.addAccountToAccountOutput(token, authAddresse.address, to, authAddresse.amount);
 
     var changeAmount = totalInputValue - fee;
     txb.addOutput(returnAddress, changeAmount);

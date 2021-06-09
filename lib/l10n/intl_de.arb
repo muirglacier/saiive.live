@@ -85,6 +85,9 @@
   "wallet_locked": "Wallet synchronisiert gerade!",
 
   
+  "wallet_operation_failed": "Transaktionsfehler :(",
+  "wallet_operation_success": "Transaktion war erfolgreich :)",
+  "wallet_operation_show_tx": "Transaktion im Explorer anzeigen...",
   "wallet_operation_refresh_utxo": "UTXO aktualisieren...",
   "wallet_operation_refresh_utxo_done": "UTXO aktualisieren...fertig",
   "wallet_operation_build_tx": "Transaktion wird erstellt",

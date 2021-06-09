@@ -4,7 +4,6 @@ import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/network/model/transaction.dart';
-import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class IWallet {
@@ -35,6 +34,6 @@ abstract class IWallet {
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 
-  Future<Tuple3<String, List<Transaction>, String>> createSendTransaction(int amount, String token, String to, {bool sendMax = false});
-  Future<TransactionData> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createSendTransaction(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
 }

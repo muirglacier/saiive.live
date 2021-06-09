@@ -443,19 +443,18 @@ class _DexScreen extends State<DexScreen> {
     }
 
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-    int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
+    //int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
     final walletTo = await wallet.getPublicKey();
     try {
       var streamController = StreamController<String>();
-      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, maxPrice, 0, loadingStream: streamController);
+      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807, loadingStream: streamController);
 
       sl.get<AppCenterWrapper>().trackEvent("swap", <String, String>{
         "fromToken": _selectedValueFrom.hash,
         "toToken": _selectedValueTo.hash,
         "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo,
-        "maxPrice": maxPrice.toString()
+        "walletTo": walletTo
       });
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
@@ -466,7 +465,6 @@ class _DexScreen extends State<DexScreen> {
         "toToken": _selectedValueTo.hash,
         "valueFrom": valueFrom.toString(),
         "walletTo": walletTo,
-        "maxPrice": maxPrice.toString(),
         "txId": tx.mintTxId
       });
 
@@ -488,7 +486,6 @@ class _DexScreen extends State<DexScreen> {
         "toToken": _selectedValueTo.hash,
         "valueFrom": valueFrom.toString(),
         "walletTo": walletTo,
-        "maxPrice": maxPrice.toString(),
         "error": e.toString()
       });
     }

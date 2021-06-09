@@ -1,8 +1,8 @@
-import 'package:defichainwallet/appstate_container.dart';
+import 'package:saiive.live/appstate_container.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EnvHelper {
-  EnvironmentType getEnvironment() {
+  static EnvironmentType getEnvironment() {
     var currentEnvironment = EnvironmentType.Unknonw;
 
     switch (env["ENV"]) {
@@ -18,5 +18,18 @@ class EnvHelper {
     }
 
     return currentEnvironment;
+  }
+
+  static String environmentToString(EnvironmentType type) {
+    switch (type) {
+      case EnvironmentType.Development:
+        return "DEV";
+      case EnvironmentType.Staging:
+        return "STAGING";
+      case EnvironmentType.Production:
+        return "PRODUCTION";
+      default:
+        return "unkown";
+    }
   }
 }

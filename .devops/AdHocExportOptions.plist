@@ -8,8 +8,8 @@
     <string>5QAM4Z73EV</string>
     <key>provisioningProfiles</key>
     <dict>
-    	<key>com.defichain.wallet</key>
-    	<string>com.defichain.wallet AdHoc Distribution</string>
+    	<key>at.saiive.live</key>
+    	<string>at.saiive.live AdHoc v2</string>
     </dict>
     <key>signingCertificate</key>
     <string>Apple Distribution</string>

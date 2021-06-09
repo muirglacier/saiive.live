@@ -21,7 +21,7 @@ class WalletAddress {
       isChangeAddress: json['isChangeAddress'],
       index: json['index'],
       chain: ChainType.values[json['chain']],
-      network: ChainNet.values[json['chain']],
+      network: ChainNet.values[json['network']],
       name: json['name'],
       publicKey: json['publicKey'],
     );

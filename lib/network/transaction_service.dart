@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:defichainwallet/bus/transactions_loaded_event.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/request/addresses_request.dart';
-import 'package:defichainwallet/network/request/raw_tx_request.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
+import 'package:saiive.live/bus/transactions_loaded_event.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/request/addresses_request.dart';
+import 'package:saiive.live/network/request/raw_tx_request.dart';
+import 'package:saiive.live/network/response/error_response.dart';
 
 import 'model/transaction_data.dart';
 
@@ -14,6 +14,7 @@ abstract class ITransactionService {
   Future<List<Transaction>> getAddressesTransactions(String coin, List<String> addresses);
   Future<List<Transaction>> getUnspentTransactionOutputs(String coin, List<String> addresses);
   Future<TransactionData> getWithTxId(String coin, String txId);
+  Future<String> sendRawTransaction(String coin, String rawTxHex);
 }
 
 class TransactionService extends NetworkService implements ITransactionService {
@@ -106,6 +107,9 @@ class TransactionService extends NetworkService implements ITransactionService {
 
     if (response is ErrorResponse) {
       this.handleError(response);
+    }
+    if (response == null) {
+      return null;
     }
 
     final decodedBody = json.decode(response.body);

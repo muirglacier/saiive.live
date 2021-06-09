@@ -1,5 +1,5 @@
-import 'package:defichainwallet/network/healthcheck_service.dart';
-import 'package:defichainwallet/services/health_service.dart';
+import 'package:saiive.live/network/healthcheck_service.dart';
+import 'package:saiive.live/services/health_service.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class HealthServiceMock extends IHealthService {

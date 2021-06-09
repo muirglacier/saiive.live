@@ -13,7 +13,7 @@ class Sizes {
 }
 
 abstract class BaseTheme {
-  static const pink = Color.fromARGB(0xFF, 0xFF, 0x00, 0xAF);
+  static const accent = Color(0xFF00ADB5);
   static const black = Color(0xFF000000);
   static const white = Color(0xFFFFFFFF);
 
@@ -38,8 +38,8 @@ abstract class BaseTheme {
 }
 
 class DefiThemeLight extends BaseTheme {
-  Color primary = BaseTheme.pink;
-  Color disabled = Color.fromARGB(0xCC, 0xCC, 0x00, 0xAF);
+  Color primary = BaseTheme.accent;
+  Color disabled = Colors.grey;
   Color backgroundColor = Colors.grey[200];
   Color cardBackgroundColor = Color(0xffd3d3d3);
 
@@ -59,8 +59,8 @@ class DefiThemeLight extends BaseTheme {
 }
 
 class DefiThemeDark extends BaseTheme {
-  Color primary = BaseTheme.pink;
-  Color disabled = Color.fromARGB(0xCC, 0xCC, 0x00, 0xAF);
+  Color primary = BaseTheme.accent;
+  Color disabled = Color.fromARGB(0xFF, 0x10, 0xBB, 0xB5);
   Color backgroundColor = Colors.grey[900];
   Color cardBackgroundColor = Colors.grey[800];
 
@@ -73,7 +73,7 @@ class DefiThemeDark extends BaseTheme {
   Color lightColor = BaseTheme.black;
   Color darkColor = BaseTheme.white;
 
-  Color buttonColorPrimary = BaseTheme.pink;
+  Color buttonColorPrimary = BaseTheme.accent;
   Color buttonColorSecondary = Colors.grey.shade50;
 
   Brightness brightness = Brightness.dark;

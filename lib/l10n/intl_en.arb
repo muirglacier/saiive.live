@@ -3,10 +3,10 @@
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
   },
-  "title": "Smart DeFi Wallet",
+  "title": "saiive.live",
   "version": "Version",
   "home_wallet": "Wallet",
-  "home_liquitiy": "Liquidity",
+  "home_liquidity": "Liquidity",
   "home_dex": "DEX",
   "home_tokens": "Tokens",
   
@@ -20,14 +20,14 @@
   "light_mode": "Light",
 
   "test_info": "Thanks for testing!",
-  "test_info_test": "Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!",
+  "test_info_test": "Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!",
   "test_info_funds": "We recomment you staying in the testnet. You will receive some funds from us. We provided a form for that here:",
   "test_info_telegram": "If you have any questions, we have created a Telegram group for that:",
   "test_info_feedback": "If you want to provide feedback, or found any bugs, please create a GitHub issue here:",
   "test_info_epilogue": "The app has for sure some bugs, if you get an error creating a transaction, just retry it a couple times. Don't forget to create a GitHub issue. You can provide us all your publicKey addresses as well, just copy them from the Settings page!",
 
   "wallet_home_network": "Network",
-  "wallet_offline": "It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...",
+  "wallet_offline": "It seems we are having some problems with the supernode ({chains}), we are working hard to restore our services. Check back later...",
   "wallet_uptime_stats": "Show state",
 
   "welcome_wallet_create": "Create a new wallet",
@@ -35,6 +35,14 @@
   "welcome_wallet_info": "Create your DeFiChain wallet and keep full control of your private keys!",
   "welcome_wallet_secure": "Secure",
   "welcome_wallet_privacy": "We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics.",
+  "welcome_accept_terms_and_privacy": "I've read and accepted the Termns of Service and Privacy Notice",
+  "welcome_legal": "Legal",
+  "welcome_legal_text": "Please review the saiive.live Terms of Service and Private Notice.",
+  "welcome_legal_tos": "Terms of Service",
+  "welcome_legal_privacy": "Private Notice",
+  "welcome_legal_tos_link": "https://static.saiive.live/tos.html",
+  "welcome_legal_privacy_link": "https://static.saiive.live/privacy.html",
+
   "wallet_new_reveal": "Reveal my recovery phrase",
   "wallet_new_info1_header": "What's a recovery phrase?",
   "wallet_new_info1_text": "It's the master private key to your wallet and the assets within, only you can access and should take full control of it.",
@@ -59,6 +67,9 @@
   "wallet_recovery_phrase_title": "Recovery phrase",
   "wallet_recovery_phrase_test_title": "Recovery phrase test",
 
+  "wallet_operation_failed": "Transaction failed :(",
+  "wallet_operation_success": "Transaction was successful :)",
+  "wallet_operation_show_tx": "Show transaction in the explorer...",
   "wallet_restore_noAccountFound": "We did not found a used account, but we have created on for you!",
   "wallet_restore_accountsFound": "We have found the following accounts:",
   "wallet_restore_accountsAdded": "The accounts have been added to your local datastore! Your acounts will be synced in the background!",
@@ -73,6 +84,7 @@
   "wallet_restore_word_invalid": "Word is invalid",
   "wallet_empty": "Your wallet is empty!",
   "wallet_receive": "Receive",
+  "wallet_receive_warning": "Send only {coin} to this address. Sending coin or token other than {coin} to this address may result in the loss of your deposit!",
   "wallet_locked": "Wallet is synchronising right now!",
 
   "wallet_operation_refresh_utxo": "Refreshing utxo...",
@@ -95,7 +107,22 @@
   "wallet_send_amount": "Amount",
 
   "settings": "Settings",
+  "settings_wallet": "Wallet",
+  "settings_common": "Common",
+
+  "settings_support": "Support",
+  "settings_support_telegram_live": "Telegram saiive.live",
+  "settings_support_telegram_defichain_en": "Telegram DeFiChain [en]",
+  "settings_support_telegram_defichain_de": "Telegram DeFiChain [de]",
+  "settings_support_wiki": "Wiki",
+  "settings_support_reddit": "Reddit",
+  "settings_support_github": "GitHub",
+  "settings_support_defichain": "Defichain.com",
+
+  "settings_network": "Network",
   "settings_remove_seed": "Remove Seed",
+  "settings_show_logs": "Show logs",
+  "settings_show_wallet_addresses": "Wallet addresses",
   "settings_show_seed": "Show Seed",
   "settings_removed_seed": "Removed saved seed",
   "settings_donate": "If you want to help making the App even better, you can donate $DFI here:",
@@ -136,21 +163,27 @@
   "home_welcome_account_syncing": "Synchronizing...",
   "home_welcome_account_block_height": "Block Height: ",
 
-  "liquitiy": "Liquidity",
-  "liquitiy_pool_share_percentage": "Pool-Share",
-  "liquitiy_add": "Add Liquidity",
-  "liquitiy_add_max": "max",
-  "liquitiy_add_token_a": "Token A",
-  "liquitiy_add_token_b": "Token B",
-  "liquitiy_add_amount_a": "Amount A",
-  "liquitiy_add_amount_b": "Amount B",
-  "liquitiy_add_pool_share": "Pool Share",
-  "liquitiy_add_total_pooled": "Totally pooled",
-  "liquitiy_add_insufficient_funds": "Insufficient Funds for LM",
-  "liquitiy_add_price": "Price",
+  "liquidity": "Liquidity",
+  "liquidity_pool_share_percentage": "Pool-Share",
+  "liquidity_add": "Add Liquidity",
+  "liquidity_add_max": "max",
+  "liquidity_add_token_a": "Token A",
+  "liquidity_add_token_b": "Token B",
+  "liquidity_add_amount_a": "Amount A",
+  "liquidity_add_amount_b": "Amount B",
+  "liquidity_add_pool_share": "Pool Share",
+  "liquidity_add_total_pooled": "Totally pooled",
+  "liquidity_add_insufficient_funds": "Insufficient Funds for LM",
+  "liquidity_add_price": "Price",
   "liqudity_add_successfull": "Add liquidity successfull",
   "liqudity_your_liquidity": "Your Liquidity",
   "liqudity_pool_pairs": "Pool Pairs",
+  "liquidity_remove": "Remove Liquidity",
+  "liquidity_remove_price": "Price",
+  "liquidity_remove_of": "of",
+
+  "liquidity_remove_successfull": "Removed liquidity successfull",
+
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

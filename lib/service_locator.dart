@@ -1,35 +1,33 @@
-import 'dart:io';
-
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/database/wallet_db_sembast.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/network/account_history_service.dart';
-import 'package:defichainwallet/network/account_service.dart';
-import 'package:defichainwallet/network/balance_service.dart';
-import 'package:defichainwallet/network/block_service.dart';
-import 'package:defichainwallet/network/coingecko_service.dart';
-import 'package:defichainwallet/network/defichain_service.dart';
-import 'package:defichainwallet/network/dex_service.dart';
-import 'package:defichainwallet/network/gov_service.dart';
-import 'package:defichainwallet/network/healthcheck_service.dart';
-import 'package:defichainwallet/network/http_service.dart';
-import 'package:defichainwallet/network/ihttp_service.dart';
-import 'package:defichainwallet/network/pool_pair_service.dart';
-import 'package:defichainwallet/network/pool_share_service.dart';
-import 'package:defichainwallet/network/token_service.dart';
-import 'package:defichainwallet/network/transaction_service.dart';
-import 'package:defichainwallet/services/health_service.dart';
-import 'package:defichainwallet/ui/testrun/test_run_service.dart';
-import 'package:defichainwallet/ui/utils/authentication_helper.dart';
-import 'package:defichainwallet/ui/utils/biometrics.dart';
-import 'package:defichainwallet/ui/utils/hapticutil.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/network/account_history_service.dart';
+import 'package:saiive.live/network/account_service.dart';
+import 'package:saiive.live/network/balance_service.dart';
+import 'package:saiive.live/network/block_service.dart';
+import 'package:saiive.live/network/coingecko_service.dart';
+import 'package:saiive.live/network/defichain_service.dart';
+import 'package:saiive.live/network/dex_service.dart';
+import 'package:saiive.live/network/gov_service.dart';
+import 'package:saiive.live/network/healthcheck_service.dart';
+import 'package:saiive.live/network/http_service.dart';
+import 'package:saiive.live/network/ihttp_service.dart';
+import 'package:saiive.live/network/pool_pair_service.dart';
+import 'package:saiive.live/network/pool_share_service.dart';
+import 'package:saiive.live/network/token_service.dart';
+import 'package:saiive.live/network/transaction_service.dart';
+import 'package:saiive.live/services/env_service.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/testrun/test_run_service.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
+import 'package:saiive.live/ui/utils/biometrics.dart';
+import 'package:saiive.live/ui/utils/hapticutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:path/path.dart';
 
-import 'package:defichainwallet/util/sharedprefsutil.dart';
-import 'package:defichainwallet/network/model/vault.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
+import 'package:saiive.live/network/model/vault.dart';
 import 'network/api_service.dart';
 import 'network/ihttp_service.dart';
 import 'network/model/ivault.dart';
@@ -67,14 +65,11 @@ void setupServiceLocator() {
 
   sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
 
-  sl.registerSingletonAsync<IWalletDatabase>(() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+  sl.registerLazySingleton<IWalletDatabaseFactory>(() => WalletDatabaseFactory());
 
-    final path = join(documentsDirectory.path, "db");
-    var db = SembastWalletDatabase(path);
-    await db.open();
-    return db;
-  });
-
+  sl.registerLazySingleton<IWalletService>(() => WalletService());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(true));
+  sl.registerLazySingleton<BitcoinWallet>(() => BitcoinWallet(true));
+
+  sl.registerLazySingleton<IEnvironmentService>(() => EnvironmentService());
 }

@@ -1,8 +1,11 @@
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
-import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/model/pool_share_liquidity.dart';
+import 'package:saiive.live/ui/liquidity/liquidity_remove.dart';
+import 'package:saiive.live/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
+
+import 'liquidity_add.dart';
 
 class PoolShareScreen extends StatefulWidget {
   final PoolShareLiquidity liquidity;
@@ -22,6 +25,25 @@ class _PoolShareScreen extends State<PoolShareScreen> {
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           title: Text(widget.liquidity.tokenA + ' - ' + widget.liquidity.tokenB),
+          actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
+          actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityAddScreen()));
+                  },
+                  child: Icon(Icons.add, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityRemoveScreen(widget.liquidity)));
+                  },
+                  child: Icon(Icons.remove_circle_outline_outlined, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
+          ],
         ),
         body: Padding(
             padding: EdgeInsets.all(10),
@@ -62,7 +84,7 @@ class _PoolShareScreen extends State<PoolShareScreen> {
                         ),
                         Container(
                             child: Row(children: [
-                          Expanded(flex: 4, child: Text(S.of(context).liquitiy_pool_share_percentage)),
+                          Expanded(flex: 4, child: Text(S.of(context).liquidity_pool_share_percentage)),
                           Expanded(flex: 6, child: Text(widget.liquidity.poolSharePercentage.toStringAsFixed(8) + '%', textAlign: TextAlign.right))
                         ])),
                         Column(children: <Widget>[

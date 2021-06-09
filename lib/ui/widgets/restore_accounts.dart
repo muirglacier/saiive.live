@@ -1,25 +1,16 @@
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/crypto/wallet/wallet-restore.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/network/api_service.dart';
-import 'package:defichainwallet/network/model/ivault.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
-import 'package:flutter/foundation.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:tuple/tuple.dart';
 
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 class RestoreAccountsScreen extends StatefulWidget {
-  final ChainType chain;
-
-  RestoreAccountsScreen(this.chain);
+  RestoreAccountsScreen();
 
   @override
   State<StatefulWidget> createState() {
@@ -28,48 +19,28 @@ class RestoreAccountsScreen extends StatefulWidget {
 }
 
 class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
-  Future<List<WalletAccount>> searchAccounts(ChainType chain) async {
+  Future<List<WalletAccount>> searchAccounts() async {
     final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
 
-    var dataMap = Map();
-    dataMap["chain"] = chain;
-    dataMap["network"] = network;
-    dataMap["seed"] = await sl.get<IVault>().getSeed();
-    dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
-    dataMap["apiService"] = sl.get<ApiService>();
+    final walletService = sl.get<IWalletService>();
 
-    var result = await compute(_searchAccounts, dataMap);
+    var result = await walletService.restore(network);
+    var ret = List<WalletAccount>.empty(growable: true);
 
-    var isFirst = true;
-    for (var element in result.item1) {
-      await sl.get<IWalletDatabase>().addAccount(name: element.name, account: element.account, chain: chain, isSelected: isFirst);
-
-      isFirst = false;
-    }
-    for (var address in result.item2) {
-      await sl.get<IWalletDatabase>().addAddress(address);
+    for (final res in result) {
+      ret.addAll(res.item1);
     }
 
-    if (result.item1.length == 0) {
-      await sl.get<IWalletDatabase>().addAccount(name: ChainHelper.chainTypeString(chain), account: 0, chain: chain);
-    }
-
-    await sl.get<DeFiChainWallet>().init();
-    await sl.get<DeFiChainWallet>().syncAll();
-
-    return result.item1;
-  }
-
-  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _searchAccounts(Map dataMap) async {
-    final ret = await WalletRestore.restore(
-      dataMap["chain"],
-      dataMap["network"],
-      dataMap["seed"],
-      dataMap["password"],
-      dataMap["apiService"],
-    );
+    await walletService.init();
 
     return ret;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    sl.get<IHealthService>().checkHealth(context);
   }
 
   Widget _buildAccountEntry(WalletAccount account) {
@@ -128,7 +99,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
 
   Widget _buildRestoreRunner(BuildContext context) {
     return FutureBuilder<List<WalletAccount>>(
-      future: searchAccounts(widget.chain),
+      future: searchAccounts(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<WalletAccount> data = snapshot.data;
@@ -144,9 +115,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).welcome_wallet_restore)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
         body: Card(
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
           Container(

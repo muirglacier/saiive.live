@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:defichainwallet/network/network_service.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/network_service.dart';
 
 abstract class IHealthCheckService {
   Future<bool> isAlive(String coin);

@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:defichainwallet/network/response/error_response.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/network/response/error_response.dart';
+import 'package:saiive.live/service_locator.dart';
 
 import 'package:event_taxi/event_taxi.dart';
 

@@ -2,16 +2,16 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart';
 
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/network/model/account_balance.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/network/model/account.dart';
+import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
-import 'package:defichainwallet/network/model/transaction.dart' as tx;
+import 'package:saiive.live/network/model/transaction.dart' as tx;
 import "package:collection/collection.dart";
 
 import '../chain.dart';
@@ -40,7 +40,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   Stream<List<WalletAccount>> get accountStream => _accountStreamController.stream;
 
   final String _path;
-  SembastWalletDatabase(this._path);
+  final ChainType _chain;
+  SembastWalletDatabase(this._path, this._chain);
 
   Future destroy() async {
     var db = await database;
@@ -291,11 +292,12 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future setAccountBalance(Account balance) async {
-    await _balancesStoreInstance.record(balance.key).put(await database, balance.toJson());
+    var db = await database;
+    await _balancesStoreInstance.record(balance.key).put(db, balance.toJson());
   }
 
-  Future<AccountBalance> getAccountBalance(String token) async {
-    if (token == DeFiConstants.DefiTokenSymbol) {
+  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
+    if (token == DeFiConstants.DefiTokenSymbol && _chain == ChainType.DeFiChain) {
       final unspentTx = await getUnspentTransactions();
       var amount = 0;
 
@@ -303,25 +305,40 @@ class SembastWalletDatabase extends IWalletDatabase {
         amount += unspent.value;
       }
 
-      return new AccountBalance(balance: amount, token: token);
+      return new AccountBalance(balance: amount, token: token, chain: this._chain);
+    } else if (_chain == ChainType.Bitcoin) {
+      final unspentTx = await getUnspentTransactions();
+      var amount = 0;
+
+      for (final unspent in unspentTx) {
+        amount += unspent.value;
+      }
+      return new AccountBalance(balance: amount, token: ChainHelper.chainTypeString(_chain), chain: this._chain);
     }
     var dbStore = _balancesStoreInstance;
-
+    final db = await database;
     var finder = Finder(filter: Filter.equals('token', token));
-    final accounts = await dbStore.find(await database, finder: finder);
+
+    final accounts = await dbStore.find(db, finder: finder);
 
     final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+
+    if (excludeAddresses != null && excludeAddresses.isNotEmpty) {
+      data.removeWhere((element) => excludeAddresses.contains(element.address));
+    }
 
     final ret = groupBy(data, (e) => e.token);
 
     Map sumMap = Map<String, int>();
 
     ret.forEach((k, v) {
-      sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
+      sumMap[k] = v.fold(0, (prev, element) {
+        return prev + element.balance;
+      });
     });
 
     var sumBalance = sumMap[token];
-    return AccountBalance(balance: sumBalance == null ? 0 : sumBalance, token: token);
+    return AccountBalance(balance: sumBalance == null ? 0 : sumBalance, token: token, chain: this._chain);
   }
 
   @override
@@ -378,7 +395,7 @@ class SembastWalletDatabase extends IWalletDatabase {
       sumMap[k] = v.fold(0, (prev, element) => prev + element.balance);
     });
 
-    List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value)).toList();
+    List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value, chain: this._chain)).toList();
     balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol));
     return balances;
   }

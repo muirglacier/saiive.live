@@ -1,10 +1,10 @@
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/network/model/account_balance.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/network/model/account.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 
 class MemoryDatabaseMock extends IWalletDatabase {
   List<Account> _accounts = List<Account>.empty(growable: true);
@@ -82,8 +82,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<AccountBalance> getAccountBalance(String token) async {
+  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
     var balance = 0;
+    _accounts.sort((a, b) => b.balance.compareTo(a.balance));
 
     for (var acc in _accounts) {
       if (acc.token == token) {
@@ -91,7 +92,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
       }
     }
 
-    return AccountBalance(balance: balance, token: token);
+    return AccountBalance(balance: balance, token: token, chain: ChainType.DeFiChain);
   }
 
   @override
@@ -101,6 +102,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<List<WalletAccount>> getAccounts() {
+    _walletAccounts.sort((a, b) => b.balance.compareTo(a.balance));
     return Future.value(_walletAccounts);
   }
 
@@ -133,6 +135,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<List<Transaction>> getUnspentTransactions() {
+    _transactions.sort((a, b) => b.valueRaw.compareTo(a.valueRaw));
     return Future.value(_transactions);
   }
 
@@ -140,6 +143,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount) async {
     var ret = List<Transaction>.empty(growable: true);
 
+    _unspentTransactions.sort((a, b) => a.valueRaw.compareTo(b.valueRaw));
     for (final tx in _unspentTransactions) {
       if (tx.address == pubKey && tx.value >= minAmount) {
         ret.add(tx);

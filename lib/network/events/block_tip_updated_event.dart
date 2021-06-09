@@ -1,4 +1,4 @@
-import 'package:defichainwallet/network/model/block.dart';
+import 'package:saiive.live/network/model/block.dart';
 import 'package:event_taxi/event_taxi.dart';
 
 class BlockTipUpdatedEvent extends Event {

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(walletapp LANGUAGES CXX)
+project(saiive-live LANGUAGES CXX)
 
-set(BINARY_NAME "walletapp")
+set(BINARY_NAME "saiive-live")
 
 cmake_policy(SET CMP0063 NEW)
 

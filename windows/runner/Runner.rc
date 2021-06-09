@@ -63,13 +63,13 @@ IDI_APP_ICON            ICON                    "resources\\app_icon.ico"
 #ifdef FLUTTER_BUILD_NUMBER
 #define VERSION_AS_NUMBER FLUTTER_BUILD_NUMBER
 #else
-#define VERSION_AS_NUMBER 1,0,0
+#define VERSION_AS_NUMBER 99,99,99
 #endif
 
 #ifdef FLUTTER_BUILD_NAME
 #define VERSION_AS_STRING #FLUTTER_BUILD_NAME
 #else
-#define VERSION_AS_STRING "1.0.0"
+#define VERSION_AS_STRING "99.99.99"
 #endif
 
 VS_VERSION_INFO VERSIONINFO
@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.defichain" "\0"
-            VALUE "FileDescription", "A new Flutter project." "\0"
+            VALUE "CompanyName", "at.saiive" "\0"
+            VALUE "FileDescription", "saiive.live - DeFi Wallet." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "walletapp" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2021 com.defichain. All rights reserved." "\0"
-            VALUE "OriginalFilename", "walletapp.exe" "\0"
-            VALUE "ProductName", "walletapp" "\0"
+            VALUE "InternalName", "saiive-live" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2021 at.saiive. All rights reserved." "\0"
+            VALUE "OriginalFilename", "saiive-live.exe" "\0"
+            VALUE "ProductName", "saiive-live" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

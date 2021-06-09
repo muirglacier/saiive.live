@@ -1,7 +1,7 @@
 import 'dart:core';
 
-import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
+import 'package:saiive.live/helper/constants.dart';
+import 'package:saiive.live/network/model/transaction.dart';
 
 class TransactionDetail {
   final List<Transaction> inputs;

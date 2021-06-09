@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:defichainwallet/bus/pool_pair_loaded_event.dart';
-import 'package:defichainwallet/network/model/pool_pair.dart';
-import 'package:defichainwallet/network/model/testpoolswap_result.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/request/testpoolswap_request.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
+import 'package:saiive.live/bus/pool_pair_loaded_event.dart';
+import 'package:saiive.live/network/model/pool_pair.dart';
+import 'package:saiive.live/network/model/testpoolswap_result.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/request/testpoolswap_request.dart';
+import 'package:saiive.live/network/response/error_response.dart';
 
 abstract class IDexService {
   Future<TestPoolSwapResult> testPoolSwap(String coin, String from, String tokenFrom, double amountFrom, String to, String tokenTo);

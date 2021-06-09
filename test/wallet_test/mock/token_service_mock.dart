@@ -1,5 +1,5 @@
-import 'package:defichainwallet/network/model/token.dart';
-import 'package:defichainwallet/network/token_service.dart';
+import 'package:saiive.live/network/model/token.dart';
+import 'package:saiive.live/network/token_service.dart';
 
 class TokenServiceMock implements ITokenService {
   @override

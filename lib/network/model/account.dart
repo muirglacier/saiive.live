@@ -1,4 +1,5 @@
-import 'package:defichainwallet/helper/constants.dart';
+import 'package:saiive.live/crypto/crypto/from_account.dart';
+import 'package:saiive.live/helper/constants.dart';
 
 class Account {
   final String token;
@@ -21,6 +22,11 @@ class Account {
         raw: json['raw'] ?? '',
         chain: json['chain'],
         network: json['network']);
+  }
+
+  FromAccount toFromAccount() {
+    var fromAccount = FromAccount(address: address, amount: balance);
+    return fromAccount;
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{'token': token, 'address': address, 'balance': balance, 'raw': raw, 'chain': chain, 'network': network};

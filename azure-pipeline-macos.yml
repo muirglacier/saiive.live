@@ -53,21 +53,44 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
-          KeyVaultName: 'defichain-wallet'
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
           SecretsFilter: 'apple-macos-developerid-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletMacOSDeveloperID.p12'
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -109,19 +132,12 @@ stages:
           generateCodeCoverageReport: true
 
       - task: Bash@3
-        displayName: "Build MacOS Staging"
+        displayName: "Build MacOS DEV"
         inputs:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --release --target=lib/main.dart --build-name=$(AppVersion) --verbose
-
-      - task: Bash@3
-        displayName: 'Sign .app'
-        inputs:
-          targetType: 'inline'
-          script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/walletapp.app
+            $(FlutterToolPath)/flutter build macos --target=lib/main.dart --build-name=$(AppVersion) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -131,22 +147,22 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "defichainwallet-debug" \
+              --volname "saiive-live-debug" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/walletapp.app" 260 250 \
-              --hide-extension "walletapp.app" \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
-              "walletapp.dmg" \
-              "build/macos/Build/Products/Release/walletapp.app"
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Debug/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: 'walletapp.dmg'
+          contents: 'saiive.live.dmg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/debug'
 
       - task: PublishBuildArtifacts@1
@@ -163,21 +179,44 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
-          KeyVaultName: 'defichain-wallet'
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
           SecretsFilter: 'apple-macos-developerid-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletMacOSDeveloperID.p12'
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -224,14 +263,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --release --target=lib/main_staging.dart --build-name=$(AppVersion) --verbose
-
-      - task: Bash@3
-        displayName: 'Sign .app'
-        inputs:
-          targetType: 'inline'
-          script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/walletapp.app
+            $(FlutterToolPath)/flutter build macos --target=lib/main_staging.dart --build-name=$(AppVersion) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -241,22 +273,22 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "defichainwallet-staging" \
+              --volname "saiive-live-staging" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/walletapp.app" 260 250 \
-              --hide-extension "walletapp.app" \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
-              "walletapp.dmg" \
-              "build/macos/Build/Products/Release/walletapp.app"
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Debug/saiive.live.app"
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: 'walletapp.dmg'
+          contents: 'saiive.live.dmg'
           targetFolder: '$(build.artifactStagingDirectory)/macos/staging'
 
       - task: PublishBuildArtifacts@1
@@ -264,30 +296,53 @@ stages:
         inputs:
           ArtifactName: 'staging-macos'
 
-  - job: BuildMacOSProduction
+  - job: BuildMacOSProductionAppStore
     dependsOn: ReleaseNotes
-    displayName: "Build macOS Production"
+    displayName: "Build macOS Production AppStore"
     pool:
       vmImage: 'macOS-latest'
     
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: 'Microsoft Partner Network(551ab192-148c-445b-ae4f-0d0107e6f5de)'
-          KeyVaultName: 'defichain-wallet'
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
           SecretsFilter: 'apple-macos-developerid-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletMacOSDeveloperID.p12'
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
           certPwd: '$(apple-macos-developerid-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -329,19 +384,125 @@ stages:
           generateCodeCoverageReport: true
 
       - task: Bash@3
-        displayName: "Build MacOS Staging"
+        displayName: "Build MacOS Prod"
         inputs:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --release --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose
+            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --release
 
       - task: Bash@3
-        displayName: 'Sign .app'
+        displayName: 'Create .pkg'
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/codesign --force --deep -s 5QAM4Z73EV ./build/macos/Build/Products/Release/walletapp.app
+            /usr/bin/productbuild --component build/macos/Build/Products/Release/saiive.live.app /Applications --sign E220D8D5B09C6C7C345DE6EF780C0FBB9CA0EA08 saiive.live.pkg
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts pkg"
+        inputs:
+          contents: 'saiive.live.pkg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod-appstore'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-macos'
+
+  - job: BuildMacOSProductionDirect
+    dependsOn: ReleaseNotes
+    displayName: "Build macOS Production Direct"
+    pool:
+      vmImage: 'macOS-latest'
+
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'apple-macos-developerid-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion)
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter enable macos"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: Bash@3
+        displayName: "Build MacOS Prod"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -351,25 +512,25 @@ stages:
             brew install create-dmg
 
             create-dmg \
-              --volname "defichainwallet-staging" \
+              --volname "saiive.live" \
               --window-pos 200 120 \
               --window-size 800 529 \
               --icon-size 130 \
               --text-size 14 \
-              --icon "build/macos/Build/Products/Release/walletapp.app" 260 250 \
-              --hide-extension "walletapp.app" \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
               --app-drop-link 540 250 \
               --hdiutil-quiet \
-              "walletapp.dmg" \
-              "build/macos/Build/Products/Release/walletapp.app"
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Debug/saiive.live.app"
 
       - task: CopyFiles@2
-        displayName: "Copy artifacts"
+        displayName: "Copy artifacts dmg"
         inputs:
-          contents: 'walletapp.dmg'
-          targetFolder: '$(build.artifactStagingDirectory)/macos/staging'
+          contents: 'saiive.live.dmg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod-direct'
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
-          ArtifactName: 'staging-macos'
+          ArtifactName: 'prod-macos'

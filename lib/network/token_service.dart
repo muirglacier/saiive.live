@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:defichainwallet/bus/token_loaded_event.dart';
-import 'package:defichainwallet/bus/tokens_loaded_event.dart';
-import 'package:defichainwallet/network/model/token.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
+import 'package:saiive.live/bus/token_loaded_event.dart';
+import 'package:saiive.live/bus/tokens_loaded_event.dart';
+import 'package:saiive.live/network/model/token.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/response/error_response.dart';
 
 abstract class ITokenService {
   Future<List<Token>> getTokens(String coin);

@@ -39,12 +39,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.defichain.wallet"
+        applicationId "at.saiive.live"
         minSdkVersion 28
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        resValue "string", "build_config_package", "com.defichain.wallet"
+        resValue "string", "build_config_package", "at.saiive.live"
     }
 
     buildTypes {
@@ -66,20 +66,20 @@ android {
         dev {
             getIsDefault().set(true)
             dimension "env"
-            applicationId "com.defichain.wallet.dev"
-            resValue "string", "build_config_package", "com.defichain.wallet"
+            applicationId "at.saiive.live.dev"
+            resValue "string", "build_config_package", "at.saiive.live"
         }
  
         staging {
             dimension "env"
-            applicationId "com.defichain.wallet.staging"
-            resValue "string", "build_config_package", "com.defichain.wallet"
+            applicationId "at.saiive.live.staging"
+            resValue "string", "build_config_package", "at.saiive.live"
         }
 
         prod {
             dimension "env"
-            applicationId "com.defichain.wallet"
-            resValue "string", "build_config_package", "com.defichain.wallet"
+            applicationId "at.saiive.live"
+            resValue "string", "build_config_package", "at.saiive.live"
         }
     }
 }

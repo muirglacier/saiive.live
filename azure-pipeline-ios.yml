@@ -52,21 +52,21 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: 'saiive Pay-As-You-Go (b207e678-0c82-4ed5-8cd7-3be5888d64e8)'
-          KeyVaultName: 'saiive-wallet'
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
           SecretsFilter: 'apple-adhoc-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletAdHoc.p12'
+          certSecureFile: 'DPDist.p12'
           certPwd: '$(apple-adhoc-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.adhoc.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.adhoc.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -139,21 +139,21 @@ stages:
     steps:
       - task: AzureKeyVault@1
         inputs:
-          azureSubscription: 'saiive Pay-As-You-Go (b207e678-0c82-4ed5-8cd7-3be5888d64e8)'
-          KeyVaultName: 'saiive-wallet'
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
           SecretsFilter: 'apple-adhoc-cert-password'
           RunAsPreJob: true
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DefiChainWalletAdHoc.p12'
+          certSecureFile: 'DPDist.p12'
           certPwd: '$(apple-adhoc-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'com.defichain.wallet.appstore.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.appstore.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"

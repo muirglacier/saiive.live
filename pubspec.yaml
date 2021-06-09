@@ -1,5 +1,5 @@
-name: defichainwallet
-description: A new Flutter project.
+name: saiive.live
+description: DefiChain and Bitcoin Wallet
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -32,13 +32,13 @@ dependencies:
   url_launcher: ^6.0.3
 
   flutter_dotenv: ^3.1.0
-  flutter_config: ^1.0.8
+  flutter_config: ^2.0.0
   shared_preferences: ^2.0.5
   package_info_plus  : ^1.0.0
-  permission_handler: ^6.1.1
+  permission_handler: ^7.1.0
 
   #cryto libs
-  defichaindart: ^2.2.1+5
+  defichaindart: ^3.0.1
 
   #utils
   sprintf: ^6.0.0 
@@ -47,18 +47,19 @@ dependencies:
   retry: ^3.1.0 
   tuple: ^2.0.0
   mutex: ^3.0.0
-  async: ^2.4.2
+  async: ^2.5.0
   
   #ui libs
   carousel_slider: ^3.0.0
   flutter_typeahead: ^3.1.1
-  pull_to_refresh: ^1.6.4
+  pull_to_refresh: ^2.0.0
   auto_size_text: ^2.1.0
   qr_flutter: ^4.0.0
-  flutter_qr_reader: 1.0.3
+  flutter_qr_reader: 1.0.3 #do not update
   flutter_launcher_icons: ^0.9.0
   clipboard_manager: ^0.0.4
   flutter_icons: ^1.1.0
+  webview_flutter: ^2.0.7
 
   # Desktop
   window_size:
@@ -67,7 +68,7 @@ dependencies:
       path: plugins/window_size
 
   # Dependency Injection
-  get_it: ^6.0.0
+  get_it: ^7.1.3
 
   # Securley store data in a keystore
   flutter_secure_storage: ^4.1.0
@@ -98,6 +99,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  msix: ^2.1.2
 
 flutter_intl:
   enabled: true
@@ -116,3 +118,14 @@ flutter:
     - assets/env/.env-Staging
     - assets/image/
 
+
+msix_config:
+  display_name: saiive.live - DeFi Wallet
+  publisher_display_name: saiive.live
+  publisher: CN=saiive.live
+  identity_name: at.saiive.live
+  msix_version: 99.99.99.99
+  icons_background_color: "#00ADB5"
+  architecture: x64
+  # See https://docs.microsoft.com/en-us/windows/uwp/packaging/app-capability-declarations
+  capabilities: "internetClient"

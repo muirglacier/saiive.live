@@ -1,4 +1,4 @@
-import 'package:defichainwallet/ui/model/settings_item.dart';
+import 'package:saiive.live/ui/model/settings_item.dart';
 import 'package:flutter/material.dart';
 
 enum AvailableLanguage {

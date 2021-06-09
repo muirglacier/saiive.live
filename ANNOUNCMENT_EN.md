@@ -3,14 +3,14 @@ The current implementation is still a work in progress.
 
 We wanted to let the community to know about it. We are working hard on it, and we want to release it as soon as possible. 
 
-# Smart DeFi Wallet
+# saiive.livechain
 ## Key Features
 * Ready to use right after installation. Blockchain is managed by a server (like Mycelium).
 * No custodial wallet - you still **OWN YOUR PRIVATE KEYS**
 * Send/Receive DFI+DAT Tokens
 * Liquidity Mining - Add & Remove Liquitidy shares
 * DEX - Swap pairs on the go
-* [OpenSource](https://github.com/DeFiCh-WalletApp/WalletApp)
+* [OpenSource](https://github.com/saiive/saiive.live)
 * Cross Platform (Flutter)
 
 
@@ -19,12 +19,12 @@ What is implemented, and should be (list is prioritized).
 * See funds
 * Send DFI 
 * Send token (currently in work, should be finished the next couple days)
-* DEX (TODO)
-* Liqudity Mining (TODO)
-* Tokens (TODO)
+* DEX
+* Liqudity Mining
+* Tokens
 
 ## Screenshots
-Can be found in the app repository [here](https://github.com/DeFiCh-WalletApp/WalletApp).
+Can be found in the app repository [here](https://github.com/saiive/saiive.live).
 
 ## Feedback
 

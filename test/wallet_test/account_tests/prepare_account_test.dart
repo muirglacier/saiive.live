@@ -1,10 +1,11 @@
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/crypto/chain.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/network/model/account.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import '../mock/transaction_service_mock.dart';
 import '../wallet_test_base.dart';
 
 void main() async {
@@ -12,7 +13,8 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
+
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
@@ -26,19 +28,23 @@ void main() async {
           value: 66904421465,
           confirmations: -1);
       await db.addTransaction(tx);
+      await db.addUnspentTransaction(tx);
 
-      final dfiAccount =
-          Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 24262150804, raw: "242.62150804@DFI", chain: "DFI", network: "testnet");
+      final dfiAccount = Account(
+          token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 24262150804, raw: "242.62150804@DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiAccount);
-      final dfiToken = Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, raw: "100000000@\$DFI", chain: "DFI", network: "testnet");
+      final dfiToken = Account(
+          token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, raw: "100000000@\$DFI", chain: "DFI", network: "testnet");
 
       await db.setAccountBalance(dfiToken);
     }
 
     Future destoryTest() async {
-      final db = sl.get<IWalletDatabase>();
-      await db.destroy();
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
+
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.close();
     }
 
     test("has enough acc", () async {
@@ -47,8 +53,10 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
+      final txController = sl.get<TransactionServiceMock>();
       final tx = await wallet.prepareUtxoToAccountTransaction(240 * 100000000);
-      expect(tx, null);
+      expect(tx, 240 * 100000000);
+      expect(txController.lastTx, null);
       await destoryTest();
     });
 
@@ -59,7 +67,8 @@ void main() async {
 
       await wallet.init();
       final tx = await wallet.prepareUtxoToAccountTransaction(243 * 100000000);
-      expect(tx.item1,
+      final txController = sl.get<TransactionServiceMock>();
+      expect(txController.lastTx,
           "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff0224944102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b870100000000249441020000000053d38e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f87024830450221009f5f792f26aa41e9730a59503cd60286cbd7ff14fa2083cafb7c739ae64ada6e0220774853dd60e36252baed56005ddc958196d934b57551acb214b2b1618600cedf012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
       await destoryTest();
     });

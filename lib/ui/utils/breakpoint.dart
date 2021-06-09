@@ -12,10 +12,7 @@ import 'package:flutter/material.dart';
 /// [https://material.io/design/layout/responsive-layout-grid.html#grid-behavior]
 enum WindowSize { xxsmall, xsmall, small, medium, large, xlarge, xxlarge }
 
-int usedColumns(int availableColumns, int divisor) =>
-    (availableColumns / divisor).floor() < 1
-        ? 1
-        : (availableColumns / divisor).floor();
+int usedColumns(int availableColumns, int divisor) => (availableColumns / divisor).floor() < 1 ? 1 : (availableColumns / divisor).floor();
 
 enum LayoutClass {
   smallHandset,
@@ -61,9 +58,7 @@ class Breakpoint {
 
     if (constraints.debugAssertIsValid()) {
       _width = constraints.normalize().maxWidth;
-      orientation = constraints.maxHeight > constraints.maxWidth
-          ? Orientation.portrait
-          : Orientation.landscape;
+      orientation = constraints.maxHeight > constraints.maxWidth ? Orientation.portrait : Orientation.landscape;
     }
 
     return _calcBreakpoint(orientation, _width);
@@ -181,8 +176,7 @@ class Breakpoint {
       return Breakpoint(
         columns: 4,
         gutters: 8,
-        device:
-            isPortrait ? LayoutClass.smallTablet : LayoutClass.mediumHandset,
+        device: isPortrait ? LayoutClass.smallTablet : LayoutClass.mediumHandset,
         window: WindowSize.small,
         orientation: orientation,
       );
@@ -191,8 +185,7 @@ class Breakpoint {
       return Breakpoint(
         columns: 4,
         gutters: 6,
-        device:
-            isPortrait ? LayoutClass.largeHandset : LayoutClass.smallHandset,
+        device: isPortrait ? LayoutClass.largeHandset : LayoutClass.smallHandset,
         window: WindowSize.xsmall,
         orientation: orientation,
       );
@@ -201,8 +194,7 @@ class Breakpoint {
       return Breakpoint(
         columns: 4,
         gutters: 6,
-        device:
-            isPortrait ? LayoutClass.largeHandset : LayoutClass.smallHandset,
+        device: isPortrait ? LayoutClass.largeHandset : LayoutClass.smallHandset,
         window: WindowSize.xsmall,
         orientation: orientation,
       );
@@ -211,8 +203,7 @@ class Breakpoint {
       return Breakpoint(
         columns: 2,
         gutters: 6,
-        device:
-            isPortrait ? LayoutClass.mediumHandset : LayoutClass.smallHandset,
+        device: isPortrait ? LayoutClass.mediumHandset : LayoutClass.smallHandset,
         window: WindowSize.xsmall,
       );
     }
@@ -241,7 +232,6 @@ class BreakpointBuilder extends StatelessWidget {
   final BuildContext context;
   @override
   Widget build(BuildContext root) {
-    final _context = context ?? root;
     return LayoutBuilder(
       builder: (_context, constraints) {
         return builder(_context, Breakpoint.fromConstraints(constraints));

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/model/available_themes.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/model/available_themes.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 
 class LoadingWidget extends StatefulWidget {

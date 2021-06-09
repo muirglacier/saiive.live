@@ -1,27 +1,35 @@
 import 'dart:async';
 
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/balance.dart';
-import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/helper/env.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/services/health_service.dart';
-import 'package:defichainwallet/ui/utils/qr_code_scan.dart';
-import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
-import 'package:defichainwallet/ui/utils/authentication_helper.dart';
+import 'package:event_taxi/event_taxi.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/errors/TransactionError.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/balance.dart';
+import 'package:saiive.live/helper/constants.dart';
+import 'package:saiive.live/helper/env.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/response/error_response.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/utils/qr_code_scan.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
+import 'package:saiive.live/ui/widgets/loading_overlay.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class WalletSendScreen extends StatefulWidget {
   final String token;
   final String toAddress;
+  final ChainType chainType;
 
-  WalletSendScreen(this.token, {this.toAddress});
+  WalletSendScreen(this.token, this.chainType, {this.toAddress});
 
   @override
   State<StatefulWidget> createState() {
@@ -39,36 +47,31 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
 
+      var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
+
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<DeFiChainWallet>().createAndSend(totalAmount, widget.token, _addressController.text, loadingStream: stream);
+      final tx = await sl
+          .get<IWalletService>()
+          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
-      final txId = tx.txId;
+      final txId = tx;
       LogHelper.instance.d("sent tx $txId");
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(txId),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(txId, S.of(context).wallet_operation_success),
       ));
 
+      Navigator.of(context).pop();
       sl
           .get<AppCenterWrapper>()
           .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
     } catch (e) {
-      LogHelper.instance.e("Error creating tx", e);
-      if (e is ErrorResponse) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.error),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailureHandled", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.error});
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.toString()),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
-      }
+      sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+      ));
     }
   }
 
@@ -79,19 +82,14 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<DeFiChainWallet>().prepareAccount(totalAmount, loadingStream: stream);
-
-      final txId = tx.txId;
-      LogHelper.instance.d("sent tx $txId");
+      await sl.get<DeFiChainWallet>().prepareAccount(totalAmount, loadingStream: stream);
 
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(txId),
+        content: Text("done"),
       ));
 
-      sl
-          .get<AppCenterWrapper>()
-          .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
+      sl.get<AppCenterWrapper>().trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
     } catch (e) {
       LogHelper.instance.e("Error creating tx", e);
       if (e is ErrorResponse) {
@@ -111,7 +109,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   }
 
   handleSetMax() async {
-    var tokenAmount = await BalanceHelper().getAccountBalance(widget.token);
+    var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
     _amountController.text = (tokenAmount.balance / DefiChainConstants.COIN).toString();
   }
 
@@ -122,7 +120,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     sl.get<IHealthService>().checkHealth(context);
     sl.get<AppCenterWrapper>().trackEvent("openWalletSend", <String, String>{"coin": widget.token});
 
-    _currentEnvironment = new EnvHelper().getEnvironment();
+    _currentEnvironment = EnvHelper.getEnvironment();
 
     var toAddress = widget.toAddress;
 
@@ -178,7 +176,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                     height: 30,
                     minWidth: 40,
                     child: ElevatedButton(
-                        child: Text(S.of(context).liquitiy_add_max),
+                        child: Text(S.of(context).liquidity_add_max),
                         onPressed: () {
                           handleSetMax();
                         }))
@@ -198,7 +196,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                       });
                     },
                   )),
-              if (_currentEnvironment == EnvironmentType.Development)
+              if (_currentEnvironment == EnvironmentType.Development && widget.chainType == ChainType.DeFiChain)
                 Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: SizedBox(

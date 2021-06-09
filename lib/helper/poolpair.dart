@@ -1,12 +1,12 @@
-import 'package:defichainwallet/network/coingecko_service.dart';
-import 'package:defichainwallet/network/defichain_service.dart';
-import 'package:defichainwallet/network/gov_service.dart';
-import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
-import 'package:defichainwallet/network/model/yield_farming.dart';
-import 'package:defichainwallet/network/pool_pair_service.dart';
-import 'package:defichainwallet/network/pool_share_service.dart';
-import 'package:defichainwallet/network/token_service.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/network/coingecko_service.dart';
+import 'package:saiive.live/network/defichain_service.dart';
+import 'package:saiive.live/network/gov_service.dart';
+import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
+import 'package:saiive.live/network/model/yield_farming.dart';
+import 'package:saiive.live/network/pool_pair_service.dart';
+import 'package:saiive.live/network/pool_share_service.dart';
+import 'package:saiive.live/network/token_service.dart';
+import 'package:saiive.live/service_locator.dart';
 
 class PoolPairHelper {
   Future<List<PoolPairLiquidity>> getPoolPairs(String coin, String currency) async {

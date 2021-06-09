@@ -1,10 +1,10 @@
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/crypto/chain.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/network/model/account.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import '../wallet_test_base.dart';
 
 void main() async {
@@ -12,7 +12,8 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
+
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
@@ -54,8 +55,10 @@ void main() async {
     }
 
     Future destoryTest() async {
-      final db = sl.get<IWalletDatabase>();
-      await db.destroy();
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
+
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.close();
     }
 
     test("has enough acc", () async {

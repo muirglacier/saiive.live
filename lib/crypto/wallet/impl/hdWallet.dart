@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/crypto/wallet/hdWallet.dart';
-import 'package:defichainwallet/crypto/wallet/wallet.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:defichainwallet/network/api_service.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/hdWallet.dart';
+import 'package:saiive.live/crypto/wallet/wallet.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/api_service.dart';
+import 'package:saiive.live/network/model/key_account_wrapper.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:hex/hex.dart';
 import 'package:tuple/tuple.dart';
 
@@ -125,26 +127,36 @@ class HdWallet extends IHdWallet {
 
   @override
   Future syncWallet(IWalletDatabase database, {StreamController<String> loadingStream}) async {
-    await database.clearUnspentTransactions();
-    await database.clearAccountBalances();
-
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
+
+    var newUtxos = List<Transaction>.empty(growable: true);
+    var newBalance = List<KeyAccountWrapper>.empty(growable: true);
 
     await _syncWallet(database, (addresses, pos, max) async {
       loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
       final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
-      final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
 
-      utxo.forEach((element) async {
-        await database.addUnspentTransaction(element);
-      });
+      newUtxos.addAll(utxo);
 
-      for (final acc in balances) {
-        acc.accounts.forEach((element) async {
-          await database.setAccountBalance(element);
-        });
+      if (_chain == ChainType.DeFiChain) {
+        final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
+        newBalance.addAll(balances);
       }
     }, loadingStream: loadingStream);
+
+    await database.clearUnspentTransactions();
+    newUtxos.forEach((element) async {
+      await database.addUnspentTransaction(element);
+      print("tx with id ${element.mintTxId} has ${element.confirmations} confirmations");
+    });
+
+    await database.clearAccountBalances();
+    for (final acc in newBalance) {
+      for (final element in acc.accounts) {
+        await database.setAccountBalance(element);
+      }
+    }
+    var balances = await database.getAccountBalances();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
   }

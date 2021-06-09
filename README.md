@@ -1,12 +1,15 @@
-# defichainwallet
+# saiive.live
 Android
-[![Build Status Android](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.Android?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=6&branchName=main)
+[![Build Status Adnroid](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.droid?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=15&branchName=main)
 
 iOS
-[![Build Status iOS](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.iOS?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=7&branchName=main)
+[![Build Status](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.ios?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=16&branchName=main)
 
 Windows
-[![Build Status](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_apis/build/status/WalletApp.Windows?branchName=main)](https://dev.azure.com/defich-wallet/DefiCh-Wallet/_build/latest?definitionId=8&branchName=main)
+[![Build Status Android](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.win?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=18&branchName=main)
+
+MacOS
+[![Build Status MacOS](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.mac?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=17&branchName=main)
 
 A mobile application for [DeFiChain](https://defichain.com/).
 
@@ -44,10 +47,14 @@ Mistakes and bugs happen, but with your help in resolving and reporting, togethe
 ## Wallet
 * View Funds
   * Sync your wallet
-  * See all funds ($DFI, DST)
-* Send $DFI funds
-* Swap Tokens
+  * See all funds ($DFI, DATs and BTC)
+* Send funds - $DFI, DATs and BTC
+* Receive funds - $DFI, DATs and BTC
+* Swap Tokens - $DFI <-> DATs
 * Add Liquidity 
+* Remove Liquidity
+* List Tokens
+* List History
 
 
 # Development
@@ -64,6 +71,9 @@ flutter pub get
 flutter build apk //for android
 flutter build ios //for iOS
 flutter build web //for web
+flutter build macos //for macos
+flutter build windows //for windows
+flutter build linux //for linux
 ```
 
 # Contributors
@@ -75,14 +85,14 @@ flutter build web //for web
 # Screenshots
 Everything is just early preview!
 
-![Init](./screenshots/init.jpg)
-![Home](./screenshots/home.jpg)
-![Token](./screenshots/token.jpg)
+![Home](./screenshots/home_ios.png)
+![History](./screenshots/history_ios.png)
+![Receive](./screenshots/receive_ios.png)
+![Token](./screenshots/token_ios.png)
 ![Dex (iOS)](./screenshots/dex_ios.png)
 ![Home iOS](./screenshots/home_ios.png)
-![Token iOS](./screenshots/token_ios.png)
-![Tokens iOS](./screenshots/tokens_ios.png)
 ![Liquidity iOS](./screenshots/liquidity_ios.png)
+![Liquidity Detail iOS](./screenshots/liquidity_detail_ios.png)
 
 
 

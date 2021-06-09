@@ -1,23 +1,28 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/network/model/block.dart';
-import 'package:defichainwallet/ui/model/authentication_method.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/helper/env.dart';
+import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/env_service.dart';
+import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:defichainwallet/ui/model/available_language.dart';
-import 'package:defichainwallet/ui/model/available_themes.dart';
+import 'package:saiive.live/ui/model/available_language.dart';
+import 'package:saiive.live/ui/model/available_themes.dart';
 
 class SharedPrefsUtil {
   // Keys
-  static const String first_launch_key = 'defi_first_launch';
-  static const String seed_backed_up_key = 'defi_seed_backup';
-  static const String cur_language = 'defi_language_pref';
-  static const String cur_theme = 'defi_theme_pref';
+  static const String first_launch_key = 'saiive_first_launch';
+  static const String seed_backed_up_key = 'saiive_seed_backup';
+  static const String cur_language = 'saiive_language_pref';
+  static const String cur_theme = 'saiive_theme_pref';
   static const String cur_net = 'cur_net';
-  static const String auth_method = 'defi_auth_method';
-  static const String last_block = 'defi_last_block';
+  static const String auth_method = 'saiive_auth_method';
+  static const String last_block = 'saiive_defichain_last_block';
+  static const String last_block_btc = 'saiive_btc_last_block';
   static const String test_mode_page = 'test_mode_page';
   static const String instance_id = 'instance_id';
   static const String change_address_index = 'chg_addr_index';
@@ -26,6 +31,13 @@ class SharedPrefsUtil {
   // For plain-text data
   Future<void> set(String key, value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      var currentEnvironment = await sl.get<IEnvironmentService>().getCurrentEnvironment();
+
+      key = EnvHelper.environmentToString(currentEnvironment) + "_" + key;
+    }
+
     if (value is bool) {
       sharedPreferences.setBool(key, value);
     } else if (value is String) {
@@ -41,6 +53,13 @@ class SharedPrefsUtil {
 
   Future<dynamic> get(String key, {dynamic defaultValue}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      var currentEnvironment = await sl.get<IEnvironmentService>().getCurrentEnvironment();
+
+      key = EnvHelper.environmentToString(currentEnvironment) + "_" + key;
+    }
+
     return sharedPreferences.get(key) ?? defaultValue;
   }
 

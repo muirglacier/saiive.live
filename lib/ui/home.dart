@@ -1,15 +1,18 @@
 import 'dart:io';
 
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/version.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/dex/dex.dart';
-import 'package:defichainwallet/ui/liquidity/liquitiy.dart';
-import 'package:defichainwallet/ui/tokens/tokens.dart';
-import 'package:defichainwallet/ui/wallet/wallet_home.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/env.dart';
+import 'package:saiive.live/helper/version.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/dex/dex.dart';
+import 'package:saiive.live/ui/liquidity/liquidity.dart';
+import 'package:saiive.live/ui/settings/settings.dart';
+import 'package:saiive.live/ui/tokens/tokens.dart';
+import 'package:saiive.live/ui/wallet/wallet_home.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -39,10 +42,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void initMenu(BuildContext context) {
     _navigationEntries = [
       _NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen()),
-      _NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquitiy, page: LiquidityScreen()),
+      _NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen()),
       _NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen()),
       _NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen())
     ];
+
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      _navigationEntries.add(_NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen()));
+    }
   }
 
   void _onItemTapped(int index) {
@@ -60,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _init() async {
     _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
     _version = await VersionHelper().getVersion();
+
     setState(() {});
   }
 
@@ -71,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();
+    var currentEnvironment = EnvHelper.getEnvironment();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -97,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
                         Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(height: 5),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(ChainHelper.chainNetworkString(_currentNet)), Text(_version)])
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(ChainHelper.chainNetworkString(_currentNet)), Text(_version)]),
+                        if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
                       ]),
                     ),
                     Divider(color: StateContainer.of(context).curTheme.backgroundColor)

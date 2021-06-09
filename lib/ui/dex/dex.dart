@@ -1,28 +1,30 @@
 import 'dart:async';
 
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/errors/TransactionError.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/helper/balance.dart';
-import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:defichainwallet/network/dex_service.dart';
-import 'package:defichainwallet/network/events/wallet_sync_start_event.dart';
-import 'package:defichainwallet/network/model/account_balance.dart';
-import 'package:defichainwallet/network/model/pool_pair.dart';
-import 'package:defichainwallet/network/model/token_balance.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/pool_pair_service.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/services/health_service.dart';
-import 'package:defichainwallet/ui/utils/token_icon.dart';
-import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
-import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/errors/TransactionError.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/helper/balance.dart';
+import 'package:saiive.live/helper/constants.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/dex_service.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/pool_pair.dart';
+import 'package:saiive.live/network/model/token_balance.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/pool_pair_service.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
+import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/ui/widgets/loading_overlay.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,6 +60,22 @@ class _DexScreen extends State<DexScreen> {
 
   var _amountFromController = TextEditingController(text: '');
   var _amountToController = TextEditingController(text: '');
+
+  void resetForm() {
+    setState(() {
+      _selectedPoolPair = null;
+
+      _selectedValueTo = null;
+      _selectedValueFrom = null;
+
+      _amountFrom = 0;
+      _amountTo = 0;
+      _conversionRate = 0;
+
+      _amountFromController.clear();
+      _amountToController.clear();
+    });
+  }
 
   @override
   void initState() {
@@ -100,18 +118,22 @@ class _DexScreen extends State<DexScreen> {
       }
     }
 
-    var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+    var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
     var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
     if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
       var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
 
-      tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId)));
+      if (account != null) {
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
+      } else {
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
+      }
     });
 
     _poolPairs = pairs;
@@ -215,7 +237,12 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _amountFromController.text = (_selectedValueFrom.balance / DefiChainConstants.COIN).toString();
+    if (DeFiConstants.isDfiToken(_selectedValueFrom.hash)) {
+      final value = _selectedValueFrom.balance - DeFiChainWallet.MinKeepUTXO;
+      _amountFromController.text = (value / DefiChainConstants.COIN).toString();
+    } else {
+      _amountFromController.text = (_selectedValueFrom.balance / DefiChainConstants.COIN).toString();
+    }
 
     handleChangeFrom();
   }
@@ -225,7 +252,12 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _amountToController.text = (_selectedValueTo.balance / DefiChainConstants.COIN).toString();
+    if (DeFiConstants.isDfiToken(_selectedValueTo.hash)) {
+      final value = _selectedValueTo.balance - DeFiChainWallet.MinKeepUTXO;
+      _amountFromController.text = (value / DefiChainConstants.COIN).toString();
+    } else {
+      _amountFromController.text = (_selectedValueTo.balance / DefiChainConstants.COIN).toString();
+    }
 
     handleChangeTo();
   }
@@ -439,55 +471,15 @@ class _DexScreen extends State<DexScreen> {
 
       streamController.close();
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(S.of(context).dex_swap_successfull),
-        action: SnackBarAction(
-          label: S.of(context).dex_swap_show_transaction,
-          onPressed: () async {
-            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-            EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-            if (await canLaunch(url)) {
-              await launch(url);
-            }
-          },
-        ),
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).dex_swap_successfull),
       ));
-    } on HttpException catch (e) {
-      final errorMsg = e.error.error;
-      LogHelper.instance.e("Error saving tx...($errorMsg)");
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error occured commiting the tx...($errorMsg)'),
-      ));
-      sl.get<AppCenterWrapper>().trackEvent("swawFailureHandled", <String, String>{
-        "fromToken": _selectedValueFrom.hash,
-        "toToken": _selectedValueTo.hash,
-        "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo,
-        "maxPrice": maxPrice.toString(),
-        "error": errorMsg
-      });
-    } on TransactionError catch (e) {
-      final errorMsg = e.error;
-      LogHelper.instance.e("Tx Error...($errorMsg)");
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(errorMsg),
-      ));
-      sl.get<AppCenterWrapper>().trackEvent("swawFailureHandled", <String, String>{
-        "fromToken": _selectedValueFrom.hash,
-        "toToken": _selectedValueTo.hash,
-        "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo,
-        "maxPrice": maxPrice.toString(),
-        "error": errorMsg
-      });
+      resetForm();
     } catch (e) {
-      LogHelper.instance.e("Error...", e);
-      final errorMsg = e.toString();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error occured commiting the tx...($errorMsg)'),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
       ));
 
       sl.get<AppCenterWrapper>().trackEvent("swapFailure", <String, String>{
@@ -511,7 +503,7 @@ class _DexScreen extends State<DexScreen> {
         Expanded(
           flex: 1,
           child: AutoSizeText(
-            e.hash,
+            e.displayName,
             style: Theme.of(context).textTheme.headline3,
             maxLines: 1,
           ),
@@ -626,7 +618,7 @@ class _DexScreen extends State<DexScreen> {
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
                   ]),
-                if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && _insufficientFunds == false)
+                if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && !_insufficientFunds)
                   Column(children: [
                     SizedBox(height: 10),
                     Row(children: [

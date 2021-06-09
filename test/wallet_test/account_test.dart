@@ -1,10 +1,11 @@
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/network/model/account.dart';
-import 'package:defichainwallet/crypto/chain.dart';
+import 'package:saiive.live/network/model/transaction.dart';
+import 'package:saiive.live/network/model/account.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'mock/transaction_service_mock.dart';
 import 'wallet_test_base.dart';
 
 void main() async {
@@ -12,7 +13,7 @@ void main() async {
 
   group("#1 create tx", () {
     Future initTest() async {
-      final db = sl.get<IWalletDatabase>();
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
       await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
       final tx = Transaction(
           id: "6022346c779edc3b789bc5b9",
@@ -43,8 +44,10 @@ void main() async {
     }
 
     Future destoryTest() async {
-      final db = sl.get<IWalletDatabase>();
-      await db.destroy();
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
+
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.close();
     }
 
     test("#1 test invalid utxo and account for DFI", () async {
@@ -63,9 +66,12 @@ void main() async {
 
       final wallet = sl.get<DeFiChainWallet>();
 
-      await wallet.init();
-      final tx = await wallet.createSendTransaction(1 * 100000000, DeFiConstants.DefiTokenSymbol, "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+      final txController = sl.get<TransactionServiceMock>();
 
+      await wallet.init();
+      await wallet.createSendTransaction(1 * 100000000, DeFiConstants.DefiTokenSymbol, "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+      expect(txController.lastTx,
+          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff02d6c92df60600000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8700e1f5050000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702483045022100d481cdd6d1722edb4521a13d7d1a4444e73fea514085149496a6f8f2435c58c90220654d6aa6e97eb0b93bfc0275f7149f9f64ea9dff032b48e6f8b0286702cfebd2012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
 
@@ -79,15 +85,28 @@ void main() async {
       await destoryTest();
     });
 
-    test("#4 create bitcoin accountToAccount tx", () async {
+    test("#4 create dBTC accountToAccount tx", () async {
+      await initTest();
+
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.init();
+
+      final txId = await wallet.createSendTransaction(1 * 100000000, "BTC", "tgoVbmjxpgMHzj22y6PUPRcr7WxasGAx3n");
+
+      final txController = sl.get<TransactionServiceMock>();
+
+      expect(txController.lastTx,
+          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a914739bfb5d214c04655148eb21d91cdae8bb903fa387010100000000e1f5050000000048a023fc0600000017a9149cc76b954b69473e492db73ff8694dd39991bd9b8702483045022100911699d81c8d14cfe3cd21f3ad22e114fec085ef18d95d93e3801d80c8c9d7c002202ab9862eb07e44384e6ce4e56a8f6c2cee812da10678d4fbe264b7fd1f67159d012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+      await destoryTest();
+    });
+    test("#4 create dBTC accountToAccount to self tx", () async {
       await initTest();
 
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
       final tx = await wallet.createSendTransaction(1 * 100000000, "BTC", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
-      expect(tx.item1,
-          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a9141084ef98bacfecbc9f140496b26516ae55d79bfa87010100000000e1f5050000000048a023fc0600000017a9149cc76b954b69473e492db73ff8694dd39991bd9b870247304402207dc705c498f262f592e0d51ff09aa1885ffd3756068e16380d4556c4196a579f02202d5212d091fc39eec5716fe21c073c8d9064ff45f914e1ae5ec6c186709c4ad2012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+      expect(tx, null);
       await destoryTest();
     });
   });

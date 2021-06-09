@@ -1,5 +1,5 @@
-import 'package:defichainwallet/network/model/pool_pair.dart';
-import 'package:defichainwallet/network/model/pool_share.dart';
+import 'package:saiive.live/network/model/pool_pair.dart';
+import 'package:saiive.live/network/model/pool_share.dart';
 
 class PoolPairLiquidity extends PoolPair {
   final String tokenA;

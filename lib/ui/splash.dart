@@ -1,20 +1,24 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/helper/env.dart';
-import 'package:defichainwallet/helper/version.dart';
-import 'package:defichainwallet/network/model/ivault.dart';
-import 'package:defichainwallet/services/health_service.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
+import 'package:saiive.live/crypto/errors/TransactionError.dart';
+import 'package:saiive.live/helper/env.dart';
+import 'package:saiive.live/helper/version.dart';
+import 'package:saiive.live/network/model/ivault.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import '../generated/l10n.dart';
 
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
-import 'package:defichainwallet/ui/styles.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
+import 'package:saiive.live/ui/styles.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -61,10 +65,13 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       await sl.allReady();
 
       if (hasSeedGenerated) {
-        final wallet = sl.get<DeFiChainWallet>();
+        final wallet = sl.get<IWalletService>();
         await wallet.init();
+
+        if (await wallet.isRestoreNeeded()) {
+          route = "/intro_accounts_restore";
+        }
       }
-      // await sl.get<IWalletDatabase>().open();
 
       await sl.get<IHealthService>().checkHealth(context);
 
@@ -81,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   void _init() async {
-    _currentEnvironment = EnvHelper().getEnvironment();
+    _currentEnvironment = EnvHelper.getEnvironment();
     _version = await VersionHelper().getVersion();
 
     final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
@@ -132,7 +139,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height * 0.6;
+    var height = MediaQuery.of(context).size.height * 0.4;
 
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       height = height / 2;
@@ -144,12 +151,14 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            S.of(context).title,
-            style: TextStyle(fontSize: 30, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800),
-          ),
+          Padding(
+              padding: EdgeInsets.only(top: 70),
+              child: Text(
+                S.of(context).title,
+                style: TextStyle(fontSize: 50, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w800),
+              )),
           Container(child: Image.asset('assets/logo.png', height: height)),
-          SizedBox(height: 20),
+          SizedBox(height: 15),
           Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: 50, vertical: 20),

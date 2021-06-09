@@ -1,27 +1,30 @@
 import 'dart:async';
 
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/errors/TransactionError.dart';
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/balance.dart';
-import 'package:defichainwallet/helper/constants.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:defichainwallet/network/events/wallet_sync_start_event.dart';
-import 'package:defichainwallet/network/model/account_balance.dart';
-import 'package:defichainwallet/network/model/pool_pair.dart';
-import 'package:defichainwallet/network/model/token_balance.dart';
-import 'package:defichainwallet/network/network_service.dart';
-import 'package:defichainwallet/network/pool_pair_service.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/utils/token_icon.dart';
-import 'package:defichainwallet/ui/widgets/auto_resize_text.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
-import 'package:defichainwallet/ui/widgets/loading_overlay.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/errors/TransactionError.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/balance.dart';
+import 'package:saiive.live/helper/constants.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/pool_pair.dart';
+import 'package:saiive.live/network/model/token_balance.dart';
+import 'package:saiive.live/network/network_service.dart';
+import 'package:saiive.live/network/pool_pair_service.dart';
+import 'package:saiive.live/network/response/error_response.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
+import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/ui/widgets/loading_overlay.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -129,18 +132,22 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       }
     }
 
-    var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+    var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
     var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
     if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0));
+      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));
     }
 
     uniqueTokenList.forEach((symbolKey, tokenId) {
       var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
 
-      tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId)));
+      if (account != null) {
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
+      } else {
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
+      }
     });
 
     _poolPairs = pairs;
@@ -326,7 +333,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
         Expanded(
             flex: 1,
             child: AutoSizeText(
-              e.hash,
+              e.displayName,
               style: Theme.of(context).textTheme.headline3,
               maxLines: 1,
             )),
@@ -371,80 +378,27 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       });
 
       streamController.close();
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(S.of(context).liqudity_add_successfull),
-        action: SnackBarAction(
-          label: S.of(context).dex_swap_show_transaction,
-          onPressed: () async {
-            var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-            var url = DefiChainConstants.getExplorerUrl(_chainNet, tx.txId);
-            EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-            if (await canLaunch(url)) {
-              await launch(url);
-            }
-          },
-        ),
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).liqudity_add_successfull),
       ));
 
-      Navigator.of(context).pop();
-    } on TransactionError catch (e) {
-      final errorMsg = e.error;
-      LogHelper.instance.e("addpool-tx error...($errorMsg)");
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(errorMsg),
+      Navigator.popUntil(context, ModalRoute.withName('/home'));
+    } catch (e) {
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
       ));
-      sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
+
+      sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailure", <String, String>{
         "tokenA": _selectedTokenA.hash,
         "amountA": amountTokenA.toString(),
         "tokenB": _selectedTokenB.hash,
         "amountB": amountTokenB.toString(),
         "shareAddress": walletTo,
-        "error": e.error
+        "error": e.toString()
       });
-    } catch (e) {
-      LogHelper.instance.e("Error creating addpool-tx", e);
-      if (e is ErrorResponse) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.error),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
-          "tokenA": _selectedTokenA.hash,
-          "amountA": amountTokenA.toString(),
-          "tokenB": _selectedTokenB.hash,
-          "amountB": amountTokenB.toString(),
-          "shareAddress": walletTo,
-          "error": e.error
-        });
-      } else if (e is HttpException) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.error.error),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailureHandled", <String, String>{
-          "tokenA": _selectedTokenA.hash,
-          "amountA": amountTokenA.toString(),
-          "tokenB": _selectedTokenB.hash,
-          "amountB": amountTokenB.toString(),
-          "shareAddress": walletTo,
-          "error": e.error.error
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.toString()),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailure", <String, String>{
-          "tokenA": _selectedTokenA.hash,
-          "amountA": amountTokenA.toString(),
-          "tokenB": _selectedTokenB.hash,
-          "amountB": amountTokenB.toString(),
-          "shareAddress": walletTo,
-          "error": e.toString()
-        });
-      }
     }
   }
 
@@ -468,7 +422,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 height: 60,
                 child: DropdownButton<TokenBalance>(
                   isExpanded: true,
-                  hint: Text(S.of(context).liquitiy_add_token_a),
+                  hint: Text(S.of(context).liquidity_add_token_a),
                   value: _selectedTokenA,
                   items: _fromTokens.map((e) {
                     return new DropdownMenuItem<TokenBalance>(
@@ -492,14 +446,14 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             height: 30,
             minWidth: 40,
             child: ElevatedButton(
-                child: Text(S.of(context).liquitiy_add_max),
+                child: Text(S.of(context).liquidity_add_max),
                 onPressed: () {
                   handleSetMaxTokenA();
                 }))
       ]),
       TextField(
         controller: _amountTokenAController,
-        decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+        decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
       ),
       Row(children: [
         Expanded(
@@ -508,7 +462,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 height: 60,
                 child: DropdownButton<TokenBalance>(
                   isExpanded: true,
-                  hint: Text(S.of(context).liquitiy_add_token_b),
+                  hint: Text(S.of(context).liquidity_add_token_b),
                   value: _selectedTokenB,
                   items: _toTokens.map((e) {
                     return new DropdownMenuItem<TokenBalance>(
@@ -532,25 +486,25 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             height: 30,
             minWidth: 40,
             child: ElevatedButton(
-                child: Text(S.of(context).liquitiy_add_max),
+                child: Text(S.of(context).liquidity_add_max),
                 onPressed: () {
                   handleSetMaxTokenB();
                 }))
       ]),
       TextField(
         controller: _amountTokenBController,
-        decoration: InputDecoration(hintText: S.of(context).liquitiy_add_amount_b),
+        decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b),
       ),
       if (_insufficientFunds)
         Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
-          Text(S.of(context).liquitiy_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
+          Text(S.of(context).liquidity_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
         ]),
       if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false)
         Column(children: [
           SizedBox(height: 10),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_price)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_price)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -577,7 +531,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             thickness: 2,
           ),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_pool_share)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_pool_share)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -588,7 +542,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 )),
           ]),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenA.hash)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + _selectedTokenA.hash)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -602,7 +556,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             thickness: 2,
           ),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquitiy_add_total_pooled + ' ' + _selectedTokenB.hash)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + _selectedTokenB.hash)),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -613,7 +567,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 )),
           ]),
           ElevatedButton(
-            child: Text(S.of(context).liquitiy_add),
+            child: Text(S.of(context).liquidity_add),
             onPressed: () async {
               await addLiquidity();
             },
@@ -625,7 +579,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   @override
   Widget build(Object context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquitiy_add)),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquidity_add)),
         body: Padding(padding: EdgeInsets.all(30), child: _buildAddLmPage(context)));
   }
 }

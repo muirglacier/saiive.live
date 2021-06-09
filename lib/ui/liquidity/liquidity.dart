@@ -1,19 +1,23 @@
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
-import 'package:defichainwallet/helper/poolpair.dart';
-import 'package:defichainwallet/helper/poolshare.dart';
-import 'package:defichainwallet/network/model/pool_pair_liquidity.dart';
-import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/services/health_service.dart';
-import 'package:defichainwallet/ui/widgets/responsive.dart';
-import 'package:defichainwallet/ui/liquidity/liquitiy_add.dart';
-import 'package:defichainwallet/ui/liquidity/liquitiy_box.dart';
-import 'package:defichainwallet/ui/liquidity/pool_share.dart';
-import 'package:defichainwallet/ui/utils/token_pair_icon.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
+import 'dart:async';
+
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/helper/poolpair.dart';
+import 'package:saiive.live/helper/poolshare.dart';
+import 'package:saiive.live/network/events/wallet_sync_done_event.dart';
+import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
+import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
+import 'package:saiive.live/network/model/pool_share_liquidity.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/ui/widgets/responsive.dart';
+import 'package:saiive.live/ui/liquidity/liquidity_add.dart';
+import 'package:saiive.live/ui/liquidity/liquidity_box.dart';
+import 'package:saiive.live/ui/utils/token_pair_icon.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
@@ -32,6 +36,18 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   bool showEstimatedRewards = false;
   bool _isLoading = false;
 
+  StreamSubscription<WalletSyncLiquidityData> _refreshPoolDataSubscription;
+
+  @override
+  void deactivate() {
+    super.deactivate();
+
+    if (_refreshPoolDataSubscription != null) {
+      _refreshPoolDataSubscription.cancel();
+      _refreshPoolDataSubscription = null;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +55,12 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     sl.get<AppCenterWrapper>().trackEvent("openLiquidityPage", <String, String>{});
     sl.get<IHealthService>().checkHealth(context);
     _init();
+
+    if (_refreshPoolDataSubscription == null) {
+      _refreshPoolDataSubscription = EventTaxiImpl.singleton().registerTo<WalletSyncLiquidityData>().listen((event) async {
+        await _refresh();
+      });
+    }
   }
 
   _init() async {
@@ -145,7 +167,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Text(S.of(context).liquitiy),
+          title: Text(S.of(context).liquidity),
           actions: [
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
@@ -153,10 +175,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   onTap: () async {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LiquidityAddScreen()));
                   },
-                  child: Icon(
-                    Icons.add,
-                    size: 26.0,
-                  ),
+                  child: Icon(Icons.add, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
             Padding(
                 padding: EdgeInsets.only(right: 20.0),
@@ -164,10 +183,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   onTap: () async {
                     _refresh();
                   },
-                  child: Icon(
-                    Icons.refresh,
-                    size: 26.0,
-                  ),
+                  child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
           ],
         ),

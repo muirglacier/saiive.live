@@ -39,6 +39,17 @@ stages:
           getAllParents: False
           getIndirectPullRequests: False
       
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
@@ -66,6 +77,18 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter doctor -v
             $(FlutterToolPath)\flutter precache
+
+          
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
       
       - task: CmdLine@2
         displayName: "Flutter enable windows"
@@ -100,8 +123,15 @@ stages:
           buildFlavour: 'dev'
           entryPoint: 'lib/main.dart'
           buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main.dart
 
-          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -125,6 +155,13 @@ stages:
           buildName: $(AppVersion)
           buildFlavour: 'dev'
           buildNumber: $(Build.BuildNumber)
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -156,6 +193,17 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter clean
+                  
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
            
       - task: CmdLine@2
         displayName: "Flutter enable windows"
@@ -190,6 +238,14 @@ stages:
           buildFlavour: 'staging'
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main_staging.dart
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -225,6 +281,18 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)\flutter clean
 
+                  
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+
       - task: CmdLine@2
         displayName: "Flutter enable windows"
         inputs:
@@ -257,6 +325,15 @@ stages:
           buildFlavour: 'prod'
           entryPoint: 'lib/main_prod.dart'
           buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main_prod.dart
+
+          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"

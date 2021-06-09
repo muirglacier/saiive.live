@@ -1,6 +1,6 @@
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/ui/widgets/loading.dart';
-import 'package:defichainwallet/ui/widgets/recovery_phrase_info.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/ui/widgets/recovery_phrase_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:defichaindart/defichaindart.dart';

@@ -45,10 +45,10 @@ class S {
     );
   }
 
-  /// `Smart DeFi Wallet`
+  /// `saiive.live`
   String get title {
     return Intl.message(
-      'Smart DeFi Wallet',
+      'saiive.live',
       name: 'title',
       desc: '',
       args: [],
@@ -76,10 +76,10 @@ class S {
   }
 
   /// `Liquidity`
-  String get home_liquitiy {
+  String get home_liquidity {
     return Intl.message(
       'Liquidity',
-      name: 'home_liquitiy',
+      name: 'home_liquidity',
       desc: '',
       args: [],
     );
@@ -185,10 +185,10 @@ class S {
     );
   }
 
-  /// `Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!`
+  /// `Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!`
   String get test_info_test {
     return Intl.message(
-      'Thanks for helping us bringing the Smart DeFi Wallet to a bigger audience. Your feedback helps us a lot!',
+      'Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!',
       name: 'test_info_test',
       desc: '',
       args: [],
@@ -245,13 +245,13 @@ class S {
     );
   }
 
-  /// `It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...`
-  String get wallet_offline {
+  /// `It seems we are having some problems with the supernode ({chains}), we are working hard to restore our services. Check back later...`
+  String wallet_offline(Object chains) {
     return Intl.message(
-      'It seems we are having some problems with the supernode, we are working hard to restore our services. Check back later...',
+      'It seems we are having some problems with the supernode ($chains), we are working hard to restore our services. Check back later...',
       name: 'wallet_offline',
       desc: '',
-      args: [],
+      args: [chains],
     );
   }
 
@@ -310,6 +310,76 @@ class S {
     return Intl.message(
       'We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics.',
       name: 'welcome_wallet_privacy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I've read and accepted the Termns of Service and Privacy Notice`
+  String get welcome_accept_terms_and_privacy {
+    return Intl.message(
+      'I\'ve read and accepted the Termns of Service and Privacy Notice',
+      name: 'welcome_accept_terms_and_privacy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Legal`
+  String get welcome_legal {
+    return Intl.message(
+      'Legal',
+      name: 'welcome_legal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please review the saiive.live Terms of Service and Private Notice.`
+  String get welcome_legal_text {
+    return Intl.message(
+      'Please review the saiive.live Terms of Service and Private Notice.',
+      name: 'welcome_legal_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Service`
+  String get welcome_legal_tos {
+    return Intl.message(
+      'Terms of Service',
+      name: 'welcome_legal_tos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Private Notice`
+  String get welcome_legal_privacy {
+    return Intl.message(
+      'Private Notice',
+      name: 'welcome_legal_privacy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://static.saiive.live/tos.html`
+  String get welcome_legal_tos_link {
+    return Intl.message(
+      'https://static.saiive.live/tos.html',
+      name: 'welcome_legal_tos_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `https://static.saiive.live/privacy.html`
+  String get welcome_legal_privacy_link {
+    return Intl.message(
+      'https://static.saiive.live/privacy.html',
+      name: 'welcome_legal_privacy_link',
       desc: '',
       args: [],
     );
@@ -535,6 +605,36 @@ class S {
     );
   }
 
+  /// `Transaction failed :(`
+  String get wallet_operation_failed {
+    return Intl.message(
+      'Transaction failed :(',
+      name: 'wallet_operation_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction was successful :)`
+  String get wallet_operation_success {
+    return Intl.message(
+      'Transaction was successful :)',
+      name: 'wallet_operation_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show transaction in the explorer...`
+  String get wallet_operation_show_tx {
+    return Intl.message(
+      'Show transaction in the explorer...',
+      name: 'wallet_operation_show_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `We did not found a used account, but we have created on for you!`
   String get wallet_restore_noAccountFound {
     return Intl.message(
@@ -672,6 +772,16 @@ class S {
       name: 'wallet_receive',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Send only {coin} to this address. Sending coin or token other than {coin} to this address may result in the loss of your deposit!`
+  String wallet_receive_warning(Object coin) {
+    return Intl.message(
+      'Send only $coin to this address. Sending coin or token other than $coin to this address may result in the loss of your deposit!',
+      name: 'wallet_receive_warning',
+      desc: '',
+      args: [coin],
     );
   }
 
@@ -855,11 +965,141 @@ class S {
     );
   }
 
+  /// `Wallet`
+  String get settings_wallet {
+    return Intl.message(
+      'Wallet',
+      name: 'settings_wallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Common`
+  String get settings_common {
+    return Intl.message(
+      'Common',
+      name: 'settings_common',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support`
+  String get settings_support {
+    return Intl.message(
+      'Support',
+      name: 'settings_support',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram saiive.live`
+  String get settings_support_telegram_live {
+    return Intl.message(
+      'Telegram saiive.live',
+      name: 'settings_support_telegram_live',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram DeFiChain [en]`
+  String get settings_support_telegram_defichain_en {
+    return Intl.message(
+      'Telegram DeFiChain [en]',
+      name: 'settings_support_telegram_defichain_en',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram DeFiChain [de]`
+  String get settings_support_telegram_defichain_de {
+    return Intl.message(
+      'Telegram DeFiChain [de]',
+      name: 'settings_support_telegram_defichain_de',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wiki`
+  String get settings_support_wiki {
+    return Intl.message(
+      'Wiki',
+      name: 'settings_support_wiki',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reddit`
+  String get settings_support_reddit {
+    return Intl.message(
+      'Reddit',
+      name: 'settings_support_reddit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GitHub`
+  String get settings_support_github {
+    return Intl.message(
+      'GitHub',
+      name: 'settings_support_github',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Defichain.com`
+  String get settings_support_defichain {
+    return Intl.message(
+      'Defichain.com',
+      name: 'settings_support_defichain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network`
+  String get settings_network {
+    return Intl.message(
+      'Network',
+      name: 'settings_network',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Remove Seed`
   String get settings_remove_seed {
     return Intl.message(
       'Remove Seed',
       name: 'settings_remove_seed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show logs`
+  String get settings_show_logs {
+    return Intl.message(
+      'Show logs',
+      name: 'settings_show_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wallet addresses`
+  String get settings_show_wallet_addresses {
+    return Intl.message(
+      'Wallet addresses',
+      name: 'settings_show_wallet_addresses',
       desc: '',
       args: [],
     );
@@ -1216,120 +1456,120 @@ class S {
   }
 
   /// `Liquidity`
-  String get liquitiy {
+  String get liquidity {
     return Intl.message(
       'Liquidity',
-      name: 'liquitiy',
+      name: 'liquidity',
       desc: '',
       args: [],
     );
   }
 
   /// `Pool-Share`
-  String get liquitiy_pool_share_percentage {
+  String get liquidity_pool_share_percentage {
     return Intl.message(
       'Pool-Share',
-      name: 'liquitiy_pool_share_percentage',
+      name: 'liquidity_pool_share_percentage',
       desc: '',
       args: [],
     );
   }
 
   /// `Add Liquidity`
-  String get liquitiy_add {
+  String get liquidity_add {
     return Intl.message(
       'Add Liquidity',
-      name: 'liquitiy_add',
+      name: 'liquidity_add',
       desc: '',
       args: [],
     );
   }
 
   /// `max`
-  String get liquitiy_add_max {
+  String get liquidity_add_max {
     return Intl.message(
       'max',
-      name: 'liquitiy_add_max',
+      name: 'liquidity_add_max',
       desc: '',
       args: [],
     );
   }
 
   /// `Token A`
-  String get liquitiy_add_token_a {
+  String get liquidity_add_token_a {
     return Intl.message(
       'Token A',
-      name: 'liquitiy_add_token_a',
+      name: 'liquidity_add_token_a',
       desc: '',
       args: [],
     );
   }
 
   /// `Token B`
-  String get liquitiy_add_token_b {
+  String get liquidity_add_token_b {
     return Intl.message(
       'Token B',
-      name: 'liquitiy_add_token_b',
+      name: 'liquidity_add_token_b',
       desc: '',
       args: [],
     );
   }
 
   /// `Amount A`
-  String get liquitiy_add_amount_a {
+  String get liquidity_add_amount_a {
     return Intl.message(
       'Amount A',
-      name: 'liquitiy_add_amount_a',
+      name: 'liquidity_add_amount_a',
       desc: '',
       args: [],
     );
   }
 
   /// `Amount B`
-  String get liquitiy_add_amount_b {
+  String get liquidity_add_amount_b {
     return Intl.message(
       'Amount B',
-      name: 'liquitiy_add_amount_b',
+      name: 'liquidity_add_amount_b',
       desc: '',
       args: [],
     );
   }
 
   /// `Pool Share`
-  String get liquitiy_add_pool_share {
+  String get liquidity_add_pool_share {
     return Intl.message(
       'Pool Share',
-      name: 'liquitiy_add_pool_share',
+      name: 'liquidity_add_pool_share',
       desc: '',
       args: [],
     );
   }
 
   /// `Totally pooled`
-  String get liquitiy_add_total_pooled {
+  String get liquidity_add_total_pooled {
     return Intl.message(
       'Totally pooled',
-      name: 'liquitiy_add_total_pooled',
+      name: 'liquidity_add_total_pooled',
       desc: '',
       args: [],
     );
   }
 
   /// `Insufficient Funds for LM`
-  String get liquitiy_add_insufficient_funds {
+  String get liquidity_add_insufficient_funds {
     return Intl.message(
       'Insufficient Funds for LM',
-      name: 'liquitiy_add_insufficient_funds',
+      name: 'liquidity_add_insufficient_funds',
       desc: '',
       args: [],
     );
   }
 
   /// `Price`
-  String get liquitiy_add_price {
+  String get liquidity_add_price {
     return Intl.message(
       'Price',
-      name: 'liquitiy_add_price',
+      name: 'liquidity_add_price',
       desc: '',
       args: [],
     );
@@ -1360,6 +1600,46 @@ class S {
     return Intl.message(
       'Pool Pairs',
       name: 'liqudity_pool_pairs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove Liquidity`
+  String get liquidity_remove {
+    return Intl.message(
+      'Remove Liquidity',
+      name: 'liquidity_remove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get liquidity_remove_price {
+    return Intl.message(
+      'Price',
+      name: 'liquidity_remove_price',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `of`
+  String get liquidity_remove_of {
+    return Intl.message(
+      'of',
+      name: 'liquidity_remove_of',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Removed liquidity successfull`
+  String get liquidity_remove_successfull {
+    return Intl.message(
+      'Removed liquidity successfull',
+      name: 'liquidity_remove_successfull',
       desc: '',
       args: [],
     );

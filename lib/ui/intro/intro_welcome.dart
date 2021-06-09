@@ -1,13 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:defichainwallet/appcenter/appcenter.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/service_locator.dart';
-import 'package:defichainwallet/ui/model/available_themes.dart';
-import 'package:defichainwallet/ui/widgets/buttons.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/intro/intro_legal.dart';
+import 'package:saiive.live/ui/model/available_themes.dart';
+import 'package:saiive.live/ui/widgets/buttons.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:defichainwallet/generated/l10n.dart';
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 class IntroWelcomeScreen extends StatefulWidget {
@@ -129,11 +130,12 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
         SizedBox(height: 10),
         Container(
             child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).welcome_wallet_create,
-                onPressed: () => {Navigator.of(context).pushNamed("/intro_wallet_new")}, icon: Icons.account_balance_wallet)),
+                onPressed: () => {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => IntroLegalScreen("/intro_wallet_new")))},
+                icon: Icons.account_balance_wallet)),
         SizedBox(height: 10),
         Container(
             child: AppButton.buildAppButton(context, AppButtonType.SECONDARY, S.of(context).welcome_wallet_restore,
-                onPressed: () => {Navigator.of(context).pushNamed("/intro_wallet_restore")}, icon: Icons.list)),
+                onPressed: () => {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => IntroLegalScreen("/intro_wallet_restore")))}, icon: Icons.list)),
         SizedBox(height: 10),
         if (_curTheme?.theme == ThemeOptions.DEFI_DARK)
           Container(

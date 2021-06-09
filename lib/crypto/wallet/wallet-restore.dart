@@ -1,14 +1,14 @@
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:defichaindart/defichaindart.dart';
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/crypto/wallet/wallet.dart';
-import 'package:defichainwallet/network/api_service.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/wallet.dart';
+import 'package:saiive.live/network/api_service.dart';
 import 'package:hex/hex.dart';
-import 'package:defichainwallet/helper/logger/LogHelper.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:tuple/tuple.dart';
 
 class WalletRestore {
@@ -63,7 +63,7 @@ class WalletRestore {
         var path = HdWalletUtil.derivePathsWithChange(account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
-        LogHelper.instance.d("found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery}");
+        LogHelper.instance.d("(${chain}) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
         for (final tx in transactions) {
           final keyIndex = publicKeys.indexWhere((item) => item == tx.address);

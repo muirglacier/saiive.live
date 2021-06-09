@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:defichainwallet/crypto/chain.dart';
-import 'package:defichainwallet/network/cache_response.dart';
-import 'package:defichainwallet/network/ihttp_service.dart';
-import 'package:defichainwallet/network/model/error.dart';
-import 'package:defichainwallet/network/base_request.dart';
-import 'package:defichainwallet/network/response/error_response.dart';
-import 'package:defichainwallet/util/sharedprefsutil.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/network/cache_response.dart';
+import 'package:saiive.live/network/ihttp_service.dart';
+import 'package:saiive.live/network/model/error.dart';
+import 'package:saiive.live/network/base_request.dart';
+import 'package:saiive.live/network/response/error_response.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpService extends IHttpService {
   String serverAddress;
@@ -27,10 +27,7 @@ class HttpService extends IHttpService {
   }
 
   Future init() async {
-    final sharedPreferences = await SharedPreferences.getInstance();
-    final rawValue = sharedPreferences.get(SharedPrefsUtil.cur_net);
-
-    final chainNet = ChainNet.values[rawValue ?? ChainNet.Testnet.index];
+    final chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
     this.network = ChainHelper.chainNetworkString(chainNet);
     if (env.containsKey("API_URL")) {
       this.serverAddress = env['API_URL'];
@@ -38,6 +35,8 @@ class HttpService extends IHttpService {
   }
 
   Future<Map<String, dynamic>> makeHttpGetRequest(String url, String coin, {cached: false}) async {
+    await init();
+
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
 
     if (cached && cachedResults.containsKey(finalUrl)) {

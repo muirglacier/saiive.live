@@ -1,14 +1,14 @@
-import 'package:defichainwallet/crypto/wallet/defichain_wallet.dart';
-import 'package:defichainwallet/network/coingecko_service.dart';
-import 'package:defichainwallet/network/defichain_service.dart';
-import 'package:defichainwallet/network/gov_service.dart';
-import 'package:defichainwallet/network/model/pool_share.dart';
-import 'package:defichainwallet/network/model/pool_share_liquidity.dart';
-import 'package:defichainwallet/network/model/yield_farming.dart';
-import 'package:defichainwallet/network/pool_pair_service.dart';
-import 'package:defichainwallet/network/pool_share_service.dart';
-import 'package:defichainwallet/network/token_service.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/network/coingecko_service.dart';
+import 'package:saiive.live/network/defichain_service.dart';
+import 'package:saiive.live/network/gov_service.dart';
+import 'package:saiive.live/network/model/pool_share.dart';
+import 'package:saiive.live/network/model/pool_share_liquidity.dart';
+import 'package:saiive.live/network/model/yield_farming.dart';
+import 'package:saiive.live/network/pool_pair_service.dart';
+import 'package:saiive.live/network/pool_share_service.dart';
+import 'package:saiive.live/network/token_service.dart';
+import 'package:saiive.live/service_locator.dart';
 
 class PoolShareHelper {
   Future<List<PoolShareLiquidity>> getPoolShares(String coin, String currency) async {
@@ -41,7 +41,7 @@ class PoolShareHelper {
       if (!combinedPoolShares.containsKey(poolShare.poolID)) {
         combinedPoolShares[poolShare.poolID] = poolShare;
       } else {
-        combinedPoolShares[poolShare.poolID].amount += poolShare.amount;
+        combinedPoolShares[poolShare.poolID].displayAmount += poolShare.displayAmount;
       }
     }
 
@@ -50,11 +50,12 @@ class PoolShareHelper {
       var poolPair = await sl.get<IPoolPairService>().getPoolPair(coin, poolShare.poolID);
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;
+      var allPoolShares = poolShares.where((element) => element.poolID == poolShare.poolID).toList();
 
       var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
       var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
 
-      var poolSharePercentage = (poolShare.amount / poolShare.totalLiquidity) * 100;
+      var poolSharePercentage = (poolShare.displayAmount / poolShare.totalLiquidity) * 100;
 
       var dfiCoin = priceData.firstWhere((element) => element.idToken == '0', orElse: () => null);
       var priceA = priceData.firstWhere((element) => element.idToken == poolPair.idTokenA, orElse: () => null);
@@ -112,26 +113,26 @@ class PoolShareHelper {
       var apy = poolStats.containsKey(idTokenA + '_' + idTokenB) ? poolStats[idTokenA + '_' + idTokenB].apy : 0;
 
       return new PoolShareLiquidity(
-        tokenA: tokenA.symbol,
-        tokenB: tokenB.symbol,
-        poolPair: poolPair,
-        poolShare: poolShare,
-        totalLiquidityInUSDT: totalLiquidity,
-        yearlyPoolReward: yearlyPoolReward,
-        poolSharePercentage: poolSharePercentage,
-        apy: apy,
-        coin: dfiCoin,
-        blockReward: rewardPerBlock,
-        minuteReward: minuteReward,
-        hourlyReword: hourlyReword,
-        dailyReward: dailyReward,
-        yearlyReward: yearlyReward,
-        blockRewardFiat: blockRewardFiat,
-        minuteRewardFiat: minuteRewardFiat,
-        hourlyRewordFiat: hourlyRewordFiat,
-        dailyRewardFiat: dailyRewardFiat,
-        yearlyRewardFiat: yearlyRewardFiat,
-      );
+          tokenA: tokenA.symbol,
+          tokenB: tokenB.symbol,
+          poolPair: poolPair,
+          poolShare: poolShare,
+          totalLiquidityInUSDT: totalLiquidity,
+          yearlyPoolReward: yearlyPoolReward,
+          poolSharePercentage: poolSharePercentage,
+          apy: apy,
+          coin: dfiCoin,
+          blockReward: rewardPerBlock,
+          minuteReward: minuteReward,
+          hourlyReword: hourlyReword,
+          dailyReward: dailyReward,
+          yearlyReward: yearlyReward,
+          blockRewardFiat: blockRewardFiat,
+          minuteRewardFiat: minuteRewardFiat,
+          hourlyRewordFiat: hourlyRewordFiat,
+          dailyRewardFiat: dailyRewardFiat,
+          yearlyRewardFiat: yearlyRewardFiat,
+          poolShares: allPoolShares);
     });
 
     for (Future<PoolShareLiquidity> f in result) {

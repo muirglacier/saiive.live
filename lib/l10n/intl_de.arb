@@ -1,9 +1,9 @@
 {
   "helloWorld": "Hallo Welt!",
-  "title": "Smart DeFi Wallet",
+  "title": "saiive.live",
   "version": "Version",
   "home_wallet": "Wallet",
-  "home_liquitiy": "Liquidity",
+  "home_liquidity": "Liquidity",
   "home_dex": "DEX",
   "home_tokens": "Tokens",
   "welcome": "Willkommen",
@@ -16,7 +16,7 @@
   
   
   "test_info": "Danke fürs Testen!",
-  "test_info_test": "Danke für deine Hilfe das Smart DeFi Wallet für alle verfügbar zu machen. Dein Feedback hilft uns sehr!",
+  "test_info_test": "Danke für deine Hilfe das saiive.live für alle verfügbar zu machen. Dein Feedback hilft uns sehr!",
   "test_info_funds": "Wir bitten dich im testnet zu bleiben. Du bekommst von uns gerne Funds zum testen. Für dies haben wir ein Forumlar erstellt welches du hier findest:",
   "test_info_telegram": "Für fragen haben wir eine Telegram Gruppe erstellt, diese findest du hier:",
   "test_info_feedback": "Möchtest du uns feedback geben, oder hast einen Bug gefunden, leg bitte einen Issue bei GitHub an:",
@@ -24,7 +24,7 @@
 
   "wallet_home_network": "Netzwerk",
 
-  "wallet_offline": "Es scheint gerade Probleme mit dem Supernode zu geben. Am besten du schaust später nochmal rein!",
+  "wallet_offline": "Es scheint gerade Probleme mit dem Supernode zu geben ({chains}). Am besten du schaust später nochmal rein!",
   "wallet_uptime_stats": "Status anzeigen",
 
   "welcome_wallet_create": "Neues Wallet anlegen",
@@ -32,6 +32,14 @@
   "welcome_wallet_info": "Erstelle dein DeFiChain Wallet und behalte die Kontrolle deiner Privaten Schlüssel!",
   "welcome_wallet_secure": "Sicher",
   "welcome_wallet_privacy": "Deine Privaten Schlüssel werden lokal verschlüsselt abgelegt und verwaltet, geschützt durch deine Biometrie/PIN.",
+  "welcome_accept_terms_and_privacy": "Ich habe die Nutzungsbedingungen und Datenschuterklärung gelesen und akzeptiert",
+  "welcome_legal": "Legal",
+  "welcome_legal_text": "Bitte lese die Nutzungsbedingungen und Datenschutzerklärung von saiive.live.",
+  "welcome_legal_tos": "Nutzungsbedingungen",
+  "welcome_legal_privacy": "Datenschuterklärung",
+  "welcome_legal_tos_link": "https://static.saiive.live/tos.html",
+  "welcome_legal_privacy_link": "https://static.saiive.live/privacy.html",
+
   "wallet_new_reveal": "Zeig meine Wiederherstellungswörter",
   "wallet_new_info1_header": "Was sind Wiederherstellungswörter?",
   "wallet_new_info1_text": "Es ist dein Master Private Key für dein Wallet, sozusagen Benutzername und Kennwort. Nur du solltest Zugriff darauf haben, gib acht!",
@@ -69,6 +77,7 @@
   "wallet_restore_word_invalid": "Wort ist ungültig",
   "wallet_empty": "Dein Wallet ist leer!",
   "wallet_receive": "Empfangen",
+  "wallet_receive_warning": "Sende nur {coin} an diese Adresse. Wenn du einen anderen Coin als {coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!",
   "wallet_send": "Senden",
   "wallet_send_address": "Adresse",
   "wallet_send_address_scan": "Scan",
@@ -76,6 +85,9 @@
   "wallet_locked": "Wallet synchronisiert gerade!",
 
   
+  "wallet_operation_failed": "Transaktionsfehler :(",
+  "wallet_operation_success": "Transaktion war erfolgreich :)",
+  "wallet_operation_show_tx": "Transaktion im Explorer anzeigen...",
   "wallet_operation_refresh_utxo": "UTXO aktualisieren...",
   "wallet_operation_refresh_utxo_done": "UTXO aktualisieren...fertig",
   "wallet_operation_build_tx": "Transaktion wird erstellt",
@@ -90,7 +102,22 @@
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
   "settings": "Einstellungen",
+  "settings_wallet": "Wallet",
+  "settings_common": "Allgemein",
+
+  "settings_support": "Hilfe",
+  "settings_support_telegram_live": "Telegram saiive.live",
+  "settings_support_telegram_defichain_en": "Telegram DeFiChain [en]",
+  "settings_support_telegram_defichain_de": "Telegram DeFiChain [de]",
+  "settings_support_wiki": "Wiki",
+  "settings_support_reddit": "Reddit",
+  "settings_support_github": "GitHub",
+  "settings_support_defichain": "Defichain.com",
+
+  "settings_network": "Netzwerk",
   "settings_remove_seed": "Seed löschen",
+  "settings_show_logs": "Logs zeigen",
+  "settings_show_wallet_addresses": "Wallet Adressen",
   "settings_show_seed": "Seed anzeigen",
   "settings_removed_seed": "Seed gelöscht",
   "settings_donate": "Wenn du uns helfen willst die App noch besser machen, kannst du uns gerne DFI spenden:",
@@ -133,21 +160,26 @@
   "home_welcome_account_block_height": "Block Höhe: ",
   
 
-  "liquitiy": "Liquidity",
-  "liquitiy_pool_share_percentage": "Pool-Anteil",
-  "liquitiy_add": "Hinzufügen",
-  "liquitiy_add_max": "max",
-  "liquitiy_add_token_a": "Token A",
-  "liquitiy_add_token_b": "Token B",
-  "liquitiy_add_amount_a": "Amount A",
-  "liquitiy_add_amount_b": "Amount B",
-  "liquitiy_add_pool_share": "Pool Share",
-  "liquitiy_add_total_pooled": "Insgesammt gepoolt",
-  "liquitiy_add_insufficient_funds": "Nicht genügend Balance für LM",
-  "liquitiy_add_price": "Preis",
+  "liquidity": "Liquidity",
+  "liquidity_pool_share_percentage": "Pool-Anteil",
+  "liquidity_add": "Hinzufügen",
+  "liquidity_add_max": "max",
+  "liquidity_add_token_a": "Token A",
+  "liquidity_add_token_b": "Token B",
+  "liquidity_add_amount_a": "Amount A",
+  "liquidity_add_amount_b": "Amount B",
+  "liquidity_add_pool_share": "Pool Share",
+  "liquidity_add_total_pooled": "Insgesammt gepoolt",
+  "liquidity_add_insufficient_funds": "Nicht genügend Balance für LM",
+  "liquidity_add_price": "Preis",
   "liqudity_add_successfull": "Hinzufügen war erfolgreich",
   "liqudity_your_liquidity": "Deine Liquidität",
   "liqudity_pool_pairs": "Pool Paare",
+  "liquidity_remove": "Entfernen",
+  "liquidity_remove_price": "Preis",
+  "liquidity_remove_of": "von",
+
+  "liquidity_remove_successfull": "Entfernen war erfolgreich",
 
   "biometric_auth_error": "Biometric Authentification Error"
 }

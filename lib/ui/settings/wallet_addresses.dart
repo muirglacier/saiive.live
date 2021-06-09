@@ -1,10 +1,9 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
-import 'package:defichainwallet/appstate_container.dart';
-import 'package:defichainwallet/crypto/crypto/hd_wallet_util.dart';
-import 'package:defichainwallet/crypto/database/wallet_database.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/generated/l10n.dart';
-import 'package:defichainwallet/service_locator.dart';
+import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,18 +16,27 @@ class WalletAddressesScreen extends StatefulWidget {
 }
 
 class _WalletAddressesScreen extends State<WalletAddressesScreen> {
-  List<WalletAddress> _walletAddresses = [];
-  List<String> _walletAddressesString = [];
+  List<String> _dfiWalletAddresses = [];
+  List<String> _btcWalletAddresses = [];
+
+  List<String> _walletAddresses = [];
 
   loadAddresses() async {
-    final walletDb = sl.get<IWalletDatabase>();
-    _walletAddresses = await walletDb.getWalletAddresses(0);
+    final walletService = sl.get<IWalletService>();
+    _dfiWalletAddresses = await walletService.getPublicKeys(ChainType.DeFiChain);
+    _btcWalletAddresses = await walletService.getPublicKeys(ChainType.Bitcoin);
 
-    for (final address in _walletAddresses) {
-      var path = HdWalletUtil.derivePath(address.account, address.isChangeAddress, address.index);
-
-      _walletAddressesString.add(address.publicKey + " @ " + path);
-    }
+    _walletAddresses.add("");
+    _walletAddresses.add("DeFiChain");
+    _walletAddresses.add("");
+    _walletAddresses.add("");
+    _walletAddresses.addAll(_dfiWalletAddresses);
+    _walletAddresses.add("");
+    _walletAddresses.add("");
+    _walletAddresses.add("Bitcoin");
+    _walletAddresses.add("");
+    _walletAddresses.addAll(_btcWalletAddresses);
+    _walletAddresses.add("");
 
     setState(() {});
   }
@@ -56,9 +64,9 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: _walletAddressesString.length,
+                itemCount: _walletAddresses.length,
                 itemBuilder: (context, index) {
-                  final account = _walletAddressesString.elementAt(index);
+                  final account = _walletAddresses.elementAt(index);
                   return _buildAddressEntry(context, account);
                 })));
   }
@@ -73,12 +81,12 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () async {
-                      await ClipboardManager.copyToClipBoard(_walletAddressesString?.join("\r\n"));
+                      await ClipboardManager.copyToClipBoard(_walletAddresses?.join("\r\n"));
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(S.of(context).receive_address_copied_to_clipboard),
                       ));
 
-                      Clipboard.setData(new ClipboardData(text: _walletAddressesString?.join("\r\n")));
+                      Clipboard.setData(new ClipboardData(text: _walletAddresses?.join("\r\n")));
                     },
                     child: Icon(
                       Icons.copy,

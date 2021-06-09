@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:defichainwallet/crypto/model/wallet_account.dart';
-import 'package:defichainwallet/crypto/model/wallet_address.dart';
-import 'package:defichainwallet/network/model/transaction.dart';
-import 'package:defichainwallet/network/model/transaction_data.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/network/model/transaction.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class IWallet {
@@ -11,9 +11,17 @@ abstract class IWallet {
   static const int MaxUnusedIndexScan = 2;
   static const int KeysPerQuery = 30;
 
+  String get walletType;
+
   Future init();
   Future close();
   bool isLocked();
+  Future<bool> isAlive();
+  Future<bool> hasAccounts();
+
+  Future syncAll({StreamController<String> loadingStream});
+
+  IWalletDatabase getDatabase();
 
   Future<Transaction> getTransaction(String id);
 
@@ -26,9 +34,6 @@ abstract class IWallet {
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 
-  Future<TransactionData> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream});
-  Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
-      {StreamController<String> loadingStream});
-
-  Future<TransactionData> createAndSendAddPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress, {StreamController<String> loadingStream});
+  Future<String> createSendTransaction(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
 }

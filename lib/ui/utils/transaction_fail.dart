@@ -1,5 +1,7 @@
+import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
@@ -71,10 +73,23 @@ class TransactionFailScreen extends StatelessWidget {
             ),
           if (error != null) SizedBox(height: 30),
           if (error != null)
-            Text(
+            SelectableText(
               _stackTrace,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 10),
             ),
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  ClipboardManager.copyToClipBoard(_stackTrace).then((result) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(S.of(context).receive_address_copied_to_clipboard),
+                    ));
+                  });
+                  Clipboard.setData(new ClipboardData(text: _stackTrace));
+                },
+                child: Icon(Icons.copy, size: 26.0, color: Colors.white),
+              ))
         ])));
   }
 }

@@ -38,6 +38,11 @@ class AccountBalance {
     if (isLPS || isDAT) {
       return isLPS ? "LP" : "DST";
     }
+
+    if (!isLPS && !isDAT) {
+      return 'Token';
+    }
+
     return null;
   }
 

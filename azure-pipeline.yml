@@ -91,7 +91,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, android-key-properties'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
           RunAsPreJob: true
           
 
@@ -122,10 +122,12 @@ stages:
       - task: Bash@3
         displayName: "prepare signing"
         inputs:
-          targetType: 'filePath'
+          targetType: 'inline'
           workingDirectory: $(Build.SourcesDirectory)
-          filePath: $(Build.SourcesDirectory)/.devops/android_key_properties.sh
-            
+          script: |
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+            .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
+
       - task: FlutterBuild@0
         displayName: Android Debug APK
         inputs:
@@ -185,7 +187,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, android-key-properties'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
           RunAsPreJob: true
 
       - task: FlutterInstall@0
@@ -215,10 +217,12 @@ stages:
       - task: Bash@3
         displayName: "prepare signing"
         inputs:
-          targetType: 'filePath'
+          targetType: 'inline'
           workingDirectory: $(Build.SourcesDirectory)
-          filePath: $(Build.SourcesDirectory)/.devops/android_key_properties.sh
-
+          script: |
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+            .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
+            
       - task: FlutterBuild@0
         displayName: Android Release APK
         inputs:
@@ -251,7 +255,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, android-key-properties'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
           RunAsPreJob: true
 
       - task: FlutterInstall@0
@@ -281,10 +285,12 @@ stages:
       - task: Bash@3
         displayName: "prepare signing"
         inputs:
-          targetType: 'filePath'
+          targetType: 'inline'
           workingDirectory: $(Build.SourcesDirectory)
-          filePath: $(Build.SourcesDirectory)/.devops/android_key_properties.sh
-          
+          script: |
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+            .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
+            
       - task: FlutterBuild@0
         displayName: Android Release APK
         inputs:

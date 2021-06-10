@@ -1,8 +1,6 @@
 #!/bin/bash
-echo $(android-upload-key-base64) | base64 --decode > upload-key.jks
-echo $(android-key-properties) | base64 --decode > android/key.properties
-
+sed -e "s|{{password}}|$1|g" android/key.properties.template  | tee android/key.properties
 cat android/key.properties
 
-sed 's|{{source_dir}}|$(Build.SourcesDirectory)|g' android/key.properties > android/key.properties
+sed -e "s|{{path}}|$2|g" android/key.properties | tee android/key.properties
 cat android/key.properties

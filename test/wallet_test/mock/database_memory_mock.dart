@@ -1,6 +1,7 @@
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
@@ -194,9 +195,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<bool> addressExists(int account, bool isChangeAddress, int index) async {
+  Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType) async {
     for (final address in _addresses) {
-      if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index) {
+      if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index && address.addressType == addressType) {
         return true;
       }
     }
@@ -234,9 +235,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index) async {
+  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType) async {
     for (final address in _addresses) {
-      if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index) {
+      if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index && address.addressType == addressType) {
         return address;
       }
     }

@@ -91,7 +91,7 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
       await wallet.init();
 
-      final txId = await wallet.createSendTransaction(1 * 100000000, "BTC", "tgoVbmjxpgMHzj22y6PUPRcr7WxasGAx3n");
+      await wallet.createSendTransaction(1 * 100000000, "BTC", "tgoVbmjxpgMHzj22y6PUPRcr7WxasGAx3n");
 
       final txController = sl.get<TransactionServiceMock>();
 

@@ -1,6 +1,7 @@
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/transaction.dart';
@@ -35,9 +36,9 @@ abstract class IWalletDatabase {
   Future addAddress(WalletAddress address);
   Future<bool> isOwnAddress(String pubKey);
   Future<WalletAddress> getWalletAddress(String pubKey);
-  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index);
+  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType);
   Future<List<WalletAddress>> getWalletAddresses(int account);
-  Future<bool> addressExists(int account, bool isChangeAddress, int index);
+  Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType);
 
   int getAddressCreationCount();
 

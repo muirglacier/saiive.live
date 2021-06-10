@@ -1,6 +1,7 @@
 import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bip32_defichain/bip32.dart' as bip32;
@@ -35,8 +36,8 @@ void main() {
       final seedHex = defichain.mnemonicToSeedHex(mnemonic, passphrase: "");
       final seed = HEX.decode(seedHex);
 
-      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, 20);
-      var changeKeys = await HdWalletUtil.derivePublicKeys(seed, 0, true, 0, ChainType.DeFiChain, ChainNet.Testnet, 20);
+      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.P2SHSegwit, 20);
+      var changeKeys = await HdWalletUtil.derivePublicKeys(seed, 0, true, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.P2SHSegwit, 20);
       int i = 0;
       for (var key in keys) {
         LogHelper.instance.d("$key at $i");

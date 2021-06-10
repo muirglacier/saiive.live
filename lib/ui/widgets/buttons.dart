@@ -52,8 +52,8 @@ class AppButton {
                   }
                   return;
                 }));
-
-        throw new UnsupportedError('Button not implemented');
+      default:
+        return SizedBox();
     }
   } //
 }

@@ -11,6 +11,7 @@ import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/impl/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
@@ -133,9 +134,9 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<String> getPublicKey() async {
+  Future<String> getPublicKey(AddressType addressType) async {
     isInitialzed();
-    return getPublicKeyFromAccount(_account, false);
+    return getPublicKeyFromAccount(_account, false, addressType);
   }
 
   Future<List<String>> getPublicKeys() async {
@@ -150,12 +151,12 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress) async {
+  Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress, AddressType addressType) async {
     isInitialzed();
     assert(_wallets.containsKey(account));
 
     if (_wallets.containsKey(account)) {
-      return await _wallets[account].nextFreePublicKey(_walletDatabase, _sharedPrefsUtil, isChangeAddress);
+      return await _wallets[account].nextFreePublicKey(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
     }
     throw UnimplementedError();
   }

@@ -6,7 +6,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/helper/poolpair.dart';
 import 'package:saiive.live/helper/poolshare.dart';
-import 'package:saiive.live/network/events/wallet_sync_done_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
 import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';

@@ -12,6 +12,7 @@ import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/network/model/token.dart';
 import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:tuple/tuple.dart';
+import '../address_type.dart';
 import '../impl/wallet.dart' as wallet;
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 
@@ -26,8 +27,8 @@ abstract class IDeFiCHainWallet {
 class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   DeFiChainWallet(bool checkUtxo) : super(ChainType.DeFiChain, checkUtxo);
 
-  final int AuthTxMin = 200000;
-  static final int MinKeepUTXO = 2000000;
+  static const int AuthTxMin = 200000;
+  static const int MinKeepUTXO = 2000000;
 
   @override
   Future<TransactionData> createAndSendRemovePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream}) async {
@@ -201,7 +202,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       fromAmount = await prepareAccount(fromAmount, loadingStream: loadingStream);
     }
 
-    final changeAddress = await getPublicKeyFromAccount(account, true);
+    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
@@ -253,7 +254,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   @override
   Future<String> createSendTransaction(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = await this.getPublicKeyFromAccount(account, true);
+    final changeAddress = await this.getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
 
     if (DeFiConstants.isDfiToken(token)) {
       if (sendMax) {
@@ -341,7 +342,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       return null;
     }
 
-    final changeAddress = await getPublicKeyFromAccount(account, true);
+    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
     var lastTxId = "";
     for (var authAddress in useAccounts) {
       final txb = await HdWalletUtil.buildAccountToAccountTransaction(inputTxs, authAddress, keys, tokenType.id, to, amount, fee, changeAddress, chain, network);
@@ -354,7 +355,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<Tuple3<String, List<tx.Transaction>, String>> createAuthTx(String pubKey, int amount, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = await getPublicKeyFromAccount(account, true);
+    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
 
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
@@ -433,7 +434,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         break;
       }
     }
-    final changeAddress = await getPublicKeyFromAccount(account, true);
+    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
 
     final tokenType = await apiService.tokenService.getToken("DFI", DeFiConstants.DefiAccountSymbol);
 

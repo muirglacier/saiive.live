@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/events.dart';
@@ -355,8 +356,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 child: GestureDetector(
                   onTap: () async {
                     var wallet = sl.get<IWalletService>();
-                    var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain);
-                    var pubKeyBTC = await wallet.getPublicKey(ChainType.Bitcoin);
+                    var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain, AddressType.P2SHSegwit);
+                    var pubKeyBTC = await wallet.getPublicKey(ChainType.Bitcoin, AddressType.P2SHSegwit);
 
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletHomeReceiveScreen(pubKeyDFI: pubKeyDFI, pubKeyBTC: pubKeyBTC)));
                   },

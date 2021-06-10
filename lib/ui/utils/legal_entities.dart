@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:saiive.live/ui/utils/card-link.widget.dart';
-import 'package:saiive.live/ui/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:saiive.live/generated/l10n.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LegalEntitiesWidget extends StatefulWidget {
   final EdgeInsets padding;

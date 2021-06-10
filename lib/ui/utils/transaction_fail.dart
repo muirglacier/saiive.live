@@ -7,34 +7,40 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class TransactionFailScreen extends StatelessWidget {
+class TransactionFailScreen extends StatefulWidget {
   final String text;
 
   final String additional;
   final dynamic error;
 
-  String _errorText;
-  String _stackTrace;
-
   TransactionFailScreen(this.text, {this.additional, this.error});
 
+  @override
+  _TransactionFailScreenState createState() => _TransactionFailScreenState();
+}
+
+class _TransactionFailScreenState extends State<TransactionFailScreen> {
+  String _errorText;
+
+  String _stackTrace;
+
   transformError() {
-    if (error == null) {
+    if (widget.error == null) {
       return;
     }
 
-    if (error is HttpException) {
-      final httpError = error as HttpException;
+    if (widget.error is HttpException) {
+      final httpError = widget.error as HttpException;
       _errorText = httpError.error.error;
-    } else if (error is TransactionError) {
-      final txError = error as TransactionError;
+    } else if (widget.error is TransactionError) {
+      final txError = widget.error as TransactionError;
       _errorText = txError.error;
     } else {
-      _errorText = error.toString();
+      _errorText = widget.error.toString();
     }
 
-    if (error is Error) {
-      _stackTrace = (error as Error).stackTrace.toString();
+    if (widget.error is Error) {
+      _stackTrace = (widget.error as Error).stackTrace.toString();
     } else {
       _stackTrace = "";
     }
@@ -61,21 +67,21 @@ class TransactionFailScreen extends StatelessWidget {
             child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.error_outline_outlined, size: 50),
           Text(
-            text,
+            widget.text,
             style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w800),
           ),
-          if (additional != null && additional.isNotEmpty)
+          if (widget.additional != null && widget.additional.isNotEmpty)
             Text(
-              additional,
+              widget.additional,
               style: TextStyle(fontSize: 30, color: Colors.white),
             ),
-          if (error != null) SizedBox(height: 30),
-          if (error != null)
+          if (widget.error != null) SizedBox(height: 30),
+          if (widget.error != null)
             Text(
               _errorText,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
-          if (error != null) SizedBox(height: 30),
+          if (widget.error != null) SizedBox(height: 30),
           if (_stackTrace != null)
             SelectableText(
               _stackTrace,

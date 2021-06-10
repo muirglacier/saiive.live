@@ -1,0 +1,1354 @@
+trigger:
+- main
+- features/*
+- fix/*
+name: $(BuildID)
+
+variables:
+- group: saiive.live
+
+stages:
+- stage: Android
+  displayName: Android
+  
+  jobs:
+  - job: ReleaseNotes
+    displayName: "Generate release notes"
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: Bash@3
+        displayName: "Prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
+            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
+
+      - task: XplatGenerateReleaseNotes@3
+        inputs:
+          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
+          templateLocation: 'File'
+          templatefile: '.devops/release_notes_template.txt'
+          dumpPayloadToConsole: true
+          dumpPayloadToFile: false
+          replaceFile: false
+          getParentsAndChildren: False
+          getAllParents: False
+          getIndirectPullRequests: False
+      
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'release-notes'
+          
+  - job: BuildAndroidDev
+    dependsOn: ReleaseNotes
+    displayName: "Build Android DEV"
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          RunAsPreJob: true
+          
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter doctor -v
+            $(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: FlutterBuild@0
+        displayName: Android Debug APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          debugMode: true
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
+          buildFlavour: 'dev'
+          entryPoint: 'lib/main.dart'
+          buildNumber: $(Build.BuildNumber)
+
+          
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/android/debug'
+      - task: Bash@3
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter clean
+            $(FlutterToolPath)/flutter precache
+
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
+
+            
+      - task: FlutterBuild@0
+        displayName: Android Release APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
+          buildFlavour: 'dev'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/android/release'
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'dev-android'
+
+  - job: BuildAndroidStaging
+    dependsOn: ReleaseNotes
+    displayName: "Build Android STAGING"
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          RunAsPreJob: true
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion)
+
+      - task: Bash@3
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter clean
+            
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: FlutterBuild@0
+        displayName: Android Release APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)'
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
+          buildFlavour: 'staging'
+          entryPoint: 'lib/main_staging.dart'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/android/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'staging-android'
+  
+  - job: BuildAndroidProd
+    dependsOn: ReleaseNotes
+    displayName: "Build Android PROD"
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          RunAsPreJob: true
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion)
+
+      - task: Bash@3
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter clean
+            
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+            
+
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+            
+      - task: FlutterBuild@0
+        displayName: Android Release APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
+          buildFlavour: 'prod'
+          entryPoint: 'lib/main_prod.dart'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/android/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-android'
+
+- stage: iOS
+  displayName: iOS
+  
+  jobs:
+  - job: ReleaseNotes
+    displayName: "Generate release notes"
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: Bash@3
+        displayName: "Prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
+            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
+
+      - task: XplatGenerateReleaseNotes@3
+        inputs:
+          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
+          templateLocation: 'File'
+          templatefile: '.devops/release_notes_template.txt'
+          dumpPayloadToConsole: true
+          dumpPayloadToFile: false
+          replaceFile: false
+          getParentsAndChildren: False
+          getAllParents: False
+          getIndirectPullRequests: False
+    
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'release-notes'
+        
+  - job: BuildiOSAdHoc
+    dependsOn: ReleaseNotes
+    displayName: "Build iOS AdHoc"
+    pool:
+      vmImage: 'macOS-latest'
+    
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'apple-adhoc-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDist.p12'
+          certPwd: '$(apple-adhoc-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.adhoc.mobileprovision'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+          
+      - task: FlutterBuild@0
+        displayName: "Build iOS AdHoc"
+        inputs:
+          target: 'ios'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildFlavour: 'staging'
+          entryPoint: 'lib/main_staging.dart'
+          verboseMode: true
+          debugMode: false
+          buildName: $(AppVersion)
+          buildNumber: $(Build.BuildNumber)
+
+      - task: Bash@3
+        displayName: 'Create ipa package'
+        inputs:
+          targetType: 'inline'
+          script: |
+            xcodebuild -workspace ios/Runner.xcworkspace -scheme staging -sdk iphoneos -configuration Release-staging archive -archivePath build/ios/Runner.xcarchive
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist .devops/AdHocExportOptions.plist -exportPath build/ios
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'build/ios/*.ipa'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/staging'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'staging-ios'
+
+  - job: BuildiOSAppStore
+    dependsOn: ReleaseNotes
+    displayName: "Build iOS AppStore"
+    pool:
+      vmImage: 'macOS-latest'
+
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'apple-adhoc-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDist.p12'
+          certPwd: '$(apple-adhoc-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore.mobileprovision'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+            
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-prod.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+
+      - task: FlutterBuild@0
+        displayName: "Build iOS AppStore"
+        inputs:
+          target: 'ios'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildFlavour: 'production'
+          entryPoint: 'lib/main_prod.dart'
+          verboseMode: false
+          debugMode: false
+          buildName: $(AppVersion)
+          buildNumber: $(Build.BuildNumber)
+
+      - task: Bash@3
+        displayName: 'Create ipa package'
+        inputs:
+          targetType: 'inline'
+          script: |
+            xcodebuild -workspace ios/Runner.xcworkspace -scheme production -sdk iphoneos -configuration Release-production archive -archivePath build/ios/Runner.xcarchive
+            xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportOptionsPlist .devops/AppStoreExportOptions.plist -exportPath build/ios
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'build/ios/*.ipa'
+          targetFolder: '$(build.artifactStagingDirectory)/ios/production'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'production-ios'
+
+- stage: macOS
+  displayName: macOS
+  
+  jobs:
+  - job: ReleaseNotes
+    displayName: "Generate release notes"
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: Bash@3
+        displayName: "Prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
+            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
+
+      - task: XplatGenerateReleaseNotes@3
+        inputs:
+          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
+          templateLocation: 'File'
+          templatefile: '.devops/release_notes_template.txt'
+          dumpPayloadToConsole: true
+          dumpPayloadToFile: false
+          replaceFile: false
+          getParentsAndChildren: False
+          getAllParents: False
+          getIndirectPullRequests: False
+    
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'release-notes'
+
+  - job: BuildMacOS
+    dependsOn: ReleaseNotes
+    displayName: "Build macOS Dev"
+    pool:
+      vmImage: 'macOS-latest'
+
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'apple-macos-developerid-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion)
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter enable macos"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: Bash@3
+        displayName: "Build MacOS DEV"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter build macos --target=lib/main.dart --build-name=$(AppVersion) --verbose --debug
+
+      - task: Bash@3
+        displayName: 'Create .dmg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            brew install create-dmg
+
+            create-dmg \
+              --volname "saiive-live-debug" \
+              --window-pos 200 120 \
+              --window-size 800 529 \
+              --icon-size 130 \
+              --text-size 14 \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
+              --app-drop-link 540 250 \
+              --hdiutil-quiet \
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Debug/saiive.live.app"
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'saiive.live.dmg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/debug'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'debug-macos'
+
+  - job: BuildMacOSStaging
+    dependsOn: ReleaseNotes
+    displayName: "Build macOS Staging"
+    pool:
+      vmImage: 'macOS-latest'
+
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'apple-macos-developerid-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter enable macos"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: Bash@3
+        displayName: "Build MacOS Staging"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter build macos --target=lib/main_staging.dart --build-name=$(AppVersion) --verbose --debug
+
+      - task: Bash@3
+        displayName: 'Create .dmg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            brew install create-dmg
+
+            create-dmg \
+              --volname "saiive-live-staging" \
+              --window-pos 200 120 \
+              --window-size 800 529 \
+              --icon-size 130 \
+              --text-size 14 \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
+              --app-drop-link 540 250 \
+              --hdiutil-quiet \
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Debug/saiive.live.app"
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: 'saiive.live.dmg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/staging'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'staging-macos'
+
+  - job: BuildMacOSProductionAppStore
+    dependsOn: ReleaseNotes
+    displayName: "Build macOS Production AppStore"
+    pool:
+      vmImage: 'macOS-latest'
+    
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'apple-macos-developerid-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter enable macos"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: Bash@3
+        displayName: "Build MacOS Prod"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --release
+
+      - task: Bash@3
+        displayName: 'Create .pkg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            /usr/bin/productbuild --component build/macos/Build/Products/Release/saiive.live.app /Applications --sign E220D8D5B09C6C7C345DE6EF780C0FBB9CA0EA08 saiive.live.pkg
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts pkg"
+        inputs:
+          contents: 'saiive.live.pkg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod-appstore'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-macos'
+
+  - job: BuildMacOSProductionDirect
+    dependsOn: ReleaseNotes
+    displayName: "Build macOS Production Direct"
+    pool:
+      vmImage: 'macOS-latest'
+
+    steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'apple-macos-developerid-cert-password'
+          RunAsPreJob: true
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDeveloperID.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPDistMacOS.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleCertificate@2
+        inputs:
+          certSecureFile: 'DPMacOSInstaller.p12'
+          certPwd: '$(apple-macos-developerid-cert-password)'
+          keychain: 'temp'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+
+      - task: InstallAppleProvisioningProfile@1
+        inputs:
+          provisioningProfileLocation: 'secureFiles'
+          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion)
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            #cd $(Build.SourcesDirectory)
+            #$(FlutterToolPath)/flutter doctor -v
+            #$(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter enable macos"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter config --enable-macos-desktop
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml
+            cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: Bash@3
+        displayName: "Build MacOS Prod"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --debug
+
+      - task: Bash@3
+        displayName: 'Create .dmg'
+        inputs:
+          targetType: 'inline'
+          script: |
+            brew install create-dmg
+
+            create-dmg \
+              --volname "saiive.live" \
+              --window-pos 200 120 \
+              --window-size 800 529 \
+              --icon-size 130 \
+              --text-size 14 \
+              --icon "build/macos/Build/Products/Debug/saiive.live.app" 260 250 \
+              --hide-extension "saiive.live.app" \
+              --app-drop-link 540 250 \
+              --hdiutil-quiet \
+              "saiive.live.dmg" \
+              "build/macos/Build/Products/Debug/saiive.live.app"
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts dmg"
+        inputs:
+          contents: 'saiive.live.dmg'
+          targetFolder: '$(build.artifactStagingDirectory)/macos/prod-direct'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-macos'
+
+- stage: Windows
+  displayName: Windows
+  
+  jobs:
+  - job: ReleaseNotes
+    displayName: "Generate release notes"
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: Bash@3
+        displayName: "Prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
+            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
+
+      - task: XplatGenerateReleaseNotes@3
+        inputs:
+          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
+          templateLocation: 'File'
+          templatefile: '.devops/release_notes_template.txt'
+          dumpPayloadToConsole: true
+          dumpPayloadToFile: false
+          replaceFile: false
+          getParentsAndChildren: False
+          getAllParents: False
+          getIndirectPullRequests: False
+      
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'release-notes'
+          
+  - job: BuildWindowsDev
+    dependsOn: ReleaseNotes
+    displayName: "Build Windows DEV"
+    pool:
+      vmImage: 'windows-latest'
+    
+    steps:
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: CmdLine@2
+        displayName: "Flutter prepare"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter doctor -v
+            $(FlutterToolPath)\flutter precache
+
+          
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+      
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
+
+      - task: CmdLine@2
+        displayName: "Flutter build icons"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub get
+            $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
+
+            cd windows/runner/resources
+            xcopy /Y app_icon_dev.ico app_icon.ico
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: FlutterBuild@0
+        displayName: Windows Debug
+        inputs:
+          target: 'windows'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          debugMode: true
+          buildFlavour: 'dev'
+          entryPoint: 'lib/main.dart'
+          buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main.dart
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Debug\**'
+          targetFolder: '$(build.artifactStagingDirectory)/windows/debug'
+
+      - task: CmdLine@2
+        displayName: "Flutter clean"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter clean
+            $(FlutterToolPath)\flutter precache
+
+            
+      - task: FlutterBuild@0
+        displayName: Windows Release
+        inputs:
+          target: 'windows'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          buildFlavour: 'dev'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
+          targetFolder: '$(build.artifactStagingDirectory)/windows/release'
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'dev-windows'
+
+  - job: BuildWindowsStaging
+    dependsOn: ReleaseNotes
+    displayName: "Build Windows STAGING"
+    pool:
+      vmImage: 'windows-latest'
+    
+    steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: CmdLine@2
+        displayName: "Flutter clean"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter clean
+                  
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+           
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
+
+      - task: CmdLine@2
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub get
+            $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+
+            cd windows/runner/resources
+            xcopy /Y app_icon_staging.ico app_icon.ico
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+      - task: FlutterBuild@0
+        displayName: Windows Release
+        inputs:
+          target: 'windows'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          buildFlavour: 'staging'
+          entryPoint: 'lib/main_staging.dart'
+          buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main_staging.dart
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
+          targetFolder: '$(build.artifactStagingDirectory)/windows/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'staging-windows'
+  
+  - job: BuildWindowsProd
+    dependsOn: ReleaseNotes
+    displayName: "Build Widnows PROD"
+    pool:
+      vmImage: 'windows-latest'
+    
+    steps:
+
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: CmdLine@2
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter clean
+
+                  
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
+            
+      - task: CmdLine@2
+        displayName: "Flutter build icons"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub get
+            $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+
+            cd windows/runner/resources
+            xcopy /Y app_icon_prod.ico app_icon.ico
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+            
+      - task: FlutterBuild@0
+        displayName: Windows Release
+        inputs:
+          target: 'windows'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          buildFlavour: 'prod'
+          entryPoint: 'lib/main_prod.dart'
+          buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main_prod.dart
+
+          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
+          targetFolder: '$(build.artifactStagingDirectory)/windows/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-windows'

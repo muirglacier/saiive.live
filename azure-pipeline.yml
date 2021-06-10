@@ -239,7 +239,7 @@ stages:
           targetType: 'inline'
           script: |
             cat $(Build.SourcesDirectory)/android/key.properties
-           # cat $(Build.SourcesDirectory)/upload-key.jks
+            #cat $(Build.SourcesDirectory)/upload-key.jks
             cat $(Build.SourcesDirectory)/upload-key.jks | base64
 
       - task: FlutterBuild@0

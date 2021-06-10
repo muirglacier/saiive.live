@@ -54,7 +54,14 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-*'
+          SecretsFilter: 'android-upload-key-password'
+          RunAsPreJob: true
+
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-upload-key'
           RunAsPreJob: true
 
       - task: FlutterInstall@0
@@ -150,7 +157,14 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-*'
+          SecretsFilter: 'android-upload-key-password'
+          RunAsPreJob: true
+
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-upload-key'
           RunAsPreJob: true
 
       - task: FlutterInstall@0
@@ -220,7 +234,14 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-*'
+          SecretsFilter: 'android-upload-key-password'
+          RunAsPreJob: true
+
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-upload-key'
           RunAsPreJob: true
 
       - task: FlutterInstall@0

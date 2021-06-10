@@ -10,7 +10,8 @@ variables:
 stages:
 - stage: Android
   displayName: Android
-  
+  dependsOn: []
+
   jobs:
   - job: ReleaseNotes
     displayName: "Generate release notes"
@@ -301,6 +302,7 @@ stages:
 
 - stage: iOS
   displayName: iOS
+  dependsOn: []
   
   jobs:
   - job: ReleaseNotes
@@ -510,6 +512,7 @@ stages:
 
 - stage: macOS
   displayName: macOS
+  dependsOn: []
   
   jobs:
   - job: ReleaseNotes
@@ -1036,6 +1039,7 @@ stages:
 
 - stage: Windows
   displayName: Windows
+  dependsOn: []
   
   jobs:
   - job: ReleaseNotes

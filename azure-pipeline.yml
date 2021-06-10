@@ -43,8 +43,6 @@ stages:
         inputs:
           ArtifactName: 'release-notes'
 
-
-stages:
 - stage: Test
   displayName: Test
   dependsOn: [Pre]
@@ -236,7 +234,7 @@ stages:
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
             sed 's/{{path}}/$KEY_PATH/g' android/key.properties > android/key.properties
-            
+
       - task: Bash@3
         displayName: "prepare signing"
         inputs:

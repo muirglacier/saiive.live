@@ -1,4 +1,4 @@
 storePassword={{password}}
 keyPassword={{password}}
 keyAlias=upload
-storeFile=~/upload-key.jks
+storeFile={{path}}

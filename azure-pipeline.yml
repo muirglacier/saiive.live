@@ -95,9 +95,12 @@ stages:
           script: |
             
             echo $(android-upload-key-base64) 
-            echo $(android-upload-key-base64) | base64 --decode > ~/upload-key.jks
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            KEY_PATH=$(Build.SourcesDirectory)/upload-key.jks
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{path}}/$KEY_PATH/g' android/key.properties > android/key.properties
 
       - task: FlutterBuild@0
         displayName: Android Debug APK
@@ -199,9 +202,12 @@ stages:
           script: |
             
             echo $(android-upload-key-base64) 
-            echo $(android-upload-key-base64) | base64 --decode > ~/upload-key.jks
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            KEY_PATH=$(Build.SourcesDirectory)/upload-key.jks
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{path}}/$KEY_PATH/g' android/key.properties > android/key.properties
 
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -275,9 +281,12 @@ stages:
           script: |
             
             echo $(android-upload-key-base64) 
-            echo $(android-upload-key-base64) | base64 --decode > ~/upload-key.jks
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            KEY_PATH=$(Build.SourcesDirectory)/upload-key.jks
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{path}}/$KEY_PATH/g' android/key.properties > android/key.properties
 
       - task: FlutterBuild@0
         displayName: Android Release APK

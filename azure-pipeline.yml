@@ -91,7 +91,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, android-key-properties'
           RunAsPreJob: true
           
 
@@ -128,7 +128,9 @@ stages:
             cd $(Build.SourcesDirectory)
 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(key.properties) > $(Build.SourcesDirectory)/android/key.properties
+            echo $(key.properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
+
+            cat $(Build.SourcesDirectory)/android/key.properties
             
             sed 's|{{source_dir}}|$(Build.SourcesDirectory)|g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
 
@@ -191,7 +193,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, android-key-properties'
           RunAsPreJob: true
 
       - task: FlutterInstall@0
@@ -226,7 +228,9 @@ stages:
             cd $(Build.SourcesDirectory)
 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(key.properties) > $(Build.SourcesDirectory)/android/key.properties
+            echo $(key.properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
+
+            cat $(Build.SourcesDirectory)/android/key.properties
             
             sed 's|{{source_dir}}|$(Build.SourcesDirectory)|g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
 
@@ -272,7 +276,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, android-key-properties'
           RunAsPreJob: true
 
       - task: FlutterInstall@0
@@ -304,11 +308,12 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            
             cd $(Build.SourcesDirectory)
 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(key.properties) > $(Build.SourcesDirectory)/android/key.properties
+            echo $(key.properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
+
+            cat $(Build.SourcesDirectory)/android/key.properties
             
             sed 's|{{source_dir}}|$(Build.SourcesDirectory)|g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
 

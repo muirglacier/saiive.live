@@ -54,7 +54,7 @@ stages:
       vmImage: 'ubuntu-latest'
 
     steps:
-       - task: FlutterInstall@0
+      - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
           channel: 'stable'

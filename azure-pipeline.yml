@@ -227,8 +227,8 @@ stages:
             cd $(Build.SourcesDirectory)
 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            sed 's/{{password}}/$(android-upload-key-password)/g' $(Build.SourcesDirectory)/android/key.properties.template > $(Build.SourcesDirectory)/android/key.properties
-            sed 's/{{path}}/"$(Build.SourcesDirectory)/upload-key.jks"/g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
+            sed 's|{{password}}|$(android-upload-key-password)|g' $(Build.SourcesDirectory)/android/key.properties.template > $(Build.SourcesDirectory)/android/key.properties
+            sed 's|{{path}}|$(Build.SourcesDirectory)/upload-key.jks|g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
             
             cat $(Build.SourcesDirectory)/android/key.properties
 

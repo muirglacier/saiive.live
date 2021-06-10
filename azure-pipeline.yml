@@ -229,12 +229,18 @@ stages:
 
             KEY_PATH=$(Build.SourcesDirectory)/upload-key.jks
 
-            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
-            sed 's/{{path}}/$KEY_PATH/g' android/key.properties > android/key.properties
+            sed 's/{{password}}/$(android-upload-key-password)/g' $(Build.SourcesDirectory)/android/key.properties.template > android/key.properties
+            sed 's/{{path}}/$KEY_PATH/g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
+            
 
-            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template
-            sed 's/{{path}}/$KEY_PATH/g' android/key.properties > android/key.properties.template
 
+            echo "test sed 1"
+            sed 's/{{password}}/$(android-upload-key-password)/g' $(Build.SourcesDirectory)/android/key.properties.template 
+
+            echo "test sed 2"
+            sed 's/{{path}}/$KEY_PATH/g' $(Build.SourcesDirectory)/android/key.properties.template
+
+            echo "cast key properties file"
             cat $(Build.SourcesDirectory)/android/key.properties
 
       - task: Bash@3

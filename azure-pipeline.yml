@@ -49,7 +49,7 @@ stages:
 
   jobs:
   - job: Test
-    displayName: "Generate release notes"
+    displayName: "Flutter test"
     pool:
       vmImage: 'ubuntu-latest'
 
@@ -238,8 +238,8 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            cat android/key.properties
-            cat $(Build.SourcesDirectory)/upload-key.jks
+            cat $(Build.SourcesDirectory)/android/key.properties
+           # cat $(Build.SourcesDirectory)/upload-key.jks
             cat $(Build.SourcesDirectory)/upload-key.jks | base64
 
       - task: FlutterBuild@0

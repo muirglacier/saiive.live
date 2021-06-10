@@ -1,6 +1,8 @@
 #!/bin/bash
-sed -e "s|{{password}}|$1|g" android/key.properties.template  | tee android/key.properties
-cat android/key.properties
+rm -f android/key.properties.template
+echo storePassword=$1 >> android/key.properties.template
+echo keyPassword=$1 >> android/key.properties.template
+echo keyAlias=upload >> android/key.properties.template
+echo storeFile=$2 >> android/key.properties.template
 
-sed -e "s|{{path}}|$2|g" android/key.properties | tee android/key.properties
 cat android/key.properties

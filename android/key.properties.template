@@ -1,4 +1,4 @@
-storePassword={{password}}
-keyPassword={{password}}
+storePassword=71AmRqOlDPQrKl1jqSna
+keyPassword=71AmRqOlDPQrKl1jqSna
 keyAlias=upload
-storeFile={{path}}
+storeFile=/mnt/c/dev/saiive/saiive.live/

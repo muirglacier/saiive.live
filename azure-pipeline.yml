@@ -125,6 +125,7 @@ stages:
           targetType: 'inline'
           workingDirectory: $(Build.SourcesDirectory)
           script: |
+            chmod 755 .devops/android_key_properties.sh
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
             .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
 
@@ -220,6 +221,7 @@ stages:
           targetType: 'inline'
           workingDirectory: $(Build.SourcesDirectory)
           script: |
+            chmod 755 .devops/android_key_properties.sh
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
             .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
             
@@ -288,6 +290,7 @@ stages:
           targetType: 'inline'
           workingDirectory: $(Build.SourcesDirectory)
           script: |
+            chmod 755 .devops/android_key_properties.sh
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
             .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
             

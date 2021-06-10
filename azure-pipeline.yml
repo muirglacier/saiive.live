@@ -82,7 +82,6 @@ stages:
   jobs:
           
   - job: BuildAndroidDev
-    dependsOn: ReleaseNotes
     displayName: "Build Android DEV"
     pool:
       vmImage: 'ubuntu-latest'
@@ -184,7 +183,6 @@ stages:
           ArtifactName: 'dev-android'
 
   - job: BuildAndroidStaging
-    dependsOn: ReleaseNotes
     displayName: "Build Android STAGING"
     pool:
       vmImage: 'ubuntu-latest'
@@ -267,7 +265,6 @@ stages:
           ArtifactName: 'staging-android'
   
   - job: BuildAndroidProd
-    dependsOn: ReleaseNotes
     displayName: "Build Android PROD"
     pool:
       vmImage: 'ubuntu-latest'
@@ -346,7 +343,6 @@ stages:
   
   jobs:
   - job: BuildiOSAdHoc
-    dependsOn: ReleaseNotes
     displayName: "Build iOS AdHoc"
     pool:
       vmImage: 'macOS-latest'
@@ -428,7 +424,7 @@ stages:
           ArtifactName: 'staging-ios'
 
   - job: BuildiOSAppStore
-    dependsOn: ReleaseNotes
+
     displayName: "Build iOS AppStore"
     pool:
       vmImage: 'macOS-latest'
@@ -516,7 +512,6 @@ stages:
   jobs:
 
   - job: BuildMacOS
-    dependsOn: ReleaseNotes
     displayName: "Build macOS Dev"
     pool:
       vmImage: 'macOS-latest'
@@ -637,7 +632,7 @@ stages:
           ArtifactName: 'debug-macos'
 
   - job: BuildMacOSStaging
-    dependsOn: ReleaseNotes
+
     displayName: "Build macOS Staging"
     pool:
       vmImage: 'macOS-latest'
@@ -758,7 +753,6 @@ stages:
           ArtifactName: 'staging-macos'
 
   - job: BuildMacOSProductionAppStore
-    dependsOn: ReleaseNotes
     displayName: "Build macOS Production AppStore"
     pool:
       vmImage: 'macOS-latest'
@@ -866,7 +860,6 @@ stages:
           ArtifactName: 'prod-macos'
 
   - job: BuildMacOSProductionDirect
-    dependsOn: ReleaseNotes
     displayName: "Build macOS Production Direct"
     pool:
       vmImage: 'macOS-latest'
@@ -992,7 +985,6 @@ stages:
   
   jobs:         
   - job: BuildWindowsDev
-    dependsOn: ReleaseNotes
     displayName: "Build Windows DEV"
     pool:
       vmImage: 'windows-latest'
@@ -1105,7 +1097,6 @@ stages:
           ArtifactName: 'dev-windows'
 
   - job: BuildWindowsStaging
-    dependsOn: ReleaseNotes
     displayName: "Build Windows STAGING"
     pool:
       vmImage: 'windows-latest'
@@ -1185,7 +1176,6 @@ stages:
           ArtifactName: 'staging-windows'
   
   - job: BuildWindowsProd
-    dependsOn: ReleaseNotes
     displayName: "Build Widnows PROD"
     pool:
       vmImage: 'windows-latest'

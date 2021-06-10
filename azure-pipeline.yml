@@ -122,18 +122,10 @@ stages:
       - task: Bash@3
         displayName: "prepare signing"
         inputs:
-          targetType: 'inline'
-          script: |
+          targetType: 'filePath'
+          workingDirectory: $(Build.SourcesDirectory)
+          filePath: $(Build.SourcesDirectory)/.devops/android_key_properties.sh
             
-            cd $(Build.SourcesDirectory)
-
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(android-key-properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
-
-            cat $(Build.SourcesDirectory)/android/key.properties
-            
-            sed 's|{{source_dir}}|$(Build.SourcesDirectory)|g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
-
       - task: FlutterBuild@0
         displayName: Android Debug APK
         inputs:
@@ -223,25 +215,9 @@ stages:
       - task: Bash@3
         displayName: "prepare signing"
         inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(android-key-properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
-
-            cat $(Build.SourcesDirectory)/android/key.properties
-            
-            sed 's|{{source_dir}}|$(Build.SourcesDirectory)|g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
-
-      - task: Bash@3
-        displayName: "prepare signing"
-        inputs:
-          targetType: 'inline'
-          script: |
-            cat $(Build.SourcesDirectory)/android/key.properties
-            
-            cat $(Build.SourcesDirectory)/upload-key.jks | base64
+          targetType: 'filePath'
+          workingDirectory: $(Build.SourcesDirectory)
+          filePath: $(Build.SourcesDirectory)/.devops/android_key_properties.sh
 
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -305,17 +281,10 @@ stages:
       - task: Bash@3
         displayName: "prepare signing"
         inputs:
-          targetType: 'inline'
-          script: |
-            cd $(Build.SourcesDirectory)
-
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(android-key-properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
-
-            cat $(Build.SourcesDirectory)/android/key.properties
-            
-            sed 's|{{source_dir}}|$(Build.SourcesDirectory)|g' $(Build.SourcesDirectory)/android/key.properties > $(Build.SourcesDirectory)/android/key.properties
-
+          targetType: 'filePath'
+          workingDirectory: $(Build.SourcesDirectory)
+          filePath: $(Build.SourcesDirectory)/.devops/android_key_properties.sh
+          
       - task: FlutterBuild@0
         displayName: Android Release APK
         inputs:

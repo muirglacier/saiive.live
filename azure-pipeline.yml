@@ -105,6 +105,7 @@ stages:
         inputs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)/android/debug'
+
       - task: Bash@3
         displayName: "Flutter clean"
         inputs:
@@ -113,12 +114,18 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter clean
             $(FlutterToolPath)/flutter precache
-
+      
+      - task: Bash@3
+        displayName: "prepare signing"
+        inputs:
+          targetType: 'inline'
+          script: |
+            
+            echo $(android-upload-key-base64) 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
             sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
-
             
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -178,15 +185,21 @@ stages:
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
 
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-
-            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
-            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
-
       - task: FlutterTest@0
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
           generateCodeCoverageReport: true
+      
+      - task: Bash@3
+        displayName: "prepare signing"
+        inputs:
+          targetType: 'inline'
+          script: |
+            
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
 
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -247,18 +260,23 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
-            
-
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-
-            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
-            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
 
       - task: FlutterTest@0
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
           generateCodeCoverageReport: true
+
+      - task: Bash@3
+        displayName: "prepare signing"
+        inputs:
+          targetType: 'inline'
+          script: |
             
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
+
       - task: FlutterBuild@0
         displayName: Android Release APK
         inputs:

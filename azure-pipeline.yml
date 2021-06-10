@@ -87,6 +87,17 @@ stages:
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
           generateCodeCoverageReport: true
+      
+          - task: Bash@3
+        displayName: "prepare signing"
+        inputs:
+          targetType: 'inline'
+          script: |
+            
+            echo $(android-upload-key-base64) 
+            echo $(android-upload-key-base64) | base64 --decode > ~/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
 
       - task: FlutterBuild@0
         displayName: Android Debug APK
@@ -116,17 +127,7 @@ stages:
             $(FlutterToolPath)/flutter clean
             $(FlutterToolPath)/flutter precache
       
-      - task: Bash@3
-        displayName: "prepare signing"
-        inputs:
-          targetType: 'inline'
-          script: |
-            
-            echo $(android-upload-key-base64) 
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
 
-            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
-            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
             
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -197,10 +198,10 @@ stages:
           targetType: 'inline'
           script: |
             
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+            echo $(android-upload-key-base64) 
+            echo $(android-upload-key-base64) | base64 --decode > ~/upload-key.jks
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
-            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
 
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -273,10 +274,10 @@ stages:
           targetType: 'inline'
           script: |
             
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+            echo $(android-upload-key-base64) 
+            echo $(android-upload-key-base64) | base64 --decode > ~/upload-key.jks
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
-            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
 
       - task: FlutterBuild@0
         displayName: Android Release APK

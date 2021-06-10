@@ -50,6 +50,12 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-*'
+          RunAsPreJob: true
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -106,6 +112,12 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter clean
             $(FlutterToolPath)/flutter precache
+
+            echo $(android-upload-key) > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
+
             
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -134,6 +146,13 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-*'
+          RunAsPreJob: true
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -157,6 +176,11 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+
+            echo $(android-upload-key) > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
 
       - task: FlutterTest@0
         inputs:
@@ -192,6 +216,12 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'android-*'
+          RunAsPreJob: true
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -216,6 +246,12 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+            
+
+            echo $(android-upload-key) > $(Build.SourcesDirectory)/upload-key.jks
+
+            sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
+            sed 's/{{upload-keystore-location}}}/$(Build.SourcesDirectory)/upload-key.jks/g' android/key.properties > android/key.properties
 
       - task: FlutterTest@0
         inputs:

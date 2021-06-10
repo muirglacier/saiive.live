@@ -8,9 +8,8 @@ variables:
 - group: saiive.live
 
 stages:
-- stage: Android
-  displayName: Android
-  dependsOn: []
+- stage: Pre
+  displayName: Pre
 
   jobs:
   - job: ReleaseNotes
@@ -43,6 +42,46 @@ stages:
         displayName: "Publish artifacts"
         inputs:
           ArtifactName: 'release-notes'
+
+
+stages:
+- stage: Test
+  displayName: Test
+  dependsOn: [Pre]
+
+  jobs:
+  - job: Test
+    displayName: "Generate release notes"
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+       - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter doctor -v
+            $(FlutterToolPath)/flutter precache
+
+      - task: FlutterTest@0
+        inputs:
+          projectDirectory: '$(Build.SourcesDirectory)'
+          generateCodeCoverageReport: true
+
+
+- stage: Android
+  displayName: Android
+  dependsOn: [Test]
+
+  jobs:
           
   - job: BuildAndroidDev
     dependsOn: ReleaseNotes
@@ -82,11 +121,6 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
-
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
       
       - task: Bash@3
         displayName: "prepare signing"
@@ -129,8 +163,7 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter clean
             $(FlutterToolPath)/flutter precache
-      
-
+    
             
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -189,11 +222,6 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
-
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
       
       - task: Bash@3
         displayName: "prepare signing"
@@ -208,6 +236,15 @@ stages:
 
             sed 's/{{password}}/$(android-upload-key-password)/g' android/key.properties.template > android/key.properties
             sed 's/{{path}}/$KEY_PATH/g' android/key.properties > android/key.properties
+            
+      - task: Bash@3
+        displayName: "prepare signing"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cat android/key.properties
+            cat $(Build.SourcesDirectory)/upload-key.jks
+            cat $(Build.SourcesDirectory)/upload-key.jks | base64
 
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -269,11 +306,6 @@ stages:
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
 
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
-
       - task: Bash@3
         displayName: "prepare signing"
         inputs:
@@ -312,40 +344,9 @@ stages:
 
 - stage: iOS
   displayName: iOS
-  dependsOn: []
+  dependsOn: [Test]
   
   jobs:
-  - job: ReleaseNotes
-    displayName: "Generate release notes"
-    pool:
-      vmImage: 'ubuntu-latest'
-
-    steps:
-      - task: Bash@3
-        displayName: "Prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
-            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
-
-      - task: XplatGenerateReleaseNotes@3
-        inputs:
-          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
-          templateLocation: 'File'
-          templatefile: '.devops/release_notes_template.txt'
-          dumpPayloadToConsole: true
-          dumpPayloadToFile: false
-          replaceFile: false
-          getParentsAndChildren: False
-          getAllParents: False
-          getIndirectPullRequests: False
-    
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'release-notes'
-        
   - job: BuildiOSAdHoc
     dependsOn: ReleaseNotes
     displayName: "Build iOS AdHoc"
@@ -396,11 +397,6 @@ stages:
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
             cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
-
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
           
       - task: FlutterBuild@0
         displayName: "Build iOS AdHoc"
@@ -473,11 +469,6 @@ stages:
             #cd $(Build.SourcesDirectory)
             #$(FlutterToolPath)/flutter doctor -v
             #$(FlutterToolPath)/flutter precache
-
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
             
       - task: Bash@3
         displayName: "Flutter build icons"
@@ -522,39 +513,9 @@ stages:
 
 - stage: macOS
   displayName: macOS
-  dependsOn: []
+  dependsOn: [Test]
   
   jobs:
-  - job: ReleaseNotes
-    displayName: "Generate release notes"
-    pool:
-      vmImage: 'ubuntu-latest'
-
-    steps:
-      - task: Bash@3
-        displayName: "Prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
-            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
-
-      - task: XplatGenerateReleaseNotes@3
-        inputs:
-          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
-          templateLocation: 'File'
-          templatefile: '.devops/release_notes_template.txt'
-          dumpPayloadToConsole: true
-          dumpPayloadToFile: false
-          replaceFile: false
-          getParentsAndChildren: False
-          getAllParents: False
-          getIndirectPullRequests: False
-    
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'release-notes'
 
   - job: BuildMacOS
     dependsOn: ReleaseNotes
@@ -637,11 +598,6 @@ stages:
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml
             cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
-
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
 
       - task: Bash@3
         displayName: "Build MacOS DEV"
@@ -764,11 +720,6 @@ stages:
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml
             cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
 
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
-
       - task: Bash@3
         displayName: "Build MacOS Staging"
         inputs:
@@ -890,11 +841,6 @@ stages:
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
             cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
 
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
-
       - task: Bash@3
         displayName: "Build MacOS Prod"
         inputs:
@@ -1003,11 +949,6 @@ stages:
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml
             cp -av $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon-staging.appiconset/* $(Build.SourcesDirectory)/ios/Runner/Assets.xcassets/AppIcon.appiconset/
 
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
-
       - task: Bash@3
         displayName: "Build MacOS Prod"
         inputs:
@@ -1049,51 +990,9 @@ stages:
 
 - stage: Windows
   displayName: Windows
-  dependsOn: []
+  dependsOn: [Test]
   
-  jobs:
-  - job: ReleaseNotes
-    displayName: "Generate release notes"
-    pool:
-      vmImage: 'ubuntu-latest'
-
-    steps:
-      - task: Bash@3
-        displayName: "Prepare"
-        inputs:
-          targetType: 'inline'
-          script: |
-            mkdir -p  $(build.artifactStagingDirectory)/release-notes/
-            touch $(build.artifactStagingDirectory)/release-notes/release-notes.txt
-
-      - task: XplatGenerateReleaseNotes@3
-        inputs:
-          outputfile: '$(build.artifactStagingDirectory)/release-notes/release-notes.txt'
-          templateLocation: 'File'
-          templatefile: '.devops/release_notes_template.txt'
-          dumpPayloadToConsole: true
-          dumpPayloadToFile: false
-          replaceFile: false
-          getParentsAndChildren: False
-          getAllParents: False
-          getIndirectPullRequests: False
-      
-      - task: PowerShell@2
-        displayName: "Set windows build version"
-        inputs:
-          targetType: 'inline'
-          script: |
-           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
-           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
-           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
-
-      - task: PublishBuildArtifacts@1
-        displayName: "Publish artifacts"
-        inputs:
-          ArtifactName: 'release-notes'
-          
+  jobs:         
   - job: BuildWindowsDev
     dependsOn: ReleaseNotes
     displayName: "Build Windows DEV"
@@ -1146,11 +1045,6 @@ stages:
 
             cd windows/runner/resources
             xcopy /Y app_icon_dev.ico app_icon.ico
-
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
 
       - task: FlutterBuild@0
         displayName: Windows Debug
@@ -1263,11 +1157,6 @@ stages:
             cd windows/runner/resources
             xcopy /Y app_icon_staging.ico app_icon.ico
 
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
-
       - task: FlutterBuild@0
         displayName: Windows Release
         inputs:
@@ -1349,11 +1238,6 @@ stages:
 
             cd windows/runner/resources
             xcopy /Y app_icon_prod.ico app_icon.ico
-
-      - task: FlutterTest@0
-        inputs:
-          projectDirectory: '$(Build.SourcesDirectory)'
-          generateCodeCoverageReport: true
             
       - task: FlutterBuild@0
         displayName: Windows Release

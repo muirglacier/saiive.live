@@ -128,7 +128,7 @@ stages:
             cd $(Build.SourcesDirectory)
 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(key.properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
+            echo $(android-key-properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
 
             cat $(Build.SourcesDirectory)/android/key.properties
             
@@ -228,7 +228,7 @@ stages:
             cd $(Build.SourcesDirectory)
 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(key.properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
+            echo $(android-key-properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
 
             cat $(Build.SourcesDirectory)/android/key.properties
             
@@ -242,7 +242,6 @@ stages:
             cat $(Build.SourcesDirectory)/android/key.properties
             
             cat $(Build.SourcesDirectory)/upload-key.jks | base64
-            cat $(Build.SourcesDirectory)/android_key.properties
 
       - task: FlutterBuild@0
         displayName: Android Release APK
@@ -311,7 +310,7 @@ stages:
             cd $(Build.SourcesDirectory)
 
             echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            echo $(key.properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
+            echo $(android-key-properties) | base64 --decode > $(Build.SourcesDirectory)/android/key.properties
 
             cat $(Build.SourcesDirectory)/android/key.properties
             

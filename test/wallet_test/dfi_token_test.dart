@@ -81,6 +81,7 @@ void main() async {
       await wallet.init();
 
       final txController = sl.get<TransactionServiceMock>();
+      await wallet.createSendTransaction(1000000000, "\$DFI", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
       expect(txController.lastTx,
           "0200000000010127278e5cbc857433ffc08bdeaa7e5d563011b756715024cf20d978ec7fa05dd80000000017160014faf5b246f4ed8fe5b9e149a036404aa2c2ea451bffffffff02fe63b50d0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870247304402200587e738c15c9ba8f89e704f51d3ac8a1d5421ea9ae92029a125fbe37078e6860220764b54f65f9f05a3b997bede1e025ce36036db00c9560f29bbb30d410c7ee4cf01210241e3f9c894cd6d44c6a262d442f7aaf92e41c1dd6eb118334e7c5742335c8bcc00000000");
 

@@ -64,12 +64,12 @@ class HdWallet extends IHdWallet {
     if (!alreadyExists) {
       final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType);
 
-      await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey));
+      await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
   }
 
-  WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey) {
-    return WalletAddress(account: _account.id, isChangeAddress: isChangeAddress, index: index, chain: _chain, publicKey: pubKey, network: _network);
+  WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
+    return WalletAddress(account: _account.id, isChangeAddress: isChangeAddress, index: index, chain: _chain, publicKey: pubKey, network: _network, addressType: addressType);
   }
 
   @override

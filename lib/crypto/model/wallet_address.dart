@@ -38,6 +38,6 @@ class WalletAddress {
         'chain': chain.index,
         'publicKey': publicKey,
         'network': network.index,
-        'addressType': addressType.index
+        'addressType': addressType == null ? AddressType.P2SHSegwit.index : addressType.index
       };
 }

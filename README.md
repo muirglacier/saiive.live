@@ -1,15 +1,5 @@
 # saiive.live
-Android
-[![Build Status Adnroid](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.droid?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=15&branchName=main)
-
-iOS
-[![Build Status](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.ios?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=16&branchName=main)
-
-Windows
-[![Build Status Android](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.win?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=18&branchName=main)
-
-MacOS
-[![Build Status MacOS](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.mac?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=17&branchName=main)
+[![Build Status](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=23&branchName=main)
 
 A mobile application for [DeFiChain](https://defichain.com/).
 

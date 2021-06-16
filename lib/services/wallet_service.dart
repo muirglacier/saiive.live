@@ -4,6 +4,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
@@ -24,7 +25,7 @@ abstract class IWalletService {
   Future<bool> hasAccounts();
   Future<List<WalletAccount>> getAccounts();
 
-  Future<String> getPublicKey(ChainType chainType);
+  Future<String> getPublicKey(ChainType chainType, AddressType addressType);
   Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
   Future<List<String>> getPublicKeys(ChainType chainType);
 
@@ -100,11 +101,11 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<String> getPublicKey(ChainType chainType) {
+  Future<String> getPublicKey(ChainType chainType, AddressType addressType) {
     if (chainType == ChainType.DeFiChain) {
-      return _defiWallet.getPublicKey();
+      return _defiWallet.getPublicKey(addressType);
     }
-    return _bitcoinWallet.getPublicKey();
+    return _bitcoinWallet.getPublicKey(addressType);
   }
 
   @override

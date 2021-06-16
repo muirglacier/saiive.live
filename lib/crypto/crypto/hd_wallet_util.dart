@@ -3,6 +3,7 @@ import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 
@@ -22,7 +23,7 @@ class HdWalletUtil {
     return networkType;
   }
 
-  static Future<String> getPublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network) async {
+  static Future<String> getPublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType) async {
     final networkType = _getNetwork(chainType, network);
 
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
@@ -30,7 +31,7 @@ class HdWalletUtil {
 
     final path = derivePath(account, changeAddress, index);
 
-    final address = await _getPublicAddress(xMasterPriv.derivePath(path), chainType, network);
+    final address = await _getPublicAddress(xMasterPriv.derivePath(path), chainType, network, addressType);
 
     //   LogHelper.instance
     //     .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
@@ -50,14 +51,33 @@ class HdWalletUtil {
     return keyPair;
   }
 
-  static Future<String> _getPublicAddress(bip32.BIP32 keyPair, ChainType chainType, ChainNet network) async {
+  static Future<String> _getPublicAddress(bip32.BIP32 keyPair, ChainType chainType, ChainNet network, AddressType addressType) async {
+    switch (addressType) {
+      case AddressType.Legacy:
+        return _getLegacyPublicKey(keyPair, chainType, network);
+        break;
+      case AddressType.P2SHSegwit:
+        return _getPayToScriptHashPublicKey(keyPair, chainType, network);
+      default:
+        throw new ArgumentError("not supported...");
+    }
+  }
+
+  static Future<String> _getLegacyPublicKey(bip32.BIP32 keyPair, ChainType chainType, ChainNet network) async {
+    final net = getNetworkType(chainType, network);
+    final address = P2PKH(data: PaymentData(pubkey: keyPair.publicKey), network: net).data.address;
+
+    return address;
+  }
+
+  static Future<String> _getPayToScriptHashPublicKey(bip32.BIP32 keyPair, ChainType chainType, ChainNet network) async {
     final net = getNetworkType(chainType, network);
     final address = P2SH(data: PaymentData(redeem: P2WPKH(data: PaymentData(pubkey: keyPair.publicKey), network: net).data), network: net).data.address;
 
     return address;
   }
 
-  static Future<String> _getPublicAddressFromKeyPair(ECPair keyPair, ChainType chainType, ChainNet network) async {
+  static Future<String> _getPublicAddressFromKeyPair(ECPair keyPair, ChainType chainType, ChainNet network, AddressType addressType) async {
     final net = getNetworkType(chainType, network);
     final address = P2SH(data: PaymentData(redeem: P2WPKH(data: PaymentData(pubkey: keyPair.publicKey), network: net).data), network: net).data.address;
 
@@ -79,8 +99,23 @@ class HdWalletUtil {
     return 9;
   }
 
-  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(List<tx.Transaction> inputTxs, FromAccount authA, FromAccount authB, IWalletDatabase database, int tokenA,
-      int tokenB, String shareAddress, int amountA, int amountB, int fee, String returnAddress, Uint8List seed, ChainType chain, ChainNet net) async {
+  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(
+      List<tx.Transaction> inputTxs,
+      FromAccount authA,
+      String authAAddress,
+      FromAccount authB,
+      String authBAddress,
+      IWalletDatabase database,
+      int tokenA,
+      int tokenB,
+      String shareAddress,
+      int amountA,
+      int amountB,
+      int fee,
+      String returnAddress,
+      Uint8List seed,
+      ChainType chain,
+      ChainNet net) async {
     var network = getNetworkType(chain, net);
 
     final txb = TransactionBuilder(network: network);
@@ -93,7 +128,7 @@ class HdWalletUtil {
       totalInputValue += tx.valueRaw;
     }
 
-    txb.addAddLiquidityOutput(tokenA, authA.address, amountA, tokenB, authB.address, amountB, shareAddress);
+    txb.addAddLiquidityOutput(tokenA, authAAddress, amountA, tokenB, authBAddress, amountB, shareAddress);
 
     var changeAmount = totalInputValue - fee;
     txb.addOutput(returnAddress, changeAmount);
@@ -107,7 +142,7 @@ class HdWalletUtil {
           seed, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.P2SHSegwit);
       final input = inputTxs[index].mintTxId;
       LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
 
@@ -146,7 +181,7 @@ class HdWalletUtil {
     for (final key in keys) {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.Legacy);
       final input = inputTxs[index].mintTxId;
       LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
 
@@ -204,7 +239,7 @@ class HdWalletUtil {
     for (final key in keys) {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.Legacy);
       final input = inputTxs[index].mintTxId;
       final witnessValue = inputTxs[index].valueRaw;
       LogHelper.instance.d("sign tx $input with privateKey from $pubKey witnessValue. $witnessValue");
@@ -254,7 +289,7 @@ class HdWalletUtil {
     for (final key in keys) {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net);
+      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.P2SHSegwit);
       final input = inputTxs[index].mintTxId;
       final witnessValue = inputTxs[index].valueRaw;
       LogHelper.instance.d("sign tx $input with privateKey from $pubKey witnessValue. $witnessValue");
@@ -266,27 +301,28 @@ class HdWalletUtil {
     return txb.build().toHex();
   }
 
-  static Future<String> derivePublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network) async {
-    return await getPublicKey(seed, account, changeAddress, index, chainType, network);
+  static Future<String> derivePublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType) async {
+    return await getPublicKey(seed, account, changeAddress, index, chainType, network, addressType);
   }
 
-  static Future<List<String>> derivePublicKeys(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, int count) async {
+  static Future<List<String>> derivePublicKeys(
+      Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType, int count) async {
     final list = List<String>.empty(growable: true);
     for (int i = 0; i < count; i++) {
-      final key = await derivePublicKey(seed, account, changeAddress, index + i, chainType, network);
+      final key = await derivePublicKey(seed, account, changeAddress, index + i, chainType, network, addressType);
       list.add(key);
     }
     return list;
   }
 
-  static Future<List<String>> derivePublicKeysWithChange(Uint8List seed, int account, int index, ChainType chainType, ChainNet network, int count) async {
+  static Future<List<String>> derivePublicKeysWithChange(Uint8List seed, int account, int index, ChainType chainType, ChainNet network, AddressType addressType, int count) async {
     final list = List<String>.empty(growable: true);
     for (int i = 0; i < count; i++) {
-      final key = await derivePublicKey(seed, account, false, index + i, chainType, network);
+      final key = await derivePublicKey(seed, account, false, index + i, chainType, network, addressType);
       list.add(key);
     }
     for (int i = 0; i < count; i++) {
-      final changeKey = await derivePublicKey(seed, account, true, index + i, chainType, network);
+      final changeKey = await derivePublicKey(seed, account, true, index + i, chainType, network, addressType);
       list.add(changeKey);
     }
     return list;

@@ -4,7 +4,6 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
@@ -185,7 +184,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
               SizedBox(
                   width: 250,
                   child: ElevatedButton(
-                    child: Text(S.of(context).wallet_send, style: TextStyle(color: StateContainer.of(context).curTheme.text)),
+                    child: Text(S.of(context).wallet_send),
                     style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
                     onPressed: () async {
                       sl.get<AuthenticationHelper>().forceAuth(context, () {
@@ -202,7 +201,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                     child: SizedBox(
                         width: 250,
                         child: ElevatedButton(
-                          child: Text("UTXO_TO_ACCOUNT", style: TextStyle(color: StateContainer.of(context).curTheme.text)),
+                          child: Text("UTXO_TO_ACCOUNT"),
                           style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
                           onPressed: () async {
                             sl.get<AuthenticationHelper>().forceAuth(context, () {

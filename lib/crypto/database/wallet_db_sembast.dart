@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
@@ -116,22 +117,41 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
-  Future<bool> addressExists(int account, bool isChangeAddress, int index) async {
+  Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType) async {
     var dbStore = _addressesStoreInstance;
 
-    var finder = Finder(filter: Filter.equals('account', account) & Filter.equals('isChangeAddress', isChangeAddress) & Filter.equals('index', index));
-    final accounts = await dbStore.find(await database, finder: finder);
+    var finder = Finder(
+        filter: Filter.equals('account', account) &
+            Filter.equals('isChangeAddress', isChangeAddress) &
+            Filter.equals('index', index) &
+            Filter.equals('addressType', addressType.index));
+    var accounts = await dbStore.find(await database, finder: finder);
+
+    if (accounts.isEmpty && addressType == AddressType.P2SHSegwit) {
+      finder = Finder(filter: Filter.equals('account', account) & Filter.equals('isChangeAddress', isChangeAddress) & Filter.equals('index', index));
+
+      accounts = await dbStore.find(await database, finder: finder);
+    }
 
     return accounts.isNotEmpty;
   }
 
   @override
-  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index) async {
+  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType) async {
     var dbStore = _addressesStoreInstance;
 
-    var finder = Finder(filter: Filter.equals('account', account) & Filter.equals('isChangeAddress', isChangeAddress) & Filter.equals('index', index));
-    final accounts = await dbStore.find(await database, finder: finder);
+    var finder = Finder(
+        filter: Filter.equals('account', account) &
+            Filter.equals('isChangeAddress', isChangeAddress) &
+            Filter.equals('index', index) &
+            Filter.equals('addressType', addressType.index));
 
+    var accounts = await dbStore.find(await database, finder: finder);
+    if (accounts.isEmpty && addressType == AddressType.P2SHSegwit) {
+      finder = Finder(filter: Filter.equals('account', account) & Filter.equals('isChangeAddress', isChangeAddress) & Filter.equals('index', index));
+
+      accounts = await dbStore.find(await database, finder: finder);
+    }
     final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
 
     return data.firstOrNull;
@@ -402,6 +422,6 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   int getAddressCreationCount() {
-    return 100;
+    return 50;
   }
 }

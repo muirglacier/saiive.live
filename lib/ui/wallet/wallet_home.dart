@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/events.dart';
@@ -339,7 +340,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           actions: [
             Padding(
-                padding: EdgeInsets.only(right: 20.0),
+                padding: EdgeInsets.only(right: 0),
                 child: RotationTransition(
                     turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
                     child: IconButton(
@@ -351,19 +352,19 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                           : null,
                     ))),
             Padding(
-                padding: EdgeInsets.only(right: 20.0),
+                padding: EdgeInsets.only(right: 10.0),
                 child: GestureDetector(
                   onTap: () async {
                     var wallet = sl.get<IWalletService>();
-                    var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain);
-                    var pubKeyBTC = await wallet.getPublicKey(ChainType.Bitcoin);
+                    var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain, AddressType.P2SHSegwit);
+                    var pubKeyBTC = await wallet.getPublicKey(ChainType.Bitcoin, AddressType.P2SHSegwit);
 
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletHomeReceiveScreen(pubKeyDFI: pubKeyDFI, pubKeyBTC: pubKeyBTC)));
                   },
                   child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
             Padding(
-                padding: EdgeInsets.only(right: 20.0),
+                padding: EdgeInsets.only(right: 10.0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsScreen()));

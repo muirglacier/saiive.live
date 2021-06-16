@@ -1,15 +1,5 @@
 # saiive.live
-Android
-[![Build Status Adnroid](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.droid?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=15&branchName=main)
-
-iOS
-[![Build Status](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.ios?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=16&branchName=main)
-
-Windows
-[![Build Status Android](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.win?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=18&branchName=main)
-
-MacOS
-[![Build Status MacOS](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live.mac?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=17&branchName=main)
+[![Build Status](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=23&branchName=main)
 
 A mobile application for [DeFiChain](https://defichain.com/).
 
@@ -64,7 +54,6 @@ Install flutter and vscode or some other IDE.
 We are working in the Flutter beta channel. 
 
 ``` 
-flutter channel beta
 flutter upgrade
 
 flutter pub get
@@ -83,8 +72,6 @@ flutter build linux //for linux
 
 
 # Screenshots
-Everything is just early preview!
-
 ![Home](./screenshots/home_ios.png)
 ![History](./screenshots/history_ios.png)
 ![Receive](./screenshots/receive_ios.png)
@@ -101,5 +88,4 @@ No one who is contributing to this project is taking any responsibility of what 
 
 
 # Licenses
-
-The DeFi Wallet App is released under the terms of the G GNU GENERAL PUBLIC LICENSE Version 3.
+The saiive.live is released under the terms of the GNU GENERAL PUBLIC LICENSE Version 3.

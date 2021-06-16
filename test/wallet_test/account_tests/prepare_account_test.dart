@@ -66,7 +66,7 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      final tx = await wallet.prepareUtxoToAccountTransaction(243 * 100000000);
+      await wallet.prepareUtxoToAccountTransaction(243 * 100000000);
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
           "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff0224944102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b870100000000249441020000000053d38e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f87024830450221009f5f792f26aa41e9730a59503cd60286cbd7ff14fa2083cafb7c739ae64ada6e0220774853dd60e36252baed56005ddc958196d934b57551acb214b2b1618600cedf012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");

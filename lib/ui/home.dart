@@ -6,7 +6,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/service_locator.dart';
-import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
@@ -34,8 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   ChainNet _currentNet = ChainNet.Testnet;
   String _version = "";
-
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static List<_NavigationEntry> _navigationEntries = [];
 

@@ -55,7 +55,7 @@ class _PoolShareScreen extends State<PoolShareScreen> {
                         Container(child: TokenPairIcon(widget.liquidity.tokenA, widget.liquidity.tokenB)),
                         Container(
                           child: Row(children: [
-                            Expanded(flex: 2, child: Text('APY', style: TextStyle(fontWeight: FontWeight.bold))),
+                            Expanded(flex: 2, child: Text('APR', style: TextStyle(fontWeight: FontWeight.bold))),
                             Expanded(
                                 flex: 10,
                                 child: Text(

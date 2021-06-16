@@ -6,6 +6,7 @@ import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -52,41 +53,41 @@ class HdWallet extends IHdWallet {
 
     final seed = HEX.decode(_seed);
     for (int i = 0; i < walletDatabase.getAddressCreationCount(); i++) {
-      await _checkAndCreateIfExists(walletDatabase, seed, i, true);
-      await _checkAndCreateIfExists(walletDatabase, seed, i, false);
+      await _checkAndCreateIfExists(walletDatabase, seed, i, true, AddressType.P2SHSegwit);
+      await _checkAndCreateIfExists(walletDatabase, seed, i, false, AddressType.P2SHSegwit);
     }
   }
 
-  Future _checkAndCreateIfExists(IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress) async {
-    final alreadyExists = await walletDatabase.addressExists(_account.account, isChangeAddress, index);
+  Future _checkAndCreateIfExists(IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress, AddressType addressType) async {
+    final alreadyExists = await walletDatabase.addressExists(_account.account, isChangeAddress, index, addressType);
 
     if (!alreadyExists) {
-      final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network);
+      final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType);
 
-      await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey));
+      await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
   }
 
-  WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey) {
-    return WalletAddress(account: _account.id, isChangeAddress: isChangeAddress, index: index, chain: _chain, publicKey: pubKey, network: _network);
+  WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
+    return WalletAddress(account: _account.id, isChangeAddress: isChangeAddress, index: index, chain: _chain, publicKey: pubKey, network: _network, addressType: addressType);
   }
 
   @override
-  Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress) async {
+  Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
 
-    if (!await database.addressExists(_account.account, isChangeAddress, nextIndex)) {
+    if (!await database.addressExists(_account.account, isChangeAddress, nextIndex, addressType)) {
       //overflow indexes....start again with 0
       await sharedPrefs.setAddressIndex(0, isChangeAddress);
       nextIndex = 0;
     }
-    var address = await database.getWalletAddressById(_account.account, isChangeAddress, nextIndex);
+    var address = await database.getWalletAddressById(_account.account, isChangeAddress, nextIndex, addressType);
 
     return address.publicKey;
   }
 
   @override
-  Future<Tuple3<int, bool, int>> nextFreePublicKeyRaw(IWalletDatabase database, bool isChangeAddress) async {
+  Future<Tuple3<int, bool, int>> nextFreePublicKeyRaw(IWalletDatabase database, bool isChangeAddress, AddressType addressType) async {
     final nextIndex = await database.getNextFreeIndex(_account.account);
 
     return Tuple3<int, bool, int>(_account.account, isChangeAddress, nextIndex);
@@ -156,7 +157,6 @@ class HdWallet extends IHdWallet {
         await database.setAccountBalance(element);
       }
     }
-    var balances = await database.getAccountBalances();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
   }

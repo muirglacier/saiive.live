@@ -6,6 +6,8 @@ import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:tuple/tuple.dart';
 
+import 'address_type.dart';
+
 abstract class IWallet {
   static const int MaxUnusedAccountScan = 3;
   static const int MaxUnusedIndexScan = 2;
@@ -29,8 +31,8 @@ abstract class IWallet {
   Future<WalletAccount> addAccount(String name, int account);
 
   void setWorkingAccount(int id);
-  Future<String> getPublicKey();
-  Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress);
+  Future<String> getPublicKey(AddressType type);
+  Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress, AddressType addressType);
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 

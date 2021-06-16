@@ -5,6 +5,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
 import 'package:saiive.live/network/api_service.dart';
 import 'package:hex/hex.dart';
@@ -34,13 +35,16 @@ class WalletRestore {
 
     do {
       if (!existingAccounts.contains(i)) {
-        final result = await _restore(i, key, api, chain, network);
+        final p2sh = await _restore(i, key, api, chain, network, AddressType.P2SHSegwit);
+        final legacy = await _restore(i, key, api, chain, network, AddressType.Legacy);
+        final result = List<WalletAddress>.from(p2sh);
+        result.addAll(legacy);
 
         if (result.isEmpty) {
           max--;
         } else {
           walletAddresses.addAll(result);
-          ret..add(WalletAccount(name: ChainHelper.chainTypeString(chain) + (i + 1).toString(), id: i, account: i, chain: ChainType.DeFiChain));
+          ret..add(WalletAccount(name: ChainHelper.chainTypeString(chain) + (i + 1).toString(), id: i, account: i, chain: chain));
           max = IWallet.MaxUnusedAccountScan;
         }
       }
@@ -51,7 +55,7 @@ class WalletRestore {
     return Tuple2(ret, walletAddresses);
   }
 
-  static Future<List<WalletAddress>> _restore(int account, Uint8List key, ApiService api, ChainType chain, ChainNet net) async {
+  static Future<List<WalletAddress>> _restore(int account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType) async {
     int i = 0;
     int maxEmpty = IWallet.MaxUnusedIndexScan;
     var startDate = DateTime.now();
@@ -59,11 +63,11 @@ class WalletRestore {
 
     do {
       try {
-        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account, IWallet.KeysPerQuery * i, chain, net, IWallet.KeysPerQuery);
+        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account, IWallet.KeysPerQuery * i, chain, net, addressType, IWallet.KeysPerQuery);
         var path = HdWalletUtil.derivePathsWithChange(account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
-        LogHelper.instance.d("(${chain}) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
+        LogHelper.instance.d("($chain) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
         for (final tx in transactions) {
           final keyIndex = publicKeys.indexWhere((item) => item == tx.address);

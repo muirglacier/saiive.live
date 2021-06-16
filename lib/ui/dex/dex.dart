@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/errors/TransactionError.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/helper/balance.dart';
@@ -25,10 +25,8 @@ import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
-import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DexScreen extends StatefulWidget {
   @override
@@ -56,7 +54,6 @@ class _DexScreen extends State<DexScreen> {
   List<TokenBalance> _toTokens = [];
   List<TokenBalance> _tokenMap = [];
   List<PoolPair> _poolPairs;
-  bool _poolPairCondition = true;
   PoolPair _selectedPoolPair;
 
   var _amountFromController = TextEditingController(text: '');
@@ -198,9 +195,7 @@ class _DexScreen extends State<DexScreen> {
     _selectedPoolPair = _poolPairs.firstWhere(
         (element) => (element.idTokenA == tokenA.idToken && element.idTokenB == tokenB.idToken) || (element.idTokenA == tokenB.idToken && element.idTokenB == tokenA.idToken),
         orElse: () => null);
-    if (null != _selectedPoolPair) {
-      _poolPairCondition = _selectedPoolPair.idTokenA == tokenA.idToken && _selectedPoolPair.idTokenB == tokenB.idToken;
-    }
+    if (null != _selectedPoolPair) {}
   }
 
   getConversionRatio() {
@@ -333,7 +328,7 @@ class _DexScreen extends State<DexScreen> {
       _testSwapLoading = true;
 
       var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey();
+      var pubKey = await wallet.getPublicKey(AddressType.P2SHSegwit);
 
       try {
         var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
@@ -398,7 +393,7 @@ class _DexScreen extends State<DexScreen> {
       _testSwapLoading = true;
 
       var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey();
+      var pubKey = await wallet.getPublicKey(AddressType.P2SHSegwit);
 
       try {
         var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
@@ -445,28 +440,21 @@ class _DexScreen extends State<DexScreen> {
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
     //int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
-    final walletTo = await wallet.getPublicKey();
+    final walletTo = await wallet.getPublicKey(AddressType.P2SHSegwit);
     try {
       var streamController = StreamController<String>();
-      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807, loadingStream: streamController);
+      var createSwapFuture =
+          wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807, loadingStream: streamController);
 
-      sl.get<AppCenterWrapper>().trackEvent("swap", <String, String>{
-        "fromToken": _selectedValueFrom.hash,
-        "toToken": _selectedValueTo.hash,
-        "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo
-      });
+      sl
+          .get<AppCenterWrapper>()
+          .trackEvent("swap", <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": valueFrom.toString(), "walletTo": walletTo});
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createSwapFuture);
 
-      sl.get<AppCenterWrapper>().trackEvent("swapSuccess", <String, String>{
-        "fromToken": _selectedValueFrom.hash,
-        "toToken": _selectedValueTo.hash,
-        "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo,
-        "txId": tx.mintTxId
-      });
+      sl.get<AppCenterWrapper>().trackEvent("swapSuccess",
+          <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": valueFrom.toString(), "walletTo": walletTo, "txId": tx.mintTxId});
 
       streamController.close();
 
@@ -481,13 +469,8 @@ class _DexScreen extends State<DexScreen> {
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
       ));
 
-      sl.get<AppCenterWrapper>().trackEvent("swapFailure", <String, String>{
-        "fromToken": _selectedValueFrom.hash,
-        "toToken": _selectedValueTo.hash,
-        "valueFrom": valueFrom.toString(),
-        "walletTo": walletTo,
-        "error": e.toString()
-      });
+      sl.get<AppCenterWrapper>().trackEvent("swapFailure",
+          <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": valueFrom.toString(), "walletTo": walletTo, "error": e.toString()});
     }
   }
 
@@ -506,7 +489,9 @@ class _DexScreen extends State<DexScreen> {
             maxLines: 1,
           ),
         ),
-        Expanded(flex: 1, child: AutoSizeText(FundFormatter.format(e.balance / DefiChainConstants.COIN), style: Theme.of(context).textTheme.headline3, maxLines: 1, textAlign: TextAlign.right))
+        Expanded(
+            flex: 1,
+            child: AutoSizeText(FundFormatter.format(e.balance / DefiChainConstants.COIN), style: Theme.of(context).textTheme.headline3, maxLines: 1, textAlign: TextAlign.right))
       ],
     );
   }

@@ -6,7 +6,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/helper/poolpair.dart';
 import 'package:saiive.live/helper/poolshare.dart';
-import 'package:saiive.live/network/events/wallet_sync_done_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
 import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
@@ -109,7 +108,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   margin: const EdgeInsets.only(bottom: 10.0), decoration: new BoxDecoration(color: Colors.transparent), child: TokenPairIcon(liquidity.tokenA, liquidity.tokenB)),
               Container(
                 child: Row(children: [
-                  Expanded(flex: 2, child: Text('APY', style: TextStyle(fontWeight: FontWeight.bold))),
+                  Expanded(flex: 2, child: Text('APR', style: TextStyle(fontWeight: FontWeight.bold))),
                   Expanded(
                       flex: 10,
                       child: Text(

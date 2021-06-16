@@ -1,5 +1,6 @@
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
@@ -103,27 +104,28 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   buildBalanceCard(BuildContext context) {
     return Card(
         child: ListTile(
-          title: Row(children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  _balance.tokenDisplay + " - " + S.of(context).wallet_token_available_balance,
-                  style: Theme.of(context).textTheme.headline3,
+      title: Row(children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            _balance.tokenDisplay + " - " + S.of(context).wallet_token_available_balance,
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          if (_balance.additionalDisplay != null)
+            Chip(
+                label: Text(
+                  _balance.additionalDisplay,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
-                if (_balance.additionalDisplay != null)
-                  Chip(
-                      label: Text(
-                        _balance.additionalDisplay,
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                      backgroundColor: Theme.of(context).primaryColor)
-              ]),
-          Expanded(
-              child: AutoSizeText(
-                FundFormatter.format(_balance.balanceDisplay),
-                style: Theme.of(context).textTheme.headline3,
-                textAlign: TextAlign.right,
-                maxLines: 1,
-              ))]),
+                backgroundColor: Theme.of(context).primaryColor)
+        ]),
+        Expanded(
+            child: AutoSizeText(
+          FundFormatter.format(_balance.balanceDisplay),
+          style: Theme.of(context).textTheme.headline3,
+          textAlign: TextAlign.right,
+          maxLines: 1,
+        ))
+      ]),
       //title: Text(
       //    _balance.token + " - " + S.of(context).wallet_token_available_balance,
       //    style: TextStyle(fontSize: 12)),
@@ -131,10 +133,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
       trailing: RotationTransition(
           turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
           child: IconButton(
-            icon: Icon(Icons.refresh,
-                color: _balanceRefreshing
-                    ? Theme.of(context).primaryColor
-                    : StateContainer.of(context).curTheme.text),
+            icon: Icon(Icons.refresh, color: _balanceRefreshing ? Theme.of(context).primaryColor : StateContainer.of(context).curTheme.text),
             onPressed: () async {
               await loadAccountBalance();
             },
@@ -148,24 +147,24 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
         child: _transactionsLoading
             ? LoadingWidget(text: S.of(context).loading)
             : Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: Text(history.type), flex: 1),
-              Expanded(child: Text(FundFormatter.format(history.getBalance(widget.token) / DefiChainConstants.COIN), textAlign: TextAlign.right), flex: 2),
-              if (history.txid != null)
-                Expanded(
-                    child: InkWell(
-                        child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor), textAlign: TextAlign.right),
-                        onTap: () => launch(DefiChainConstants.getExplorerUrl(_chainNet, history.txid))),
-                    flex: 1),
-            ],
-          ),
-          SizedBox(height: 5),
-          Text(history.blockHash, style: TextStyle(fontSize: 8)),
-          Divider()
-        ]));
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(child: Text(history.type), flex: 1),
+                    Expanded(child: Text(FundFormatter.format(history.getBalance(widget.token) / DefiChainConstants.COIN), textAlign: TextAlign.right), flex: 2),
+                    if (history.txid != null)
+                      Expanded(
+                          child: InkWell(
+                              child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor), textAlign: TextAlign.right),
+                              onTap: () => launch(DefiChainConstants.getExplorerUrl(_chainNet, history.txid))),
+                          flex: 1),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Text(history.blockHash, style: TextStyle(fontSize: 8)),
+                Divider()
+              ]));
   }
 
   buildAccountHistoryList(BuildContext context) {
@@ -175,21 +174,21 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
 
     return Card(
         child: Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
-          ListTile(
-            title: Text(S.of(context).wallet_token_transactions, style: TextStyle(fontSize: 15)),
-          ),
-          Expanded(
-              child: Scrollbar(
-                  child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: _history.length,
-                      itemBuilder: (context, index) {
-                        final history = _history[index];
-                        return buildAccountHistory(context, history);
-                      })))
-        ]));
+      ListTile(
+        title: Text(S.of(context).wallet_token_transactions, style: TextStyle(fontSize: 15)),
+      ),
+      Expanded(
+          child: Scrollbar(
+              child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _history.length,
+                  itemBuilder: (context, index) {
+                    final history = _history[index];
+                    return buildAccountHistory(context, history);
+                  })))
+    ]));
   }
 
   buildActions(BuildContext context) {
@@ -209,7 +208,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
               })),
           AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
             var wallet = sl.get<IWalletService>();
-            var pubKey = await wallet.getPublicKey(widget.chainType);
+            var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
             await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
           })
         ],

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/webview.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,11 +18,15 @@ class TransactionSuccessScreen extends StatelessWidget {
 
   TransactionSuccessScreen(this.txId, this.text, {this.additional, this.showTxText});
 
-  openExplorerLink() async {
+  openExplorerLink(BuildContext context) async {
     var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-    var url = DefiChainConstants.getExplorerUrl(_chainNet, txId);
-    if (await canLaunch(url)) {
-      await launch(url);
+    var uri = DefiChainConstants.getExplorerUrl(_chainNet, txId);
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      if (await canLaunch(uri)) {
+        await launch(uri);
+      }
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WebViewScreen(uri, "Explorer", canOpenInBrowser: true)));
     }
   }
 
@@ -55,7 +62,7 @@ class TransactionSuccessScreen extends StatelessWidget {
             ),
           GestureDetector(
               onTap: () async {
-                await this.openExplorerLink();
+                await this.openExplorerLink(context);
               },
               child: Padding(
                   padding: EdgeInsets.only(top: 50),
@@ -65,7 +72,7 @@ class TransactionSuccessScreen extends StatelessWidget {
                   ))),
           GestureDetector(
               onTap: () async {
-                await this.openExplorerLink();
+                await this.openExplorerLink(context);
               },
               child: Text(
                 txId,

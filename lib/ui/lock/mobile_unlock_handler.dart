@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/functions.dart';
@@ -13,7 +15,7 @@ class MobileUnlockHandler extends BaseUnlockHandler {
 
   Future<bool> _localAuth(BuildContext context) async {
     final localAuth = LocalAuthentication();
-    final didAuthenticate = await localAuth.authenticate(localizedReason: 'Please authenticate', biometricOnly: true);
+    final didAuthenticate = await localAuth.authenticate(localizedReason: 'Please authenticate', biometricOnly: true, stickyAuth: true, sensitiveTransaction: true);
     if (didAuthenticate) {
       Navigator.pop(context);
     }
@@ -23,7 +25,7 @@ class MobileUnlockHandler extends BaseUnlockHandler {
   @override
   Future<String> setNewPassword(BuildContext context, {bool canCancel = true}) async {
     final inputController = InputController();
-
+    var usedFingerprint = false;
     await screenLock<void>(
         context: context,
         correctString: '',
@@ -43,13 +45,15 @@ class MobileUnlockHandler extends BaseUnlockHandler {
         ),
         customizedButtonChild: Icon(Icons.fingerprint),
         customizedButtonTap: () async {
-          await _localAuth(context);
+          usedFingerprint = await _localAuth(context);
         });
 
     if (inputController.confirmedInput.isNotEmpty) {
       await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
 
       return inputController.confirmedInput;
+    } else if (usedFingerprint) {
+      await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(Random().nextInt(9999).toString()));
     }
     return null;
   }

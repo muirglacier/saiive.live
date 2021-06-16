@@ -18,6 +18,7 @@ import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
@@ -647,7 +648,9 @@ class _DexScreen extends State<DexScreen> {
                     ElevatedButton(
                       child: Text(S.of(context).dex_swap),
                       onPressed: () async {
-                        await doSwap();
+                        await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                          await doSwap();
+                        });
                       },
                     )
                   ])

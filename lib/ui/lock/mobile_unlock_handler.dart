@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/functions.dart';
 import 'package:flutter_screen_lock/input_controller.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 
@@ -15,7 +16,7 @@ class MobileUnlockHandler extends BaseUnlockHandler {
 
   Future<bool> _localAuth(BuildContext context) async {
     final localAuth = LocalAuthentication();
-    final didAuthenticate = await localAuth.authenticate(localizedReason: 'Please authenticate', biometricOnly: true, stickyAuth: true, sensitiveTransaction: true);
+    final didAuthenticate = await localAuth.authenticate(localizedReason: S.of(context).authenticate, stickyAuth: true, sensitiveTransaction: false);
     if (didAuthenticate) {
       Navigator.pop(context);
     }
@@ -33,6 +34,8 @@ class MobileUnlockHandler extends BaseUnlockHandler {
         canCancel: canCancel,
         digits: BaseUnlockHandler.PIN_LENGTH,
         inputController: inputController,
+        confirmTitle: Text(S.of(context).pin_confirm),
+        title: Text(S.of(context).pin_enter),
         didConfirmed: (matchedText) {
           Navigator.of(context).pop();
         },
@@ -41,7 +44,7 @@ class MobileUnlockHandler extends BaseUnlockHandler {
             // Release the confirmation state and return to the initial input state.
             inputController.unsetConfirmed();
           },
-          child: const Text('Return enter mode.'),
+          child: Text(S.of(context).pin_return),
         ),
         customizedButtonChild: Icon(Icons.fingerprint),
         customizedButtonTap: () async {

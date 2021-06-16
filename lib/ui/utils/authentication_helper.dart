@@ -2,7 +2,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/lock/unlock_handler.dart';
 
 class AuthenticationHelper {
-  void forceAuth(context, onAuth()) async {
+  Future forceAuth(context, onAuth()) async {
     var unlockHandler = sl.get<IUnlockHandler>();
 
     var unlocked = await unlockHandler.unlockScreen(context);

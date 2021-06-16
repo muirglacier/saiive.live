@@ -9,6 +9,7 @@ import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
 import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
@@ -223,7 +224,9 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
           ElevatedButton(
             child: Text(S.of(context).liquidity_remove),
             onPressed: () async {
-              await removeLiquidity();
+              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                await removeLiquidity();
+              });
             },
           )
       ])

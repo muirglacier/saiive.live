@@ -15,6 +15,7 @@ import 'package:saiive.live/network/model/pool_pair.dart';
 import 'package:saiive.live/network/model/token_balance.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
@@ -565,7 +566,9 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
           ElevatedButton(
             child: Text(S.of(context).liquidity_add),
             onPressed: () async {
-              await addLiquidity();
+              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                await addLiquidity();
+              });
             },
           )
         ])

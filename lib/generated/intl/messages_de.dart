@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "authenticate" : MessageLookupByLibrary.simpleMessage("Authentifiziere Dich"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "dark_mode" : MessageLookupByLibrary.simpleMessage("Dunkel"),
@@ -80,6 +81,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading" : MessageLookupByLibrary.simpleMessage("Laden..."),
     "next" : MessageLookupByLibrary.simpleMessage("Weiter"),
     "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
+    "pin_confirm" : MessageLookupByLibrary.simpleMessage("PIN bestätigen"),
+    "pin_enter" : MessageLookupByLibrary.simpleMessage("PIN Eingabe"),
+    "pin_return" : MessageLookupByLibrary.simpleMessage("Zurück zum ersten Schritt"),
     "receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Adresse wurde in die Zwischenablage übernommen"),
     "send" : MessageLookupByLibrary.simpleMessage("Senden"),

@@ -187,5 +187,9 @@
   "liquidity_remove_successfull": "Removed liquidity successfull",
 
 
-  "biometric_auth_error": "Biometric Authentification Error"
+  "biometric_auth_error": "Biometric Authentification Error",
+  "authenticate": "Please authenticate",
+  "pin_return": "Return to first step",
+  "pin_confirm": "Confirm PIN",
+  "pin_enter": "Enter your PIN"
 }

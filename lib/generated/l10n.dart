@@ -1664,6 +1664,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Please authenticate`
+  String get authenticate {
+    return Intl.message(
+      'Please authenticate',
+      name: 'authenticate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Return to first step`
+  String get pin_return {
+    return Intl.message(
+      'Return to first step',
+      name: 'pin_return',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm PIN`
+  String get pin_confirm {
+    return Intl.message(
+      'Confirm PIN',
+      name: 'pin_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your PIN`
+  String get pin_enter {
+    return Intl.message(
+      'Enter your PIN',
+      name: 'pin_enter',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

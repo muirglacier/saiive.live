@@ -260,11 +260,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       if (sendMax) {
         await moveAllTokensToUtxo(changeAddress);
       } else {
-        var txHex = await prepareAccountToUtxosTransactions(changeAddress, amount, sendMax: sendMax);
+        var txHex = await prepareAccountToUtxosTransactions(changeAddress, amount, sendMax: sendMax, loadingStream: loadingStream);
 
         if (txHex != null) {
           for (var txHexStr in txHex.item1) {
-            final tx = await createTxAndWaitInternal(txHexStr);
+            final tx = await createTxAndWaitInternal(txHexStr, loadingStream: loadingStream);
 
             for (final unspentTx in tx.details.outputs) {
               if (unspentTx.address == changeAddress) {
@@ -278,7 +278,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       }
 
       if (sendMax) {
-        await ensureUtxoUnsafe();
+        await ensureUtxoUnsafe(loadingStream: loadingStream);
         amount = (await BalanceHelper().getAccountBalance(token, chain)).balance;
       }
 
@@ -324,7 +324,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
       final addressInfo = await walletDatabase.getWalletAddress(tx.address);
 
-      inputTxs.add(await getAuthInputsSmart(tx.address, AuthTxMin, fee));
+      inputTxs.add(await getAuthInputsSmart(tx.address, AuthTxMin, fee, loadingStream: loadingStream));
 
       final keyPair = HdWalletUtil.getKeyPair(key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, addressInfo.chain, addressInfo.network);
       keys.add(keyPair);
@@ -347,7 +347,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     for (var authAddress in useAccounts) {
       final txb = await HdWalletUtil.buildAccountToAccountTransaction(inputTxs, authAddress, keys, tokenType.id, to, amount, fee, changeAddress, chain, network);
       loadingStream?.add(S.current.wallet_operation_send_tx);
-      var txD = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb.build().toHex(), inputTxs, changeAddress));
+      var txD = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb.build().toHex(), inputTxs, changeAddress), loadingStream: loadingStream);
 
       lastTxId = txD.txId;
     }
@@ -529,7 +529,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return Tuple2<String, List<tx.Transaction>>(txHex, useInputs);
   }
 
-  Future<Tuple3<List<String>, List<tx.Transaction>, int>> prepareAccountToUtxosTransactions(String pubKey, int amount, {bool sendMax = false}) async {
+  Future<Tuple3<List<String>, List<tx.Transaction>, int>> prepareAccountToUtxosTransactions(String pubKey, int amount,
+      {bool sendMax = false, StreamController<String> loadingStream}) async {
     var tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (tokenBalance == null || tokenBalance.balance == 0) {
@@ -567,7 +568,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       final useInputs = List<tx.Transaction>.empty(growable: true);
       final keys = List<ECPair>.empty(growable: true);
 
-      final authTx = await getAuthInputsSmart(acc.address, AuthTxMin, fees);
+      final authTx = await getAuthInputsSmart(acc.address, AuthTxMin, fees, loadingStream: loadingStream);
       useInputs.add(authTx);
       usedInputs.add(authTx);
 

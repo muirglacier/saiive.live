@@ -231,7 +231,7 @@ abstract class Wallet extends IWallet {
   Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false}) async {
     final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax);
 
-    var tx = await createTxAndWait(txb);
+    var tx = await createTxAndWait(txb, loadingStream: loadingStream);
 
     loadingStream?.add(S.current.wallet_operation_send_tx);
 
@@ -333,6 +333,7 @@ abstract class Wallet extends IWallet {
       }, retryIf: (e) async {
         if (e is HttpException) {
           if (e.error.error.contains("txn-mempool-conflict")) {
+            LogHelper.instance.e("mempool-conflict", e);
             loadingStream?.add(S.current.wallet_operation_mempool_conflict_retry);
             return true;
           }

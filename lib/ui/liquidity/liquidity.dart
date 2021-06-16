@@ -108,7 +108,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   margin: const EdgeInsets.only(bottom: 10.0), decoration: new BoxDecoration(color: Colors.transparent), child: TokenPairIcon(liquidity.tokenA, liquidity.tokenB)),
               Container(
                 child: Row(children: [
-                  Expanded(flex: 2, child: Text('APY', style: TextStyle(fontWeight: FontWeight.bold))),
+                  Expanded(flex: 2, child: Text('APR', style: TextStyle(fontWeight: FontWeight.bold))),
                   Expanded(
                       flex: 10,
                       child: Text(

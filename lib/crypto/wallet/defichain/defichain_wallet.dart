@@ -129,9 +129,15 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       //handle account to account - move account balance to new address
       await createAccountTransaction(tokenA, amountA, accountA.address);
     }
-    if (amountB > accountB.balance) {
+    var useAddress = accountB.address;
+    if (accountA.address == accountB.address) {
+      useAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+    }
+
+    if (amountB > accountB.balance || accountA.address == accountB.address) {
       //handle account to account - move account balance to new address
-      await createAccountTransaction(tokenB, amountB, accountB.address);
+
+      await createAccountTransaction(tokenB, amountB, useAddress);
     }
 
     final useableAccountsA = await _getNeededAccounts(accountsA, amountA);
@@ -146,8 +152,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       }
     }
 
-    final txb = await HdWalletUtil.buildAddPollLiquidityTransaction(inputTxs, accountA.toFromAccount(), accountB.toFromAccount(), walletDatabase, tokenAType.id, tokenBType.id,
-        shareAddress, amountA, amountB, fee, shareAddress, key, chain, network);
+    final txb = await HdWalletUtil.buildAddPollLiquidityTransaction(inputTxs, accountA.toFromAccount(), accountA.address, accountB.toFromAccount(), useAddress, walletDatabase,
+        tokenAType.id, tokenBType.id, shareAddress, amountA, amountB, fee, shareAddress, key, chain, network);
     return txb.build().toHex();
   }
 

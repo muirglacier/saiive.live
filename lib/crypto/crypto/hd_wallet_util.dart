@@ -99,8 +99,23 @@ class HdWalletUtil {
     return 9;
   }
 
-  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(List<tx.Transaction> inputTxs, FromAccount authA, FromAccount authB, IWalletDatabase database, int tokenA,
-      int tokenB, String shareAddress, int amountA, int amountB, int fee, String returnAddress, Uint8List seed, ChainType chain, ChainNet net) async {
+  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(
+      List<tx.Transaction> inputTxs,
+      FromAccount authA,
+      String authAAddress,
+      FromAccount authB,
+      String authBAddress,
+      IWalletDatabase database,
+      int tokenA,
+      int tokenB,
+      String shareAddress,
+      int amountA,
+      int amountB,
+      int fee,
+      String returnAddress,
+      Uint8List seed,
+      ChainType chain,
+      ChainNet net) async {
     var network = getNetworkType(chain, net);
 
     final txb = TransactionBuilder(network: network);
@@ -113,7 +128,7 @@ class HdWalletUtil {
       totalInputValue += tx.valueRaw;
     }
 
-    txb.addAddLiquidityOutput(tokenA, authA.address, amountA, tokenB, authB.address, amountB, shareAddress);
+    txb.addAddLiquidityOutput(tokenA, authAAddress, amountA, tokenB, authBAddress, amountB, shareAddress);
 
     var changeAmount = totalInputValue - fee;
     txb.addOutput(returnAddress, changeAmount);

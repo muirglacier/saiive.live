@@ -54,7 +54,6 @@ Install flutter and vscode or some other IDE.
 We are working in the Flutter beta channel. 
 
 ``` 
-flutter channel beta
 flutter upgrade
 
 flutter pub get
@@ -73,8 +72,6 @@ flutter build linux //for linux
 
 
 # Screenshots
-Everything is just early preview!
-
 ![Home](./screenshots/home_ios.png)
 ![History](./screenshots/history_ios.png)
 ![Receive](./screenshots/receive_ios.png)
@@ -91,5 +88,4 @@ No one who is contributing to this project is taking any responsibility of what 
 
 
 # Licenses
-
-The DeFi Wallet App is released under the terms of the G GNU GENERAL PUBLIC LICENSE Version 3.
+The saiive.live is released under the terms of the GNU GENERAL PUBLIC LICENSE Version 3.

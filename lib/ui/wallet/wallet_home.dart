@@ -340,7 +340,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           actions: [
             Padding(
-                padding: EdgeInsets.only(right: 20.0),
+                padding: EdgeInsets.only(right: 0),
                 child: RotationTransition(
                     turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
                     child: IconButton(
@@ -352,7 +352,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                           : null,
                     ))),
             Padding(
-                padding: EdgeInsets.only(right: 20.0),
+                padding: EdgeInsets.only(right: 10.0),
                 child: GestureDetector(
                   onTap: () async {
                     var wallet = sl.get<IWalletService>();
@@ -364,7 +364,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                   child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
             Padding(
-                padding: EdgeInsets.only(right: 20.0),
+                padding: EdgeInsets.only(right: 10.0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingsScreen()));

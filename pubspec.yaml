@@ -39,6 +39,9 @@ dependencies:
 
   #cryto libs
   defichaindart: ^3.0.1
+  encrypt : ^5.0.0
+  pointycastle: ^3.1.1
+  aes_crypt: ^0.1.1
 
   #utils
   sprintf: ^6.0.0 
@@ -95,6 +98,9 @@ dependencies:
 
   # TouchID/FaceID
   local_auth: ^1.1.2
+  flutter_screen_lock: 
+    git: 
+      url: git://github.com/saiive/flutter_screen_lock
   
 dev_dependencies:
   flutter_test:

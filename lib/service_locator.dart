@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
@@ -17,9 +19,14 @@ import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/pool_share_service.dart';
 import 'package:saiive.live/network/token_service.dart';
 import 'package:saiive.live/network/transaction_service.dart';
+import 'package:saiive.live/services/desktop_vault.dart';
 import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/lock/base_unlock_handler.dart';
+import 'package:saiive.live/ui/lock/desktop_unlock_handler.dart';
+import 'package:saiive.live/ui/lock/mobile_unlock_handler.dart';
+import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import 'package:saiive.live/ui/testrun/test_run_service.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/biometrics.dart';
@@ -27,7 +34,7 @@ import 'package:saiive.live/ui/utils/hapticutil.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:saiive.live/util/sharedprefsutil.dart';
-import 'package:saiive.live/network/model/vault.dart';
+import 'package:saiive.live/services/mobile_vault.dart';
 import 'network/api_service.dart';
 import 'network/ihttp_service.dart';
 import 'network/model/ivault.dart';
@@ -36,7 +43,12 @@ GetIt sl = GetIt.instance;
 
 void setupServiceLocator() {
   sl.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
-  sl.registerLazySingleton<IVault>(() => Vault());
+  sl.registerLazySingleton<IVault>(() {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return DesktopVault();
+    }
+    return MobileVault();
+  });
   sl.registerSingletonAsync<IHttpService>(() async {
     var service = HttpService();
     await service.init();
@@ -72,4 +84,11 @@ void setupServiceLocator() {
   sl.registerLazySingleton<BitcoinWallet>(() => BitcoinWallet(true));
 
   sl.registerLazySingleton<IEnvironmentService>(() => EnvironmentService());
+
+  sl.registerLazySingleton<IUnlockHandler>(() {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return DesktopUnlockHandler();
+    }
+    return MobileUnlockHandler();
+  });
 }

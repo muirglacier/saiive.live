@@ -1065,6 +1065,16 @@ class S {
     );
   }
 
+  /// `Set/change password`
+  String get settings_set_password {
+    return Intl.message(
+      'Set/change password',
+      name: 'settings_set_password',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Network`
   String get settings_network {
     return Intl.message(

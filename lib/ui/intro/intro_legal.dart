@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import 'package:saiive.live/ui/utils/legal_entities.dart';
 import 'package:saiive.live/ui/utils/webview.dart';
 import 'package:saiive.live/ui/widgets/buttons.dart';
@@ -75,8 +77,9 @@ class _IntroLegalState extends State<IntroLegalScreen> {
         SizedBox(height: 100),
         Container(
             padding: EdgeInsets.only(left: marginLeft, right: marginRight),
-            child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).next, enabled: accepted, onPressed: () {
+            child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).next, enabled: accepted, onPressed: () async {
               if (accepted) {
+                await sl.get<IUnlockHandler>().setNewPassword(context, canCancel: false);
                 Navigator.of(context).pushNamed(widget.forwardUrl);
               }
             }, icon: Icons.check)),

@@ -95,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_network_changed" : MessageLookupByLibrary.simpleMessage("Network updated..."),
     "settings_remove_seed" : MessageLookupByLibrary.simpleMessage("Remove Seed"),
     "settings_removed_seed" : MessageLookupByLibrary.simpleMessage("Removed saved seed"),
+    "settings_set_password" : MessageLookupByLibrary.simpleMessage("Set/change password"),
     "settings_show_logs" : MessageLookupByLibrary.simpleMessage("Show logs"),
     "settings_show_seed" : MessageLookupByLibrary.simpleMessage("Show Seed"),
     "settings_show_wallet_addresses" : MessageLookupByLibrary.simpleMessage("Wallet addresses"),

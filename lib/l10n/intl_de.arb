@@ -114,6 +114,8 @@
   "settings_support_github": "GitHub",
   "settings_support_defichain": "Defichain.com",
 
+  "settings_set_password": "Passwort setzen/ändern",
+
   "settings_network": "Netzwerk",
   "settings_remove_seed": "Seed löschen",
   "settings_show_logs": "Logs zeigen",

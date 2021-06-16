@@ -9,6 +9,7 @@ import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import '../generated/l10n.dart';
 
 import 'package:saiive.live/service_locator.dart';
@@ -26,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   bool _hasCheckedLoggedIn;
   bool _retried;
   bool _versionLoaded = false;
+  bool _alreadyUnlocked = false;
 
   String _curNet = "";
 
@@ -46,6 +48,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       bool firstLaunch = await sl.get<SharedPrefsUtil>().getFirstLaunch();
       if (firstLaunch) {
         await sl.get<IVault>().deleteAll();
+      } else {
+        if (!_alreadyUnlocked) {
+          _alreadyUnlocked = await sl.get<IUnlockHandler>().unlockScreen(context, canCancel: false);
+        }
       }
       await sl.get<SharedPrefsUtil>().setFirstLaunch();
       // See if have already a seed generated

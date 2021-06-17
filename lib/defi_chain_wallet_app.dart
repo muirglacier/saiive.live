@@ -45,36 +45,19 @@ class SaiiveLiveApp extends StatefulWidget {
   State<StatefulWidget> createState() => _SaiiveLiveAppState();
 }
 
-class _SaiiveLiveAppState extends State<SaiiveLiveApp> with WidgetsBindingObserver {
-  StreamController<bool> _showLockScreenStream = StreamController();
-  StreamSubscription _showLockScreenSubs;
-
+class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
   void init() {
     LogConsole.init();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _showLockScreenStream.add(true);
-    }
   }
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addObserver(this);
     EventTaxiImpl.singleton().registerAll().listen((event) {
       final eventType = event.runtimeType.toString();
       StateContainer.of(context).appCenter.trackEvent(eventType, {});
       StateContainer.of(context).logger.d("Event " + eventType + " called...");
-    });
-
-    _showLockScreenSubs = _showLockScreenStream.stream.listen((bool show) {
-      if (mounted && show) {
-        // sl.get<AuthenticationHelper>().forceAuth(GlobalState.navKey.currentContext, () {});
-      }
     });
 
     init();
@@ -82,8 +65,6 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> with WidgetsBindingObserv
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _showLockScreenSubs?.cancel();
     super.dispose();
   }
 

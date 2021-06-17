@@ -4,6 +4,7 @@ import 'package:flutter_screen_lock/functions.dart';
 import 'package:flutter_screen_lock/input_controller.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 
 import 'base_unlock_handler.dart';
@@ -69,6 +70,8 @@ class DesktopUnlockHandler extends BaseUnlockHandler {
 
     if (inputController.confirmedInput.isNotEmpty) {
       await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
+      await sl.get<SharedPrefsUtil>().setUseAuthentiaction(AuthMethod.PIN);
+
       _validPin = inputController.confirmedInput;
       return inputController.confirmedInput;
     }

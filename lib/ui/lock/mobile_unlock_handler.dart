@@ -7,6 +7,7 @@ import 'package:flutter_screen_lock/input_controller.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 
 import 'base_unlock_handler.dart';
@@ -27,6 +28,7 @@ class MobileUnlockHandler extends BaseUnlockHandler {
   Future<String> setNewPassword(BuildContext context, {bool canCancel = true}) async {
     final inputController = InputController();
     var usedFingerprint = false;
+    var authMethod = AuthMethod.NONE;
     await screenLock<void>(
         context: context,
         correctString: '',
@@ -49,15 +51,18 @@ class MobileUnlockHandler extends BaseUnlockHandler {
         customizedButtonChild: Icon(Icons.fingerprint),
         customizedButtonTap: () async {
           usedFingerprint = await _localAuth(context);
+          authMethod = AuthMethod.BIOMETRICS;
         });
 
     if (inputController.confirmedInput.isNotEmpty) {
       await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
+      authMethod = AuthMethod.PIN;
 
       return inputController.confirmedInput;
     } else if (usedFingerprint) {
       await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(Random().nextInt(9999).toString()));
     }
+    await sl.get<SharedPrefsUtil>().setUseAuthentiaction(authMethod);
     return null;
   }
 

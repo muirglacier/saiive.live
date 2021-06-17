@@ -82,7 +82,9 @@ class SharedPrefsUtil {
     return await get(pw_hash, defaultValue: null);
   }
 
-  Future setUseAuthentiaction() async {}
+  Future setUseAuthentiaction(AuthMethod method) async {
+    return await set(auth_method, method.index);
+  }
 
   Future<AuthenticationMethod> getAuthMethod() async {
     return AuthenticationMethod(AuthMethod.values[await get(auth_method, defaultValue: AuthMethod.NONE.index)]);

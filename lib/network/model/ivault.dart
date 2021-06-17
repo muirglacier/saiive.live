@@ -8,4 +8,6 @@ abstract class IVault {
   Future setSeed(String seed);
 
   Future deleteAll();
+
+  Future reEncryptData(String oldPassword, String newPassword);
 }

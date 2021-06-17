@@ -154,7 +154,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           CardItemWidget(S.of(context).settings_common, null, backgroundColor: Colors.transparent),
                           CardItemWidget(S.of(context).settings_set_password, () async {
                             sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                              await sl.get<IUnlockHandler>().setNewPassword(context);
+                              final unlockHandler = sl.get<IUnlockHandler>();
+                              final oldPassword = await unlockHandler.getUnlockCode();
+                              final newPassword = await unlockHandler.setNewPassword(context);
+
+                              await sl.get<IVault>().reEncryptData(oldPassword, newPassword);
                             });
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                           SizedBox(height: 5),

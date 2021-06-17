@@ -1,6 +1,3 @@
-import 'dart:convert';
-import "package:hex/hex.dart" as hex;
-
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -10,7 +7,35 @@ import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DesktopVault extends IVault {
-  // Re-usable
+  @override
+  Future reEncryptData(String oldPassword, String newPassword) async {
+    if (newPassword == null || newPassword.isEmpty) {
+      throw new ArgumentError("newPassword cannot be empty!");
+    }
+
+    await _reEncrypt(IVault.seedKey, oldPassword, newPassword);
+  }
+
+  Future _reEncrypt(String key, String oldPassword, String newPassword) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    var currentEnvironment = EnvHelper.getEnvironment();
+
+    String value;
+    if (oldPassword == null || oldPassword.isEmpty) {
+      value = sharedPreferences.getString(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
+    } else {
+      var encryptedValue = sharedPreferences.getString(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key);
+
+      value = AesCrypto.decryptAESCryptoJS(encryptedValue, oldPassword);
+    }
+    if (value == null || value.isEmpty) {
+      return value;
+    }
+
+    final encrypted = AesCrypto.encryptAESCryptoJS(value, newPassword);
+    sharedPreferences.setString(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key, encrypted);
+  }
+
   Future<String> _write(String key, String value) async {
     var sharedPreferences = await SharedPreferences.getInstance();
     var currentEnvironment = EnvHelper.getEnvironment();
@@ -60,8 +85,6 @@ class DesktopVault extends IVault {
   @override
   Future deleteAll() async {
     await _write(IVault.seedKey, null);
-    await _write(IVault.encryptionKey, null);
-    await _write(IVault.passwordHashKey, null);
   }
 
   @override
@@ -72,17 +95,5 @@ class DesktopVault extends IVault {
   @override
   Future<String> setSeed(String seed) async {
     return await _write(IVault.seedKey, seed);
-  }
-
-  @override
-  Future<String> getPasswordHash() async {
-    var hash = await _read(IVault.passwordHashKey);
-
-    return hash;
-  }
-
-  @override
-  Future setPasswordHash(String hash) async {
-    return await _write(IVault.passwordHashKey, hash);
   }
 }

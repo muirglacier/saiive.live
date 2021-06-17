@@ -30,14 +30,5 @@ class MobileVault extends IVault {
   }
 
   @override
-  Future<String> getPasswordHash() async {
-    var hash = await _read(IVault.passwordHashKey);
-
-    return hash;
-  }
-
-  @override
-  Future setPasswordHash(String hash) async {
-    return await _write(IVault.passwordHashKey, hash);
-  }
+  Future reEncryptData(String oldPassword, String newPassword) async {}
 }

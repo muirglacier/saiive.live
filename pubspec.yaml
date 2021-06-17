@@ -101,6 +101,7 @@ dependencies:
   flutter_screen_lock: 
     git: 
       url: git://github.com/saiive/flutter_screen_lock
+      ref: master
   
 dev_dependencies:
   flutter_test:

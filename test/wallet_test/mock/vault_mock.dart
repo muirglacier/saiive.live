@@ -29,4 +29,10 @@ class VaultMock extends IVault {
     // TODO: implement setPasswordHash
     throw UnimplementedError();
   }
+
+  @override
+  Future reEncryptData(String oldPassword, String newPassword) {
+    // TODO: implement reEncryptData
+    throw UnimplementedError();
+  }
 }

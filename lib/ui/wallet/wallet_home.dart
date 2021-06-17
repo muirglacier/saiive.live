@@ -162,6 +162,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     });
 
     super.initState();
+    _initSyncText();
 
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 

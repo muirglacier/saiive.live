@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/functions.dart';
 import 'package:flutter_screen_lock/input_controller.dart';
-import 'package:saiive.live/network/model/ivault.dart';
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
@@ -35,7 +35,15 @@ class DesktopUnlockHandler extends BaseUnlockHandler {
         }
       }
     });
-    await screenLock(context: context, correctString: "", inputController: inputController, canCancel: canCancel, digits: BaseUnlockHandler.PIN_LENGTH);
+    await screenLock(
+      context: context,
+      correctString: "",
+      inputController: inputController,
+      canCancel: canCancel,
+      digits: BaseUnlockHandler.PIN_LENGTH,
+      confirmTitle: Text(S.of(context).pin_confirm),
+      title: Text(S.of(context).pin_enter),
+    );
 
     return isValidated;
   }
@@ -56,6 +64,8 @@ class DesktopUnlockHandler extends BaseUnlockHandler {
       canCancel: canCancel,
       digits: BaseUnlockHandler.PIN_LENGTH,
       inputController: inputController,
+      confirmTitle: Text(S.of(context).pin_confirm),
+      title: Text(S.of(context).pin_enter),
       didConfirmed: (matchedText) {
         Navigator.of(context).pop();
       },
@@ -64,7 +74,7 @@ class DesktopUnlockHandler extends BaseUnlockHandler {
           // Release the confirmation state and return to the initial input state.
           inputController.unsetConfirmed();
         },
-        child: const Text('Return enter mode.'),
+        child: Text(S.of(context).pin_return),
       ),
     );
 

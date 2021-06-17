@@ -26,12 +26,6 @@ abstract class BaseUnlockHandler implements IUnlockHandler {
   Future<bool> isValid(String input) async {
     final digest = hashPassword(input);
     final savedHash = await sl.get<SharedPrefsUtil>().getPasswordHash();
-
-    print("------------------------");
-    print(input);
-    print(digest);
-    print(savedHash);
-
     return digest == savedHash;
   }
 }

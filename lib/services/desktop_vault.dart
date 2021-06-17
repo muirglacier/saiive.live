@@ -23,6 +23,7 @@ class DesktopVault extends IVault {
     String value;
     if (oldPassword == null || oldPassword.isEmpty) {
       value = sharedPreferences.getString(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
+      sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
     } else {
       var encryptedValue = sharedPreferences.getString(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key);
 

@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/global_state_key.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
 import 'package:saiive.live/ui/splash.dart';
@@ -9,6 +11,7 @@ import 'package:saiive.live/ui/intro/intro_welcome.dart';
 import 'package:saiive.live/ui/intro/intro_restore.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/routes.dart';
 import 'package:saiive.live/ui/widgets/restore_accounts.dart';
 import 'package:event_taxi/event_taxi.dart';
@@ -44,22 +47,46 @@ class SaiiveLiveApp extends StatefulWidget {
   State<StatefulWidget> createState() => _SaiiveLiveAppState();
 }
 
-class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
+class _SaiiveLiveAppState extends State<SaiiveLiveApp> with WidgetsBindingObserver {
+  StreamController<bool> _showLockScreenStream = StreamController();
+  StreamSubscription _showLockScreenSubs;
+
   void init() {
     LogConsole.init();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _showLockScreenStream.add(true);
+    }
   }
 
   @override
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addObserver(this);
     EventTaxiImpl.singleton().registerAll().listen((event) {
       final eventType = event.runtimeType.toString();
       StateContainer.of(context).appCenter.trackEvent(eventType, {});
       StateContainer.of(context).logger.d("Event " + eventType + " called...");
     });
 
+    _showLockScreenSubs = _showLockScreenStream.stream.listen((bool show) {
+      if (mounted && show) {
+        // sl.get<AuthenticationHelper>().forceAuth(GlobalState.navKey.currentContext, () {});
+      }
+    });
+
     init();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _showLockScreenSubs?.cancel();
+    super.dispose();
   }
 
   @override
@@ -93,10 +120,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [
-          const Locale('en', ''),
-          const Locale('de', '')
-        ],
+        supportedLocales: [const Locale('en', ''), const Locale('de', '')],
         locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
             ? null
             : StateContainer.of(context).curLanguage.getLocale(),

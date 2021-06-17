@@ -27,43 +27,42 @@ class MobileUnlockHandler extends BaseUnlockHandler {
   @override
   Future<String> setNewPassword(BuildContext context, {bool canCancel = true}) async {
     final inputController = InputController();
-    var usedFingerprint = false;
+
     var authMethod = AuthMethod.NONE;
     await screenLock<void>(
-        context: context,
-        correctString: '',
-        confirmation: true,
-        canCancel: canCancel,
-        digits: BaseUnlockHandler.PIN_LENGTH,
-        inputController: inputController,
-        confirmTitle: Text(S.of(context).pin_confirm),
-        title: Text(S.of(context).pin_enter),
-        didConfirmed: (matchedText) {
-          Navigator.of(context).pop();
+      context: context,
+      correctString: '',
+      confirmation: true,
+      canCancel: canCancel,
+      digits: BaseUnlockHandler.PIN_LENGTH,
+      inputController: inputController,
+      confirmTitle: Text(S.of(context).pin_confirm),
+      title: Text(S.of(context).pin_enter),
+      didConfirmed: (matchedText) {
+        Navigator.of(context).pop();
+      },
+      footer: TextButton(
+        onPressed: () {
+          // Release the confirmation state and return to the initial input state.
+          inputController.unsetConfirmed();
         },
-        footer: TextButton(
-          onPressed: () {
-            // Release the confirmation state and return to the initial input state.
-            inputController.unsetConfirmed();
-          },
-          child: Text(S.of(context).pin_return),
-        ),
-        customizedButtonChild: Icon(Icons.fingerprint),
-        customizedButtonTap: () async {
-          usedFingerprint = await _localAuth(context);
-          authMethod = AuthMethod.BIOMETRICS;
-        });
+        child: Text(S.of(context).pin_return),
+      ),
+      // customizedButtonChild: Icon(Icons.fingerprint),
+      // customizedButtonTap: () async {
+      //   usedFingerprint = await _localAuth(context);
+      //   authMethod = AuthMethod.BIOMETRICS;
+      // }
+    );
 
     if (inputController.confirmedInput.isNotEmpty) {
       await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
       authMethod = AuthMethod.PIN;
+      await sl.get<SharedPrefsUtil>().setUseAuthentiaction(authMethod);
 
       return inputController.confirmedInput;
-    } else if (usedFingerprint) {
-      await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(Random().nextInt(9999).toString()));
     }
-    await sl.get<SharedPrefsUtil>().setUseAuthentiaction(authMethod);
-    return null;
+    throw new ArgumentError("something bad happened");
   }
 
   @override
@@ -71,7 +70,7 @@ class MobileUnlockHandler extends BaseUnlockHandler {
     if (!await hasUnlockScreenEnabled()) {
       return true;
     }
-
+    final translate = S.of(context);
     final inputController = InputController();
     var isValidated = false;
 
@@ -92,6 +91,8 @@ class MobileUnlockHandler extends BaseUnlockHandler {
     await screenLock(
         context: context,
         correctString: "",
+        confirmTitle: Text(translate.pin_confirm),
+        title: Text(translate.pin_enter),
         inputController: inputController,
         canCancel: canCancel,
         digits: BaseUnlockHandler.PIN_LENGTH,

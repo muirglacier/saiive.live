@@ -9,6 +9,7 @@ import 'package:saiive.live/network/ihttp_service.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import 'package:saiive.live/ui/model/available_themes.dart';
 import 'package:saiive.live/ui/settings/settings_seed.dart';
 import 'package:saiive.live/ui/settings/wallet_addresses.dart';
@@ -151,26 +152,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           CardItemWidget(S.of(context).settings_common, null, backgroundColor: Colors.transparent),
-                          Padding(
-                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
-                              child: Container(
-                                  child: DropdownButton<int>(
-                                isExpanded: true,
-                                value: _authMethod,
-                                items: AuthenticationMethod.all().map((e) {
-                                  return new DropdownMenuItem<int>(
-                                    value: e.getIndex(),
-                                    child: Text(e.getDisplayName(context)),
-                                  );
-                                }).toList(),
-                                onChanged: (int val) {
-                                  setState(() {
-                                    _authMethod = val;
-                                  });
+                          CardItemWidget(S.of(context).settings_set_password, () async {
+                            sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                              final unlockHandler = sl.get<IUnlockHandler>();
+                              final oldPassword = await unlockHandler.getUnlockCode();
+                              final newPassword = await unlockHandler.setNewPassword(context);
 
-                                  sl.get<SharedPrefsUtil>().setAuthMethod(AuthenticationMethod(AuthMethod.values[val]));
-                                },
-                              ))),
+                              await sl.get<IVault>().reEncryptData(oldPassword, newPassword);
+                            });
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                           SizedBox(height: 5),
                           Padding(
                               padding: EdgeInsets.only(left: itemPaddingLeft + 5),

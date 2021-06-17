@@ -119,6 +119,8 @@
   "settings_support_github": "GitHub",
   "settings_support_defichain": "Defichain.com",
 
+  "settings_set_password": "Set/change password",
+
   "settings_network": "Network",
   "settings_remove_seed": "Remove Seed",
   "settings_show_logs": "Show logs",
@@ -185,5 +187,9 @@
   "liquidity_remove_successfull": "Removed liquidity successfull",
 
 
-  "biometric_auth_error": "Biometric Authentification Error"
+  "biometric_auth_error": "Biometric Authentification Error",
+  "authenticate": "Please authenticate",
+  "pin_return": "Return to first step",
+  "pin_confirm": "Confirm PIN",
+  "pin_enter": "Enter your PIN"
 }

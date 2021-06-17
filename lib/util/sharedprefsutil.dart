@@ -27,6 +27,8 @@ class SharedPrefsUtil {
   static const String instance_id = 'instance_id';
   static const String change_address_index = 'chg_addr_index';
   static const String address_index = 'addr_index';
+  static const String use_auth = 'saiive_use_auth';
+  static const String pw_hash = 'saiive_pw_hash';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -72,8 +74,16 @@ class SharedPrefsUtil {
     return await get(seed_backed_up_key, defaultValue: false);
   }
 
-  Future<void> setAuthMethod(AuthenticationMethod method) async {
-    return await set(auth_method, method.getIndex());
+  Future<void> setPasswordHash(String hash) async {
+    return await set(pw_hash, hash);
+  }
+
+  Future<String> getPasswordHash() async {
+    return await get(pw_hash, defaultValue: null);
+  }
+
+  Future setUseAuthentiaction(AuthMethod method) async {
+    return await set(auth_method, method.index);
   }
 
   Future<AuthenticationMethod> getAuthMethod() async {

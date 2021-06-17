@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "authenticate" : MessageLookupByLibrary.simpleMessage("Please authenticate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "dark_mode" : MessageLookupByLibrary.simpleMessage("Dark"),
@@ -80,6 +81,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loading" : MessageLookupByLibrary.simpleMessage("Loading..."),
     "next" : MessageLookupByLibrary.simpleMessage("Next"),
     "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
+    "pin_confirm" : MessageLookupByLibrary.simpleMessage("Confirm PIN"),
+    "pin_enter" : MessageLookupByLibrary.simpleMessage("Enter your PIN"),
+    "pin_return" : MessageLookupByLibrary.simpleMessage("Return to first step"),
     "receive" : MessageLookupByLibrary.simpleMessage("Receive"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Address copied to Clipboard"),
     "send" : MessageLookupByLibrary.simpleMessage("Send"),
@@ -95,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_network_changed" : MessageLookupByLibrary.simpleMessage("Network updated..."),
     "settings_remove_seed" : MessageLookupByLibrary.simpleMessage("Remove Seed"),
     "settings_removed_seed" : MessageLookupByLibrary.simpleMessage("Removed saved seed"),
+    "settings_set_password" : MessageLookupByLibrary.simpleMessage("Set/change password"),
     "settings_show_logs" : MessageLookupByLibrary.simpleMessage("Show logs"),
     "settings_show_seed" : MessageLookupByLibrary.simpleMessage("Show Seed"),
     "settings_show_wallet_addresses" : MessageLookupByLibrary.simpleMessage("Wallet addresses"),

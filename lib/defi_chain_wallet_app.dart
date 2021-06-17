@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
@@ -63,6 +64,11 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -93,10 +99,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [
-          const Locale('en', ''),
-          const Locale('de', '')
-        ],
+        supportedLocales: [const Locale('en', ''), const Locale('de', '')],
         locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
             ? null
             : StateContainer.of(context).curLanguage.getLocale(),

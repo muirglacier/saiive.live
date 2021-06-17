@@ -1065,6 +1065,16 @@ class S {
     );
   }
 
+  /// `Set/change password`
+  String get settings_set_password {
+    return Intl.message(
+      'Set/change password',
+      name: 'settings_set_password',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Network`
   String get settings_network {
     return Intl.message(
@@ -1650,6 +1660,46 @@ class S {
     return Intl.message(
       'Biometric Authentification Error',
       name: 'biometric_auth_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please authenticate`
+  String get authenticate {
+    return Intl.message(
+      'Please authenticate',
+      name: 'authenticate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Return to first step`
+  String get pin_return {
+    return Intl.message(
+      'Return to first step',
+      name: 'pin_return',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm PIN`
+  String get pin_confirm {
+    return Intl.message(
+      'Confirm PIN',
+      name: 'pin_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your PIN`
+  String get pin_enter {
+    return Intl.message(
+      'Enter your PIN',
+      name: 'pin_enter',
       desc: '',
       args: [],
     );

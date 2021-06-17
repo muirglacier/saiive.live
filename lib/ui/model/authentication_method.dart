@@ -2,7 +2,7 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/ui/model/settings_item.dart';
 import 'package:flutter/material.dart';
 
-enum AuthMethod { NONE, BIOMETRICS }
+enum AuthMethod { NONE, BIOMETRICS, PIN }
 
 class AuthenticationMethod extends SettingSelectionItem {
   AuthMethod method = AuthMethod.NONE;
@@ -12,6 +12,8 @@ class AuthenticationMethod extends SettingSelectionItem {
   String getDisplayName(BuildContext context) {
     switch (method) {
       case AuthMethod.BIOMETRICS:
+        return S.of(context).settings_auth_biometric;
+      case AuthMethod.PIN:
         return S.of(context).settings_auth_biometric;
       case AuthMethod.NONE:
       default:
@@ -23,6 +25,7 @@ class AuthenticationMethod extends SettingSelectionItem {
     return [
       new AuthenticationMethod(AuthMethod.NONE),
       new AuthenticationMethod(AuthMethod.BIOMETRICS),
+      new AuthenticationMethod(AuthMethod.PIN),
     ];
   }
 

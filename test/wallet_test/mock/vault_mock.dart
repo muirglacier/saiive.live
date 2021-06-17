@@ -17,4 +17,22 @@ class VaultMock extends IVault {
   Future setSeed(String seed) async {
     _seed = seed;
   }
+
+  @override
+  Future<String> getPasswordHash() {
+    // TODO: implement getPasswordHash
+    throw UnimplementedError();
+  }
+
+  @override
+  Future setPasswordHash(String hash) {
+    // TODO: implement setPasswordHash
+    throw UnimplementedError();
+  }
+
+  @override
+  Future reEncryptData(String oldPassword, String newPassword) {
+    // TODO: implement reEncryptData
+    throw UnimplementedError();
+  }
 }

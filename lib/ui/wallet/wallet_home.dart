@@ -146,8 +146,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     });
   }
 
-  _initInternals() async {}
-
   @override
   void initState() {
     _controller = AnimationController(
@@ -167,11 +165,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     _wallet = sl.get<IWalletService>();
 
-    _initInternals();
-
     _syncEvents();
     _initWallet();
     _initLastSyncedBlock();
+
+    _welcomeText = "Welcome";
   }
 
   @override

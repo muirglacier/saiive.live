@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
@@ -11,6 +13,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/utils/webview.dart';
 import 'package:saiive.live/ui/wallet/wallet_receive.dart';
 import 'package:saiive.live/ui/wallet/wallet_send.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
@@ -157,7 +160,16 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                       Expanded(
                           child: InkWell(
                               child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor), textAlign: TextAlign.right),
-                              onTap: () => launch(DefiChainConstants.getExplorerUrl(_chainNet, history.txid))),
+                              onTap: () async {
+                                var uri = DefiChainConstants.getExplorerUrl(_chainNet, history.txid);
+                                if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                                  if (await canLaunch(uri)) {
+                                    await launch(uri);
+                                  }
+                                } else {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WebViewScreen(uri, "Explorer", canOpenInBrowser: true)));
+                                }
+                              }),
                           flex: 1),
                   ],
                 ),

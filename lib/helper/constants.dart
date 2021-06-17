@@ -8,11 +8,22 @@ class DefiChainConstants {
 
   static const int COIN = 100000000;
 
+  static getExplorerUrlForNet(ChainNet net) {
+    switch (net) {
+      case ChainNet.Mainnet:
+        return "https://mainnet-supernode.saiive.live/explorer/#/DFI/mainnet/";
+        break;
+      case ChainNet.Testnet:
+        return "https://testnet-supernode.saiive.live/testnet/#/DFI/testnet/";
+        break;
+    }
+  }
+
   static getExplorerUrl(ChainNet net, String txId) {
-    return "https://" + ChainHelper.chainNetworkString(net) + ".defichain.io/#/DFI/" + ChainHelper.chainNetworkString(net) + "/tx/" + txId;
+    return getExplorerUrlForNet(net) + "/tx/" + txId;
   }
 
   static getExplorerBlockUrl(ChainNet net, String blockHash) {
-    return "https://" + ChainHelper.chainNetworkString(net) + ".defichain.io/#/DFI/" + ChainHelper.chainNetworkString(net) + "/block/" + blockHash;
+    return getExplorerUrlForNet(net) + "/block/" + blockHash;
   }
 }

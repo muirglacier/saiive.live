@@ -194,6 +194,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
               child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
+                  padding: EdgeInsets.only(bottom: 100),
                   shrinkWrap: true,
                   itemCount: _history.length,
                   itemBuilder: (context, index) {
@@ -203,29 +204,82 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     ]));
   }
 
-  buildActions(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: EdgeInsets.only(top: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 10, onPressed: () async {
-                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
+  buildFloatingActions(BuildContext context) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return Container();
+    }
+    return Container(
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: FloatingActionButton.extended(
+                    onPressed: () async {
+                      var wallet = sl.get<IWalletService>();
+                      var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
+                      await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
+                    },
+                    heroTag: null,
+                    icon: Icon(Icons.arrow_downward, color: StateContainer.of(context).curTheme.text),
+                    label: Text(
+                      S.of(context).receive,
+                      style: TextStyle(color: StateContainer.of(context).curTheme.text),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                )),
+            Padding(
+                padding: EdgeInsets.only(right: 0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton.extended(
+                    onPressed: () async {
+                      await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
+                      Navigator.of(context).pop();
+                    },
+                    heroTag: null,
+                    icon: Icon(Icons.arrow_upward, color: StateContainer.of(context).curTheme.text),
+                    label: Text(
+                      S.of(context).send,
+                      style: TextStyle(color: StateContainer.of(context).curTheme.text),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                )),
+          ],
+        ));
+  }
 
-                Navigator.of(context).pop();
-              })),
-          AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
-            var wallet = sl.get<IWalletService>();
-            var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
-            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
-          })
-        ],
-      ),
-    );
+  buildActions(BuildContext context) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      final width = MediaQuery.of(context).size.width;
+      return Padding(
+        padding: EdgeInsets.only(top: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 10, onPressed: () async {
+                  await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
+
+                  Navigator.of(context).pop();
+                })),
+            AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
+              var wallet = sl.get<IWalletService>();
+              var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
+              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
+            })
+          ],
+        ),
+      );
+    }
+    return Container();
   }
 
   buildView(BuildContext context) {
@@ -257,8 +311,8 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.displayName)),
-      body: buildView(context),
-    );
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(widget.displayName)),
+        body: buildView(context),
+        floatingActionButton: buildFloatingActions(context));
   }
 }

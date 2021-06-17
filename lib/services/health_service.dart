@@ -34,18 +34,20 @@ class HealthService implements IHealthService {
       var deadChainsString = deadChains.toString();
       deadChainsString = deadChainsString.substring(0, deadChainsString.length - 1);
 
-      // var message = S.of(context).wallet_offline
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(S.of(context).wallet_offline(deadChainsString)),
-          // duration: Duration(days: 1),
-          action: SnackBarAction(
-            label: S.of(context).wallet_uptime_stats,
-            onPressed: () async {
-              final url = env["STATS_URL"];
+      try {
+        // var message = S.of(context).wallet_offline
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(S.of(context).wallet_offline(deadChainsString)),
+            // duration: Duration(days: 1),
+            action: SnackBarAction(
+              label: S.of(context).wallet_uptime_stats,
+              onPressed: () async {
+                final url = env["STATS_URL"];
 
-              await launch(url);
-            },
-          )));
+                await launch(url);
+              },
+            )));
+      } catch (e) {}
     }
   }
 }

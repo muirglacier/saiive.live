@@ -93,6 +93,7 @@ class WalletRestore {
         }
       } catch (e) {
         LogHelper.instance.e(e);
+        maxEmpty--;
       } finally {
         i++;
       }

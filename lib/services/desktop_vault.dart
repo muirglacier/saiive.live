@@ -44,6 +44,7 @@ class DesktopVault extends IVault {
 
     if (value == null) {
       sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
+      sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key);
     } else {
       final hash = await sl.get<SharedPrefsUtil>().getPasswordHash();
       final lockEnabled = hash != null && hash.isNotEmpty;

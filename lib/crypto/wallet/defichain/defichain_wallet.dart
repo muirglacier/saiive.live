@@ -140,17 +140,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       await createAccountTransaction(tokenB, amountB, useAddress);
     }
 
-    final useableAccountsA = await _getNeededAccounts(accountsA, amountA);
-    final useableAccountsB = await _getNeededAccounts(accountsB, amountB);
+    final authInputA = await getAuthInputsSmart(accountA.address, AuthTxMin, 0);
+    final authInputB = await getAuthInputsSmart(useAddress, AuthTxMin, 0);
 
     var inputTxs = List<tx.Transaction>.empty(growable: true);
-    inputTxs.addAll(useableAccountsA.item2.where((element) => element.address == accountA.address));
-
-    for (final input in useableAccountsB.item2) {
-      if (!inputTxs.any((element) => element.mintTxId == input.mintTxId && element.mintHeight == input.mintHeight)) {
-        inputTxs.add(input);
-      }
-    }
+    inputTxs.add(authInputA);
+    inputTxs.add(authInputB);
 
     final txb = await HdWalletUtil.buildAddPollLiquidityTransaction(inputTxs, accountA.toFromAccount(), accountA.address, accountB.toFromAccount(), useAddress, walletDatabase,
         tokenAType.id, tokenBType.id, shareAddress, amountA, amountB, fee, shareAddress, key, chain, network);

@@ -66,6 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     sl.get<AppCenterWrapper>().trackEvent("settingsDeleteSeed", {});
 
     await sl.get<IVault>().setSeed(null);
+    await sl.get<SharedPrefsUtil>().setPasswordHash(null);
     await sl.get<IWalletService>().close();
     await sl.get<IWalletService>().destroy();
 

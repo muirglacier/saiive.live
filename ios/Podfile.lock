@@ -1,13 +1,13 @@
 PODS:
-  - AppCenter (3.2.0):
-    - AppCenter/Analytics (= 3.2.0)
-    - AppCenter/Crashes (= 3.2.0)
-  - AppCenter/Analytics (3.2.0):
+  - AppCenter (3.3.4):
+    - AppCenter/Analytics (= 3.3.4)
+    - AppCenter/Crashes (= 3.3.4)
+  - AppCenter/Analytics (3.3.4):
     - AppCenter/Core
-  - AppCenter/Core (3.2.0)
-  - AppCenter/Crashes (3.2.0):
+  - AppCenter/Core (3.3.4)
+  - AppCenter/Crashes (3.3.4):
     - AppCenter/Core
-  - AppCenter/Distribute (3.2.0):
+  - AppCenter/Distribute (3.3.4):
     - AppCenter/Core
   - clipboard_manager (0.0.3):
     - Flutter
@@ -15,8 +15,8 @@ PODS:
     - Flutter
   - Flutter (1.0.0)
   - flutter_appcenter_bundle (0.0.1):
-    - AppCenter (~> 3.2.0)
-    - AppCenter/Distribute (~> 3.2.0)
+    - AppCenter (~> 3.3.4)
+    - AppCenter/Distribute (~> 3.3.4)
     - Flutter
   - flutter_config (0.0.1):
     - Flutter

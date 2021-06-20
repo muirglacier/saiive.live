@@ -23,7 +23,7 @@ class AppCenterWrapper {
         appSecretIOS: iOs,
         enableAnalytics: true,
         enableCrashes: true,
-        enableDistribute: true,
+        enableDistribute: false,
         usePrivateDistributeTrack: false,
         disableAutomaticCheckForUpdate: true);
 

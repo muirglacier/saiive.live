@@ -137,7 +137,7 @@ stages:
           buildName: $(AppVersion)
           debugMode: true
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
-          buildFlavour: 'dev'
+          buildFlavour: 'devappcenter'
           entryPoint: 'lib/main.dart'
           buildNumber: $(Build.BuildNumber)
 
@@ -165,7 +165,7 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: $(AppVersion)
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
-          buildFlavour: 'dev'
+          buildFlavour: 'devappcenter'
           buildNumber: $(Build.BuildNumber)
 
       - task: CopyFiles@2
@@ -232,7 +232,7 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: $(AppVersion)'
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
-          buildFlavour: 'staging'
+          buildFlavour: 'stagingappcenter'
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
 
@@ -301,7 +301,7 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: $(AppVersion)
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
-          buildFlavour: 'prod'
+          buildFlavour: 'prodgooglePlay'
           entryPoint: 'lib/main_prod.dart'
           buildNumber: $(Build.BuildNumber)
 

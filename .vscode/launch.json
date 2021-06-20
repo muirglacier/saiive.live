@@ -12,7 +12,7 @@
             ],
             "args": [
                 "--flavor",
-                "dev"
+                "devappcenter"
             ]
         },
         {
@@ -25,7 +25,7 @@
             ],
             "args": [
                 "--flavor",
-                "staging"
+                "stagingappcenter"
             ]
         },
         {
@@ -38,7 +38,7 @@
             ],
             "args": [
                 "--flavor",
-                "prod"
+                "prodappcenter"
             ]
         }
     ]

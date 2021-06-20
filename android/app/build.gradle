@@ -43,6 +43,37 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+
+    flavorDimensions "env", "distribute"
+    productFlavors {
+ 
+        dev {
+            applicationId "at.saiive.live.dev"
+            resValue "string", "build_config_package", "at.saiive.live"
+            dimension "env"
+        }
+ 
+        staging {
+            applicationId "at.saiive.live.staging"
+            resValue "string", "build_config_package", "at.saiive.live"
+            dimension "env"
+        }
+
+        prod {
+            applicationId "at.saiive.live"
+            resValue "string", "build_config_package", "at.saiive.live"
+            dimension "env"
+        }
+
+        appCenter {
+            dimension "distribute"
+        }
+
+        googlePlay {
+            dimension "distribute"
+        }
+    }
+
     lintOptions {
         disable 'InvalidPackage'
         checkReleaseBuilds false
@@ -54,6 +85,7 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
         resValue "string", "build_config_package", "at.saiive.live"
     }
 
@@ -76,28 +108,7 @@ android {
         }
     }
 
-    flavorDimensions "env"
-    productFlavors {
- 
-        dev {
-            getIsDefault().set(true)
-            dimension "env"
-            applicationId "at.saiive.live.dev"
-            resValue "string", "build_config_package", "at.saiive.live"
-        }
- 
-        staging {
-            dimension "env"
-            applicationId "at.saiive.live.staging"
-            resValue "string", "build_config_package", "at.saiive.live"
-        }
-
-        prod {
-            dimension "env"
-            applicationId "at.saiive.live"
-            resValue "string", "build_config_package", "at.saiive.live"
-        }
-    }
+   
 }
 
 flutter {

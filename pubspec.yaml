@@ -93,7 +93,7 @@ dependencies:
   flutter_vibrate: ^1.0.0
 
   #appcenter
-  flutter_appcenter_bundle: 3.2.0+2
+  flutter_appcenter_bundle: 3.3.1+2
   device_info: ^2.0.0
 
   # TouchID/FaceID

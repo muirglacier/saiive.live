@@ -30,6 +30,7 @@ class TransactionServiceMock implements ITransactionService {
   Future<String> sendRawTransaction(String coin, String rawTxHex) async {
     txs.add(rawTxHex);
     lastTx = rawTxHex;
+
     return rawTxHex;
   }
 }

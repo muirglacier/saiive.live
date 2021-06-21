@@ -105,8 +105,6 @@ class SharedPrefsUtil {
   Future<int> getAddressIndex(bool isChangeAddress) async {
     var curIndex = await get(isChangeAddress ? change_address_index : address_index, defaultValue: 0);
 
-    await setAddressIndex(curIndex + 1, isChangeAddress);
-
     return curIndex;
   }
 

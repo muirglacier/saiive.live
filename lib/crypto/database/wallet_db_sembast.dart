@@ -117,6 +117,15 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
+  Future<bool> addressAlreadyUsed(String address) async {
+    var dbStore = _transactionStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('address', address));
+    final accounts = await dbStore.find(await database, finder: finder);
+    return accounts.isNotEmpty;
+  }
+
+  @override
   Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType) async {
     var dbStore = _addressesStoreInstance;
 

@@ -323,7 +323,7 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future<TransactionData> createTxAndWaitInternal(String txHex, {StreamController<String> loadingStream}) async {
-    final r = RetryOptions(maxAttempts: 15, maxDelay: Duration(seconds: 15));
+    final r = RetryOptions(maxAttempts: 20, maxDelay: Duration(seconds: 30));
     // bool ensureUtxoCalled = false;
 
     LogHelper.instance.d("commiting tx $txHex");

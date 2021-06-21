@@ -76,14 +76,29 @@ class HdWallet extends IHdWallet {
   Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
 
-    if (!await database.addressExists(_account.account, isChangeAddress, nextIndex, addressType)) {
-      //overflow indexes....start again with 0
-      await sharedPrefs.setAddressIndex(0, isChangeAddress);
-      nextIndex = 0;
-    }
-    var address = await database.getWalletAddressById(_account.account, isChangeAddress, nextIndex, addressType);
+    var address = await getNextFreePublicKey(database, nextIndex, sharedPrefs, isChangeAddress, addressType);
 
     return address.publicKey;
+  }
+
+  Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+    if (!await database.addressExists(_account.account, isChangeAddress, startIndex, addressType)) {
+      //overflow indexes....start again with 0
+      await sharedPrefs.setAddressIndex(0, isChangeAddress);
+      startIndex = 0;
+
+      return await database.getWalletAddressById(_account.account, isChangeAddress, 0, addressType);
+    }
+
+    var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
+    var addressUsed = await database.addressAlreadyUsed(address.publicKey);
+
+    if (addressUsed) {
+      return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
+    }
+
+    await sharedPrefs.setAddressIndex(startIndex, isChangeAddress);
+    return address;
   }
 
   @override

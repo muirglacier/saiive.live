@@ -94,7 +94,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       throw ArgumentError("One of the 2 tokens must be DFI!");
     }
 
-    final useAmount = await prepareAccount(DeFiConstants.isDfiToken(tokenA) ? amountA : amountB);
+    final useAmount = await prepareAccount(DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
 
     if (DeFiConstants.isDfiToken(tokenA)) {
       amountA = useAmount;
@@ -127,7 +127,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     if (amountA > accountA.balance) {
       //handle account to account - move account balance to new address
-      await createAccountTransaction(tokenA, amountA, accountA.address);
+      await createAccountTransaction(tokenA, amountA, accountA.address, loadingStream: loadingStream);
     }
     var useAddress = accountB.address;
     if (accountA.address == accountB.address) {
@@ -137,11 +137,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (amountB > accountB.balance || accountA.address == accountB.address) {
       //handle account to account - move account balance to new address
 
-      await createAccountTransaction(tokenB, amountB, useAddress);
+      await createAccountTransaction(tokenB, amountB, useAddress, loadingStream: loadingStream);
     }
 
-    final authInputA = await getAuthInputsSmart(accountA.address, AuthTxMin, 0);
-    final authInputB = await getAuthInputsSmart(useAddress, AuthTxMin, 0);
+    final authInputA = await getAuthInputsSmart(accountA.address, AuthTxMin, 0, loadingStream: loadingStream);
+    final authInputB = await getAuthInputsSmart(useAddress, AuthTxMin, 0, loadingStream: loadingStream);
 
     var inputTxs = List<tx.Transaction>.empty(growable: true);
     inputTxs.add(authInputA);

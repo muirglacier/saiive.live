@@ -243,4 +243,15 @@ class MemoryDatabaseMock extends IWalletDatabase {
     }
     return null;
   }
+
+  @override
+  Future<bool> addressAlreadyUsed(String address) async {
+    for (final acc in _transactions) {
+      if (acc.address == address) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

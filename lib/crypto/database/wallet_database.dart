@@ -39,6 +39,7 @@ abstract class IWalletDatabase {
   Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType);
   Future<List<WalletAddress>> getWalletAddresses(int account);
   Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType);
+  Future<bool> addressAlreadyUsed(String address);
 
   int getAddressCreationCount();
 

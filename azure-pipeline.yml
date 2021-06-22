@@ -1515,7 +1515,7 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             sudo snap install snapcraft --classic
-            snapcraft --destructive-mode
+            # snapcraft --destructive-mode
 
       # - task: CopyFiles@2
       #   displayName: "Copy artifacts"

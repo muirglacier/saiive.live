@@ -1269,6 +1269,8 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5
+            
             $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
             $(FlutterToolPath)/flutter doctor
 
@@ -1375,6 +1377,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5
             $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
             $(FlutterToolPath)/flutter doctor
             
@@ -1435,6 +1438,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5
             $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
             $(FlutterToolPath)/flutter doctor
 

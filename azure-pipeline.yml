@@ -1238,7 +1238,7 @@ stages:
 
 - stage: Linux
   displayName: Linux
-  dependsOn: [Test]
+  dependsOn: []
 
   jobs:
           

@@ -1347,10 +1347,10 @@ stages:
           targetFolder: '$(build.artifactStagingDirectory)/linux/release'
 
       - task: CopyFiles@2
-          displayName: "Copy artifacts"
-          inputs:
-            contents: '$(Build.SourcesDirectory)/build/linux/x64/release/plugins/**/*.so'
-            targetFolder: '$(build.artifactStagingDirectory)/linux/release/build/linux/x64/release/bundle/lib'
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)/build/linux/x64/release/plugins/**/*.so'
+          targetFolder: '$(build.artifactStagingDirectory)/linux/release/build/linux/x64/release/bundle/lib'
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
@@ -1414,6 +1414,12 @@ stages:
         inputs:
           contents: '$(Build.SourcesDirectory)/build/linux/x64/release/bundle/**'
           targetFolder: '$(build.artifactStagingDirectory)/linux/release'
+    
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)/build/linux/x64/release/plugins/**/*.so'
+          targetFolder: '$(build.artifactStagingDirectory)/linux/release/build/linux/x64/release/bundle/lib'
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"

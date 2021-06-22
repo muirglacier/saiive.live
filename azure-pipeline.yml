@@ -1314,6 +1314,12 @@ stages:
           contents: '$(Build.SourcesDirectory)/build/linux/x64/debug/bundle/**'
           targetFolder: '$(build.artifactStagingDirectory)/linux/debug'
 
+      - task: CopyFiles@2
+          displayName: "Copy artifacts"
+          inputs:
+            contents: '$(Build.SourcesDirectory)/build/linux/x64/debug/plugins/**/*.so'
+            targetFolder: '$(build.artifactStagingDirectory)/linux/debug/build/linux/x64/debug/bundle/lib'
+
       - task: Bash@3
         displayName: "Flutter clean"
         inputs:
@@ -1339,6 +1345,12 @@ stages:
         inputs:
           contents: '$(Build.SourcesDirectory)/build/linux/x64/release/bundle/**'
           targetFolder: '$(build.artifactStagingDirectory)/linux/release'
+
+      - task: CopyFiles@2
+          displayName: "Copy artifacts"
+          inputs:
+            contents: '$(Build.SourcesDirectory)/build/linux/x64/release/plugins/**/*.so'
+            targetFolder: '$(build.artifactStagingDirectory)/linux/release/build/linux/x64/release/bundle/lib'
 
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
@@ -1470,3 +1482,29 @@ stages:
         displayName: "Publish artifacts"
         inputs:
           ArtifactName: 'prod-linux'
+
+  - job: BuildLinuxSnap
+    displayName: "Build Linux PROD"
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+      - task: Bash@3
+        displayName: "Snapcraft"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            sudo snap install snapcraft --classic
+            snapcraft
+
+      # - task: CopyFiles@2
+      #   displayName: "Copy artifacts"
+      #   inputs:
+      #     contents: '$(Build.SourcesDirectory)/build/linux/x64/release/bundle/**'
+      #     targetFolder: '$(build.artifactStagingDirectory)/linux/release'
+
+      # - task: PublishBuildArtifacts@1
+      #   displayName: "Publish artifacts"
+      #   inputs:
+      #     ArtifactName: 'prod-linux-snap'

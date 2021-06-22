@@ -15,4 +15,10 @@ parts:
   saiive-live:
     source: .
     plugin: flutter
-    flutter-target: lib/main-prod.dart
+    flutter-target: lib/main_prod.dart
+    build-packages:
+     - libsecret-1-dev
+     - libjsoncpp-dev
+    stage-packages:
+     - libsecret-1-dev
+     - libjsoncpp-dev

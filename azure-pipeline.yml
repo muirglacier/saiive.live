@@ -1484,7 +1484,7 @@ stages:
           ArtifactName: 'prod-linux'
 
   - job: BuildLinuxSnap
-    displayName: "Build Linux PROD"
+    displayName: "Build Linux Snap"
     pool:
       vmImage: 'ubuntu-latest'
     

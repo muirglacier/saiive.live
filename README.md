@@ -1,5 +1,5 @@
 # saiive.live
-[![Build Status](https://dev.azure.com/saiive/saiive/_apis/build/status/saiive.live?branchName=main)](https://dev.azure.com/saiive/saiive/_build/latest?definitionId=23&branchName=main)
+[![Build Status](https://dev.azure.com/saiive/saiive.live/_apis/build/status/saiive.live?branchName=main)](https://dev.azure.com/saiive/saiive.live/_build/latest?definitionId=23&branchName=main)
 
 A mobile application for [DeFiChain](https://defichain.com/).
 

@@ -43,6 +43,12 @@ stages:
         inputs:
           ArtifactName: 'release-notes'
 
+      - task: git-tag-on-release-task@9
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+        displayName: "Add Tag to git"
+        inputs:
+          staticTagName: "$(AppVersion).$(Build.BuildNumber)"
+
 - stage: Test
   displayName: Test
   dependsOn: [Pre]

@@ -1235,3 +1235,199 @@ stages:
         displayName: "Publish artifacts"
         inputs:
           ArtifactName: 'prod-windows'
+
+- stage: Linux
+  displayName: Linux
+  dependsOn: [Test]
+
+  jobs:
+          
+  - job: BuildLinuxDev
+    displayName: "Build Linux DEV"
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter doctor -v
+            $(FlutterToolPath)/flutter precache
+
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
+      
+      - task: Bash@3
+        displayName: "prepare signing"
+        inputs:
+          targetType: 'inline'
+          workingDirectory: $(Build.SourcesDirectory)
+          script: |
+            chmod 755 .devops/android_key_properties.sh
+            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
+            .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
+
+      - task: FlutterBuild@0
+        displayName: Linux Debug
+        inputs:
+          target: 'linux'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          debugMode: true
+          buildFlavour: 'dev'
+          entryPoint: 'lib/main.dart'
+          buildNumber: $(Build.BuildNumber)
+
+          
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/linux/debug'
+
+      - task: Bash@3
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter clean
+            $(FlutterToolPath)/flutter precache
+    
+            
+      - task: FlutterBuild@0
+        displayName: Linux Release
+        inputs:
+          target: 'linux'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          buildFlavour: 'devappcenter'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/linux/release'
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'dev-linux'
+
+  - job: BuildLinuxStaging
+    displayName: "Build Linux STAGING"
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion)
+
+      - task: Bash@3
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter clean
+            
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+            
+      - task: FlutterBuild@0
+        displayName: Linux Release
+        inputs:
+          target: 'linux'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)'
+          buildFlavour: 'stagingappcenter'
+          entryPoint: 'lib/main_staging.dart'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/linux/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'staging-linux'
+  
+  - job: BuildLinuxProd
+    displayName: "Build Linux PROD"
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion)
+
+      - task: Bash@3
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter clean
+            
+      - task: Bash@3
+        displayName: "Flutter build icons"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)/flutter pub get
+            $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+
+      - task: FlutterBuild@0
+        displayName: Linux Release
+        inputs:
+          target: 'linux'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          buildFlavour: 'prodgooglePlay'
+          entryPoint: 'lib/main_prod.dart'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)/linux/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-linux'

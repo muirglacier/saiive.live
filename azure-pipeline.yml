@@ -7,6 +7,7 @@ name: $(BuildID)
 variables:
 - group: saiive.live
 
+
 stages:
 - stage: Pre
   displayName: Pre
@@ -18,6 +19,15 @@ stages:
       vmImage: 'ubuntu-latest'
 
     steps:
+      - checkout: self
+        persistCredentials: true
+
+      - script: |
+          git tag $(AppVersion).$(Build.BuildNumber)
+          git push origin $(AppVersion).$(Build.BuildNumber)
+        workingDirectory: $(Build.SourcesDirectory)
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+
       - task: Bash@3
         displayName: "Prepare"
         inputs:
@@ -42,12 +52,6 @@ stages:
         displayName: "Publish artifacts"
         inputs:
           ArtifactName: 'release-notes'
-
-      - task: git-tag-on-release-task@9
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-        displayName: "Add Tag to git"
-        inputs:
-          staticTagName: "$(AppVersion).$(Build.BuildNumber)"
 
 - stage: Test
   displayName: Test

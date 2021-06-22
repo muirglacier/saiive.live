@@ -1315,10 +1315,10 @@ stages:
           targetFolder: '$(build.artifactStagingDirectory)/linux/debug'
 
       - task: CopyFiles@2
-          displayName: "Copy artifacts"
-          inputs:
-            contents: '$(Build.SourcesDirectory)/build/linux/x64/debug/plugins/**/*.so'
-            targetFolder: '$(build.artifactStagingDirectory)/linux/debug/build/linux/x64/debug/bundle/lib'
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)/build/linux/x64/debug/plugins/**/*.so'
+          targetFolder: '$(build.artifactStagingDirectory)/linux/debug/build/linux/x64/debug/bundle/lib'
 
       - task: Bash@3
         displayName: "Flutter clean"

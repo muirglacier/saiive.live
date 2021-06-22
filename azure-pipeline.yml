@@ -1269,8 +1269,9 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5
+            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
             
+            $(FlutterToolPath)/flutter config --enable-linux-desktop
             $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
             $(FlutterToolPath)/flutter doctor -v
 
@@ -1282,16 +1283,7 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-dev.yaml 
-      
-      - task: Bash@3
-        displayName: "prepare signing"
-        inputs:
-          targetType: 'inline'
-          workingDirectory: $(Build.SourcesDirectory)
-          script: |
-            chmod 755 .devops/android_key_properties.sh
-            echo $(android-upload-key-base64) | base64 --decode > $(Build.SourcesDirectory)/upload-key.jks
-            .devops/android_key_properties.sh $(android-upload-key-password) $(Build.SourcesDirectory)/upload-key.jks
+    
 
       - task: FlutterBuild@0
         displayName: Linux Debug
@@ -1377,7 +1369,9 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5
+            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
+            
+            $(FlutterToolPath)/flutter config --enable-linux-desktop
             $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
             $(FlutterToolPath)/flutter doctor -v
             
@@ -1438,7 +1432,9 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5
+            sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
+            
+            $(FlutterToolPath)/flutter config --enable-linux-desktop
             $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
             $(FlutterToolPath)/flutter doctor -v
 

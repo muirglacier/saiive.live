@@ -1,0 +1,18 @@
+name: saiive-live
+version: 99.99.99
+summary: saiive.live - DeFi Wallet
+description: DeFi Wallet for DeFiChain Blockchain
+confinement: strict
+base: core18
+grade: stable
+apps:
+  saiive-live:
+    command: saiive-live
+    extensions: [flutter-master]
+    plugs:
+    - network
+parts:
+  saiive-live:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main-prod.dart

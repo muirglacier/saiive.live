@@ -1262,7 +1262,15 @@ stages:
           script: |
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter doctor -v
-            $(FlutterToolPath)/flutter precache
+            $(FlutterToolPath)/flutter precache        
+                
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
+            $(FlutterToolPath)/flutter doctor
 
       - task: Bash@3
         displayName: "Flutter build icons"
@@ -1361,6 +1369,14 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-staging.yaml 
+                        
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
+            $(FlutterToolPath)/flutter doctor
             
       - task: FlutterBuild@0
         displayName: Linux Release
@@ -1413,6 +1429,14 @@ stages:
             cd $(Build.SourcesDirectory)
             $(FlutterToolPath)/flutter pub get
             $(FlutterToolPath)/flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+            
+      - task: Bash@3
+        displayName: "Flutter prepare"
+        inputs:
+          targetType: 'inline'
+          script: |
+            $(FlutterToolPath)/flutter create --org saiive.live --platforms=linux .
+            $(FlutterToolPath)/flutter doctor
 
       - task: FlutterBuild@0
         displayName: Linux Release

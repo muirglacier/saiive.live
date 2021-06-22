@@ -1301,7 +1301,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.apk'
+          contents: '$(Build.SourcesDirectory)/build/linux/x64/debug/bundle/**'
           targetFolder: '$(build.artifactStagingDirectory)/linux/debug'
 
       - task: Bash@3
@@ -1327,8 +1327,9 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.apk'
+          contents: '$(Build.SourcesDirectory)/build/linux/x64/release/bundle/**'
           targetFolder: '$(build.artifactStagingDirectory)/linux/release'
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
@@ -1389,7 +1390,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.apk'
+          contents: '$(Build.SourcesDirectory)/build/linux/x64/release/bundle/**'
           targetFolder: '$(build.artifactStagingDirectory)/linux/release'
 
       - task: PublishBuildArtifacts@1
@@ -1452,7 +1453,7 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '**/*.apk'
+          contents: '$(Build.SourcesDirectory)/build/linux/x64/release/bundle/**'
           targetFolder: '$(build.artifactStagingDirectory)/linux/release'
 
       - task: PublishBuildArtifacts@1

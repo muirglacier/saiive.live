@@ -1012,8 +1012,8 @@ stages:
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('certificate_path', 'certificate_path=windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('certificate_path', 'certificate_password=$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('certificate_path', 'certificate_path:windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('certificate_path', 'certificate_password:$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
            
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
@@ -1133,8 +1133,8 @@ stages:
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'certificate_path=windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_password', 'certificate_password=$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'certificate_path:windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_password', 'certificate_password:$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
            
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc) 
@@ -1226,8 +1226,8 @@ stages:
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'certificate_path=windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_password', 'certificate_password=$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'certificate_path:windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_password', 'certificate_password:$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
            
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
@@ -1311,7 +1311,7 @@ stages:
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
-           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'store=true') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'store:true') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
            
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)

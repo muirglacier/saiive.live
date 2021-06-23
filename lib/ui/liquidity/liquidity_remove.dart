@@ -19,6 +19,7 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wakelock/wakelock.dart';
 
 class LiquidityRemoveScreen extends StatefulWidget {
   final PoolShareLiquidity liquidity;
@@ -64,6 +65,8 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
   var _percentageTextController = TextEditingController(text: '100');
 
   Future removeLiquidity() async {
+    Wakelock.enable();
+
     final wallet = sl.get<DeFiChainWallet>();
 
     var totalToRemove = amountToRemove;
@@ -111,6 +114,8 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
 
       Navigator.popUntil(context, ModalRoute.withName('/home'));
     }
+
+    Wakelock.disable();
   }
 
   handleChangePercentage() {

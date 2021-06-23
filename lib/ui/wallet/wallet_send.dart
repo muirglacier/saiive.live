@@ -22,6 +22,7 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock/wakelock.dart';
 
 class WalletSendScreen extends StatefulWidget {
   final String token;
@@ -43,6 +44,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
   Future sendFunds(StreamController<String> stream) async {
     try {
+      Wakelock.enable();
+
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
 
@@ -71,6 +74,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
       ));
+    } finally {
+      Wakelock.disable();
     }
   }
 

@@ -979,6 +979,12 @@ stages:
       vmImage: 'windows-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          RunAsPreJob: true
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1001,9 +1007,14 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+           [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("$(windows-sign-key)")) | Set-Content $(Build.SourcesDirectory)/windows-sign-key.pfx
+
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('certificate_path', 'certificate_path=windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('certificate_path', 'certificate_password=$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
       
@@ -1091,6 +1102,13 @@ stages:
       vmImage: 'windows-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          RunAsPreJob: true
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1110,11 +1128,16 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+           [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("$(windows-sign-key)")) | Set-Content $(Build.SourcesDirectory)/windows-sign-key.pfx
+
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'certificate_path=windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_password', 'certificate_password=$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
-           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc) 
            
       - task: CmdLine@2
         displayName: "Flutter enable windows"
@@ -1170,6 +1193,12 @@ stages:
       vmImage: 'windows-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          RunAsPreJob: true
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1192,9 +1221,98 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+           [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String("$(windows-sign-key)")) | Set-Content $(Build.SourcesDirectory)/windows-sign-key.pfx
+
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'certificate_path=windows-sign-key.pfx') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_password', 'certificate_password=$(windows-sign-key-password)') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
+
+      - task: CmdLine@2
+        displayName: "Flutter enable windows"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter config --enable-windows-desktop
+            
+      - task: CmdLine@2
+        displayName: "Flutter build icons"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub get
+            $(FlutterToolPath)\flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons-prod.yaml 
+
+            cd windows/runner/resources
+            xcopy /Y app_icon_prod.ico app_icon.ico
+            
+      - task: FlutterBuild@0
+        displayName: Windows Release
+        inputs:
+          target: 'windows'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)
+          buildFlavour: 'prod'
+          entryPoint: 'lib/main_prod.dart'
+          buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main_prod.dart
+
+          
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
+          targetFolder: '$(build.artifactStagingDirectory)/windows/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-windows'
+
+  - job: BuildWindowsProdStore
+    displayName: "Build Windows PROD Store"
+    pool:
+      vmImage: 'windows-latest'
+    
+    steps:
+      - task: FlutterInstall@0
+        displayName: "Flutter install"
+        inputs:
+          channel: 'stable'
+          version: 'custom'
+          customVersion: $(FlutterVersion) 
+
+      - task: CmdLine@2
+        displayName: "Flutter clean"
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter clean
+
+                  
+      - task: PowerShell@2
+        displayName: "Set windows build version"
+        inputs:
+          targetType: 'inline'
+          script: |
+
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99.99.99', '$(AppVersion).$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc).replace('99,99,99', '$(AppVersion_Major),$(AppVersion_Minor),$(Build.BuildNumber)') | Set-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('99.99.99.99', '$(AppVersion_Major).$(AppVersion_Minor).$(Build.BuildNumber).0') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           (Get-Content $(Build.SourcesDirectory)/pubspec.yaml).replace('#certificate_path', 'store=true') | Set-Content $(Build.SourcesDirectory)/pubspec.yaml
+           
            (Get-Content $(Build.SourcesDirectory)/pubspec.yaml)
            (Get-Content $(Build.SourcesDirectory)/windows/runner/Runner.rc)
 

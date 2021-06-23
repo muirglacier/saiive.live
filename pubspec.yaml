@@ -136,3 +136,5 @@ msix_config:
   architecture: x64
   # See https://docs.microsoft.com/en-us/windows/uwp/packaging/app-capability-declarations
   capabilities: "internetClient"
+  #certificate_path
+  #certificate_password

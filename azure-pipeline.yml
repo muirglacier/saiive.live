@@ -1080,6 +1080,23 @@ stages:
           buildFlavour: 'dev'
           buildNumber: $(Build.BuildNumber)
 
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
+          targetFolder: '$(build.artifactStagingDirectory)/windows/release'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'dev-windows'
+
+      - task: CmdLine@2
+        displayName: "Clean artifacts"
+        inputs:
+          script: |
+            rm -rf '$(build.artifactStagingDirectory)/*'
+
       - task: CmdLine@2
         displayName: "Flutter run msix"
         inputs:
@@ -1090,12 +1107,13 @@ stages:
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\**'
-          targetFolder: '$(build.artifactStagingDirectory)/windows/release'
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\*.msix'
+          targetFolder: '$(build.artifactStagingDirectory)/'
+
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
-          ArtifactName: 'dev-windows'
+          ArtifactName: 'dev-windows-setup'
 
   - job: BuildWindowsStaging
     displayName: "Build Windows STAGING"
@@ -1171,13 +1189,6 @@ stages:
           buildNumber: $(Build.BuildNumber)
           extraArgs: --target=lib/main_staging.dart
 
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)\flutter pub run msix:create
-
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -1189,6 +1200,30 @@ stages:
         inputs:
           ArtifactName: 'staging-windows'
   
+      - task: CmdLine@2
+        displayName: "Clean artifacts"
+        inputs:
+          script: |
+            rm -rf '$(build.artifactStagingDirectory)/*'
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\*.msix'
+          targetFolder: '$(build.artifactStagingDirectory)/'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'staging-windows-setup'
+
   - job: BuildWindowsProd
     displayName: "Build Widnows PROD"
     pool:
@@ -1264,14 +1299,6 @@ stages:
           buildNumber: $(Build.BuildNumber)
           extraArgs: --target=lib/main_prod.dart
 
-          
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)\flutter pub run msix:create
-
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -1282,6 +1309,30 @@ stages:
         displayName: "Publish artifacts"
         inputs:
           ArtifactName: 'prod-windows'
+
+      - task: CmdLine@2
+        displayName: "Clean artifacts"
+        inputs:
+          script: |
+            rm -rf '$(build.artifactStagingDirectory)/*'
+
+      - task: CmdLine@2
+        displayName: "Flutter run msix"
+        inputs:
+          script: |
+            cd $(Build.SourcesDirectory)
+            $(FlutterToolPath)\flutter pub run msix:create
+
+      - task: CopyFiles@2
+        displayName: "Copy artifacts"
+        inputs:
+          contents: '$(Build.SourcesDirectory)\build\windows\runner\Release\*.msix'
+          targetFolder: '$(build.artifactStagingDirectory)/'
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish artifacts"
+        inputs:
+          ArtifactName: 'prod-windows-setup'
 
   - job: BuildWindowsProdStore
     displayName: "Build Windows PROD Store"
@@ -1349,14 +1400,6 @@ stages:
           buildNumber: $(Build.BuildNumber)
           extraArgs: --target=lib/main_prod.dart
 
-          
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)\flutter pub run msix:create
-
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -1366,7 +1409,7 @@ stages:
       - task: PublishBuildArtifacts@1
         displayName: "Publish artifacts"
         inputs:
-          ArtifactName: 'prod-windows'
+          ArtifactName: 'prod-windows-store'
 
 - stage: Linux
   displayName: Linux

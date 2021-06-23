@@ -130,7 +130,6 @@ msix_config:
   display_name: saiive.live - DeFi Wallet
   publisher_display_name: saiive.live
   publisher: CN=saiive.live
-  
   msix_version: 99.99.99.99
   icons_background_color: "#00ADB5"
   architecture: x64

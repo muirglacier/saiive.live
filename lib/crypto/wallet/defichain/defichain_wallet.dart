@@ -131,6 +131,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
     var useAddress = accountB.address;
     if (accountA.address == accountB.address) {
+      //TODO: try to get an available address so we do not need to generate an auth tx again!
       useAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
     }
 

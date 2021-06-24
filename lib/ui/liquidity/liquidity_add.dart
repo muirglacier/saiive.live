@@ -26,6 +26,7 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wakelock/wakelock.dart';
 
 class LiquidityAddScreen extends StatefulWidget {
   @override
@@ -343,6 +344,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   }
 
   Future addLiquidity() async {
+    Wakelock.enable();
+
     final wallet = sl.get<DeFiChainWallet>();
     final walletTo = await wallet.getPublicKey(AddressType.P2SHSegwit);
 
@@ -396,6 +399,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
         "shareAddress": walletTo,
         "error": e.toString()
       });
+    } finally {
+      Wakelock.disable();
     }
   }
 

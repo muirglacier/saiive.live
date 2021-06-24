@@ -28,6 +28,7 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
+import 'package:wakelock/wakelock.dart';
 
 class DexScreen extends StatefulWidget {
   @override
@@ -428,6 +429,8 @@ class _DexScreen extends State<DexScreen> {
   }
 
   Future doSwap() async {
+    Wakelock.enable();
+
     final wallet = sl.get<DeFiChainWallet>();
 
     if (wallet.isLocked()) {
@@ -472,6 +475,8 @@ class _DexScreen extends State<DexScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("swapFailure",
           <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": valueFrom.toString(), "walletTo": walletTo, "error": e.toString()});
+    } finally {
+      Wakelock.disable();
     }
   }
 

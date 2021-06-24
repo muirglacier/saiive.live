@@ -86,6 +86,7 @@
 
   
   "wallet_operation_failed": "Transaktionsfehler :(",
+  "wallet_operation_wait_for_confirmation": "Warte auf Bestätigung...",
   "wallet_operation_success": "Transaktion war erfolgreich :)",
   "wallet_operation_show_tx": "Transaktion im Explorer anzeigen...",
   "wallet_operation_refresh_utxo": "UTXO aktualisieren...",

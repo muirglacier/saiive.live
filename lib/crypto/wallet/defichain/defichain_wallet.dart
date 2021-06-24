@@ -166,34 +166,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txb.build().toHex();
   }
 
-  Future<Tuple2<List<FromAccount>, List<tx.Transaction>>> _getNeededAccounts(List<Account> accounts, int amount, {List<String> excludeAddresses}) async {
-    var curAmount = 0;
-    var useAccounts = List<FromAccount>.empty(growable: true);
-    final fees = 0;
-
-    final inputTxs = List<tx.Transaction>.empty(growable: true);
-
-    for (final tx in accounts) {
-      if (excludeAddresses != null && excludeAddresses.contains(tx.address)) {
-        continue;
-      }
-
-      final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
-      useAccounts.add(fromAccount);
-
-      inputTxs.add(await getAuthInputsSmart(tx.address, AuthTxMin, fees));
-      if ((curAmount + tx.balance) >= amount) {
-        fromAccount.amount = amount;
-        break;
-      } else {
-        fromAccount.amount = tx.balance - curAmount;
-      }
-      curAmount += tx.balance;
-    }
-
-    return Tuple2(useAccounts, inputTxs);
-  }
-
   Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
       {StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
@@ -353,10 +325,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       lastTxId = txD.txId;
 
       if ((curAmount + txs.balance) >= amount) {
-        fromAccount.amount = amount;
         break;
-      } else {
-        fromAccount.amount = txs.balance - curAmount;
       }
       curAmount += txs.balance;
     }

@@ -127,7 +127,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     if (amountA > accountA.balance) {
       //handle account to account - move account balance to new address
-      await createAccountTransaction(tokenA, amountA, accountA.address, loadingStream: loadingStream);
+      await createAccountTransaction(tokenA, amountA - accountA.balance, accountA.address, loadingStream: loadingStream);
     }
     var useAddress = accountB.address;
     if (accountA.address == accountB.address) {
@@ -143,8 +143,15 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     if (amountB > accountB.balance || accountA.address == accountB.address) {
       //handle account to account - move account balance to new address
+      var useAmountB = amountB;
 
-      await createAccountTransaction(tokenB, amountB, useAddress, loadingStream: loadingStream);
+      if (accountA.address == accountB.address) {
+        useAmountB = amountB;
+      } else {
+        useAmountB = amountB - accountB.balance;
+      }
+
+      await createAccountTransaction(tokenB, useAmountB, useAddress, loadingStream: loadingStream);
     }
 
     final authInputA = await getAuthInputsSmart(accountA.address, AuthTxMin, 0, loadingStream: loadingStream);
@@ -233,12 +240,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     if (fromAmount > fromAccount.balance) {
-      await createAccountTransaction(fromToken, fromAmount - fromAccount.balance, fromAccount.address, excludeAddresses: [fromAccount.address]);
+      await createAccountTransaction(fromToken, fromAmount - fromAccount.balance, fromAccount.address, excludeAddresses: [fromAccount.address], loadingStream: loadingStream);
     }
-    await getAuthInputsSmart(fromAccount.address, AuthTxMin, fees);
+    await getAuthInputsSmart(fromAccount.address, AuthTxMin, fees, loadingStream: loadingStream);
 
     final txb = await createBaseTransaction(0, to, changeAddress, fees, (txb, inputTxs, nw) async {
-      var tx = await getAuthInputsSmart(fromAccount.address, AuthTxMin, fees);
+      var tx = await getAuthInputsSmart(fromAccount.address, AuthTxMin, fees, loadingStream: loadingStream);
 
       txb.addSwapOutput(fromTok.id, fromAccount.address, fromAmount, toTok.id, to, maxPrice, maxPriceFraction);
 
@@ -312,53 +319,48 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final accounts = await walletDatabase.getAccountBalancesForToken(token);
     final useAccounts = List<FromAccount>.empty(growable: true);
-    final keys = List<ECPair>.empty(growable: true);
     var fee = await getTxFee(0, 0);
 
     if (sendMax) {
       fee *= -1;
     }
 
-    final inputTxs = List<tx.Transaction>.empty(growable: true);
-
     var curAmount = 0;
-    for (final tx in accounts) {
-      if (tx.address == to) {
+    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+    var lastTxId = "";
+    for (final txs in accounts) {
+      if (txs.address == to) {
         continue;
       }
 
-      final fromAccount = FromAccount(address: tx.address, amount: tx.balance);
+      final inputTxs = List<tx.Transaction>.empty(growable: true);
+      final keys = List<ECPair>.empty(growable: true);
+
+      final fromAccount = FromAccount(address: txs.address, amount: txs.balance);
       useAccounts.add(fromAccount);
 
-      final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+      final addressInfo = await walletDatabase.getWalletAddress(txs.address);
 
-      inputTxs.add(await getAuthInputsSmart(tx.address, AuthTxMin, fee, loadingStream: loadingStream));
+      inputTxs.add(await getAuthInputsSmart(txs.address, AuthTxMin, fee, loadingStream: loadingStream));
 
       final keyPair = HdWalletUtil.getKeyPair(key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, addressInfo.chain, addressInfo.network);
       keys.add(keyPair);
 
-      if ((curAmount + tx.balance) >= amount) {
-        fromAccount.amount = amount;
-        break;
-      } else {
-        fromAccount.amount = tx.balance - curAmount;
-      }
-      curAmount += tx.balance;
-    }
-
-    if (inputTxs.isEmpty) {
-      return null;
-    }
-
-    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
-    var lastTxId = "";
-    for (var authAddress in useAccounts) {
-      final txb = await HdWalletUtil.buildAccountToAccountTransaction(inputTxs, authAddress, keys, tokenType.id, to, amount, fee, changeAddress, chain, network);
+      final txb = await HdWalletUtil.buildAccountToAccountTransaction(inputTxs, fromAccount, keys, tokenType.id, to, amount, fee, changeAddress, chain, network);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       var txD = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb.build().toHex(), inputTxs, changeAddress), loadingStream: loadingStream);
 
       lastTxId = txD.txId;
+
+      if ((curAmount + txs.balance) >= amount) {
+        fromAccount.amount = amount;
+        break;
+      } else {
+        fromAccount.amount = txs.balance - curAmount;
+      }
+      curAmount += txs.balance;
     }
+
     return lastTxId;
   }
 
@@ -388,8 +390,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var txHex = await createAuthTx(pubKey, amount, loadingStream: loadingStream);
     var txData = await createTxAndWait(txHex, loadingStream: loadingStream);
     final retOut = txData.details.outputs.firstWhere((element) => element.spentHeight <= 0 && element.address == pubKey);
-    loadingStream?.add(S.current.wallet_operation_wait_for_confirmation);
-    await Future.delayed(Duration(seconds: 5));
+    // loadingStream?.add(S.current.wallet_operation_wait_for_confirmation);
+    // await Future.delayed(Duration(seconds: 5));
     return retOut;
   }
 

@@ -18,6 +18,7 @@ import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/wallet/wallet_home_receive.dart';
 import 'package:saiive.live/ui/wallet/wallet_token.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   _initWallet() async {
+    // return;
     if (await _wallet.hasAccounts()) {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
     }
@@ -277,7 +279,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
   buildWalletScreen(BuildContext context) {
     if (_accountBalance == null) {
-      return;
+      return LoadingWidget(text: S.of(context).loading);
     }
 
     if (_accountBalance.isEmpty) {

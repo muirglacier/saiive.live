@@ -58,7 +58,11 @@ dependencies:
   pull_to_refresh: ^2.0.0
   auto_size_text: ^2.1.0
   qr_flutter: ^4.0.0
-  flutter_qr_reader: 1.0.3 #do not update
+  flutter_qr_reader:
+    git: 
+      url: git://github.com/saiive/flutter_qr_reader
+      ref: master
+
   flutter_launcher_icons: ^0.9.0
   clipboard_manager: ^0.0.4
   flutter_icons: ^1.1.0

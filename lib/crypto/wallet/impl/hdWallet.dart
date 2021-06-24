@@ -45,7 +45,7 @@ class HdWallet extends IHdWallet {
       for (final address in addresses) {
         final pubKey = address.publicKey;
         final pathString = address.account.toString() + "/" + (address.isChangeAddress ? "1" : "0") + "/" + address.index.toString();
-        LogHelper.instance.i("Wallet $_chain uses address $pubKey at $pathString");
+        // LogHelper.instance.i("Wallet $_chain uses address $pubKey at $pathString");
       }
 
       return;

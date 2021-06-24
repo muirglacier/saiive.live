@@ -280,9 +280,11 @@ packages:
   flutter_qr_reader:
     dependency: "direct main"
     description:
-      name: flutter_qr_reader
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "41da917c996269ff255bad123db09c6a4e356b96"
+      url: "git://github.com/saiive/flutter_qr_reader"
+    source: git
     version: "1.0.3"
   flutter_screen_lock:
     dependency: "direct main"

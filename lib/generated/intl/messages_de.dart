@@ -158,6 +158,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird gesendet"),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Transaktion im Explorer anzeigen..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaktion war erfolgreich :)"),
+    "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Warte auf Bestätigung..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
     "wallet_receive_warning" : m3,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter Test"),

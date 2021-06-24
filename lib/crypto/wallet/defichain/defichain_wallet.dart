@@ -36,9 +36,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     await walletMutex.acquire();
 
     try {
-      var addLiq = await removePoolLiquidity(token, amount, shareAddress, loadingStream: loadingStream);
+      var removeLiq = await removePoolLiquidity(token, amount, shareAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
-      return await createTxAndWait(addLiq, loadingStream: loadingStream);
+      return await createTxAndWait(removeLiq, loadingStream: loadingStream);
     } finally {
       walletMutex.release();
     }
@@ -131,8 +131,14 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
     var useAddress = accountB.address;
     if (accountA.address == accountB.address) {
-      //TODO: try to get an available address so we do not need to generate an auth tx again!
-      useAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+      var utxos = await walletDatabase.getUnspentTransactions();
+      var otherUtxos = utxos.where((element) => element.address != accountA.address);
+
+      if (otherUtxos.isNotEmpty) {
+        useAddress = otherUtxos.first.address;
+      } else {
+        useAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+      }
     }
 
     if (amountB > accountB.balance || accountA.address == accountB.address) {
@@ -382,7 +388,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var txHex = await createAuthTx(pubKey, amount, loadingStream: loadingStream);
     var txData = await createTxAndWait(txHex, loadingStream: loadingStream);
     final retOut = txData.details.outputs.firstWhere((element) => element.spentHeight <= 0 && element.address == pubKey);
-
+    loadingStream?.add(S.current.wallet_operation_wait_for_confirmation);
+    await Future.delayed(Duration(seconds: 5));
     return retOut;
   }
 

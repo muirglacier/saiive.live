@@ -615,6 +615,16 @@ class S {
     );
   }
 
+  /// `Wait for confirmation...`
+  String get wallet_operation_wait_for_confirmation {
+    return Intl.message(
+      'Wait for confirmation...',
+      name: 'wallet_operation_wait_for_confirmation',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Transaction was successful :)`
   String get wallet_operation_success {
     return Intl.message(

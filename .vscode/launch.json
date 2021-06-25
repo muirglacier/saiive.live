@@ -6,7 +6,6 @@
             "request": "launch",
             "program": "lib/main.dart",
             "type": "dart",
-            
             "env": [
                 "ENVFILE=.env-Debug"
             ],
@@ -39,6 +38,26 @@
             "args": [
                 "--flavor",
                 "prodappcenter"
+            ]
+        },
+        {
+            "name": "Integration Tests: Launch App",
+            "request": "launch",
+            "program": "test_driver/app.dart",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "devappcenter"
+            ]
+        },
+        {
+            "name": "Integration Tests: Launch Driver",
+            "request": "launch",
+            "program": "test_driver/app_test.dart",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "devappcenter"
             ]
         }
     ]

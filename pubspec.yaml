@@ -112,6 +112,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   msix: ^2.1.2
+  flutter_driver:
+    sdk: flutter
+  test:
 
 flutter_intl:
   enabled: true

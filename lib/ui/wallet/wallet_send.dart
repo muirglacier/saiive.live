@@ -148,6 +148,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                     child: Container(
                         child: TextField(
                             controller: _addressController,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               hintText: S.of(context).wallet_send_address,
                               suffixIcon: IconButton(

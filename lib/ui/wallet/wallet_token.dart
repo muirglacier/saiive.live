@@ -205,7 +205,10 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   buildFloatingActions(BuildContext context) {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
+    final bool useMobileLayout = shortestSide < 600;
+
+    if (useMobileLayout) {
       return Container();
     }
     return Container(
@@ -255,31 +258,35 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   buildActions(BuildContext context) {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      final width = MediaQuery.of(context).size.width;
-      return Padding(
-        padding: EdgeInsets.only(top: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 10, onPressed: () async {
-                  await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
+    var shortestSide = MediaQuery.of(context).size.shortestSide;
+    final bool useMobileLayout = shortestSide < 600;
 
-                  Navigator.of(context).pop();
-                })),
-            AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
-              var wallet = sl.get<IWalletService>();
-              var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
-              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
-            })
-          ],
-        ),
-      );
+    if (useMobileLayout) {
+      return Container();
     }
-    return Container();
+
+    final width = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).send, icon: Icons.arrow_upward, width: width / 2 - 10, onPressed: () async {
+                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
+
+                Navigator.of(context).pop();
+              })),
+          AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
+            var wallet = sl.get<IWalletService>();
+            var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
+            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
+          })
+        ],
+      ),
+    );
   }
 
   buildView(BuildContext context) {

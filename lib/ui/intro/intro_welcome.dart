@@ -131,20 +131,23 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
         Container(
             child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).welcome_wallet_create,
                 onPressed: () => {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => IntroLegalScreen("/intro_wallet_new")))},
-                icon: Icons.account_balance_wallet)),
+                icon: Icons.account_balance_wallet,
+                key: const Key("wallet_new"))),
         SizedBox(height: 10),
         Container(
             child: AppButton.buildAppButton(context, AppButtonType.SECONDARY, S.of(context).welcome_wallet_restore,
-                onPressed: () => {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => IntroLegalScreen("/intro_wallet_restore")))}, icon: Icons.list)),
+                onPressed: () => {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => IntroLegalScreen("/intro_wallet_restore")))},
+                icon: Icons.list,
+                key: const Key("wallet_restore"))),
         SizedBox(height: 10),
         if (_curTheme?.theme == ThemeOptions.DEFI_DARK)
           Container(
               child: AppButton.buildAppButton(context, AppButtonType.SECONDARY, S.of(context).light_mode,
-                  onPressed: () => {setTheme(ThemeOptions.DEFI_LIGHT)}, icon: FontAwesome5.sun)),
+                  onPressed: () => {setTheme(ThemeOptions.DEFI_LIGHT)}, icon: FontAwesome5.sun, key: const Key("theme_light"))),
         if (_curTheme?.theme == ThemeOptions.DEFI_LIGHT)
           Container(
               child: AppButton.buildAppButton(context, AppButtonType.SECONDARY, S.of(context).dark_mode,
-                  onPressed: () => {setTheme(ThemeOptions.DEFI_DARK)}, icon: FontAwesome5.moon)),
+                  onPressed: () => {setTheme(ThemeOptions.DEFI_DARK)}, icon: FontAwesome5.moon, key: const Key("theme_dakr"))),
       ]),
     );
   }

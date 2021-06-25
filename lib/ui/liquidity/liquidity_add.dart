@@ -454,9 +454,9 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 }))
       ]),
       TextField(
-        controller: _amountTokenAController,
-        decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-      ),
+          controller: _amountTokenAController,
+          decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+          keyboardType: TextInputType.number),
       Row(children: [
         Expanded(
             flex: 1,
@@ -493,10 +493,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                   handleSetMaxTokenB();
                 }))
       ]),
-      TextField(
-        controller: _amountTokenBController,
-        decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b),
-      ),
+      TextField(controller: _amountTokenBController, decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b), keyboardType: TextInputType.number),
       if (_insufficientFunds)
         Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),

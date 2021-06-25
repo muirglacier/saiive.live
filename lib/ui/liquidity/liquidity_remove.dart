@@ -151,13 +151,12 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
           SizedBox(
             width: 80,
             child: TextField(
-              keyboardType: TextInputType.number,
-              maxLength: 3,
-              inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
-              textAlign: TextAlign.right,
-              decoration: InputDecoration(labelText: '', counterText: '', suffix: Text('%')),
-              controller: _percentageTextController,
-            ),
+                keyboardType: TextInputType.number,
+                maxLength: 3,
+                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
+                textAlign: TextAlign.right,
+                decoration: InputDecoration(labelText: '', counterText: '', suffix: Text('%')),
+                controller: _percentageTextController),
           ),
           Expanded(
               flex: 4,

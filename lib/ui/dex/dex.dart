@@ -546,10 +546,7 @@ class _DexScreen extends State<DexScreen> {
                             handleSetMaxFrom();
                           }))
                 ]),
-                TextField(
-                  controller: _amountFromController,
-                  decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
-                ),
+                TextField(controller: _amountFromController, decoration: InputDecoration(hintText: S.of(context).dex_from_amount), keyboardType: TextInputType.number),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -598,10 +595,7 @@ class _DexScreen extends State<DexScreen> {
                             handleSetMaxTo();
                           }))
                 ]),
-                TextField(
-                  controller: _amountToController,
-                  decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
-                ),
+                TextField(controller: _amountToController, decoration: InputDecoration(hintText: S.of(context).dex_to_amount), keyboardType: TextInputType.number),
                 if (_insufficientFunds)
                   Column(children: [
                     Padding(padding: EdgeInsets.only(top: 10)),

@@ -587,7 +587,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --target=lib/main.dart --build-name=$(AppVersion) --verbose --debug
+            $(FlutterToolPath)/flutter build macos --target=lib/main.dart --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -708,7 +708,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --target=lib/main_staging.dart --build-name=$(AppVersion) --verbose --debug
+            $(FlutterToolPath)/flutter build macos --target=lib/main_staging.dart --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'
@@ -828,7 +828,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --release
+            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --verbose --release
 
       - task: Bash@3
         displayName: 'Create .pkg'
@@ -935,7 +935,7 @@ stages:
           targetType: 'inline'
           script: |
             cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --verbose --debug
+            $(FlutterToolPath)/flutter build macos --target=lib/main_prod.dart --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --verbose --debug
 
       - task: Bash@3
         displayName: 'Create .dmg'

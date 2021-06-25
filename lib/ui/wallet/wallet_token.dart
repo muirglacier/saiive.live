@@ -205,12 +205,6 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   buildFloatingActions(BuildContext context) {
-    var shortestSide = MediaQuery.of(context).size.shortestSide;
-    final bool useMobileLayout = shortestSide < 600;
-
-    if (useMobileLayout) {
-      return Container();
-    }
     return Container(
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
         child: Row(

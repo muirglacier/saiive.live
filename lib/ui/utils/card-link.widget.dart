@@ -44,8 +44,10 @@ class CardLinkItemWidget extends StatelessWidget {
   final String uri;
   final Color backgroundColor;
   final EdgeInsetsGeometry padding;
+  final bool openInBrowser;
+  final bool canOpenInBrowser;
 
-  CardLinkItemWidget(this.name, this.uri, {this.backgroundColor, this.padding = EdgeInsets.zero});
+  CardLinkItemWidget(this.name, this.uri, {this.backgroundColor, this.padding = EdgeInsets.zero, this.openInBrowser = false, this.canOpenInBrowser = false});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,11 @@ class CardLinkItemWidget extends StatelessWidget {
           await launch(uri);
         }
       } else {
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WebViewScreen(uri, name)));
+        if (this.openInBrowser) {
+          await launch(uri);
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WebViewScreen(uri, name, canOpenInBrowser: this.canOpenInBrowser)));
+        }
       }
     }, padding: this.padding, backgroundColor: this.backgroundColor);
   }

@@ -136,7 +136,14 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
             buttonColor: StateContainer.of(context).curTheme.primary,
             fontFamily: 'Helvetica, Arial, sans-serif',
             tabBarTheme: TabBarTheme(labelColor: appBarTextColor),
-            elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary))),
+            elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
+            cursorColor: StateContainer.of(context).curTheme.primary,
+            textSelectionColor: StateContainer.of(context).curTheme.primary,
+            textSelectionTheme: TextSelectionThemeData(cursorColor: StateContainer.of(context).curTheme.primary, selectionHandleColor: StateContainer.of(context).curTheme.primary),
+            inputDecorationTheme: InputDecorationTheme(
+                counterStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),
+                focusColor: StateContainer.of(context).curTheme.primary,
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.solid, color: StateContainer.of(context).curTheme.primary)))),
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {

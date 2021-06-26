@@ -164,7 +164,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                                   final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
                                   _addressController.text = address;
                                 },
-                                icon: Icon(Icons.camera_alt),
+                                icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
                               ),
                             ))))
               ]),
@@ -174,6 +174,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                     child: Container(
                         child: TextField(
                       controller: _amountController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
                     ))),
                 SizedBox(width: 20),

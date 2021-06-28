@@ -6,6 +6,7 @@ import 'package:saiive.live/network/network_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
 class TransactionFailScreen extends StatefulWidget {
   final String text;
@@ -87,15 +88,10 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {
-                  ClipboardManager.copyToClipBoard(_copyText).then((result) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(S.of(context).receive_address_copied_to_clipboard),
-                    ));
-                  });
-                  Clipboard.setData(new ClipboardData(text: _copyText));
+                onTap: () async {
+                  await Share.share(_copyText, subject: "Error");
                 },
-                child: Icon(Icons.copy, size: 26.0, color: Colors.white),
+                child: Icon(Icons.share, size: 26.0, color: Colors.white),
               ))
         ])));
   }

@@ -5,6 +5,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:wakelock/wakelock.dart';
 
 class WalletInitScreen extends StatefulWidget {
   WalletInitScreen();
@@ -19,15 +20,20 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
   _WalletInitScreenScreen();
 
   Future initWallet() async {
-    final wallet = sl.get<IWalletService>();
-    await wallet.init();
+    Wakelock.enable();
+    try {
+      final wallet = sl.get<IWalletService>();
+      await wallet.init();
 
-    await wallet.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
-    await wallet.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
-    await wallet.close();
+      await wallet.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
+      await wallet.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
+      await wallet.close();
 
-    await wallet.init();
-    Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+      await wallet.init();
+      Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+    } finally {
+      Wakelock.disable();
+    }
   }
 
   @override

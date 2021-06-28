@@ -84,7 +84,7 @@
   "wallet_send_amount": "Menge",
   "wallet_locked": "Wallet synchronisiert gerade!",
 
-  
+  "wallet_operation_share": "Teilen...",
   "wallet_operation_failed": "Transaktionsfehler :(",
   "wallet_operation_wait_for_confirmation": "Warte auf Bestätigung...",
   "wallet_operation_success": "Transaktion war erfolgreich :)",

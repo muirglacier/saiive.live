@@ -1,11 +1,9 @@
-import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
 class TransactionFailScreen extends StatefulWidget {
@@ -85,6 +83,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           if (widget.error != null) SizedBox(height: 30),
+          Text(S.of(context).wallet_operation_share, style: TextStyle(fontSize: 30, color: Colors.white)),
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(

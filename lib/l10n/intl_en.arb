@@ -67,6 +67,7 @@
   "wallet_recovery_phrase_title": "Recovery phrase",
   "wallet_recovery_phrase_test_title": "Recovery phrase test",
 
+  "wallet_operation_share": "Share...",
   "wallet_operation_failed": "Transaction failed :(",
   "wallet_operation_wait_for_confirmation": "Wait for confirmation...",
   "wallet_operation_success": "Transaction was successful :)",

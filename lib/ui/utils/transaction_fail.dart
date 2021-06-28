@@ -1,11 +1,10 @@
-import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
 class TransactionFailScreen extends StatefulWidget {
   final String text;
@@ -22,27 +21,29 @@ class TransactionFailScreen extends StatefulWidget {
 class _TransactionFailScreenState extends State<TransactionFailScreen> {
   String _errorText;
 
-  String _stackTrace;
+  String _copyText;
 
   transformError() {
     if (widget.error == null) {
       return;
     }
+    var stackTrace = "";
+    if (widget.error is Error) {
+      stackTrace = (widget.error as Error).stackTrace.toString();
+    }
 
     if (widget.error is HttpException) {
       final httpError = widget.error as HttpException;
       _errorText = httpError.error.error;
+      _copyText = _errorText + "\r\n" + stackTrace;
     } else if (widget.error is TransactionError) {
       final txError = widget.error as TransactionError;
       _errorText = txError.error;
+
+      _copyText = txError.copyText() + "\r\n" + stackTrace;
     } else {
       _errorText = widget.error.toString();
-    }
-
-    if (widget.error is Error) {
-      _stackTrace = (widget.error as Error).stackTrace.toString();
-    } else {
-      _stackTrace = "";
+      _copyText = _errorText + "\r\n" + stackTrace;
     }
 
     LogHelper.instance.e(_errorText);
@@ -82,23 +83,14 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           if (widget.error != null) SizedBox(height: 30),
-          if (_stackTrace != null)
-            SelectableText(
-              _stackTrace,
-              style: TextStyle(color: Colors.white, fontSize: 10),
-            ),
+          Text(S.of(context).wallet_operation_share, style: TextStyle(fontSize: 30, color: Colors.white)),
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () {
-                  ClipboardManager.copyToClipBoard(_stackTrace).then((result) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(S.of(context).receive_address_copied_to_clipboard),
-                    ));
-                  });
-                  Clipboard.setData(new ClipboardData(text: _stackTrace));
+                onTap: () async {
+                  await Share.share(_copyText, subject: "Error");
                 },
-                child: Icon(Icons.copy, size: 26.0, color: Colors.white),
+                child: Icon(Icons.share, size: 26.0, color: Colors.white),
               ))
         ])));
   }

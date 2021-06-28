@@ -5,6 +5,7 @@ import 'package:flutter_appcenter_bundle/flutter_appcenter_bundle.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 class AppCenterWrapper {
   AndroidDeviceInfo _android;
@@ -14,6 +15,14 @@ class AppCenterWrapper {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       //TODO: DESKTOP
       return;
+    }
+
+    if (Platform.isIOS) {
+      bool track = await checkIosTracking();
+
+      if (!track) {
+        return;
+      }
     }
 
     final android = env["APPCENTER_ANDROID_ID"];
@@ -77,6 +86,14 @@ class AppCenterWrapper {
       return;
     }
 
+    if (Platform.isIOS) {
+      bool track = await checkIosTracking();
+
+      if (!track) {
+        return;
+      }
+    }
+
     try {
       assert(properties != null);
 
@@ -110,5 +127,15 @@ class AppCenterWrapper {
     } on Exception catch (e) {
       LogHelper.instance.e("error track event", e);
     }
+  }
+
+  Future<bool> checkIosTracking() async {
+    final status = await AppTrackingTransparency.requestTrackingAuthorization();
+
+    if (status == TrackingStatus.denied) {
+      return false;
+    }
+
+    return true;
   }
 }

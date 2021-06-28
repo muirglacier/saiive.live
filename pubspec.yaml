@@ -107,6 +107,7 @@ dependencies:
     git: 
       url: git://github.com/saiive/flutter_screen_lock
       ref: master
+  app_tracking_transparency: ^2.0.1
   
 dev_dependencies:
   flutter_test:

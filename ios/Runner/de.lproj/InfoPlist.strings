@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  Runner
+
+  Created by Dominik Pfaffenbauer on 28.06.21.
+  
+*/
+"NSUserTrackingUsageDescription" = "Wir tracken anonyme App Aktivität und Absturzberichte";

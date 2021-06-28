@@ -1,4 +1,6 @@
 PODS:
+  - app_tracking_transparency (0.0.1):
+    - Flutter
   - AppCenter (3.3.4):
     - AppCenter/Analytics (= 3.3.4)
     - AppCenter/Crashes (= 3.3.4)
@@ -56,6 +58,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - clipboard_manager (from `.symlinks/plugins/clipboard_manager/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
@@ -83,6 +86,8 @@ SPEC REPOS:
     - FMDB
 
 EXTERNAL SOURCES:
+  app_tracking_transparency:
+    :path: ".symlinks/plugins/app_tracking_transparency/ios"
   clipboard_manager:
     :path: ".symlinks/plugins/clipboard_manager/ios"
   device_info:
@@ -125,6 +130,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
+  app_tracking_transparency: 5b1745ef9ade815f7455cb6a0848349589afb7c5
   AppCenter: 0487be185c038ed2ecc5ed38219af1dcd280af23
   clipboard_manager: f4800834e62cc26b1cc4e0a92a35cd452dd8b827
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -251,7 +253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: Column(
                         children: [
                           Image.asset('assets/logo.png', height: 100),
-                          Container(
+                          if (!Platform.isIOS) Container(
                               child: Padding(
                                   padding: EdgeInsets.only(top: 20),
                                   child: Text(
@@ -259,7 +261,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
                                   ))),
-                          Container(
+                          if (!Platform.isIOS) Container(
                               child: ElevatedButton(
                             child: Text(
                               "dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs",

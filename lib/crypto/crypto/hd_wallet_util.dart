@@ -3,6 +3,7 @@ import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/errors/InputValueEqualsTotalValueError.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/helper/logger/LogHelper.dart';
@@ -218,7 +219,8 @@ class HdWalletUtil {
     }
 
     if (totalInputValue == amount) {
-      throw ArgumentError("$totalInputValue == $amount - inputValue cannot be equal to amount, we need to pay some fees!");
+      final errorMsg = "$totalInputValue == $amount - inputValue cannot be equal to amount, we need to pay some fees!";
+      throw new InputValueEqualsTotalValueError(errorMsg, inputTxs, to, amount, fee, returnAddress);
     }
 
     if (totalInputValue > (amount)) {

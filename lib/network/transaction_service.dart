@@ -106,6 +106,7 @@ class TransactionService extends NetworkService implements ITransactionService {
     dynamic response = await this.httpService.makeHttpPostRequest('/tx/raw', coin, request);
 
     if (response is ErrorResponse) {
+      response.error += " ($rawTxHex)";
       this.handleError(response);
     }
     if (response == null) {

@@ -22,27 +22,29 @@ class TransactionFailScreen extends StatefulWidget {
 class _TransactionFailScreenState extends State<TransactionFailScreen> {
   String _errorText;
 
-  String _stackTrace;
+  String _copyText;
 
   transformError() {
     if (widget.error == null) {
       return;
     }
+    var stackTrace = "";
+    if (widget.error is Error) {
+      stackTrace = (widget.error as Error).stackTrace.toString();
+    }
 
     if (widget.error is HttpException) {
       final httpError = widget.error as HttpException;
       _errorText = httpError.error.error;
+      _copyText = _errorText + "\r\n" + stackTrace;
     } else if (widget.error is TransactionError) {
       final txError = widget.error as TransactionError;
       _errorText = txError.error;
+
+      _copyText = txError.copyText() + "\r\n" + stackTrace;
     } else {
       _errorText = widget.error.toString();
-    }
-
-    if (widget.error is Error) {
-      _stackTrace = (widget.error as Error).stackTrace.toString();
-    } else {
-      _stackTrace = "";
+      _copyText = _errorText + "\r\n" + stackTrace;
     }
 
     LogHelper.instance.e(_errorText);
@@ -82,21 +84,16 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
           if (widget.error != null) SizedBox(height: 30),
-          if (_stackTrace != null)
-            SelectableText(
-              _stackTrace,
-              style: TextStyle(color: Colors.white, fontSize: 10),
-            ),
           Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  ClipboardManager.copyToClipBoard(_stackTrace).then((result) {
+                  ClipboardManager.copyToClipBoard(_copyText).then((result) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(S.of(context).receive_address_copied_to_clipboard),
                     ));
                   });
-                  Clipboard.setData(new ClipboardData(text: _stackTrace));
+                  Clipboard.setData(new ClipboardData(text: _copyText));
                 },
                 child: Icon(Icons.copy, size: 26.0, color: Colors.white),
               ))

@@ -9,15 +9,15 @@ A mobile application for [DeFiChain](https://defichain.com/).
  - Donate $DFI: dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs
 
 # Documentation
-- [Getting started](#getting-started)
+- [Wiki](#wiki)
 - [Status](#status)
 - [Development](#development)
 - [Contributors](#contributors)
 - [Screenshots](#screenshots)
 - [Disclaimer](#disclaimer)
 
-# Getting Started
-Work in Progress - you can soon download the app in the store.
+# Wiki
+For more information visit the [DeFiChain-Wiki](https://defichain-wiki.com/wiki/Saiive.live)
 
 Remember - use at your own risk. This software is still a WIP!
 

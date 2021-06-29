@@ -28,6 +28,8 @@ class _WalletReceiveWidgetState extends State<WalletReceiveWidget> {
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: QrImage(
                     data: widget.pubKey,
+                    version: QrVersions.auto,
+                    errorCorrectionLevel: QrErrorCorrectLevel.H,
                     foregroundColor: StateContainer.of(context).curTheme.text,
                   )),
               SelectableText(widget.pubKey)

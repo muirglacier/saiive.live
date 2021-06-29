@@ -1,4 +1,6 @@
 PODS:
+  - app_tracking_transparency (0.0.1):
+    - Flutter
   - AppCenter (3.3.4):
     - AppCenter/Analytics (= 3.3.4)
     - AppCenter/Crashes (= 3.3.4)
@@ -50,10 +52,13 @@ PODS:
     - FMDB (>= 2.7.5)
   - url_launcher (0.0.1):
     - Flutter
+  - wakelock (0.0.1):
+    - Flutter
   - webview_flutter (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - clipboard_manager (from `.symlinks/plugins/clipboard_manager/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `Flutter`)
@@ -72,6 +77,7 @@ DEPENDENCIES:
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
@@ -80,6 +86,8 @@ SPEC REPOS:
     - FMDB
 
 EXTERNAL SOURCES:
+  app_tracking_transparency:
+    :path: ".symlinks/plugins/app_tracking_transparency/ios"
   clipboard_manager:
     :path: ".symlinks/plugins/clipboard_manager/ios"
   device_info:
@@ -116,15 +124,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
-  AppCenter: ca66175050d538b157959382dd43f1ab96cdab84
+  app_tracking_transparency: 5b1745ef9ade815f7455cb6a0848349589afb7c5
+  AppCenter: 0487be185c038ed2ecc5ed38219af1dcd280af23
   clipboard_manager: f4800834e62cc26b1cc4e0a92a35cd452dd8b827
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_appcenter_bundle: bbf1dd726a7a090027c88201a62b83269a56f075
+  flutter_appcenter_bundle: e8cb9428b85abc67bec226ce30d00f819dde9c55
   flutter_config: 2226c1df19c78fe34a05eb7f1363445f18e76fc1
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_qr_reader: 254fd9eea45a65ef461e050d6607daf9cfb753e8
@@ -140,6 +151,7 @@ SPEC CHECKSUMS:
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter: 9f491a9b5a66f2573946a389b2677987b0ff8c0b
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c

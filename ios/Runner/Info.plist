@@ -48,22 +48,26 @@
 	<key>NSContactsUsageDescription</key>
 	<string>Flutter Contacts</string>
 	<key>NSCalendarsUsageDescription</key>
-    <string>Flutter Calender</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Flutter Photo</string>
-    <key>NSAppleMusicUsageDescription</key>
-    <string>Flutter Apple Music</string>
-    <key>NSMotionUsageDescription</key>
-    <string>Flutter Motion</string>
-    <key>NSSpeechRecognitionUsageDescription</key>
-    <string>Flutter Speech</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Flutter Location</string>
-    <key>ITSAppUsesNonExemptEncryption</key>
-    <false/>
-    <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>Flutter Component uses it</string>
-    <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>Flutter Component uses it</string>
+	<string>Flutter Calender</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Flutter Photo</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Flutter Apple Music</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Flutter Motion</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Flutter Speech</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Flutter Location</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Flutter Component uses it</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Flutter Component uses it</string>
+	<key>CFBundleAllowMixedLocalizations</key>
+	<true/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We track anonymous App Activity and App Crashes</string>
 </dict>
 </plist>

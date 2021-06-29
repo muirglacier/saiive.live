@@ -337,11 +337,6 @@ abstract class Wallet extends IWallet {
             loadingStream?.add(S.current.wallet_operation_mempool_conflict_retry);
             return true;
           }
-          // if (e.error.error.contains("Missing inputs") && !ensureUtxoCalled) {
-          //   ensureUtxoCalled = true;
-          //   await ensureUtxo(loadingStream: loadingStream);
-          //   return true;
-          // }
           return false;
         }
         return false;
@@ -364,10 +359,10 @@ abstract class Wallet extends IWallet {
     } catch (e) {
       if (e is HttpException) {
         if (e.error.error.contains("txn-mempool-conflict")) {
-          throw new MemPoolConflictError(S.current.wallet_operation_mempool_conflict);
+          throw new MemPoolConflictError(S.current.wallet_operation_mempool_conflict, txHex);
         }
         if (e.error.error.contains("Missing inputs")) {
-          throw new MissingInputsError(S.current.wallet_operation_missing_inputs);
+          throw new MissingInputsError(S.current.wallet_operation_missing_inputs, txHex);
         }
       }
 

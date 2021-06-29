@@ -68,6 +68,7 @@ dependencies:
   flutter_icons: ^1.1.0
   webview_flutter: ^2.0.7
   wakelock: ^0.5.2
+  share_plus: ^2.1.4
 
   # Desktop
   window_size:
@@ -107,6 +108,7 @@ dependencies:
     git: 
       url: git://github.com/saiive/flutter_screen_lock
       ref: master
+  app_tracking_transparency: ^2.0.1
   
 dev_dependencies:
   flutter_test:

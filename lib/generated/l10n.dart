@@ -605,6 +605,16 @@ class S {
     );
   }
 
+  /// `Share...`
+  String get wallet_operation_share {
+    return Intl.message(
+      'Share...',
+      name: 'wallet_operation_share',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Transaction failed :(`
   String get wallet_operation_failed {
     return Intl.message(

@@ -8,6 +8,7 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
 import 'package:saiive.live/util/sharedprefsutil.dart';
+import 'package:wakelock/wakelock.dart';
 
 class RestoreAccountsScreen extends StatefulWidget {
   RestoreAccountsScreen();
@@ -20,20 +21,26 @@ class RestoreAccountsScreen extends StatefulWidget {
 
 class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
   Future<List<WalletAccount>> searchAccounts() async {
-    final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    Wakelock.enable();
 
-    final walletService = sl.get<IWalletService>();
+    try {
+      final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
 
-    var result = await walletService.restore(network);
-    var ret = List<WalletAccount>.empty(growable: true);
+      final walletService = sl.get<IWalletService>();
 
-    for (final res in result) {
-      ret.addAll(res.item1);
+      var result = await walletService.restore(network);
+      var ret = List<WalletAccount>.empty(growable: true);
+
+      for (final res in result) {
+        ret.addAll(res.item1);
+      }
+
+      await walletService.init();
+
+      return ret;
+    } finally {
+      Wakelock.disable();
     }
-
-    await walletService.init();
-
-    return ret;
   }
 
   @override

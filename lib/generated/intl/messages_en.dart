@@ -157,6 +157,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refreshing utxo..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("Refreshing utxo...done"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Sending transaction"),
+    "wallet_operation_share" : MessageLookupByLibrary.simpleMessage("Share..."),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Show transaction in the explorer..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaction was successful :)"),
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Wait for confirmation..."),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
@@ -149,7 +150,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         child: TextField(
                             controller: _addressController,
                             keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
+                            decoration: Platform.isMacOS ? InputDecoration(hintText: S.of(context).wallet_send_address) : InputDecoration(
                               hintText: S.of(context).wallet_send_address,
                               suffixIcon: IconButton(
                                 onPressed: () async {

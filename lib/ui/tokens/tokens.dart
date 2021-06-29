@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/token.dart';
@@ -74,7 +76,19 @@ class _TokensScreen extends State<TokensScreen> {
     return Scaffold(
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Text(S.of(context).home_tokens)),
+            title: Row(children: [
+              if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+                Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        var key = StateContainer.of(context).scaffoldKey;
+                        key.currentState.openDrawer();
+                      },
+                      child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                    )),
+              Text(S.of(context).home_tokens)
+            ])),
         body: Scaffold(body: buildTokenScreen(context)));
   }
 }

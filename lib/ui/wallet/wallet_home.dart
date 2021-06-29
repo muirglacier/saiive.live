@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
@@ -327,15 +328,16 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
           automaticallyImplyLeading: false,
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           title: Row(children: [
-            Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () {
-                    var key = StateContainer.of(context).scaffoldKey;
-                    key.currentState.openDrawer();
-                  },
-                  child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                )),
+            if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+              Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      var key = StateContainer.of(context).scaffoldKey;
+                      key.currentState.openDrawer();
+                    },
+                    child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -128,6 +128,7 @@ flutter:
   assets:
     - assets/logo_black.jpg
     - assets/logo_white.jpg
+    - assets/logo_wh.png
     - assets/logo.png
     - assets/Logo_with_text.png
     - assets/env/.env-Debug

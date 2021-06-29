@@ -6,7 +6,9 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
+import 'package:saiive.live/ui/drawer.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
@@ -15,12 +17,13 @@ import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class _NavigationEntry {
+class NavigationEntry {
   final Icon icon;
   final String label;
   final Widget page;
+  final bool visibleForBottomNav;
 
-  _NavigationEntry({this.icon, this.label, this.page});
+  NavigationEntry({this.icon, this.label, this.page, this.visibleForBottomNav = true});
 }
 
 class HomeScreen extends StatefulWidget {
@@ -32,20 +35,23 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   ChainNet _currentNet = ChainNet.Testnet;
+  EnvironmentType _environmentType = EnvironmentType.Unknonw;
+
   String _version = "";
 
-  static List<_NavigationEntry> _navigationEntries = [];
+  static List<NavigationEntry> _navigationEntries = [];
 
   void initMenu(BuildContext context) {
     _navigationEntries = [
-      _NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen()),
-      _NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen()),
-      _NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen()),
-      _NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen())
+      NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen()),
+      NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen()),
+      NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen()),
+      NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen()),
+      NavigationEntry(icon: Icon(Icons.account_box), label: S.of(context).home_tokens, page: AccountsScreen(), visibleForBottomNav: false)
     ];
 
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      _navigationEntries.add(_NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen()));
+      _navigationEntries.add(NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen()));
     }
   }
 
@@ -62,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _init() async {
+    _environmentType = EnvHelper.getEnvironment();
     _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
     _version = await VersionHelper().getVersion();
 
@@ -127,7 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return null;
     }
 
-    final List<BottomNavigationBarItem> bottomNavBar = _navigationEntries.map((e) => BottomNavigationBarItem(icon: e.icon, label: e.label)).toList();
+    final List<BottomNavigationBarItem> bottomNavBar =
+        _navigationEntries.where((a) => a.visibleForBottomNav).map((e) => BottomNavigationBarItem(icon: e.icon, label: e.label)).toList();
 
     return BottomNavigationBar(
       items: bottomNavBar,
@@ -143,6 +151,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     initMenu(context);
-    return Scaffold(body: _buildContent(context), bottomNavigationBar: _buildBottomNavBar(context));
+    StateContainer.of(context).scaffoldKey = GlobalKey<ScaffoldState>();
+    return Scaffold(
+        key: StateContainer.of(context).scaffoldKey,
+        body: _buildContent(context),
+        bottomNavigationBar: _buildBottomNavBar(context),
+        drawer: DrawerUtil.createDrawer(context, _navigationEntries, (nav) {
+          setState(() {
+            _selectedIndex = _navigationEntries.indexOf(nav);
+          });
+        }, env: _environmentType, network: _currentNet, version: _version));
   }
 }

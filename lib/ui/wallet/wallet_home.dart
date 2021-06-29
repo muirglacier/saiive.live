@@ -51,7 +51,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   WalletService _wallet;
 
   _refresh() async {
-    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    // EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
     sl.get<IHealthService>().checkHealth(context);
 
@@ -324,20 +324,32 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(_welcomeText, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              Text(_syncText, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-              if (_lastSyncBlockTip != null)
-                Row(children: [
-                  Text(S.of(context).home_welcome_account_block_height, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-                  Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-                ]),
-            ],
-          ),
+          title: Row(children: [
+            Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    var key = StateContainer.of(context).scaffoldKey;
+                    key.currentState.openDrawer();
+                  },
+                  child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_welcomeText, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text(_syncText, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                if (_lastSyncBlockTip != null)
+                  Row(children: [
+                    Text(S.of(context).home_welcome_account_block_height, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                    Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                  ]),
+              ],
+            )
+          ]),
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           actions: [
             Padding(

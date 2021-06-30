@@ -37,7 +37,6 @@ class DrawerUtil {
                         ),
                         onTap: () {
                           selectionCallback(navItem);
-                          Navigator.pop(context);
                         });
                   })))
     ]));

@@ -102,6 +102,8 @@
   "wallet_operation_mempool_conflict": "Bitte warte bis deine Transaktion dem nächsten Block hinzugefügt wurde, bevor du mit einer neuen Transaktion fortfährst.",
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
+  "wallet_accounts": "Konten",
+
   "settings": "Einstellungen",
   "settings_wallet": "Wallet",
   "settings_common": "Allgemein",

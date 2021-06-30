@@ -15,6 +15,6 @@ class _AccountScreen extends State<AccountsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex)), body: _buildAccountPage(context));
+    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).wallet_accounts)), body: _buildAccountPage(context));
   }
 }

@@ -52,7 +52,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   WalletService _wallet;
 
   _refresh() async {
-    // EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
     sl.get<IHealthService>().checkHealth(context);
 
@@ -68,7 +68,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   _initWallet() async {
-    // return;
     if (await _wallet.hasAccounts()) {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
     }

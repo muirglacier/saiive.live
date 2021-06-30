@@ -935,6 +935,16 @@ class S {
     );
   }
 
+  /// `Accounts`
+  String get wallet_accounts {
+    return Intl.message(
+      'Accounts',
+      name: 'wallet_accounts',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(
@@ -1733,6 +1743,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'es'),
     ];
   }
 

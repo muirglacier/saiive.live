@@ -120,6 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_info_test" : MessageLookupByLibrary.simpleMessage("Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!"),
     "title" : MessageLookupByLibrary.simpleMessage("saiive.live"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
+    "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Accounts"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Your wallet is empty!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Network"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet is synchronising right now!"),

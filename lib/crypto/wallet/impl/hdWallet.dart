@@ -26,8 +26,6 @@ class HdWallet extends IHdWallet {
   final String _seed;
   final ApiService _apiService;
 
-  int _localNextIndex = 0;
-
   HdWallet(this._password, this._account, this._chain, this._network, this._seed, this._apiService);
 
   Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase) async {
@@ -42,11 +40,11 @@ class HdWallet extends IHdWallet {
     var addresses = await walletDatabase.getWalletAddresses(_account.account);
 
     if (addresses.length >= walletDatabase.getAddressCreationCount()) {
-      for (final address in addresses) {
-        final pubKey = address.publicKey;
-        final pathString = address.account.toString() + "/" + (address.isChangeAddress ? "1" : "0") + "/" + address.index.toString();
-        // LogHelper.instance.i("Wallet $_chain uses address $pubKey at $pathString");
-      }
+      // for (final address in addresses) {
+      //   final pubKey = address.publicKey;
+      //   final pathString = address.account.toString() + "/" + (address.isChangeAddress ? "1" : "0") + "/" + address.index.toString();
+      //   // LogHelper.instance.i("Wallet $_chain uses address $pubKey at $pathString");
+      // }
 
       return;
     }

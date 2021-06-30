@@ -99,7 +99,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [const Locale('en', ''), const Locale('de', '')],
+        supportedLocales: [const Locale('en', ''), const Locale('de', ''), const Locale('es', '')],
         locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
             ? null
             : StateContainer.of(context).curLanguage.getLocale(),

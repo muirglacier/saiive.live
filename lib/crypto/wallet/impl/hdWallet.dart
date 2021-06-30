@@ -67,7 +67,15 @@ class HdWallet extends IHdWallet {
   }
 
   WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
-    return WalletAddress(account: _account.id, isChangeAddress: isChangeAddress, index: index, chain: _chain, publicKey: pubKey, network: _network, addressType: addressType);
+    return WalletAddress(
+        accountId: _account.uniqueId,
+        account: _account.id,
+        isChangeAddress: isChangeAddress,
+        index: index,
+        chain: _chain,
+        publicKey: pubKey,
+        network: _network,
+        addressType: addressType);
   }
 
   @override

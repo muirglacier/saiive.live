@@ -6,6 +6,7 @@ import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:uuid/uuid.dart';
 
 class MemoryDatabaseMock extends IWalletDatabase {
   List<Account> _accounts = List<Account>.empty(growable: true);
@@ -21,12 +22,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<WalletAccount> addAccount({String name, int account, ChainType chain, bool isSelected = false}) async {
-    var newAccount = WalletAccount();
-    newAccount.name = name;
-    newAccount.account = account;
-    newAccount.id = account;
-    newAccount.chain = chain;
-    newAccount.selected = isSelected;
+    var newAccount =
+        WalletAccount(name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, uniqueId: Uuid().v4());
 
     _walletAccounts.add(newAccount);
 
@@ -67,9 +64,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future removeUnspentTransactions(List<Transaction> mintIds) async {
-    //TODO
-  }
+  Future removeUnspentTransactions(List<Transaction> mintIds) async {}
 
   @override
   Future close() async {}
@@ -103,7 +98,6 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<List<WalletAccount>> getAccounts() {
-    _walletAccounts.sort((a, b) => b.balance.compareTo(a.balance));
     return Future.value(_walletAccounts);
   }
 
@@ -113,8 +107,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
+  // ignore: override_on_non_overriding_member
   Future<List<AccountBalance>> getTotalBalances() {
-    // TODO: implement getTotalBalances
     throw UnimplementedError();
   }
 

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
@@ -137,8 +136,6 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
             fontFamily: 'Helvetica, Arial, sans-serif',
             tabBarTheme: TabBarTheme(labelColor: appBarTextColor),
             elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
-            cursorColor: StateContainer.of(context).curTheme.primary,
-            textSelectionColor: StateContainer.of(context).curTheme.primary,
             textSelectionTheme: TextSelectionThemeData(cursorColor: StateContainer.of(context).curTheme.primary, selectionHandleColor: StateContainer.of(context).curTheme.primary),
             inputDecorationTheme: InputDecorationTheme(
                 counterStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),

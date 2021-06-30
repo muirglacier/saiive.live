@@ -1,12 +1,10 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
-import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'mock/transaction_service_mock.dart';
 import 'wallet_test_base.dart';
 
 void main() async {

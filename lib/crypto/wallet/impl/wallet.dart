@@ -31,6 +31,7 @@ import 'package:retry/retry.dart';
 
 import 'package:tuple/tuple.dart';
 import 'package:mutex/mutex.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class Wallet extends IWallet {
   Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
@@ -90,7 +91,7 @@ abstract class Wallet extends IWallet {
     _network = await _sharedPrefsUtil.getChainNetwork();
     _walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(_chain, _network);
 
-    _password = ""; // TODO
+    _password = "";
     _seed = await sl.get<IVault>().getSeed();
     _account = 0; //default account, for now only 0!
 
@@ -192,11 +193,22 @@ abstract class Wallet extends IWallet {
 
     if (unusedAccounts.item1.isEmpty) {
       var lastItem = accounts.last;
-      unusedAccounts.item1.add(WalletAccount(account: lastItem.account + 1, id: -1, chain: _chain, name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString()));
+      unusedAccounts.item1.add(WalletAccount(
+          account: lastItem.account + 1,
+          id: lastItem.account + 1,
+          chain: _chain,
+          name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
+          walletAccountType: WalletAccountType.HdAccount,
+          uniqueId: Uuid().v4()));
     } else {
       var lastItem = unusedAccounts.item1.last;
-      unusedAccounts.item1
-          .add(WalletAccount(account: lastItem.account + 1, id: -1, chain: _chain, name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString()));
+      unusedAccounts.item1.add(WalletAccount(
+          account: lastItem.account + 1,
+          id: lastItem.account + 1,
+          chain: _chain,
+          name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
+          walletAccountType: WalletAccountType.HdAccount,
+          uniqueId: Uuid().v4()));
     }
     return unusedAccounts;
   }
@@ -376,8 +388,8 @@ abstract class Wallet extends IWallet {
   }
 
   Future<int> getTxFee(int inputs, int outputs) async {
-    if (inputs == 0 && outputs == 0) return 3000; //default fee is always the same for now
-    return (inputs * 180) + (outputs * 34) + 50;
+    if (inputs == 0 && outputs == 0) return 4000; //default fee is always the same for now
+    return (inputs * 250) + (outputs * 50) + 50;
   }
 
   @protected

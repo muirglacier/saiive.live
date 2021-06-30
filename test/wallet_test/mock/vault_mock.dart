@@ -19,20 +19,20 @@ class VaultMock extends IVault {
   }
 
   @override
+  // ignore: override_on_non_overriding_member
   Future<String> getPasswordHash() {
-    // TODO: implement getPasswordHash
     throw UnimplementedError();
   }
 
   @override
+  // ignore: override_on_non_overriding_member
   Future setPasswordHash(String hash) {
-    // TODO: implement setPasswordHash
     throw UnimplementedError();
   }
 
   @override
+  // ignore: override_on_non_overriding_member
   Future reEncryptData(String oldPassword, String newPassword) {
-    // TODO: implement reEncryptData
     throw UnimplementedError();
   }
 }

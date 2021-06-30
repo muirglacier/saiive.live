@@ -14,6 +14,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import "package:collection/collection.dart";
+import 'package:uuid/uuid.dart';
 
 import '../chain.dart';
 
@@ -213,12 +214,8 @@ class SembastWalletDatabase extends IWalletDatabase {
     final db = await database;
 
     if (!await _accountStoreInstance.record(account).exists(db)) {
-      var newAccount = WalletAccount();
-      newAccount.name = name;
-      newAccount.account = account;
-      newAccount.id = account;
-      newAccount.chain = chain;
-      newAccount.selected = isSelected;
+      var newAccount =
+          WalletAccount(name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, uniqueId: Uuid().v4());
 
       await _accountStoreInstance.record(account).put(db, newAccount.toJson());
 

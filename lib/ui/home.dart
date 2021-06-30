@@ -12,10 +12,12 @@ import 'package:saiive.live/ui/drawer.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
+import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:upgrader/upgrader.dart';
 
 class NavigationEntry {
   final Icon icon;
@@ -74,9 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildContent(BuildContext context) {
     if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia) {
-      return Center(
+      return AppUpdateAlert(
+          child: Center(
         child: _navigationEntries.elementAt(_selectedIndex).page,
-      );
+      ));
     }
 
     final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();

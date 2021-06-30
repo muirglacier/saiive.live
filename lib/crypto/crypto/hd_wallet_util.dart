@@ -219,8 +219,11 @@ class HdWalletUtil {
     }
 
     if (totalInputValue == amount) {
-      final errorMsg = "$totalInputValue == $amount - inputValue cannot be equal to amount, we need to pay some fees!";
-      throw new InputValueEqualsTotalValueError(errorMsg, inputTxs, to, amount, fee, returnAddress);
+      //if the totalinput is equal to the amount, we just extract the fees from the amount
+      amount -= fee;
+
+      //final errorMsg = "$totalInputValue == $amount - inputValue cannot be equal to amount, we need to pay some fees!";
+      //throw new InputValueEqualsTotalValueError(errorMsg, inputTxs, to, amount, fee, returnAddress);
     }
 
     if (totalInputValue > (amount)) {

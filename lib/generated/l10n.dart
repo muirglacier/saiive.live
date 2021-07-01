@@ -1734,6 +1734,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Update`
+  String get update_title {
+    return Intl.message(
+      'Update',
+      name: 'update_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new version of {appName} is available!`
+  String update_text(Object appName) {
+    return Intl.message(
+      'A new version of $appName is available!',
+      name: 'update_text',
+      desc: '',
+      args: [appName],
+    );
+  }
+
+  /// `Install`
+  String get update_start {
+    return Intl.message(
+      'Install',
+      name: 'update_start',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Abort`
+  String get update_cancel {
+    return Intl.message(
+      'Abort',
+      name: 'update_cancel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

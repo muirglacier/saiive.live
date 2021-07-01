@@ -19,13 +19,15 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
-  static m0(chains) => "Es scheint gerade Probleme mit dem Supernode zu geben (${chains}). Am besten du schaust später nochmal rein!";
+  static m0(appName) => "Eine neue Version von ${appName} ist verfügbar!";
 
-  static m1(from, to) => "Aktualisiere Adressen (${from}/${to})";
+  static m1(chains) => "Es scheint gerade Probleme mit dem Supernode zu geben (${chains}). Am besten du schaust später nochmal rein!";
 
-  static m2(from, to) => "Aktualisiere Transaktionen (${from}/${to})";
+  static m2(from, to) => "Aktualisiere Adressen (${from}/${to})";
 
-  static m3(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
+  static m3(from, to) => "Aktualisiere Transaktionen (${from}/${to})";
+
+  static m4(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -119,6 +121,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_info_telegram" : MessageLookupByLibrary.simpleMessage("Für fragen haben wir eine Telegram Gruppe erstellt, diese findest du hier:"),
     "test_info_test" : MessageLookupByLibrary.simpleMessage("Danke für deine Hilfe das saiive.live für alle verfügbar zu machen. Dein Feedback hilft uns sehr!"),
     "title" : MessageLookupByLibrary.simpleMessage("saiive.live"),
+    "update_cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
+    "update_start" : MessageLookupByLibrary.simpleMessage("Installieren"),
+    "update_text" : m0,
+    "update_title" : MessageLookupByLibrary.simpleMessage("Update"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Konten"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Dein Wallet ist leer!"),
@@ -143,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Schreibe das #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" Wort hier"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" Wort"),
-    "wallet_offline" : m0,
+    "wallet_offline" : m1,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird erstellt"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Erstelle Auth TX"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Account wird vorbereitet"),
@@ -152,8 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict" : MessageLookupByLibrary.simpleMessage("Bitte warte bis deine Transaktion dem nächsten Block hinzugefügt wurde, bevor du mit einer neuen Transaktion fortfährst."),
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("Es befinden sich noch Transaktionen in der Warteschlange, wir versuchen auf diese zu Warten, dies kann etwas dauern!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut."),
-    "wallet_operation_refresh_addresses" : m1,
-    "wallet_operation_refresh_tx" : m2,
+    "wallet_operation_refresh_addresses" : m2,
+    "wallet_operation_refresh_tx" : m3,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("UTXO aktualisieren..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("UTXO aktualisieren...fertig"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird gesendet"),
@@ -162,7 +168,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaktion war erfolgreich :)"),
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Warte auf Bestätigung..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
-    "wallet_receive_warning" : m3,
+    "wallet_receive_warning" : m4,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter Test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("Wir haben die Kontos in deinem lokalen Datestore hinzugefügt! Deine Konten werden im Hintergrund aktualisiert!"),

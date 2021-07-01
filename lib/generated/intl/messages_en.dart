@@ -19,13 +19,15 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(chains) => "It seems we are having some problems with the supernode (${chains}), we are working hard to restore our services. Check back later...";
+  static m0(appName) => "A new version of ${appName} is available!";
 
-  static m1(from, to) => "Refreshing addresses (${from}/${to})";
+  static m1(chains) => "It seems we are having some problems with the supernode (${chains}), we are working hard to restore our services. Check back later...";
 
-  static m2(from, to) => "Refreshing transactions (${from}/${to})";
+  static m2(from, to) => "Refreshing addresses (${from}/${to})";
 
-  static m3(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
+  static m3(from, to) => "Refreshing transactions (${from}/${to})";
+
+  static m4(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -119,6 +121,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_info_telegram" : MessageLookupByLibrary.simpleMessage("If you have any questions, we have created a Telegram group for that:"),
     "test_info_test" : MessageLookupByLibrary.simpleMessage("Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!"),
     "title" : MessageLookupByLibrary.simpleMessage("saiive.live"),
+    "update_cancel" : MessageLookupByLibrary.simpleMessage("Abort"),
+    "update_start" : MessageLookupByLibrary.simpleMessage("Install"),
+    "update_text" : m0,
+    "update_title" : MessageLookupByLibrary.simpleMessage("Update"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Accounts"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Your wallet is empty!"),
@@ -144,7 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Put the #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" word here"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" word"),
-    "wallet_offline" : m0,
+    "wallet_offline" : m1,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Building transaction"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creating auth tx"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparing account balance"),
@@ -153,8 +159,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict" : MessageLookupByLibrary.simpleMessage("Please wait for your transaction to be reflected in the next block before proceeding with a new transaction."),
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("We found some pending transactions. We try to wait for them, this could take some time!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Wallet is not synced. Please retry your transaction."),
-    "wallet_operation_refresh_addresses" : m1,
-    "wallet_operation_refresh_tx" : m2,
+    "wallet_operation_refresh_addresses" : m2,
+    "wallet_operation_refresh_tx" : m3,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refreshing utxo..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("Refreshing utxo...done"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Sending transaction"),
@@ -163,7 +169,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaction was successful :)"),
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Wait for confirmation..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Receive"),
-    "wallet_receive_warning" : m3,
+    "wallet_receive_warning" : m4,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("The accounts have been added to your local datastore! Your acounts will be synced in the background!"),

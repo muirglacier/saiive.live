@@ -196,5 +196,12 @@
   "authenticate": "Please authenticate",
   "pin_return": "Return to first step",
   "pin_confirm": "Confirm PIN",
-  "pin_enter": "Enter your PIN"
+  "pin_enter": "Enter your PIN",
+
+  
+
+  "update_title": "Update",
+  "update_text": "A new version of {appName} is available!",
+  "update_start": "Install",
+  "update_cancel": "Abort"
 }

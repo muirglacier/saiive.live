@@ -1574,6 +1574,17 @@ stages:
           buildNumber: $(Build.BuildNumber)
           extraArgs: --target=lib/main_staging.dart
 
+      - task: FlutterBuild@0
+        displayName: Linux Release PlayStore
+        inputs:
+          target: 'linux'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)'
+          buildFlavour: 'staginggooglePlay'
+          entryPoint: 'lib/main_staging.dart'
+          buildNumber: $(Build.BuildNumber)
+          extraArgs: --target=lib/main_staging.dart
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:

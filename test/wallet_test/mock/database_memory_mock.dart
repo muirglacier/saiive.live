@@ -31,6 +31,20 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
+  Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount) async {
+    await Future.delayed(Duration(microseconds: 1));
+
+    for (final acc in _walletAccounts) {
+      if (acc.uniqueId == walletAccount.uniqueId) {
+        acc.name = walletAccount.name;
+        return acc;
+      }
+    }
+    _walletAccounts.add(walletAccount);
+    return walletAccount;
+  }
+
+  @override
   Future addTransaction(Transaction transaction) async {
     _transactions.add(transaction);
   }
@@ -154,11 +168,6 @@ class MemoryDatabaseMock extends IWalletDatabase {
   @override
   Future setAccountBalance(Account balance) async {
     _accounts.add(balance);
-  }
-
-  @override
-  Future<WalletAccount> updateAccount(WalletAccount account) async {
-    return null;
   }
 
   @override

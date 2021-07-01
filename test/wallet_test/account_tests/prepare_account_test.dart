@@ -1,10 +1,12 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:uuid/uuid.dart';
 import '../mock/transaction_service_mock.dart';
 import '../wallet_test_base.dart';
 
@@ -15,7 +17,9 @@ void main() async {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
+      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      await db.addOrUpdateAccount(walletAccount);
+
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
           chain: "DFI",
@@ -69,7 +73,7 @@ void main() async {
       await wallet.prepareUtxoToAccountTransaction(243 * 100000000);
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
-          "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff0224944102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8701000000002494410200000000edd28e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f870247304402204a1ca5da2e55974f12b95c81bc58885e94b8d2981bad547443030587f6a45ce602207b7ab0d6888be7bc542b76b5017bcc4dba80018b94fa1fc78bb15f8ad0062330012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
+          "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff020c984102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8701000000000c984102000000001dcb8e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f870247304402203b1f69baa507f118a3445d111d7b41ab83b6c38334803c29536a43b85978ce380220338b0477f647fc5a2ea54323bc9d3a6cec175a18e42f2e1aae5b969210fe7fad012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
       await destoryTest();
     });
   });

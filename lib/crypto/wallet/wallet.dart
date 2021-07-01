@@ -28,7 +28,7 @@ abstract class IWallet {
   Future<Transaction> getTransaction(String id);
 
   Future<List<WalletAccount>> getAccounts();
-  Future<WalletAccount> addAccount(String name, int account);
+  Future<WalletAccount> addAccount(WalletAccount account);
 
   void setWorkingAccount(int id);
   Future<String> getPublicKey(AddressType type);

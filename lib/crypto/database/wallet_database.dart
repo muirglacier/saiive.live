@@ -11,8 +11,10 @@ abstract class IWalletDatabase {
   Future<int> getNextFreeIndex(int account);
 
   Future<List<WalletAccount>> getAccounts();
-  Future<WalletAccount> updateAccount(WalletAccount account);
+
+  @deprecated
   Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false});
+  Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount);
 
   Future clearTransactions();
   Future<List<Transaction>> getTransactions();

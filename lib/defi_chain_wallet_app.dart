@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger_flutter/logger_flutter.dart';
+import 'package:saiive.live/util/debug/SaiiveRouteObserver.dart';
 import 'package:window_size/window_size.dart';
 
 const String APP_TITLE = "saiive.live";
@@ -91,6 +92,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     ThemeData theme = ThemeData();
 
     return MaterialApp(
+        navigatorObservers: [SaiiveRouteObserver()],
         debugShowCheckedModeBanner: env["ENV"] == "dev",
         localizationsDelegates: [
           S.delegate,

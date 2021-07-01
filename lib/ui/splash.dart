@@ -8,7 +8,6 @@ import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import '../generated/l10n.dart';
 
@@ -22,7 +21,7 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen> {
   var _version = "";
   bool _hasCheckedLoggedIn;
   bool _retried;
@@ -100,12 +99,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       _versionLoaded = true;
     });
 
-    WidgetsBinding.instance.addObserver(this);
     _hasCheckedLoggedIn = false;
     _retried = false;
-    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
-      SchedulerBinding.instance.addPostFrameCallback((_) => checkLoggedIn());
-    }
 
     checkLoggedIn();
   }
@@ -119,24 +114,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Account for user changing locale when leaving the app
-    switch (state) {
-      case AppLifecycleState.paused:
-        super.didChangeAppLifecycleState(state);
-        break;
-      case AppLifecycleState.resumed:
-        super.didChangeAppLifecycleState(state);
-        break;
-      default:
-        super.didChangeAppLifecycleState(state);
-        break;
-    }
   }
 
   @override

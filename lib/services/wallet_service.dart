@@ -16,6 +16,7 @@ import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class IWalletService {
   Future init();
@@ -34,7 +35,7 @@ abstract class IWalletService {
   Future close();
   Future destroy();
 
-  Future<WalletAccount> addAccount({String name, int account, ChainType chain});
+  Future<WalletAccount> addAccount(WalletAccount account);
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards);
 
   Future<Map<String, bool>> getIsAlive();
@@ -130,11 +131,11 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<WalletAccount> addAccount({String name, int account, ChainType chain}) {
-    if (chain == ChainType.DeFiChain) {
-      return _defiWallet.addAccount(name, account);
+  Future<WalletAccount> addAccount(WalletAccount account) {
+    if (account.chain == ChainType.DeFiChain) {
+      return _defiWallet.addAccount(account);
     }
-    return _bitcoinWallet.addAccount(name, account);
+    return _bitcoinWallet.addAccount(account);
   }
 
   @override
@@ -166,19 +167,19 @@ class WalletService implements IWalletService {
 
     var result = await compute(_searchAccounts, dataMap);
 
-    var isFirst = true;
     var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
     for (var element in result.item1) {
-      await db.addAccount(name: element.name, account: element.account, chain: chain, isSelected: isFirst);
-
-      isFirst = false;
+      element.selected = true;
+      await db.addOrUpdateAccount(element);
     }
     for (var address in result.item2) {
       await db.addAddress(address);
     }
 
     if (result.item1.length == 0) {
-      await db.addAccount(name: ChainHelper.chainTypeString(chain), account: 0, chain: chain);
+      final walletAccount = WalletAccount(
+          uniqueId: Uuid().v4(), id: 0, chain: chain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: ChainHelper.chainTypeString(chain), selected: true);
+      await db.addOrUpdateAccount(walletAccount);
     }
 
     await wallet.init();

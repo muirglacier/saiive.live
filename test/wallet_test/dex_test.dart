@@ -1,10 +1,12 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:uuid/uuid.dart';
 import 'wallet_test_base.dart';
 
 void main() async {
@@ -14,7 +16,9 @@ void main() async {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
+      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      await db.addOrUpdateAccount(walletAccount);
+
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
           chain: "DFI",

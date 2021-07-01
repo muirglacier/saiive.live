@@ -163,9 +163,9 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<WalletAccount> addAccount(String name, int account) {
+  Future<WalletAccount> addAccount(WalletAccount account) {
     isInitialzed();
-    return _walletDatabase.addAccount(name: name, account: account, chain: _chain);
+    return _walletDatabase.addOrUpdateAccount(account);
   }
 
   Future<bool> hasAccounts() async {

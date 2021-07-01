@@ -1,10 +1,12 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:uuid/uuid.dart';
 import '../wallet_test_base.dart';
 
 void main() async {
@@ -14,7 +16,9 @@ void main() async {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
+      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      await db.addOrUpdateAccount(walletAccount);
+
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
           chain: "DFI",
@@ -80,7 +84,7 @@ void main() async {
       await wallet.init();
       final tx = await wallet.prepareAccountToUtxosTransactions("toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", 800 * 100000000);
       expect(tx.item1[0],
-          "02000000000101de18753cf229ecdb87dc07c282110607a894ea31ea656f5aa90afd66105887c0020000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0300000000000000002d6a2b446654786217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870100000000a32ecd0e0300000002880103000000000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b87a32ecd0e0300000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b87024830450221008a48b94e2e51411ec15dcfb1efaa2a22181651aba12de49f80012eeeff6928820220573b88f7b97de192a2095b34b9bc65fb4bcd89513adac4087e87f87ea5d51b11012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+          "02000000000101de18753cf229ecdb87dc07c282110607a894ea31ea656f5aa90afd66105887c0020000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0300000000000000002d6a2b446654786217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870100000000a32ecd0e0300000002a0fd02000000000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b87a32ecd0e0300000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b870247304402206640fcab9a38b52de293afd53105cc6e09f1edfb7133dbdd68c886d24f61f5dd02206e4747a1399b566334ef32bf6874154cdd33260650e4f80de43a163a23fce30b012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
   });

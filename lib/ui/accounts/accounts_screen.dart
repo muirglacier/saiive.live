@@ -6,7 +6,11 @@ import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/accounts/accounts_add_screen.dart';
+import 'package:saiive.live/ui/accounts/accounts_select_action_screen.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
+
+import 'accounts_import_screen.dart';
 
 class AccountsScreen extends StatefulWidget {
   @override
@@ -72,6 +76,37 @@ class _AccountScreen extends State<AccountsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).wallet_accounts)), body: _buildAccountPage(context));
+    return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+          title: Text(S.of(context).wallet_accounts),
+          actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 15.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => AccountsSelectActionScreen((chainType) {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(settings: RouteSettings(name: "/accountsAddScreen"), builder: (BuildContext context) => AccountsAddScreen(chainType)));
+                            })));
+                  },
+                  child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
+            Padding(
+                padding: EdgeInsets.only(right: 15.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => AccountsSelectActionScreen((chainType) {
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(settings: RouteSettings(name: "/accountsImportScreen"), builder: (BuildContext context) => AccountsImportScreen(chainType)));
+                            })));
+                  },
+                  child: Icon(Icons.upload, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                ))
+          ],
+        ),
+        body: _buildAccountPage(context));
   }
 }

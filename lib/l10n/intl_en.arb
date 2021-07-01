@@ -16,6 +16,9 @@
   "later": "Later",
   "ok": "Ok",
   
+  "save": "Save",
+  "add": "Add",
+  
   "dark_mode": "Dark",
   "light_mode": "Light",
 
@@ -105,6 +108,14 @@
 
 
   "wallet_accounts": "Accounts",
+  "wallet_accounts_select_type": "Select type",
+  "wallet_accounts_add": "Add account",
+  "wallet_accounts_import": "Import account",
+  "wallet_accounts_import_invalid_pub_key": "The public key is invalid!",
+  "wallet_accounts_import_invalid_priv_key": "The private key is invalid!",
+  "wallet_accounts_import_invalid": "The content is invalid!",
+  "wallet_accounts_cannot_be_empty": "The field cannot be empty!",
+  "wallet_accounts_saved": "Account saved",
 
   "wallet_send": "Send",
   "wallet_send_address": "Address",

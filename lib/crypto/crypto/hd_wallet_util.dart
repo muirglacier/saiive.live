@@ -24,6 +24,19 @@ class HdWalletUtil {
     return networkType;
   }
 
+  static bool isAddressValid(String address, ChainType chainType, ChainNet network) {
+    return Address.validateAddress(address, getNetworkType(chainType, network));
+  }
+
+  static bool isPrivateKeyValid(String wifKey, ChainType chainType, ChainNet network) {
+    try {
+      ECPair.fromWIF(wifKey, network: getNetworkType(chainType, network));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   static Future<String> getPublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType) async {
     final networkType = _getNetwork(chainType, network);
 

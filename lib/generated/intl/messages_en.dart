@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "add" : MessageLookupByLibrary.simpleMessage("Add"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Please authenticate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -88,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pin_return" : MessageLookupByLibrary.simpleMessage("Return to first step"),
     "receive" : MessageLookupByLibrary.simpleMessage("Receive"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Address copied to Clipboard"),
+    "save" : MessageLookupByLibrary.simpleMessage("Save"),
     "send" : MessageLookupByLibrary.simpleMessage("Send"),
     "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "settings_auth_biometric" : MessageLookupByLibrary.simpleMessage("Biometric"),
@@ -127,6 +129,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "update_title" : MessageLookupByLibrary.simpleMessage("Update"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Accounts"),
+    "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("Add account"),
+    "wallet_accounts_cannot_be_empty" : MessageLookupByLibrary.simpleMessage("The field cannot be empty!"),
+    "wallet_accounts_import" : MessageLookupByLibrary.simpleMessage("Import account"),
+    "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),
+    "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("The private key is invalid!"),
+    "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("The public key is invalid!"),
+    "wallet_accounts_saved" : MessageLookupByLibrary.simpleMessage("Account saved"),
+    "wallet_accounts_select_type" : MessageLookupByLibrary.simpleMessage("Select type"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Your wallet is empty!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Network"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet is synchronising right now!"),

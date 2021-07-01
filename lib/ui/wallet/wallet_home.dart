@@ -49,8 +49,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   List<AccountBalance> _accountBalance;
   RefreshController _refreshController = RefreshController(initialRefresh: true);
 
-  WalletService _wallet;
-
   _refresh() async {
     EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
@@ -68,7 +66,12 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   _initWallet() async {
-    if (await _wallet.hasAccounts()) {
+    if (!mounted) {
+      return;
+    }
+    final wallet = sl.get<IWalletService>();
+
+    if (await wallet.hasAccounts()) {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
     }
     if (_walletInitDoneSubscription == null) {
@@ -87,9 +90,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   _syncEvents() {
+    final wallet = sl.get<IWalletService>();
+
     if (_walletSyncDoneSubscription == null) {
       _walletSyncDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletSyncDoneEvent>().listen((event) async {
-        final accounts = await _wallet.getAccounts();
+        final accounts = await wallet.getAccounts();
         if (accounts.length == 0) {
           Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
         }
@@ -164,8 +169,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     super.initState();
 
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
-
-    _wallet = sl.get<IWalletService>();
 
     _syncEvents();
     _initWallet();

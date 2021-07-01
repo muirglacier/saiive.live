@@ -155,6 +155,26 @@ class S {
     );
   }
 
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get add {
+    return Intl.message(
+      'Add',
+      name: 'add',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Dark`
   String get dark_mode {
     return Intl.message(
@@ -940,6 +960,86 @@ class S {
     return Intl.message(
       'Accounts',
       name: 'wallet_accounts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select type`
+  String get wallet_accounts_select_type {
+    return Intl.message(
+      'Select type',
+      name: 'wallet_accounts_select_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add account`
+  String get wallet_accounts_add {
+    return Intl.message(
+      'Add account',
+      name: 'wallet_accounts_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import account`
+  String get wallet_accounts_import {
+    return Intl.message(
+      'Import account',
+      name: 'wallet_accounts_import',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The public key is invalid!`
+  String get wallet_accounts_import_invalid_pub_key {
+    return Intl.message(
+      'The public key is invalid!',
+      name: 'wallet_accounts_import_invalid_pub_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The private key is invalid!`
+  String get wallet_accounts_import_invalid_priv_key {
+    return Intl.message(
+      'The private key is invalid!',
+      name: 'wallet_accounts_import_invalid_priv_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The content is invalid!`
+  String get wallet_accounts_import_invalid {
+    return Intl.message(
+      'The content is invalid!',
+      name: 'wallet_accounts_import_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The field cannot be empty!`
+  String get wallet_accounts_cannot_be_empty {
+    return Intl.message(
+      'The field cannot be empty!',
+      name: 'wallet_accounts_cannot_be_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account saved`
+  String get wallet_accounts_saved {
+    return Intl.message(
+      'Account saved',
+      name: 'wallet_accounts_saved',
       desc: '',
       args: [],
     );

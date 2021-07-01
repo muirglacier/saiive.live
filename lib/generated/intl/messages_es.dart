@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "add" : MessageLookupByLibrary.simpleMessage("Agregar"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Por favor, autentícate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Error de autenticación biométrica"),
     "cancel" : MessageLookupByLibrary.simpleMessage("cancelar"),
@@ -88,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pin_return" : MessageLookupByLibrary.simpleMessage("Volver al primer paso"),
     "receive" : MessageLookupByLibrary.simpleMessage("Recibir"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Dirección copiada al portapapeles"),
+    "save" : MessageLookupByLibrary.simpleMessage("Ahorrar"),
     "send" : MessageLookupByLibrary.simpleMessage("Enviar"),
     "settings" : MessageLookupByLibrary.simpleMessage("Ajustes"),
     "settings_auth_biometric" : MessageLookupByLibrary.simpleMessage("Biométrica"),
@@ -126,6 +128,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "update_text" : m0,
     "update_title" : MessageLookupByLibrary.simpleMessage("Versión"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
+    "wallet_accounts" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_cannot_be_empty" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_import" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_saved" : MessageLookupByLibrary.simpleMessage("TODO"),
+    "wallet_accounts_select_type" : MessageLookupByLibrary.simpleMessage("TODO"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Tu billetera está vacía!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Red"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet se está sincronizando en este momento!"),

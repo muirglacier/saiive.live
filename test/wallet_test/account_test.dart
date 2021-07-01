@@ -1,10 +1,12 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:uuid/uuid.dart';
 import 'mock/transaction_service_mock.dart';
 import 'wallet_test_base.dart';
 
@@ -14,7 +16,9 @@ void main() async {
   group("#1 create tx", () {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
+      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      await db.addOrUpdateAccount(walletAccount);
+
       final tx = Transaction(
           id: "6022346c779edc3b789bc5b9",
           chain: "DFI",
@@ -96,7 +100,7 @@ void main() async {
       final txController = sl.get<TransactionServiceMock>();
 
       expect(txController.lastTx,
-          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a914739bfb5d214c04655148eb21d91cdae8bb903fa3870101000000d64efedb0400000048a023fc0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8702483045022100e103264e7bad27767407552414b29775fe2bb58e001ed34846e2059e3cd82fee02202cfd4b4ad05a3df01fc31132219480ca26020084272825da8204fdc371bc1ada012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a914739bfb5d214c04655148eb21d91cdae8bb903fa3870101000000d64efedb04000000609c23fc0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8702483045022100d28da28e9f42706dff2f1615583ce7596f1cc625d5bbff6e1cf7fa61583ac268022003912030b2f8f526b7a26fa3404645e55d201517caf7d8fbc9639090b51adac1012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
     test("#4 create dBTC accountToAccount to self tx", () async {

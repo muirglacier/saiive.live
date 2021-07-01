@@ -25,11 +25,13 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   static const String _addressesStore = "addresses";
   static const String _accountStore = "accounts";
+  static const String _accountV2Store = "accountsV2";
   static const String _transactionStore = "transactions";
   static const String _unspentStore = "unspent";
   static const String _balanceStore = "balances";
 
   final StoreRef _accountStoreInstance = intMapStoreFactory.store(_accountStore);
+  final StoreRef _accountV2StoreInstance = stringMapStoreFactory.store(_accountV2Store);
 
   final StoreRef _transactionStoreInstance = stringMapStoreFactory.store(_transactionStore);
   final StoreRef _unspentStoreInstance = stringMapStoreFactory.store(_unspentStore);
@@ -177,9 +179,36 @@ class SembastWalletDatabase extends IWalletDatabase {
     return _database;
   }
 
-  Future<List<WalletAccount>> getAccounts() async {
+  Future<List<WalletAccount>> _getOldAccounts() async {
     var db = await database;
     var dbStore = _accountStoreInstance;
+
+    final accounts = await dbStore.find(db);
+
+    final data = accounts.map((e) => e == null ? null : WalletAccount.fromJson(e.value))?.toList();
+
+    _accountStreamController.add(data);
+
+    return data;
+  }
+
+  Future _migrateAccounts() async {
+    final oldAccounts = await _getOldAccounts();
+
+    for (final oldAcc in oldAccounts) {
+      await addOrUpdateAccount(oldAcc);
+    }
+
+    var db = await database;
+    var dbStore = _accountStoreInstance;
+    await dbStore.delete(db);
+  }
+
+  Future<List<WalletAccount>> getAccounts() async {
+    await _migrateAccounts();
+
+    var db = await database;
+    var dbStore = _accountV2StoreInstance;
 
     final accounts = await dbStore.find(db);
 
@@ -203,26 +232,28 @@ class SembastWalletDatabase extends IWalletDatabase {
     return records.first["id"];
   }
 
-  Future<WalletAccount> updateAccount(WalletAccount account) async {
+  @override
+  Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount) async {
     final db = await database;
-    await _accountStoreInstance.record(account.id).put(db, account.toJson());
 
-    return WalletAccount.fromJson(await _accountStoreInstance.record(account.id).get(db));
+    await _accountV2StoreInstance.record(walletAccount.uniqueId).put(db, walletAccount.toJson());
+
+    return WalletAccount.fromJson(await _accountV2StoreInstance.record(walletAccount.uniqueId).get(db));
   }
 
   Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false}) async {
     final db = await database;
 
-    if (!await _accountStoreInstance.record(account).exists(db)) {
+    if (!await _accountV2StoreInstance.record(account).exists(db)) {
       var newAccount =
           WalletAccount(name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, uniqueId: Uuid().v4());
 
-      await _accountStoreInstance.record(account).put(db, newAccount.toJson());
+      await addOrUpdateAccount(newAccount);
 
       return newAccount;
     }
 
-    return WalletAccount.fromJson(await _accountStoreInstance.record(account).get(db));
+    return WalletAccount.fromJson(await _accountV2StoreInstance.record(account).get(db));
   }
 
   Future<List<tx.Transaction>> getTransactions() async {

@@ -1,11 +1,8 @@
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
-import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
-import 'package:saiive.live/helper/version.dart';
-import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/drawer.dart';
@@ -14,18 +11,18 @@ import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
 import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
-import 'package:saiive.live/util/sharedprefsutil.dart';
+import 'package:saiive.live/ui/widgets/version_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:upgrader/upgrader.dart';
 
 class NavigationEntry {
   final Icon icon;
   final String label;
   final Widget page;
   final bool visibleForBottomNav;
+  final String routeSettingName;
 
-  NavigationEntry({this.icon, this.label, this.page, this.visibleForBottomNav = true});
+  NavigationEntry({this.icon, this.label, this.page, this.visibleForBottomNav = true, this.routeSettingName});
 }
 
 class HomeScreen extends StatefulWidget {
@@ -36,21 +33,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  ChainNet _currentNet = ChainNet.Testnet;
-  EnvironmentType _environmentType = EnvironmentType.Unknonw;
-
-  String _version = "";
 
   static List<NavigationEntry> _navigationEntries = [];
 
   void initMenu(BuildContext context) {
     _navigationEntries = [
-      NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen()),
-      NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen()),
-      NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen()),
-      NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen()),
-      NavigationEntry(icon: Icon(Icons.account_box), label: S.of(context).wallet_accounts, page: AccountsScreen(), visibleForBottomNav: false),
-      NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen(), visibleForBottomNav: false)
+      NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen(), routeSettingName: "/home"),
+      NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(), routeSettingName: "/liqudity"),
+      NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(), routeSettingName: "/dex"),
+      NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen(), routeSettingName: "/tokens"),
+      NavigationEntry(icon: Icon(Icons.account_box), label: S.of(context).wallet_accounts, page: AccountsScreen(), visibleForBottomNav: false, routeSettingName: "/accounts"),
+      NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen(), visibleForBottomNav: false, routeSettingName: "/settings")
     ];
   }
 
@@ -58,20 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  void _init() async {
-    _environmentType = EnvHelper.getEnvironment();
-    _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-    _version = await VersionHelper().getVersion();
-
-    setState(() {});
   }
 
   _buildContent(BuildContext context) {
@@ -110,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
                         Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(height: 5),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(ChainHelper.chainNetworkString(_currentNet)), Text(_version)]),
+                        VersionWidget(),
                         if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
                       ]),
                     ),
@@ -148,6 +127,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  drawerNavigate(NavigationEntry nav) {
+    if (nav.visibleForBottomNav) {
+      setState(() {
+        _selectedIndex = _navigationEntries.indexOf(nav);
+      });
+      Navigator.pop(context);
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: nav.routeSettingName), builder: (BuildContext context) => nav.page));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     initMenu(context);
@@ -156,16 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
         key: StateContainer.of(context).scaffoldKey,
         body: _buildContent(context),
         bottomNavigationBar: _buildBottomNavBar(context),
-        drawer: DrawerUtil.createDrawer(context, _navigationEntries, (nav) {
-          setState(() {
-            if (nav.visibleForBottomNav) {
-              _selectedIndex = _navigationEntries.indexOf(nav);
-
-              Navigator.pop(context);
-            } else {
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => nav.page));
-            }
-          });
-        }, env: _environmentType, network: _currentNet, version: _version));
+        drawer: SaiiveDrawer(_navigationEntries, drawerNavigate));
   }
 }

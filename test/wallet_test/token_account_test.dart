@@ -1,10 +1,12 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:uuid/uuid.dart';
 import 'mock/transaction_service_mock.dart';
 import 'wallet_test_base.dart';
 
@@ -15,7 +17,9 @@ void main() async {
     initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
+      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      await db.addOrUpdateAccount(walletAccount);
+
       await db.addTransaction(Transaction(
           id: "601496faf1963a034ec57842",
           chain: "DFI",
@@ -91,7 +95,9 @@ void main() async {
   group("#2 create 2nd tx", () {
     initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
+      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      await db.addOrUpdateAccount(walletAccount);
+
       await db.addTransaction(Transaction(
           id: "60157d3ddc5c117a2b26ae3d",
           chain: "DFI",

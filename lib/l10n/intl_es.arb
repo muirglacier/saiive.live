@@ -16,6 +16,9 @@
   "next": "Siguiente",
   "later": "Más tarde",
   "ok": "Ok",
+
+  "save": "Ahorrar",
+  "add": "Agregar",
   
   "dark_mode": "Oscuro",
   "light_mode": "Claro",
@@ -102,6 +105,17 @@
   "wallet_operation_mempool_conflict_retry": "Encontramos transacciones pendientes. Vamos a esperarlas, ¡esto podría llevar algo de tiempo!",
   "wallet_operation_mempool_conflict": "Espere a que su transacción se refleje en el siguiente bloque antes de continuar con una nueva transacción.",
   "wallet_operation_missing_inputs": "Tu Wallet no está sincronizado. Vuelva a intentar la transacción.",
+
+
+  "wallet_accounts": "TODO",
+  "wallet_accounts_select_type": "TODO",
+  "wallet_accounts_add": "TODO",
+  "wallet_accounts_import": "TODO",
+  "wallet_accounts_import_invalid_pub_key": "TODO",
+  "wallet_accounts_import_invalid_priv_key": "TODO",
+  "wallet_accounts_import_invalid": "TODO",
+  "wallet_accounts_cannot_be_empty": "TODO",
+  "wallet_accounts_saved": "TODO",
 
   "wallet_send": "Enviar",
   "wallet_send_address": "Dirección",

@@ -11,10 +11,10 @@ class WalletAccount {
 
   final String uniqueId;
 
-  final String name;
+  String name;
 
   final int lastAccess;
-  final bool selected;
+  bool selected;
 
   final WalletAccountType walletAccountType;
 

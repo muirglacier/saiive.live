@@ -13,6 +13,9 @@
   "dark_mode": "Dunkel",
   "light_mode": "Hell",
   "ok": "Ok",
+
+  "save": "Speichern",
+  "add": "Hinzufügen",
   
   
   "test_info": "Danke fürs Testen!",
@@ -103,6 +106,14 @@
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
   "wallet_accounts": "Konten",
+  "wallet_accounts_select_type": "Kontotyp auswählen",
+  "wallet_accounts_add": "Konto anlegen",
+  "wallet_accounts_import": "Konto importieren",
+  "wallet_accounts_import_invalid_pub_key": "Der Public Key ist ungültig!",
+  "wallet_accounts_import_invalid_priv_key": "Der Private Key ist ungültig!",
+  "wallet_accounts_import_invalid": "Der Inhalt ist ungültig!",
+  "wallet_accounts_cannot_be_empty": "Das Feld darf nicht leer sein!",
+  "wallet_accounts_saved": "Konto wurde gespeichert",
 
   "settings": "Einstellungen",
   "settings_wallet": "Wallet",

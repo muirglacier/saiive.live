@@ -14,7 +14,7 @@ class VersionWidget extends StatefulWidget {
 class _VersionWidget extends State<VersionWidget> {
   EnvironmentType _environmentType = EnvironmentType.Unknonw;
   ChainNet _currentNet = ChainNet.Mainnet;
-  String _version;
+  String _version = " ";
 
   void init() async {
     _environmentType = EnvHelper.getEnvironment();

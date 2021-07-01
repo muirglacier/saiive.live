@@ -1,9 +1,11 @@
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:share_plus/share_plus.dart';
 
 class TransactionFailScreen extends StatefulWidget {
@@ -22,8 +24,11 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
   String _errorText;
 
   String _copyText;
+  String _version;
 
-  transformError() {
+  bool _isLoading = true;
+
+  _transformError() {
     if (widget.error == null) {
       return;
     }
@@ -31,6 +36,10 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     if (widget.error is Error) {
       stackTrace = (widget.error as Error).stackTrace.toString();
     }
+
+    _errorText += "\r\n";
+    _copyText += _version;
+    _errorText += "\r\n";
 
     if (widget.error is HttpException) {
       final httpError = widget.error as HttpException;
@@ -49,9 +58,28 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     LogHelper.instance.e(_errorText);
   }
 
+  _init() async {
+    _version = await VersionHelper().getVersion();
+
+    _transformError();
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _init();
+  }
+
   @override
   Widget build(BuildContext context) {
-    transformError();
+    if (_isLoading) {
+      return LoadingWidget(text: S.of(context).loading);
+    }
 
     return Scaffold(
         appBar: AppBar(

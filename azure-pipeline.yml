@@ -246,6 +246,17 @@ stages:
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
 
+      - task: FlutterBuild@0
+        displayName: Android Release APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)'
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
+          buildFlavour: 'staginggooglePlay'
+          entryPoint: 'lib/main_staging.dart'
+          buildNumber: $(Build.BuildNumber)
+
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
@@ -1570,17 +1581,6 @@ stages:
           projectDirectory: '$(Build.SourcesDirectory)'
           buildName: $(AppVersion)'
           buildFlavour: 'stagingappcenter'
-          entryPoint: 'lib/main_staging.dart'
-          buildNumber: $(Build.BuildNumber)
-          extraArgs: --target=lib/main_staging.dart
-
-      - task: FlutterBuild@0
-        displayName: Linux Release PlayStore
-        inputs:
-          target: 'linux'
-          projectDirectory: '$(Build.SourcesDirectory)'
-          buildName: $(AppVersion)'
-          buildFlavour: 'staginggooglePlay'
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
           extraArgs: --target=lib/main_staging.dart

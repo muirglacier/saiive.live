@@ -3,13 +3,9 @@ import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database.dart';
-import 'package:saiive.live/crypto/errors/InputValueEqualsTotalValueError.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/helper/logger/LogHelper.dart';
-import 'package:hex/hex.dart';
-
-import 'package:bs58check/bs58check.dart' as bs58check;
 import 'from_account.dart';
 
 class PublicPrivateKeyPair {
@@ -39,7 +35,7 @@ class HdWalletUtil {
     }
   }
 
-  static Future<String> getPublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType) async {
+  static String getPublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType) {
     final networkType = _getNetwork(chainType, network);
 
     final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
@@ -47,7 +43,7 @@ class HdWalletUtil {
 
     final path = derivePath(account, changeAddress, index);
 
-    final address = await _getPublicAddress(xMasterPriv.derivePath(path), chainType, network, addressType);
+    final address = getPublicAddress(xMasterPriv.derivePath(path), chainType, network, addressType);
 
     //   LogHelper.instance
     //     .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
@@ -67,35 +63,49 @@ class HdWalletUtil {
     return keyPair;
   }
 
-  static Future<String> _getPublicAddress(bip32.BIP32 keyPair, ChainType chainType, ChainNet network, AddressType addressType) async {
+  static String getPublicAddress(bip32.BIP32 keyPair, ChainType chainType, ChainNet network, AddressType addressType) {
     switch (addressType) {
       case AddressType.Legacy:
-        return _getLegacyPublicKey(keyPair, chainType, network);
+        return _getLegacyPublicKey(keyPair.publicKey, chainType, network);
         break;
       case AddressType.P2SHSegwit:
-        return _getPayToScriptHashPublicKey(keyPair, chainType, network);
+        return _getPayToScriptHashPublicKey(keyPair.publicKey, chainType, network);
       default:
         throw new ArgumentError("not supported...");
     }
   }
 
-  static Future<String> _getLegacyPublicKey(bip32.BIP32 keyPair, ChainType chainType, ChainNet network) async {
+  static String getPublicAddressFromWif(String privateKey, ChainType chainType, ChainNet network, AddressType addressType) {
+    var pair = ECPair.fromWIF(privateKey, network: getNetworkType(chainType, network));
+
+    switch (addressType) {
+      case AddressType.Legacy:
+        return _getLegacyPublicKey(pair.publicKey, chainType, network);
+        break;
+      case AddressType.P2SHSegwit:
+        return _getPayToScriptHashPublicKey(pair.publicKey, chainType, network);
+      default:
+        throw new ArgumentError("not supported...");
+    }
+  }
+
+  static String _getLegacyPublicKey(Uint8List publicKey, ChainType chainType, ChainNet network) {
     final net = getNetworkType(chainType, network);
-    final address = P2PKH(data: PaymentData(pubkey: keyPair.publicKey), network: net).data.address;
+    final address = P2PKH(data: PaymentData(pubkey: publicKey), network: net).data.address;
 
     return address;
   }
 
-  static Future<String> _getPayToScriptHashPublicKey(bip32.BIP32 keyPair, ChainType chainType, ChainNet network) async {
+  static String _getPayToScriptHashPublicKey(Uint8List publicKey, ChainType chainType, ChainNet network) {
     final net = getNetworkType(chainType, network);
-    final address = P2SH(data: PaymentData(redeem: P2WPKH(data: PaymentData(pubkey: keyPair.publicKey), network: net).data), network: net).data.address;
+    final address = P2SH(data: PaymentData(redeem: P2WPKH(data: PaymentData(pubkey: publicKey), network: net).data), network: net).data.address;
 
     return address;
   }
 
-  static Future<String> _getPublicAddressFromKeyPair(ECPair keyPair, ChainType chainType, ChainNet network, AddressType addressType) async {
+  static String _getPublicAddressFromKeyPair(Uint8List publicKey, ChainType chainType, ChainNet network, AddressType addressType) {
     final net = getNetworkType(chainType, network);
-    final address = P2SH(data: PaymentData(redeem: P2WPKH(data: PaymentData(pubkey: keyPair.publicKey), network: net).data), network: net).data.address;
+    final address = P2SH(data: PaymentData(redeem: P2WPKH(data: PaymentData(pubkey: publicKey), network: net).data), network: net).data.address;
 
     return address;
   }
@@ -158,7 +168,7 @@ class HdWalletUtil {
           seed, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.P2SHSegwit);
+      final pubKey = _getPublicAddressFromKeyPair(key.publicKey, chain, net, AddressType.P2SHSegwit);
       final input = inputTxs[index].mintTxId;
       LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
 
@@ -197,7 +207,7 @@ class HdWalletUtil {
     for (final key in keys) {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.Legacy);
+      final pubKey = _getPublicAddressFromKeyPair(key.publicKey, chain, net, AddressType.Legacy);
       final input = inputTxs[index].mintTxId;
       LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
 
@@ -308,7 +318,7 @@ class HdWalletUtil {
     for (final key in keys) {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.P2SHSegwit);
+      final pubKey = _getPublicAddressFromKeyPair(key.publicKey, chain, net, AddressType.P2SHSegwit);
       final input = inputTxs[index].mintTxId;
       final witnessValue = inputTxs[index].valueRaw;
       LogHelper.instance.d("sign tx $input with privateKey from $pubKey witnessValue. $witnessValue");
@@ -321,7 +331,9 @@ class HdWalletUtil {
   }
 
   static Future<String> derivePublicKey(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType) async {
-    return await getPublicKey(seed, account, changeAddress, index, chainType, network, addressType);
+    final address = getPublicKey(seed, account, changeAddress, index, chainType, network, addressType);
+
+    return Future.value(address);
   }
 
   static Future<List<String>> derivePublicKeys(

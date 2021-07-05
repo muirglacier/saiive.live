@@ -7,6 +7,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
+import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/events/events.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/block.dart';
@@ -50,7 +51,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   RefreshController _refreshController = RefreshController(initialRefresh: true);
 
   _refresh() async {
-    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    if (EnvHelper.getEnvironment() != EnvironmentType.Development) {
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    }
 
     sl.get<IHealthService>().checkHealth(context);
 
@@ -72,7 +75,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     final wallet = sl.get<IWalletService>();
 
     if (await wallet.hasAccounts()) {
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      if (EnvHelper.getEnvironment() != EnvironmentType.Development) {
+        EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      }
     }
     if (_walletInitDoneSubscription == null) {
       _walletInitDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletInitDoneEvent>().listen((event) async {

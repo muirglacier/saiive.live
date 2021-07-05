@@ -14,6 +14,11 @@ class AccountsAddScreen extends StatefulWidget {
 }
 
 class _AccountsAddScreen extends State<AccountsAddScreen> {
+  @override
+  initState() {
+    super.initState();
+  }
+
   _buildAccountAddScreen(BuildContext context) {
     return Container();
   }
@@ -23,7 +28,7 @@ class _AccountsAddScreen extends State<AccountsAddScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Text(S.of(context).wallet_accounts_add),
+          title: Text(S.of(context).wallet_accounts_address_add),
           actions: [],
         ),
         body: _buildAccountAddScreen(context));

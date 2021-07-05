@@ -30,9 +30,15 @@ abstract class IWallet {
   Future<List<WalletAccount>> getAccounts();
   Future<WalletAccount> addAccount(WalletAccount account);
 
+  Future<WalletAddress> updateAddress(WalletAddress address);
+
   void setWorkingAccount(int id);
+  Future<WalletAddress> getNextWalletAddress(AddressType addressType, bool isChangeAddress);
+  @deprecated
   Future<String> getPublicKey(AddressType type);
   Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress, AddressType addressType);
+  Future<WalletAddress> getPublicKeyFromAccounts(WalletAccount walletAccount);
+  Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount);
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 

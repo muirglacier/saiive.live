@@ -3,6 +3,8 @@ import 'package:saiive.live/network/model/ivault.dart';
 class VaultMock extends IVault {
   String _seed;
 
+  Map<String, String> _privateKeyMap = Map<String, String>();
+
   VaultMock(this._seed);
 
   @override
@@ -34,5 +36,15 @@ class VaultMock extends IVault {
   // ignore: override_on_non_overriding_member
   Future reEncryptData(String oldPassword, String newPassword) {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<String> getPrivateKey(String id) async {
+    return _privateKeyMap[id];
+  }
+
+  @override
+  Future setPrivateKey(String id, String privateKey) async {
+    _privateKeyMap.putIfAbsent(id, () => privateKey);
   }
 }

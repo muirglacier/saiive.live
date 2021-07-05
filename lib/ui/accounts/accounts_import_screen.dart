@@ -8,6 +8,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -70,8 +71,9 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             walletAccountType: WalletAccountType.PublicKey,
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 
-        Navigator.of(context)
-            .push(MaterialPageRoute(settings: RouteSettings(name: "/accountsEditScreen"), builder: (BuildContext context) => AccountsEditScreen(walletAccount, true)));
+        Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: "/accountsEditScreen"),
+            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, data, AddressType.Legacy, privateKey: null)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_accounts_import_invalid_pub_key),
@@ -89,8 +91,12 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             account: -1,
             walletAccountType: WalletAccountType.PrivateKey,
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
-        Navigator.of(context)
-            .push(MaterialPageRoute(settings: RouteSettings(name: "/accountsEditScreen"), builder: (BuildContext context) => AccountsEditScreen(walletAccount, true)));
+
+        var p2sh = HdWalletUtil.getPublicAddressFromWif(data, widget.chainType, currentNet, AddressType.P2SHSegwit);
+
+        Navigator.of(context).push(MaterialPageRoute(
+            settings: RouteSettings(name: "/accountsEditScreen"),
+            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, p2sh, AddressType.Legacy, privateKey: data)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_accounts_import_invalid_priv_key),

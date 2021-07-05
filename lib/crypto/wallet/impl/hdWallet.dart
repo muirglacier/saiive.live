@@ -39,6 +39,10 @@ class HdWallet extends IHdWallet {
   Future init(IWalletDatabase walletDatabase) async {
     var addresses = await walletDatabase.getWalletAddresses(_account.account);
 
+    if (_account.walletAccountType != WalletAccountType.HdAccount) {
+      return;
+    }
+
     if (addresses.length >= walletDatabase.getAddressCreationCount()) {
       // for (final address in addresses) {
       //   final pubKey = address.publicKey;
@@ -88,6 +92,15 @@ class HdWallet extends IHdWallet {
     return address.publicKey;
   }
 
+  @override
+  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+    var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
+
+    var address = await getNextFreePublicKey(database, nextIndex, sharedPrefs, isChangeAddress, addressType);
+
+    return address;
+  }
+
   Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     if (!await database.addressExists(_account.account, isChangeAddress, startIndex, addressType)) {
       //overflow indexes....start again with 0
@@ -100,7 +113,7 @@ class HdWallet extends IHdWallet {
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
     var addressUsed = await database.addressAlreadyUsed(address.publicKey);
 
-    if (addressUsed) {
+    if (addressUsed || address.createdAt != null) {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
     }
 

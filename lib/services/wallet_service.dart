@@ -26,6 +26,10 @@ abstract class IWalletService {
   Future<bool> hasAccounts();
   Future<List<WalletAccount>> getAccounts();
 
+  Future<WalletAddress> getNextWalletAddress(ChainType chainType, bool isChangeAddress, AddressType addressType);
+  Future<WalletAddress> getPublicKeyFromAccount(WalletAccount account);
+  Future<List<WalletAddress>> getPublicKeysFromAccount(WalletAccount account);
+
   Future<String> getPublicKey(ChainType chainType, AddressType addressType);
   Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
   Future<List<String>> getPublicKeys(ChainType chainType);
@@ -36,6 +40,7 @@ abstract class IWalletService {
   Future destroy();
 
   Future<WalletAccount> addAccount(WalletAccount account);
+  Future<WalletAddress> updateAddress(WalletAddress account);
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards);
 
   Future<Map<String, bool>> getIsAlive();
@@ -102,6 +107,14 @@ class WalletService implements IWalletService {
   }
 
   @override
+  Future<WalletAddress> getNextWalletAddress(ChainType chainType, bool isChangeAddress, AddressType addressType) {
+    if (chainType == ChainType.DeFiChain) {
+      return _defiWallet.getNextWalletAddress(addressType, isChangeAddress);
+    }
+    return _bitcoinWallet.getNextWalletAddress(addressType, isChangeAddress);
+  }
+
+  @override
   Future<String> getPublicKey(ChainType chainType, AddressType addressType) {
     if (chainType == ChainType.DeFiChain) {
       return _defiWallet.getPublicKey(addressType);
@@ -118,6 +131,22 @@ class WalletService implements IWalletService {
   }
 
   @override
+  Future<WalletAddress> getPublicKeyFromAccount(WalletAccount account) {
+    if (account.chain == ChainType.DeFiChain) {
+      return _defiWallet.getPublicKeyFromAccounts(account);
+    }
+    return _bitcoinWallet.getPublicKeyFromAccounts(account);
+  }
+
+  @override
+  Future<List<WalletAddress>> getPublicKeysFromAccount(WalletAccount account) {
+    if (account.chain == ChainType.DeFiChain) {
+      return _defiWallet.getPublicKeysFromAccounts(account);
+    }
+    return _bitcoinWallet.getPublicKeysFromAccounts(account);
+  }
+
+  @override
   Future<bool> hasAccounts() async {
     var btcHasAccounts = await _bitcoinWallet.hasAccounts();
     var defiHasAccounts = await _defiWallet.hasAccounts();
@@ -128,6 +157,14 @@ class WalletService implements IWalletService {
   @override
   Future syncAll() async {
     await Future.wait([_defiWallet.syncAll(), _bitcoinWallet.syncAll()]);
+  }
+
+  @override
+  Future<WalletAddress> updateAddress(WalletAddress address) {
+    if (address.chain == ChainType.DeFiChain) {
+      return _defiWallet.updateAddress(address);
+    }
+    return _bitcoinWallet.updateAddress(address);
   }
 
   @override

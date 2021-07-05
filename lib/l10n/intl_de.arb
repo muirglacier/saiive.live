@@ -13,6 +13,8 @@
   "dark_mode": "Dunkel",
   "light_mode": "Hell",
   "ok": "Ok",
+  "label": "Label",
+  "advanced": "Erweitert",
 
   "save": "Speichern",
   "add": "Hinzufügen",
@@ -106,6 +108,9 @@
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
   "wallet_accounts": "Konten",
+  "wallet_accounts_detail": "Konto Details",
+  "wallet_accounts_empty": "Keine Adressen angelegt...",
+  "wallet_accounts_address_add": "Neue Adresse anlegen",
   "wallet_accounts_select_type": "Kontotyp auswählen",
   "wallet_accounts_add": "Konto anlegen",
   "wallet_accounts_import": "Konto importieren",

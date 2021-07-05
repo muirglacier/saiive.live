@@ -140,6 +140,19 @@ abstract class Wallet extends IWallet {
     return getPublicKeyFromAccount(_account, false, addressType);
   }
 
+  @override
+  Future<WalletAddress> getNextWalletAddress(AddressType addressType, bool isChangeAddress) async {
+    isInitialzed();
+
+    assert(_wallets.containsKey(account));
+
+    if (_wallets.containsKey(account)) {
+      return await _wallets[account].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+    }
+
+    throw UnimplementedError();
+  }
+
   Future<List<String>> getPublicKeys() async {
     isInitialzed();
     List<String> keys = [];
@@ -160,6 +173,33 @@ abstract class Wallet extends IWallet {
       return await _wallets[account].nextFreePublicKey(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
     }
     throw UnimplementedError();
+  }
+
+  @override
+  Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount) async {
+    final addresses = await _walletDatabase.getWalletAddressesById(walletAccount.uniqueId);
+
+    return addresses;
+  }
+
+  @override
+  Future<WalletAddress> getPublicKeyFromAccounts(WalletAccount walletAccount) async {
+    if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
+      throw new ArgumentError("Not supported for hd wallets...");
+    }
+
+    final addresses = await this.getPublicKeysFromAccounts(walletAccount);
+
+    if (addresses.isNotEmpty) {
+      return addresses.first;
+    }
+    return null;
+  }
+
+  @override
+  Future<WalletAddress> updateAddress(WalletAddress address) {
+    isInitialzed();
+    return _walletDatabase.addAddress(address);
   }
 
   @override
@@ -259,8 +299,8 @@ abstract class Wallet extends IWallet {
     if (amount > tokenBalance?.balance) {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
-    final key = mnemonicToSeed(seed);
 
+    final key = mnemonicToSeed(seed);
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
@@ -283,7 +323,7 @@ abstract class Wallet extends IWallet {
       curAmount += tx.valueRaw;
 
       final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network);
-      final pubKey = await HdWalletUtil.getPublicKey(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType);
+      final pubKey = HdWalletUtil.getPublicKey(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType);
 
       if (pubKey != address.publicKey) {
         throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");

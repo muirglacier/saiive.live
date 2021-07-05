@@ -223,6 +223,12 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
+  Future<List<WalletAddress>> getWalletAddressesById(String uniqueId) {
+    var ret = _addresses.where((element) => element.accountId == uniqueId).toList();
+    return Future.value(ret);
+  }
+
+  @override
   Future<bool> isOwnAddress(String pubKey) async {
     for (final address in _addresses) {
       if (address.publicKey == pubKey) {

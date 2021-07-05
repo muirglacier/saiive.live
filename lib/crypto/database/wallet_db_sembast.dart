@@ -77,9 +77,10 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
-  Future addAddress(WalletAddress account) async {
+  Future<WalletAddress> addAddress(WalletAddress account) async {
     final db = await database;
     await _addressesStoreInstance.record(account.uniqueId).put(db, account.toJson());
+    return account;
   }
 
   @override
@@ -108,11 +109,32 @@ class SembastWalletDatabase extends IWalletDatabase {
     return null;
   }
 
+  Future<List<WalletAddress>> getWalletAddressesById(String uniqueId) async {
+    var dbStore = _addressesStoreInstance;
+
+    var db = await database;
+
+    var walletAccount = WalletAccount.fromJson(await _accountV2StoreInstance.record(uniqueId).get(db));
+
+    Finder finder;
+    if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
+      finder = Finder(filter: Filter.equals('accountId', uniqueId) & (Filter.notNull('createdAt') | Filter.notNull('name')));
+    } else {
+      finder = Finder(filter: Filter.equals('accountId', uniqueId));
+    }
+
+    final accounts = await dbStore.find(db, finder: finder);
+
+    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+
+    return data;
+  }
+
   @override
   Future<List<WalletAddress>> getWalletAddresses(int account) async {
     var dbStore = _addressesStoreInstance;
 
-    var finder = Finder(filter: Filter.equals('account', 0));
+    var finder = Finder(filter: Filter.equals('account', account));
     final accounts = await dbStore.find(await database, finder: finder);
 
     final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();

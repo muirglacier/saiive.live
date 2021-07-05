@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "add" : MessageLookupByLibrary.simpleMessage("Hinzufügen"),
+    "advanced" : MessageLookupByLibrary.simpleMessage("Erweitert"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Authentifiziere Dich"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
@@ -60,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_welcome_good_day" : MessageLookupByLibrary.simpleMessage("Guten Tag"),
     "home_welcome_good_evening" : MessageLookupByLibrary.simpleMessage("Guten Abend"),
     "home_welcome_good_morning" : MessageLookupByLibrary.simpleMessage("Guten Tag"),
+    "label" : MessageLookupByLibrary.simpleMessage("Label"),
     "later" : MessageLookupByLibrary.simpleMessage("Später"),
     "light_mode" : MessageLookupByLibrary.simpleMessage("Hell"),
     "liqudity_add_successfull" : MessageLookupByLibrary.simpleMessage("Hinzufügen war erfolgreich"),
@@ -130,7 +132,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Konten"),
     "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("Konto anlegen"),
+    "wallet_accounts_address_add" : MessageLookupByLibrary.simpleMessage("Neue Adresse anlegen"),
     "wallet_accounts_cannot_be_empty" : MessageLookupByLibrary.simpleMessage("Das Feld darf nicht leer sein!"),
+    "wallet_accounts_detail" : MessageLookupByLibrary.simpleMessage("Konto Details"),
+    "wallet_accounts_empty" : MessageLookupByLibrary.simpleMessage("Keine Adressen angelegt..."),
     "wallet_accounts_import" : MessageLookupByLibrary.simpleMessage("Konto importieren"),
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("Der Inhalt ist ungültig!"),
     "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("Der Private Key ist ungültig!"),

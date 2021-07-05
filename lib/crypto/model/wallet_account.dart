@@ -18,6 +18,18 @@ class WalletAccount {
 
   final WalletAccountType walletAccountType;
 
+  static String getStringForWalletAccountType(WalletAccountType accountType) {
+    switch (accountType) {
+      case WalletAccountType.HdAccount:
+        return "HDAccount";
+      case WalletAccountType.PublicKey:
+        return "PublicKey";
+      case WalletAccountType.PrivateKey:
+        return "PrivateKey";
+    }
+    return "";
+  }
+
   WalletAccount(
       {@required this.uniqueId,
       @required this.id,

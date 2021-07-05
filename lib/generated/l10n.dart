@@ -155,6 +155,26 @@ class S {
     );
   }
 
+  /// `Label`
+  String get label {
+    return Intl.message(
+      'Label',
+      name: 'label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advanced`
+  String get advanced {
+    return Intl.message(
+      'Advanced',
+      name: 'advanced',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(
@@ -960,6 +980,36 @@ class S {
     return Intl.message(
       'Accounts',
       name: 'wallet_accounts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account details`
+  String get wallet_accounts_detail {
+    return Intl.message(
+      'Account details',
+      name: 'wallet_accounts_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No address created yet...`
+  String get wallet_accounts_empty {
+    return Intl.message(
+      'No address created yet...',
+      name: 'wallet_accounts_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create new address`
+  String get wallet_accounts_address_add {
+    return Intl.message(
+      'Create new address',
+      name: 'wallet_accounts_address_add',
       desc: '',
       args: [],
     );

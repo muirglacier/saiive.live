@@ -13,9 +13,11 @@ class WalletAddress {
 
   final String accountId;
 
+  String name;
+  DateTime createdAt;
   final String publicKey;
 
-  String get uniqueId => chain.index.toString() + "_" + account.toString() + "_" + (isChangeAddress ? "1" : "0") + "_" + index.toString();
+  String get uniqueId => accountId + "_" + chain.index.toString() + "_" + account.toString() + "_" + (isChangeAddress ? "1" : "0") + "_" + index.toString();
 
   WalletAddress(
       {@required this.accountId,
@@ -25,7 +27,9 @@ class WalletAddress {
       @required this.isChangeAddress,
       @required this.publicKey,
       @required this.network,
-      @required this.addressType});
+      @required this.addressType,
+      this.name,
+      this.createdAt});
 
   factory WalletAddress.fromJson(Map<String, dynamic> json) {
     return WalletAddress(
@@ -36,7 +40,9 @@ class WalletAddress {
         network: ChainNet.values[json['network']],
         publicKey: json['publicKey'],
         accountId: json.containsKey("accountId") ? json["accountId"] : "00000000-0000-0000-0000-000000000000",
-        addressType: json.containsKey("addressType") ? AddressType.values[json['addressType']] : AddressType.P2SHSegwit);
+        addressType: json.containsKey("addressType") ? AddressType.values[json['addressType']] : AddressType.P2SHSegwit,
+        name: json.containsKey("name") ? json["name"] : "",
+        createdAt: json.containsKey("createdAt") ? DateTime.parse(json["createdAt"]) : null);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -47,6 +53,8 @@ class WalletAddress {
         'publicKey': publicKey,
         'network': network.index,
         'addressType': addressType == null ? AddressType.P2SHSegwit.index : addressType.index,
-        'accountId': accountId != null ? accountId : "00000000-0000-0000-0000-000000000000"
+        'accountId': accountId != null ? accountId : "00000000-0000-0000-0000-000000000000",
+        'name': name,
+        if (createdAt != null) 'createdAt': createdAt.toIso8601String()
       };
 }

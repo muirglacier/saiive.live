@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "add" : MessageLookupByLibrary.simpleMessage("Add"),
+    "advanced" : MessageLookupByLibrary.simpleMessage("Advanced"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Please authenticate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -60,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_welcome_good_day" : MessageLookupByLibrary.simpleMessage("Good day"),
     "home_welcome_good_evening" : MessageLookupByLibrary.simpleMessage("Good evening"),
     "home_welcome_good_morning" : MessageLookupByLibrary.simpleMessage("Good morning"),
+    "label" : MessageLookupByLibrary.simpleMessage("Label"),
     "later" : MessageLookupByLibrary.simpleMessage("Later"),
     "light_mode" : MessageLookupByLibrary.simpleMessage("Light"),
     "liqudity_add_successfull" : MessageLookupByLibrary.simpleMessage("Add liquidity successfull"),
@@ -130,7 +132,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Accounts"),
     "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("Add account"),
+    "wallet_accounts_address_add" : MessageLookupByLibrary.simpleMessage("Create new address"),
     "wallet_accounts_cannot_be_empty" : MessageLookupByLibrary.simpleMessage("The field cannot be empty!"),
+    "wallet_accounts_detail" : MessageLookupByLibrary.simpleMessage("Account details"),
+    "wallet_accounts_empty" : MessageLookupByLibrary.simpleMessage("No address created yet..."),
     "wallet_accounts_import" : MessageLookupByLibrary.simpleMessage("Import account"),
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),
     "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("The private key is invalid!"),

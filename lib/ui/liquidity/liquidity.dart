@@ -89,10 +89,17 @@ class _LiquidityScreen extends State<LiquidityScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadEnd", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
     } catch (e) {
-      LogHelper.instance.e("Error loading data", e);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(e.toString()),
-      ));
+      if (e is HttpException) {
+        LogHelper.instance.e("Error loading data", e.message);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.message),
+        ));
+      } else {
+        LogHelper.instance.e("Error loading data", e);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.toString()),
+        ));
+      }
 
       setState(() {
         _isLoading = false;

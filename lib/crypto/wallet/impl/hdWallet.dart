@@ -50,6 +50,7 @@ class HdWallet extends IHdWallet {
     }
 
     final seed = HEX.decode(_seed);
+    await _checkAndCreateIfExists(walletDatabase, seed, 0, true, AddressType.Legacy);
     for (int i = 0; i < walletDatabase.getAddressCreationCount(); i++) {
       await _checkAndCreateIfExists(walletDatabase, seed, i, true, AddressType.P2SHSegwit);
       await _checkAndCreateIfExists(walletDatabase, seed, i, false, AddressType.P2SHSegwit);

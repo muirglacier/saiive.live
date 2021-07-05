@@ -27,6 +27,10 @@ class AccountsImportScreen extends StatefulWidget {
 class _AccountsImportScreen extends State<AccountsImportScreen> {
   bool _cameraAllowed = false;
   _init() async {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return;
+    }
+
     var status = await Permission.camera.status;
     if (!status.isGranted) {
       final permission = await Permission.camera.request();

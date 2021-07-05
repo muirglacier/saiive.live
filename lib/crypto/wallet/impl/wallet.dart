@@ -283,6 +283,11 @@ abstract class Wallet extends IWallet {
       curAmount += tx.valueRaw;
 
       final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network);
+      final pubKey = await HdWalletUtil.getPublicKey(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType);
+
+      if (pubKey != address.publicKey) {
+        throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");
+      }
 
       keys.add(keyPair);
 

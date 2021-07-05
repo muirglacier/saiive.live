@@ -36,23 +36,23 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     if (widget.error is Error) {
       stackTrace = (widget.error as Error).stackTrace.toString();
     }
-
-    _errorText += "\r\n";
+    _copyText = "";
+    _copyText += "\r\n";
     _copyText += _version;
-    _errorText += "\r\n";
+    _copyText += "\r\n";
 
     if (widget.error is HttpException) {
       final httpError = widget.error as HttpException;
       _errorText = httpError.error.error;
-      _copyText = _errorText + "\r\n" + stackTrace;
+      _copyText += _errorText + "\r\n" + stackTrace;
     } else if (widget.error is TransactionError) {
       final txError = widget.error as TransactionError;
       _errorText = txError.error;
 
-      _copyText = txError.copyText() + "\r\n" + stackTrace;
+      _copyText += txError.copyText() + "\r\n" + stackTrace;
     } else {
       _errorText = widget.error.toString();
-      _copyText = _errorText + "\r\n" + stackTrace;
+      _copyText += _errorText + "\r\n" + stackTrace;
     }
 
     LogHelper.instance.e(_errorText);

@@ -7,7 +7,9 @@ import 'package:saiive.live/crypto/errors/InputValueEqualsTotalValueError.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:hex/hex.dart';
 
+import 'package:bs58check/bs58check.dart' as bs58check;
 import 'from_account.dart';
 
 class PublicPrivateKeyPair {
@@ -236,16 +238,18 @@ class HdWalletUtil {
       throw new InputValueEqualsTotalValueError(errorMsg, inputTxs, to, amount, fee, returnAddress);
     }
 
+    var changeAmount = totalInputValue - amount - fee;
     if (totalInputValue > (amount)) {
-      var changeAmount = totalInputValue - amount - fee;
       if (changeAmount > 0) {
         txb.addOutput(returnAddress, changeAmount);
       }
-      LogHelper.instance.d("set tx output (change) $returnAddress value is $changeAmount");
     }
     if (amount > 0) {
-      txb.addOutput(to, amount);
-      LogHelper.instance.d("set tx output $to value is $amount");
+      if (changeAmount < 0) {
+        txb.addOutput(to, amount - fee);
+      } else {
+        txb.addOutput(to, amount);
+      }
     }
 
     await additional(txb, inputTxs, network);
@@ -254,10 +258,7 @@ class HdWalletUtil {
     for (final key in keys) {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
-      final pubKey = await _getPublicAddressFromKeyPair(key, chain, net, AddressType.Legacy);
-      final input = inputTxs[index].mintTxId;
       final witnessValue = inputTxs[index].valueRaw;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey witnessValue. $witnessValue");
 
       txb.sign(vin: index, keyPair: key, witnessValue: witnessValue, redeemScript: redeemScript);
       index++;

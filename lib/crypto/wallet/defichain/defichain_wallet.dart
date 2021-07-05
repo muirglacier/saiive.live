@@ -244,12 +244,14 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final changeAddress = await this.getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
 
     if (DeFiConstants.isDfiToken(token)) {
+      var needsToRefresh = false;
       if (sendMax) {
         await moveAllTokensToUtxo(changeAddress);
       } else {
         var txHex = await prepareAccountToUtxosTransactions(changeAddress, amount, sendMax: sendMax, loadingStream: loadingStream);
 
         if (txHex != null) {
+          needsToRefresh = true;
           for (var txHexStr in txHex.item1) {
             final tx = await createTxAndWaitInternal(txHexStr, loadingStream: loadingStream);
 
@@ -265,7 +267,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       }
 
       if (sendMax) {
-        await ensureUtxoUnsafe(loadingStream: loadingStream);
+        if (needsToRefresh) {
+          await ensureUtxoUnsafe(loadingStream: loadingStream);
+        }
         amount = (await BalanceHelper().getAccountBalance(token, chain)).balance;
       }
 
@@ -530,6 +534,15 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     var neededUtxo = amount - tokenBalance.balance;
+
+    if (neededUtxo < MinKeepUTXO) {
+      neededUtxo = MinKeepUTXO;
+
+      if (neededUtxo > accountBalance.balance) {
+        neededUtxo = accountBalance.balance;
+      }
+    }
+
     final accounts = await walletDatabase.getAccountBalancesForToken(DeFiConstants.DefiAccountSymbol);
 
     if (accounts.length == 0) {
@@ -578,8 +591,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       var txHex = await HdWalletUtil.buildTransaction(useInputs, keys, pubKey, 0, fees, pubKey, (txb, inputTxs, network) async {
         final mintingStartsAt = txb.tx.ins.length + 1;
 
-        txb.addOutput(pubKey, useAcc.balance);
-        txb.addAccountToUtxoOutput(tokenType.id, acc.address, useAcc.balance, mintingStartsAt);
+        if (useAcc.balance > 0) {
+          txb.addOutput(pubKey, useAcc.balance);
+          txb.addAccountToUtxoOutput(tokenType.id, acc.address, useAcc.balance, mintingStartsAt);
+        }
       }, chain, network);
 
       txs.add(txHex);

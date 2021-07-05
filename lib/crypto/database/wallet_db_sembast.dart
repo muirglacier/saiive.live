@@ -50,6 +50,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future destroy() async {
     var db = await database;
     await _accountStoreInstance.delete(db);
+    await _accountV2StoreInstance.delete(db);
     await _transactionStoreInstance.delete(db);
     await _unspentStoreInstance.delete(db);
     await _balancesStoreInstance.delete(db);

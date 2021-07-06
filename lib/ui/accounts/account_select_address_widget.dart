@@ -7,6 +7,7 @@ import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 
@@ -27,8 +28,17 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
   WalletAddress _selectedWalletAddress;
 
   bool _isLoading = true;
+  _reset() {
+    setState(() {
+      _walletAccounts.clear();
+      _walletAddresses.clear();
+      _isLoading = true;
+      _selectedWalletAddress = null;
+    });
+  }
 
   _init() async {
+    _reset();
     final currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
     final database = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, currentNet);
 
@@ -41,7 +51,7 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
         _walletAccounts.putIfAbsent(acc.uniqueId, () => acc);
 
         if (_selectedWalletAddress == null) {
-          _selectedWalletAddress = _walletAddresses.first;
+          _selectedWalletAddress = _walletAddresses.last;
           if (widget.onChanged != null) {
             widget.onChanged(_selectedWalletAddress);
           }
@@ -108,7 +118,15 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
                         child: _buildDropdownListItem(e),
                       );
                     }).toList(),
-                  )))
+                  ))),
+          Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: IconButton(
+                  onPressed: () async {
+                    await Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: "/accounts"), builder: (BuildContext context) => AccountsScreen()));
+                    await _init();
+                  },
+                  icon: Icon(Icons.add)))
         ],
       )
     ]);

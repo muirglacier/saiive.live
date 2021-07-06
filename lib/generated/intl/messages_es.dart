@@ -140,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_address_add" : MessageLookupByLibrary.simpleMessage("Create new address"),
     "wallet_accounts_cannot_be_empty" : MessageLookupByLibrary.simpleMessage("The field cannot be empty!"),
     "wallet_accounts_detail" : MessageLookupByLibrary.simpleMessage("Account details"),
+    "wallet_accounts_edit" : MessageLookupByLibrary.simpleMessage("Edit account"),
     "wallet_accounts_empty" : MessageLookupByLibrary.simpleMessage("No address created yet..."),
     "wallet_accounts_import" : MessageLookupByLibrary.simpleMessage("Import account"),
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),

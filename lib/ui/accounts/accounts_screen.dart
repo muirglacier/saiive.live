@@ -80,7 +80,8 @@ class _AccountScreen extends State<AccountsScreen> {
   List<Widget> _buildPublicKeyAddress(BuildContext context, WalletAccount account) {
     if (account.walletAccountType == WalletAccountType.HdAccount) {
       return [
-        Text("Index: ", style: Theme.of(context).textTheme.bodyText1),
+        Text(WalletAccount.getStringForWalletAccountType(account.walletAccountType)),
+        Text(" | Id: ", style: Theme.of(context).textTheme.bodyText1),
         Text(account.account.toString(), style: Theme.of(context).textTheme.bodyText1),
       ];
     }

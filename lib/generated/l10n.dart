@@ -1045,6 +1045,16 @@ class S {
     );
   }
 
+  /// `Edit account`
+  String get wallet_accounts_edit {
+    return Intl.message(
+      'Edit account',
+      name: 'wallet_accounts_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Import account`
   String get wallet_accounts_import {
     return Intl.message(

@@ -116,6 +116,7 @@
   "wallet_accounts_address_add": "Create new address",
   "wallet_accounts_select_type": "Select type",
   "wallet_accounts_add": "Add account",
+  "wallet_accounts_edit": "Edit account",
   "wallet_accounts_import": "Import account",
   "wallet_accounts_import_priv_key_for_pub_key": "Do you want to import the Private Key for the existing account? ({pubKey})",
   "wallet_accounts_import_invalid_pub_key": "The public key is invalid!",

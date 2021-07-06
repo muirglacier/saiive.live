@@ -1994,6 +1994,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Expert mode`
+  String get expert_title {
+    return Intl.message(
+      'Expert mode',
+      name: 'expert_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expert`
+  String get expert {
+    return Intl.message(
+      'Expert',
+      name: 'expert',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

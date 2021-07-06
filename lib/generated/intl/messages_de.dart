@@ -54,6 +54,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_to_address" : MessageLookupByLibrary.simpleMessage("Token erhalten an"),
     "dex_to_amount" : MessageLookupByLibrary.simpleMessage("Menge Auf"),
     "dex_to_token" : MessageLookupByLibrary.simpleMessage("Auf Token"),
+    "expert" : MessageLookupByLibrary.simpleMessage("Experte"),
+    "expert_title" : MessageLookupByLibrary.simpleMessage("Experten Modus"),
     "helloWorld" : MessageLookupByLibrary.simpleMessage("Hallo Welt!"),
     "home_dex" : MessageLookupByLibrary.simpleMessage("DEX"),
     "home_liquidity" : MessageLookupByLibrary.simpleMessage("Liquidity"),

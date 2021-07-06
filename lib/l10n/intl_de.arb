@@ -219,5 +219,8 @@
   "update_title": "Update",
   "update_text": "Eine neue Version von {appName} ist verfügbar!",
   "update_start": "Installieren",
-  "update_cancel": "Abbrechen"
+  "update_cancel": "Abbrechen",
+
+  "expert_title": "Experten Modus",
+  "expert": "Experte"
 }

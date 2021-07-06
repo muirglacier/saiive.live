@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "add" : MessageLookupByLibrary.simpleMessage("Add"),
+    "address" : MessageLookupByLibrary.simpleMessage("Address"),
     "advanced" : MessageLookupByLibrary.simpleMessage("Advanced"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Please authenticate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
@@ -139,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("Add account"),
     "wallet_accounts_address_add" : MessageLookupByLibrary.simpleMessage("Create new address"),
     "wallet_accounts_cannot_be_empty" : MessageLookupByLibrary.simpleMessage("The field cannot be empty!"),
+    "wallet_accounts_create" : MessageLookupByLibrary.simpleMessage("You need to create an address first!"),
     "wallet_accounts_detail" : MessageLookupByLibrary.simpleMessage("Account details"),
     "wallet_accounts_edit" : MessageLookupByLibrary.simpleMessage("Edit account"),
     "wallet_accounts_empty" : MessageLookupByLibrary.simpleMessage("No address created yet..."),

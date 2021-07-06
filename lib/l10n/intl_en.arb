@@ -18,6 +18,7 @@
   "label": "Label",
   "advanced": "Advanced",
   "visibility": "Visibility",
+  "address": "Address",
   
   "save": "Save",
   "add": "Add",
@@ -115,6 +116,7 @@
   "wallet_accounts_empty": "No address created yet...",
   "wallet_accounts_address_add": "Create new address",
   "wallet_accounts_select_type": "Select type",
+  "wallet_accounts_create": "You need to create an address first!",
   "wallet_accounts_add": "Add account",
   "wallet_accounts_edit": "Edit account",
   "wallet_accounts_import": "Import account",

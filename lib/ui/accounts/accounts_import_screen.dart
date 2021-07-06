@@ -30,6 +30,9 @@ class AccountsImportScreen extends StatefulWidget {
 
 class _AccountsImportScreen extends State<AccountsImportScreen> {
   bool _cameraAllowed = false;
+
+  final _keyController = TextEditingController();
+
   _init() async {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       return;
@@ -176,8 +179,30 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
                   elevation: 0.0,
                 )));
       }
-      return Container();
     }
+    return Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+          TextFormField(
+            controller: _keyController,
+            // The validator receives the text that the user has entered.
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return S.of(context).wallet_accounts_cannot_be_empty;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Center(
+              child: ElevatedButton(
+                  child: Text(S.of(context).wallet_accounts_import),
+                  onPressed: () async {
+                    if (_keyController.text != null && _keyController.text.isNotEmpty) {
+                      await onScan(_keyController.text);
+                    }
+                  }))
+        ]));
   }
 
   @override

@@ -24,7 +24,6 @@ class AccountsEditScreen extends StatefulWidget {
 }
 
 class _AccountsEditScreen extends State<AccountsEditScreen> {
-  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
 
   @override
@@ -36,59 +35,53 @@ class _AccountsEditScreen extends State<AccountsEditScreen> {
 
   _buildEditScreen(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                controller: _nameController,
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return S.of(context).wallet_accounts_cannot_be_empty;
-                  }
-                  return null;
-                },
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      final walletDbFactory = sl.get<IWalletDatabaseFactory>();
-                      final walletDb = await walletDbFactory.getDatabase(widget.account.chain, widget.network);
-                      widget.account.name = _nameController.text;
-
-                      if (widget.isNewAccount) {
-                        final walletAddress = WalletAddress(
-                            accountId: widget.account.uniqueId,
-                            index: -1,
-                            chain: widget.account.chain,
-                            account: -1,
-                            isChangeAddress: false,
-                            network: this.widget.network,
-                            publicKey: this.widget.publicKey,
-                            addressType: this.widget.addressType);
-
-                        if (this.widget.privateKey != null && this.widget.privateKey.isNotEmpty) {
-                          await sl.get<IVault>().setPrivateKey(widget.account.uniqueId, widget.privateKey);
-                        }
-
-                        await walletDb.addAddress(walletAddress);
-                      }
-                      await walletDb.addOrUpdateAccount(widget.account);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).wallet_accounts_saved)));
-
-                      Navigator.of(context).popUntil(ModalRoute.withName("/accounts"));
-                    }
-                  },
-                  child: Text(widget.isNewAccount ? S.of(context).add : S.of(context).save),
-                ),
-              ),
-            ],
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(hintText: S.of(context).label),
           ),
-        ));
+          SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                if (_nameController.text != null && _nameController.text.isNotEmpty) {
+                  final walletDbFactory = sl.get<IWalletDatabaseFactory>();
+                  final walletDb = await walletDbFactory.getDatabase(widget.account.chain, widget.network);
+                  widget.account.name = _nameController.text;
+
+                  if (widget.isNewAccount) {
+                    final walletAddress = WalletAddress(
+                        accountId: widget.account.uniqueId,
+                        index: -1,
+                        chain: widget.account.chain,
+                        account: -1,
+                        isChangeAddress: false,
+                        network: this.widget.network,
+                        name: S.of(context).address,
+                        publicKey: this.widget.publicKey,
+                        addressType: this.widget.addressType);
+
+                    if (this.widget.privateKey != null && this.widget.privateKey.isNotEmpty) {
+                      await sl.get<IVault>().setPrivateKey(widget.account.uniqueId, widget.privateKey);
+                    }
+
+                    await walletDb.addAddress(walletAddress);
+                  }
+                  await walletDb.addOrUpdateAccount(widget.account);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).wallet_accounts_saved)));
+
+                  Navigator.of(context).popUntil(ModalRoute.withName("/accounts"));
+                }
+              },
+              child: Text(widget.isNewAccount ? S.of(context).add : S.of(context).save),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -96,7 +89,7 @@ class _AccountsEditScreen extends State<AccountsEditScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Text(S.of(context).wallet_accounts_select_type),
+          title: Text(widget.isNewAccount ? S.of(context).wallet_accounts_add : S.of(context).wallet_accounts_edit),
           actions: [],
         ),
         body: _buildEditScreen(context));

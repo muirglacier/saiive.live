@@ -185,6 +185,16 @@ class S {
     );
   }
 
+  /// `Address`
+  String get address {
+    return Intl.message(
+      'Address',
+      name: 'address',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(
@@ -1030,6 +1040,16 @@ class S {
     return Intl.message(
       'Select type',
       name: 'wallet_accounts_select_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to create an address first!`
+  String get wallet_accounts_create {
+    return Intl.message(
+      'You need to create an address first!',
+      name: 'wallet_accounts_create',
       desc: '',
       args: [],
     );

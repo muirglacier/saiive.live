@@ -11,6 +11,7 @@ abstract class IWalletDatabase {
   Future<int> getNextFreeIndex(int account);
 
   Future<List<WalletAccount>> getAccounts();
+  Future<WalletAccount> getAccount(String uniqueId);
 
   @deprecated
   Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false});
@@ -22,12 +23,14 @@ abstract class IWalletDatabase {
   Future addTransaction(Transaction transaction);
 
   Future clearUnspentTransactions();
+  Future clearUnspenTransactionsForAccount(WalletAccount account);
   Future<List<Transaction>> getUnspentTransactions();
   Future removeUnspentTransactions(List<Transaction> mintIds);
   Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount);
   Future addUnspentTransaction(Transaction transaction);
 
   Future clearAccountBalances();
+  Future clearAccountBalancesForAccount(WalletAccount account);
   Future setAccountBalance(Account balance);
   Future<List<Account>> getAccountBalances();
   Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses});

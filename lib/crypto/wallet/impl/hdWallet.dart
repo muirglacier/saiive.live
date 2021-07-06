@@ -168,25 +168,28 @@ class HdWallet extends IHdWallet {
     var newUtxos = List<Transaction>.empty(growable: true);
     var newBalance = List<KeyAccountWrapper>.empty(growable: true);
 
-    await _syncWallet(database, (addresses, pos, max) async {
-      loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
-      final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
+    final account = await database.getAccount(this._account.uniqueId);
 
-      newUtxos.addAll(utxo);
+    if (account.selected) {
+      await _syncWallet(database, (addresses, pos, max) async {
+        loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
+        final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
 
-      if (_chain == ChainType.DeFiChain) {
-        final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
-        newBalance.addAll(balances);
-      }
-    }, loadingStream: loadingStream);
+        newUtxos.addAll(utxo);
 
-    await database.clearUnspentTransactions();
+        if (_chain == ChainType.DeFiChain) {
+          final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
+          newBalance.addAll(balances);
+        }
+      }, loadingStream: loadingStream);
+    }
+    await database.clearUnspenTransactionsForAccount(account);
     newUtxos.forEach((element) async {
       await database.addUnspentTransaction(element);
-      print("tx with id ${element.mintTxId} has ${element.confirmations} confirmations");
+      print("tx with id ${element.mintTxId} has ${element.confirmations} confirmations (address is ${element.address})");
     });
 
-    await database.clearAccountBalances();
+    await database.clearAccountBalancesForAccount(account);
     for (final acc in newBalance) {
       for (final element in acc.accounts) {
         await database.setAccountBalance(element);

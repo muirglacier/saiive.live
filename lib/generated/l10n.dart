@@ -175,6 +175,16 @@ class S {
     );
   }
 
+  /// `Visibility`
+  String get visibility {
+    return Intl.message(
+      'Visibility',
+      name: 'visibility',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(
@@ -1045,6 +1055,16 @@ class S {
     );
   }
 
+  /// `Do you want to import the Private Key for the existing account? ({pubKey})`
+  String wallet_accounts_import_priv_key_for_pub_key(Object pubKey) {
+    return Intl.message(
+      'Do you want to import the Private Key for the existing account? ($pubKey)',
+      name: 'wallet_accounts_import_priv_key_for_pub_key',
+      desc: '',
+      args: [pubKey],
+    );
+  }
+
   /// `The public key is invalid!`
   String get wallet_accounts_import_invalid_pub_key {
     return Intl.message(
@@ -1585,6 +1605,16 @@ class S {
     );
   }
 
+  /// `Receive tokens at`
+  String get dex_to_address {
+    return Intl.message(
+      'Receive tokens at',
+      name: 'dex_to_address',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(
@@ -1720,6 +1750,16 @@ class S {
     return Intl.message(
       'Amount B',
       name: 'liquidity_add_amount_b',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Receive shares at`
+  String get liquidity_add_shares_addr {
+    return Intl.message(
+      'Receive shares at',
+      name: 'liquidity_add_shares_addr',
       desc: '',
       args: [],
     );

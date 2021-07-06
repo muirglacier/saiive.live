@@ -7,10 +7,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/accounts/accounts_edit_screen.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
@@ -55,6 +58,46 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
     Navigator.of(context).popUntil(ModalRoute.withName("/accounts"));
   }
 
+  Future shouldImportPrivateKeyForPublicKey(String pubKey, String privKey, IWalletDatabase database) async {
+    var walletAddress = await database.getWalletAddress(pubKey);
+    var walletAccount = await database.getAccount(walletAddress.accountId);
+
+    var import = ElevatedButton(
+      child: Text(S.of(context).ok),
+      onPressed: () async {
+        try {
+          walletAccount.walletAccountType = WalletAccountType.PrivateKey;
+          await sl.get<IVault>().setPrivateKey(walletAccount.uniqueId, privKey);
+          await database.addOrUpdateAccount(walletAccount);
+        } finally {
+          Navigator.of(context).pop();
+        }
+      },
+    );
+    var cancel = ElevatedButton(
+      child: Text(S.of(context).cancel),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(S.of(context).wallet_accounts_import),
+      content: Text(S.of(context).wallet_accounts_import_priv_key_for_pub_key(pubKey)),
+      actions: [
+        import,
+        cancel,
+      ],
+    );
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future onScan(String data) async {
     LogHelper.instance.d(data);
 
@@ -93,10 +136,19 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 
         var p2sh = HdWalletUtil.getPublicAddressFromWif(data, widget.chainType, currentNet, AddressType.P2SHSegwit);
+        final walletDbFactory = sl.get<IWalletDatabaseFactory>();
+        final walletDb = await walletDbFactory.getDatabase(widget.chainType, currentNet);
 
-        Navigator.of(context).push(MaterialPageRoute(
-            settings: RouteSettings(name: "/accountsEditScreen"),
-            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, p2sh, AddressType.Legacy, privateKey: data)));
+        final isOwnAddress = await walletDb.isOwnAddress(p2sh);
+
+        if (isOwnAddress) {
+          await shouldImportPrivateKeyForPublicKey(p2sh, data, walletDb);
+          popToAccountsPage();
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(
+              settings: RouteSettings(name: "/accountsEditScreen"),
+              builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, p2sh, AddressType.Legacy, privateKey: data)));
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_accounts_import_invalid_priv_key),

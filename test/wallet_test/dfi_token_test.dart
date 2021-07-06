@@ -16,7 +16,8 @@ void main() async {
   group("#1 create tx", () {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      final walletAccount =
+          WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       await db.addTransaction(Transaction(
@@ -96,7 +97,8 @@ void main() async {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      final walletAccount = WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc");
+      final walletAccount =
+          WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       await db.addTransaction(Transaction(

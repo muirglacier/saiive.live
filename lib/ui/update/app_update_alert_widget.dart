@@ -6,7 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:mutex/mutex.dart';
+import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/events/wallet_sync_done_event.dart';
 import 'package:upgrader/upgrader.dart';
@@ -41,7 +43,9 @@ class _AppUpdateAlert extends State<AppUpdateAlert> {
 
   getVersionInfos() async {
     try {
-      _updateInfo = await InAppUpdate.checkForUpdate();
+      if (EnvHelper.getEnvironment() != EnvironmentType.Development) {
+        _updateInfo = await InAppUpdate.checkForUpdate();
+      }
     } catch (e) {
       LogHelper.instance.e(e.toString());
     } finally {}

@@ -1,12 +1,13 @@
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
-import 'package:saiive.live/ui/accounts/accounts_add_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_detail_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_select_action_screen.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
@@ -20,8 +21,28 @@ class AccountsScreen extends StatefulWidget {
 
 class _AccountScreen extends State<AccountsScreen> {
   List<WalletAccount> _walletAccounts = List<WalletAccount>.empty();
+  bool _isLoading = false;
 
   IWalletService _walletService;
+
+  bool isSelectionMode = false;
+
+  void onLongPress(bool isSelected, WalletAccount index) {
+    setState(() {
+      index.selected = !isSelected;
+      isSelectionMode = !isSelectionMode;
+    });
+  }
+
+  Future onTap(bool isSelected, WalletAccount account) async {
+    if (isSelectionMode) {
+      setState(() {
+        account.selected = !account.selected;
+      });
+    } else {
+      await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsDetailScreen(account)));
+    }
+  }
 
   void _init() async {
     _walletService = sl.get<IWalletService>();
@@ -30,14 +51,30 @@ class _AccountScreen extends State<AccountsScreen> {
 
     setState(() {
       _walletAccounts = accounts;
+      _isLoading = false;
     });
   }
 
   @override
   void initState() {
+    _isLoading = true;
     super.initState();
 
     _init();
+  }
+
+  Future _save() async {
+    if (isSelectionMode) {
+      for (final acc in _walletAccounts) {
+        _walletService.addAccount(acc);
+      }
+
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    }
+
+    setState(() {
+      isSelectionMode = !isSelectionMode;
+    });
   }
 
   List<Widget> _buildPublicKeyAddress(BuildContext context, WalletAccount account) {
@@ -51,24 +88,46 @@ class _AccountScreen extends State<AccountsScreen> {
     return [Text(WalletAccount.getStringForWalletAccountType(account.walletAccountType))];
   }
 
+  Widget _buildSelectIcon(bool isSelected, WalletAccount account) {
+    if (isSelectionMode) {
+      return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+        Icon(
+          isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+          color: Theme.of(context).primaryColor,
+        ),
+        SizedBox(width: 10),
+        Text(account.name, style: Theme.of(context).textTheme.headline3)
+      ]);
+    } else {
+      return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+        Icon(
+          isSelected ? Icons.visibility : Icons.visibility_off,
+          color: Theme.of(context).primaryColor,
+        ),
+        SizedBox(width: 10),
+        Text(account.name, style: Theme.of(context).textTheme.headline3)
+      ]);
+    }
+  }
+
   Widget _buildAccountEntry(BuildContext context, WalletAccount account) {
     return Card(
         child: ListTile(
-      leading: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Text(account.name, style: Theme.of(context).textTheme.headline3)]),
+      leading: SizedBox(width: 100, child: _buildSelectIcon(account.selected, account)),
       title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [Text(ChainHelper.chainTypeString(account.chain), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))]),
       onTap: () async {
-        await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsDetailScreen(account)));
+        await onTap(account.selected, account);
       },
+      onLongPress: () => onLongPress(account.selected, account),
     ));
   }
 
   Widget _buildAccountPage(BuildContext context) {
-    if (_walletAccounts == null || _walletAccounts.isEmpty) {
+    if (_isLoading) {
       return LoadingWidget(text: S.of(context).loading);
     }
 
@@ -84,9 +143,29 @@ class _AccountScreen extends State<AccountsScreen> {
                       shrinkWrap: true,
                       itemCount: _walletAccounts.length,
                       itemBuilder: (context, index) {
-                        return _buildAccountEntry(context, _walletAccounts.elementAt(index));
+                        final wa = _walletAccounts.elementAt(index);
+
+                        return _buildAccountEntry(context, wa);
                       })
                 ]))));
+  }
+
+  _buildFloatingActionButton(BuildContext context) {
+    if (_isLoading) {
+      return null;
+    }
+    return FloatingActionButton.extended(
+      onPressed: () async {
+        await _save();
+      },
+      heroTag: null,
+      icon: Icon(isSelectionMode ? Icons.save : Icons.visibility_outlined, color: StateContainer.of(context).curTheme.text),
+      label: Text(
+        S.of(context).visibility,
+        style: TextStyle(color: StateContainer.of(context).curTheme.text),
+      ),
+      backgroundColor: Theme.of(context).primaryColor,
+    );
   }
 
   @override
@@ -108,20 +187,31 @@ class _AccountScreen extends State<AccountsScreen> {
             //       },
             //       child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
             //     )),
-            Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => AccountsSelectActionScreen((chainType) {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(settings: RouteSettings(name: "/accountsImportScreen"), builder: (BuildContext context) => AccountsImportScreen(chainType)));
-                            })));
-                  },
-                  child: Icon(Icons.upload, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                ))
+            if (!_isLoading)
+              Padding(
+                  padding: EdgeInsets.only(right: 15.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => AccountsSelectActionScreen((chainType) {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(settings: RouteSettings(name: "/accountsImportScreen"), builder: (BuildContext context) => AccountsImportScreen(chainType)));
+                              })));
+                    },
+                    child: Icon(Icons.upload, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
+            if (!_isLoading)
+              Padding(
+                  padding: EdgeInsets.only(right: 15.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await _save();
+                    },
+                    child: Icon(isSelectionMode ? Icons.save : Icons.visibility_outlined, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  ))
           ],
         ),
+        floatingActionButton: _buildFloatingActionButton(context),
         body: _buildAccountPage(context));
   }
 }

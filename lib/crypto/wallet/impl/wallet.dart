@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:defichaindart/defichaindart.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,9 @@ abstract class Wallet extends IWallet {
   bool checkUtxo;
 
   @protected
+  Uint8List seedList;
+
+  @protected
   final Mutex walletMutex = Mutex();
 
   @protected
@@ -94,6 +98,8 @@ abstract class Wallet extends IWallet {
     _password = "";
     _seed = await sl.get<IVault>().getSeed();
     _account = 0; //default account, for now only 0!
+
+    seedList = mnemonicToSeed(seed);
 
     final accounts = await _walletDatabase.getAccounts();
 
@@ -291,6 +297,25 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
+  Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
+    if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
+      final key = seedList;
+      final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network);
+      final pubKey = HdWalletUtil.getPublicKey(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType);
+
+      if (pubKey != address.publicKey) {
+        throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");
+      }
+      return keyPair;
+    } else if (walletAccount.walletAccountType == WalletAccountType.PrivateKey) {
+      final privKey = await sl.get<IVault>().getPrivateKey(walletAccount.uniqueId);
+      return ECPair.fromWIF(privKey);
+    }
+
+    throw new ArgumentError("Something went wrong getting the correct private key!");
+  }
+
+  @protected
   Future<Tuple3<String, List<tx.Transaction>, String>> createBaseTransaction(
       int amount, String to, String changeAddress, int additionalFees, Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional,
       {bool sendMax = false}) async {
@@ -300,7 +325,6 @@ abstract class Wallet extends IWallet {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
 
-    final key = mnemonicToSeed(seed);
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
@@ -313,7 +337,16 @@ abstract class Wallet extends IWallet {
         continue;
       }
 
+      if (tx.address == "7JXU13rknWneP7aJ9kxWg3i74diX4y6jYy") {
+        continue;
+      }
+
       final address = await walletDatabase.getWalletAddress(tx.address);
+      final walletAccount = await walletDatabase.getAccount(address.accountId);
+
+      if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+        continue;
+      }
 
       if (tx.value <= 0) {
         //ignore auth txs
@@ -322,13 +355,7 @@ abstract class Wallet extends IWallet {
       useTxs.add(tx);
       curAmount += tx.valueRaw;
 
-      final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network);
-      final pubKey = HdWalletUtil.getPublicKey(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType);
-
-      if (pubKey != address.publicKey) {
-        throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");
-      }
-
+      var keyPair = await getPrivateKey(address, walletAccount);
       keys.add(keyPair);
 
       if (curAmount >= checkAmount) {

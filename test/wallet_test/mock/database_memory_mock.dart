@@ -93,6 +93,16 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
+    if (token == DeFiConstants.DefiTokenSymbol) {
+      final unspentTx = await getUnspentTransactions();
+      var amount = 0;
+
+      for (final unspent in unspentTx) {
+        amount += unspent.value;
+      }
+
+      return new AccountBalance(balance: amount, token: token, chain: ChainType.DeFiChain);
+    }
     var balance = 0;
     _accounts.sort((a, b) => b.balance.compareTo(a.balance));
 
@@ -108,6 +118,11 @@ class MemoryDatabaseMock extends IWalletDatabase {
   @override
   Future<List<Account>> getAccountBalances() async {
     return _accounts;
+  }
+
+  @override
+  Future<WalletAccount> getAccount(String uniqueId) async {
+    return _walletAccounts.firstWhere((element) => element.uniqueId == uniqueId);
   }
 
   @override
@@ -193,8 +208,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future addAddress(WalletAddress account) async {
+  Future<WalletAddress> addAddress(WalletAddress account) async {
     _addresses.add(account);
+    return account;
   }
 
   @override
@@ -263,4 +279,10 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
     return false;
   }
+
+  @override
+  Future clearAccountBalancesForAccount(WalletAccount account) async {}
+
+  @override
+  Future clearUnspenTransactionsForAccount(WalletAccount account) async {}
 }

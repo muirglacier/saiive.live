@@ -18,6 +18,7 @@
 
   "save": "Speichern",
   "add": "Hinzufügen",
+  "visibility": "Sichtbarkeit",
   
   
   "test_info": "Danke fürs Testen!",
@@ -114,6 +115,7 @@
   "wallet_accounts_select_type": "Kontotyp auswählen",
   "wallet_accounts_add": "Konto anlegen",
   "wallet_accounts_import": "Konto importieren",
+  "wallet_accounts_import_priv_key_for_pub_key": "Möchtest du den PrivateKey für das ReadOnly Konto {pubKey} hinzufügen?",
   "wallet_accounts_import_invalid_pub_key": "Der Public Key ist ungültig!",
   "wallet_accounts_import_invalid_priv_key": "Der Private Key ist ungültig!",
   "wallet_accounts_import_invalid": "Der Inhalt ist ungültig!",
@@ -172,6 +174,7 @@
   "dex_insufficient_funds": "Nicht genügend Balance für Tausch.",
   "dex_swap_successfull": "Swap erfolgreich",
   "dex_swap_show_transaction": "Im Explorer",
+  "dex_to_address": "Token erhalten an",
 
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",
@@ -189,6 +192,7 @@
   "liquidity_add_token_b": "Token B",
   "liquidity_add_amount_a": "Amount A",
   "liquidity_add_amount_b": "Amount B",
+  "liquidity_add_shares_addr": "Erhalte Anteil auf",
   "liquidity_add_pool_share": "Pool Share",
   "liquidity_add_total_pooled": "Insgesammt gepoolt",
   "liquidity_add_insufficient_funds": "Nicht genügend Balance für LM",

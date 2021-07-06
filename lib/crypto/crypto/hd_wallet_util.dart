@@ -2,11 +2,9 @@ import 'dart:typed_data';
 import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/helper/logger/LogHelper.dart';
-import 'from_account.dart';
 
 class PublicPrivateKeyPair {
   final String privateKey;
@@ -123,102 +121,6 @@ class HdWalletUtil {
 
   static int getDecimalPlaces(ChainType type) {
     return 9;
-  }
-
-  static Future<TransactionBuilder> buildAddPollLiquidityTransaction(
-      List<tx.Transaction> inputTxs,
-      FromAccount authA,
-      String authAAddress,
-      FromAccount authB,
-      String authBAddress,
-      IWalletDatabase database,
-      int tokenA,
-      int tokenB,
-      String shareAddress,
-      int amountA,
-      int amountB,
-      int fee,
-      String returnAddress,
-      Uint8List seed,
-      ChainType chain,
-      ChainNet net) async {
-    var network = getNetworkType(chain, net);
-
-    final txb = TransactionBuilder(network: network);
-    txb.setVersion(2);
-    txb.setLockTime(0);
-
-    int totalInputValue = 0;
-    for (final tx in inputTxs) {
-      txb.addInput(tx.mintTxId, tx.mintIndex);
-      totalInputValue += tx.valueRaw;
-    }
-
-    txb.addAddLiquidityOutput(tokenA, authAAddress, amountA, tokenB, authBAddress, amountB, shareAddress);
-
-    var changeAmount = totalInputValue - fee;
-    txb.addOutput(returnAddress, changeAmount);
-
-    int index = 0;
-
-    for (final tx in inputTxs) {
-      final addressInfo = await database.getWalletAddress(tx.address);
-
-      final key = HdWalletUtil.getKeyPair(
-          seed, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
-      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
-      final redeemScript = p2wpkh.output;
-      final pubKey = _getPublicAddressFromKeyPair(key.publicKey, chain, net, AddressType.P2SHSegwit);
-      final input = inputTxs[index].mintTxId;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
-
-      txb.sign(vin: index, keyPair: key, witnessValue: inputTxs[index].valueRaw, redeemScript: redeemScript);
-      index++;
-    }
-
-    final tx = txb.build();
-    final txhex = tx.toHex();
-    LogHelper.instance.d("txHex is $txhex");
-    return txb;
-  }
-
-  static Future<TransactionBuilder> buildAccountToAccountTransaction(List<tx.Transaction> inputTxs, FromAccount authAddresse, List<ECPair> keys, int token, String to, int amount,
-      int fee, String returnAddress, ChainType chain, ChainNet net) async {
-    var network = getNetworkType(chain, net);
-
-    assert(inputTxs.length == keys.length);
-
-    final txb = TransactionBuilder(network: network);
-    txb.setVersion(2);
-    txb.setLockTime(0);
-
-    int totalInputValue = 0;
-    for (final tx in inputTxs) {
-      txb.addInput(tx.mintTxId, tx.mintIndex);
-
-      totalInputValue += tx.valueRaw;
-    }
-    txb.addAccountToAccountOutput(token, authAddresse.address, to, authAddresse.amount);
-
-    var changeAmount = totalInputValue - fee;
-    txb.addOutput(returnAddress, changeAmount);
-
-    int index = 0;
-    for (final key in keys) {
-      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
-      final redeemScript = p2wpkh.output;
-      final pubKey = _getPublicAddressFromKeyPair(key.publicKey, chain, net, AddressType.Legacy);
-      final input = inputTxs[index].mintTxId;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey");
-
-      txb.sign(vin: index, keyPair: key, witnessValue: inputTxs[index].valueRaw, redeemScript: redeemScript);
-      index++;
-    }
-
-    final tx = txb.build();
-    final txhex = tx.toHex();
-    LogHelper.instance.d("txHex is $txhex");
-    return txb;
   }
 
   static Future<String> buildTransaction(List<tx.Transaction> inputTxs, List<ECPair> keys, String to, int amount, int fee, String returnAddress,

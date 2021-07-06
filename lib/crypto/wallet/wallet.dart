@@ -36,6 +36,7 @@ abstract class IWallet {
   Future<WalletAddress> getNextWalletAddress(AddressType addressType, bool isChangeAddress);
   @deprecated
   Future<String> getPublicKey(AddressType type);
+  @deprecated
   Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress, AddressType addressType);
   Future<WalletAddress> getPublicKeyFromAccounts(WalletAccount walletAccount);
   Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount);

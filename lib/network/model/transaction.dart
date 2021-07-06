@@ -14,7 +14,7 @@ class Transaction {
   final String chain;
   final String network;
   final bool coinbase;
-  int mintIndex;
+  final int mintIndex;
   final String spentTxId;
   final String mintTxId;
   final int mintHeight;

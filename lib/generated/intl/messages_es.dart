@@ -21,13 +21,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(appName) => "¡Una nueva versión de ${appName} está disponible!";
 
-  static m1(chains) => "Parece que estamos teniendo algunos problemas con el supernodo (${chains}), estamos trabajando duro para restaurar nuestros servicios. Inténtalo más tarde...";
+  static m1(pubKey) => "Do you want to import the Private Key for the existing account? (${pubKey})";
 
-  static m2(from, to) => "Refrescando direcciones (${from}/${to})";
+  static m2(chains) => "Parece que estamos teniendo algunos problemas con el supernodo (${chains}), estamos trabajando duro para restaurar nuestros servicios. Inténtalo más tarde...";
 
-  static m3(from, to) => "Refrescando transacciones (${from}/${to})";
+  static m3(from, to) => "Refrescando direcciones (${from}/${to})";
 
-  static m4(coin) => "Envía solo ${coin} a esta dirección. Enviar monedas o fichas que no sean ${coin} a esta dirección puede resultar en la pérdida de tu depósito!";
+  static m4(from, to) => "Refrescando transacciones (${from}/${to})";
+
+  static m5(coin) => "Envía solo ${coin} a esta dirección. Enviar monedas o fichas que no sean ${coin} a esta dirección puede resultar en la pérdida de tu depósito!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -48,6 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_swap" : MessageLookupByLibrary.simpleMessage("Intercambio"),
     "dex_swap_show_transaction" : MessageLookupByLibrary.simpleMessage("En el explorador"),
     "dex_swap_successfull" : MessageLookupByLibrary.simpleMessage("Intercambio exitoso"),
+    "dex_to_address" : MessageLookupByLibrary.simpleMessage("Reciba tokens en"),
     "dex_to_amount" : MessageLookupByLibrary.simpleMessage("A Cantidad"),
     "dex_to_token" : MessageLookupByLibrary.simpleMessage("A Token"),
     "helloWorld" : MessageLookupByLibrary.simpleMessage("¡Hola, Mundo!"),
@@ -75,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "liquidity_add_max" : MessageLookupByLibrary.simpleMessage("max"),
     "liquidity_add_pool_share" : MessageLookupByLibrary.simpleMessage("Participación del pool"),
     "liquidity_add_price" : MessageLookupByLibrary.simpleMessage("Precio"),
+    "liquidity_add_shares_addr" : MessageLookupByLibrary.simpleMessage("Reciba acciones en"),
     "liquidity_add_token_a" : MessageLookupByLibrary.simpleMessage("Token A"),
     "liquidity_add_token_b" : MessageLookupByLibrary.simpleMessage("Token B"),
     "liquidity_add_total_pooled" : MessageLookupByLibrary.simpleMessage("Total pooled"),
@@ -130,6 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "update_text" : m0,
     "update_title" : MessageLookupByLibrary.simpleMessage("Versión"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
+    "visibility" : MessageLookupByLibrary.simpleMessage("Visibilidad"),
     "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Accounts"),
     "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("Add account"),
     "wallet_accounts_address_add" : MessageLookupByLibrary.simpleMessage("Create new address"),
@@ -140,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),
     "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("The private key is invalid!"),
     "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("The public key is invalid!"),
+    "wallet_accounts_import_priv_key_for_pub_key" : m1,
     "wallet_accounts_saved" : MessageLookupByLibrary.simpleMessage("Account saved"),
     "wallet_accounts_select_type" : MessageLookupByLibrary.simpleMessage("Select type"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Tu billetera está vacía!"),
@@ -165,7 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Pona la #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" palabra aquí"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" palabra"),
-    "wallet_offline" : m1,
+    "wallet_offline" : m2,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Construyendo transacción"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creando auth tx"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparando el saldo de la cuenta"),
@@ -174,8 +180,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict" : MessageLookupByLibrary.simpleMessage("Espere a que su transacción se refleje en el siguiente bloque antes de continuar con una nueva transacción."),
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("Encontramos transacciones pendientes. Vamos a esperarlas, ¡esto podría llevar algo de tiempo!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Tu Wallet no está sincronizado. Vuelva a intentar la transacción."),
-    "wallet_operation_refresh_addresses" : m2,
-    "wallet_operation_refresh_tx" : m3,
+    "wallet_operation_refresh_addresses" : m3,
+    "wallet_operation_refresh_tx" : m4,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refrescando utxo..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("Refrescando utxo...acabado"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Enviando transacción"),
@@ -183,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transacción exitosa :)"),
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Esperando confirmación..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Recibir"),
-    "wallet_receive_warning" : m4,
+    "wallet_receive_warning" : m5,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Prueba frase de recuperación"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Frase de recuperación"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("¡Las cuentas se han agregado a tu base de datos local! Tus cuentas se sincronizarán en segundo plano!"),

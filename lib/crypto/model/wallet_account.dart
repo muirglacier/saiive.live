@@ -16,7 +16,7 @@ class WalletAccount {
   final int lastAccess;
   bool selected;
 
-  final WalletAccountType walletAccountType;
+  WalletAccountType walletAccountType;
 
   static String getStringForWalletAccountType(WalletAccountType accountType) {
     switch (accountType) {

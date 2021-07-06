@@ -17,6 +17,7 @@
   "ok": "Ok",
   "label": "Label",
   "advanced": "Advanced",
+  "visibility": "Visibility",
   
   "save": "Save",
   "add": "Add",
@@ -116,6 +117,7 @@
   "wallet_accounts_select_type": "Select type",
   "wallet_accounts_add": "Add account",
   "wallet_accounts_import": "Import account",
+  "wallet_accounts_import_priv_key_for_pub_key": "Do you want to import the Private Key for the existing account? ({pubKey})",
   "wallet_accounts_import_invalid_pub_key": "The public key is invalid!",
   "wallet_accounts_import_invalid_priv_key": "The private key is invalid!",
   "wallet_accounts_import_invalid": "The content is invalid!",
@@ -178,6 +180,7 @@
   "dex_insufficient_funds": "Insufficient Funds for Swap",
   "dex_swap_successfull": "Swap successfull",
   "dex_swap_show_transaction": "In Explorer",
+  "dex_to_address": "Receive tokens at",
 
   "home_welcome_good_morning": "Good morning",
   "home_welcome_good_day": "Good day",
@@ -194,6 +197,7 @@
   "liquidity_add_token_b": "Token B",
   "liquidity_add_amount_a": "Amount A",
   "liquidity_add_amount_b": "Amount B",
+  "liquidity_add_shares_addr": "Receive shares at",
   "liquidity_add_pool_share": "Pool Share",
   "liquidity_add_total_pooled": "Totally pooled",
   "liquidity_add_insufficient_funds": "Insufficient Funds for LM",

@@ -43,6 +43,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   final _accountStreamController = StreamController<List<WalletAccount>>.broadcast();
   Stream<List<WalletAccount>> get accountStream => _accountStreamController.stream;
 
+  List<String> _activeWalletAddresses = List<String>.empty(growable: true);
+
   final String _path;
   final ChainType _chain;
   SembastWalletDatabase(this._path, this._chain);
@@ -69,7 +71,9 @@ class SembastWalletDatabase extends IWalletDatabase {
     }
   }
 
-  Future open() async {}
+  Future open() async {
+    _activeWalletAddresses = await _getActiveAddresses();
+  }
 
   Future close() async {
     _database.close();
@@ -107,6 +111,19 @@ class SembastWalletDatabase extends IWalletDatabase {
     }
 
     return null;
+  }
+
+  Future<List<WalletAddress>> _getWalletAddressesByAccount(WalletAccount walletAccount) async {
+    var dbStore = _addressesStoreInstance;
+
+    var db = await database;
+    final finder = Finder(filter: Filter.equals('accountId', walletAccount.uniqueId));
+
+    final accounts = await dbStore.find(db, finder: finder);
+
+    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+
+    return data;
   }
 
   Future<List<WalletAddress>> getWalletAddressesById(String uniqueId) async {
@@ -227,6 +244,16 @@ class SembastWalletDatabase extends IWalletDatabase {
     await dbStore.delete(db);
   }
 
+  @override
+  Future<WalletAccount> getAccount(String uniqueId) async {
+    var db = await database;
+
+    var walletAccount = WalletAccount.fromJson(await _accountV2StoreInstance.record(uniqueId).get(db));
+
+    return walletAccount;
+  }
+
+  @override
   Future<List<WalletAccount>> getAccounts() async {
     await _migrateAccounts();
 
@@ -261,6 +288,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     await _accountV2StoreInstance.record(walletAccount.uniqueId).put(db, walletAccount.toJson());
 
+    _activeWalletAddresses = await _getActiveAddresses();
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(walletAccount.uniqueId).get(db));
   }
 
@@ -275,6 +303,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
       return newAccount;
     }
+    _activeWalletAddresses = await _getActiveAddresses();
 
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(account).get(db));
   }
@@ -320,13 +349,27 @@ class SembastWalletDatabase extends IWalletDatabase {
     await _transactionStoreInstance.record(transaction.uniqueId).put(db, obj);
   }
 
+  Future<List<tx.Transaction>> getUnspentTransactionsForWalletAccount(WalletAccount account) async {
+    var dbStore = _unspentStoreInstance;
+
+    final db = await database;
+    final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('spentTxId', null) | Filter.equals('spentTxId', ""), sortOrders: [SortOrder("value", false)]));
+    final activeAddresses = await this._getWalletAddressesByAccount(account);
+    var data = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+    data = data.where((element) => activeAddresses.contains(element.address)).toList();
+
+    return data;
+  }
+
+  @override
   Future<List<tx.Transaction>> getUnspentTransactions() async {
     var dbStore = _unspentStoreInstance;
 
     final db = await database;
     final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('spentTxId', null) | Filter.equals('spentTxId', ""), sortOrders: [SortOrder("value", false)]));
-
-    final data = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+    final activeAddresses = _activeWalletAddresses;
+    var data = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+    data = data.where((element) => activeAddresses.contains(element.address)).toList();
 
     return data;
   }
@@ -338,16 +381,27 @@ class SembastWalletDatabase extends IWalletDatabase {
     var finder = Finder(filter: Filter.equals('address', pubKey) & Filter.greaterThanOrEquals("value", minAmount));
     final accounts = await dbStore.find(await database, finder: finder);
 
-    final data = accounts.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
-
+    var data = accounts.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+    data = data.where((element) => (element.spentTxId != null || element.spentTxId != '')).toList();
     return data;
   }
 
+  @override
   Future clearUnspentTransactions() async {
-    final txs = await getUnspentTransactions();
+    var txs = await getUnspentTransactions();
     final txIds = txs.map((e) => e.uniqueId);
+    if (txIds.isNotEmpty) {
+      await _unspentStoreInstance.records(txIds).delete(await database);
+    }
+  }
 
-    await _unspentStoreInstance.records(txIds).delete(await database);
+  @override
+  Future clearUnspenTransactionsForAccount(WalletAccount account) async {
+    var txs = await getUnspentTransactionsForWalletAccount(account);
+    final txIds = txs.map((e) => e.uniqueId);
+    if (txIds.isNotEmpty) {
+      await _unspentStoreInstance.records(txIds).delete(await database);
+    }
   }
 
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {
@@ -355,8 +409,10 @@ class SembastWalletDatabase extends IWalletDatabase {
     await _unspentStoreInstance.records(txIds).delete(await database);
   }
 
+  @override
   Future addUnspentTransaction(tx.Transaction transaction) async {
     final db = await database;
+
     final obj = transaction.toJson();
     await _unspentStoreInstance.record(transaction.uniqueId).put(db, obj);
   }
@@ -367,8 +423,24 @@ class SembastWalletDatabase extends IWalletDatabase {
     return await dbStore.record(txId).exists(await database);
   }
 
+  @override
+  Future clearAccountBalancesForAccount(WalletAccount account) async {
+    var accountBalance = await getAccountBalances();
+    var addressesForAccount = await this._getWalletAddressesByAccount(account);
+
+    accountBalance = accountBalance.where((element) => addressesForAccount.contains(element.address)).toList();
+    final accountBalanceIds = accountBalance.map((e) => e.key);
+
+    await _balancesStoreInstance.records(accountBalanceIds).delete(await database);
+  }
+
+  @override
   Future clearAccountBalances() async {
-    await _balancesStoreInstance.delete(await database);
+    var accountBalance = await getAccountBalances();
+    accountBalance = accountBalance.where((element) => !_activeWalletAddresses.contains(element.address)).toList();
+    final accountBalanceIds = accountBalance.map((e) => e.key);
+
+    await _balancesStoreInstance.records(accountBalanceIds).delete(await database);
   }
 
   Future setAccountBalance(Account balance) async {
@@ -399,9 +471,11 @@ class SembastWalletDatabase extends IWalletDatabase {
     final db = await database;
     var finder = Finder(filter: Filter.equals('token', token));
 
+    final activeAddresses = _activeWalletAddresses;
     final accounts = await dbStore.find(db, finder: finder);
 
-    final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    var data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    data = data.where((element) => activeAddresses.contains(element.address)).toList();
 
     if (excludeAddresses != null && excludeAddresses.isNotEmpty) {
       data.removeWhere((element) => excludeAddresses.contains(element.address));
@@ -459,13 +533,29 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
+  Future<List<String>> _getActiveAddresses() async {
+    var activeAccounts = await this.getAccounts();
+    activeAccounts = activeAccounts.where((element) => element.selected).toList();
+
+    var activeAddresses = List<String>.empty(growable: true);
+    for (final acc in activeAccounts) {
+      final addresses = await this._getWalletAddressesByAccount(acc);
+      activeAddresses.addAll(addresses.map((e) => e.publicKey));
+    }
+    print("test");
+    return activeAddresses;
+  }
+
   Future<List<AccountBalance>> getTotalBalances() async {
     var dbStore = _balancesStoreInstance;
+
+    var activeAddresses = _activeWalletAddresses;
 
     var finder = Finder(filter: Filter.notEquals('token', DeFiConstants.DefiTokenSymbol));
     final accounts = await dbStore.find(await database, finder: finder);
 
-    final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    var data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    data = data.where((element) => activeAddresses.contains(element.address)).toList();
 
     final ret = groupBy(data, (e) => e.token);
 

@@ -7,7 +7,6 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
-import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/events/events.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/block.dart';
@@ -38,6 +37,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   StreamSubscription<WalletInitDoneEvent> _walletInitDoneSubscription;
   StreamSubscription<WalletSyncDoneEvent> _walletSyncDoneSubscription;
   StreamSubscription<BlockTipUpdatedEvent> _blockTipUpdatedEvent;
+  StreamSubscription<WalletSyncStartEvent> _walletSyncStartEvent;
 
   AnimationController _controller;
 
@@ -51,34 +51,30 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   RefreshController _refreshController = RefreshController(initialRefresh: true);
 
   _refresh() async {
-    if (EnvHelper.getEnvironment() != EnvironmentType.Development) {
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-    }
+    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
     sl.get<IHealthService>().checkHealth(context);
 
     _refreshController.refreshCompleted();
-    final syncText = S.of(context).home_welcome_account_syncing;
-
-    _controller.forward();
-    setState(() {
-      _syncText = syncText;
-
-      _isSyncing = true;
-    });
   }
 
   _initWallet() async {
-    if (!mounted) {
-      return;
-    }
-    final wallet = sl.get<IWalletService>();
+    if (_walletSyncStartEvent == null) {
+      _walletSyncStartEvent = EventTaxiImpl.singleton().registerTo<WalletSyncStartEvent>().listen((event) async {
+        final syncText = S.of(context).home_welcome_account_syncing;
 
-    if (await wallet.hasAccounts()) {
-      if (EnvHelper.getEnvironment() != EnvironmentType.Development) {
-        EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-      }
+        var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+
+        _controller.forward();
+        setState(() {
+          _accountBalance = accountBalance;
+          _syncText = syncText;
+
+          _isSyncing = true;
+        });
+      });
     }
+
     if (_walletInitDoneSubscription == null) {
       _walletInitDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletInitDoneEvent>().listen((event) async {
         var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
@@ -198,6 +194,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     if (_blockTipUpdatedEvent != null) {
       _blockTipUpdatedEvent.cancel();
       _blockTipUpdatedEvent = null;
+    }
+
+    if (_walletSyncStartEvent != null) {
+      _walletSyncStartEvent.cancel();
+      _walletSyncStartEvent = null;
     }
   }
 

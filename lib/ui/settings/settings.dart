@@ -34,7 +34,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   var _version = "";
   EnvironmentType _currentEnvironment;
-  int _authMethod;
   int _theme;
 
   ChainNet _curNet;
@@ -50,14 +49,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _init() async {
     var currentEnvironment = EnvHelper.getEnvironment();
     var version = await new VersionHelper().getVersion();
-    var authMethod = await sl.get<SharedPrefsUtil>().getAuthMethod();
     var theme = await sl.get<SharedPrefsUtil>().getTheme();
     var chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
       _version = version;
-      _authMethod = authMethod.getIndex();
       _theme = theme.getIndex();
       _curNet = chainNet;
     });

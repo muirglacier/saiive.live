@@ -50,7 +50,7 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
         _walletAddresses.addAll(addresses);
         _walletAccounts.putIfAbsent(acc.uniqueId, () => acc);
 
-        if (_selectedWalletAddress == null) {
+        if (_selectedWalletAddress == null && _walletAddresses.isNotEmpty) {
           _selectedWalletAddress = _walletAddresses.last;
           if (widget.onChanged != null) {
             widget.onChanged(_selectedWalletAddress);
@@ -87,6 +87,34 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
     );
   }
 
+  _buildDropDown(BuildContext context) {
+    if (_walletAddresses.isEmpty) {
+      return Text(
+        S.of(context).wallet_accounts_create,
+        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+      );
+    }
+    return DropdownButton<WalletAddress>(
+      isExpanded: true,
+      hint: Text(S.of(context).dex_from_token),
+      value: _selectedWalletAddress,
+      onChanged: (WalletAddress newValue) {
+        setState(() {
+          _selectedWalletAddress = newValue;
+        });
+        if (widget.onChanged != null) {
+          widget.onChanged(newValue);
+        }
+      },
+      items: _walletAddresses.map((e) {
+        return new DropdownMenuItem<WalletAddress>(
+          value: e,
+          child: _buildDropdownListItem(e),
+        );
+      }).toList(),
+    );
+  }
+
   _buildWidget(BuildContext context) {
     if (_isLoading) {
       return Center(child: LoadingWidget(text: S.of(context).loading));
@@ -96,31 +124,9 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
       Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(
-              flex: 1,
-              child: Container(
-                  height: 60,
-                  child: DropdownButton<WalletAddress>(
-                    isExpanded: true,
-                    hint: Text(S.of(context).dex_from_token),
-                    value: _selectedWalletAddress,
-                    onChanged: (WalletAddress newValue) {
-                      setState(() {
-                        _selectedWalletAddress = newValue;
-                      });
-                      if (widget.onChanged != null) {
-                        widget.onChanged(newValue);
-                      }
-                    },
-                    items: _walletAddresses.map((e) {
-                      return new DropdownMenuItem<WalletAddress>(
-                        value: e,
-                        child: _buildDropdownListItem(e),
-                      );
-                    }).toList(),
-                  ))),
+          Expanded(flex: 1, child: Container(height: 60, child: _buildDropDown(context))),
           Padding(
-              padding: EdgeInsets.only(bottom: 10),
+              padding: EdgeInsets.only(bottom: _walletAddresses.isEmpty ? 30 : 10),
               child: IconButton(
                   onPressed: () async {
                     await Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: "/accounts"), builder: (BuildContext context) => AccountsScreen()));

@@ -55,7 +55,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
                   icon: Icon(Icons.qr_code)),
             ),
             title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-              Text(address.name, style: Theme.of(context).textTheme.headline3),
+              if (address.name != null) Text(address.name, style: Theme.of(context).textTheme.headline3),
               SizedBox(width: 10),
               AutoSizeText(address.publicKey, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3, maxLines: 1),
             ]),

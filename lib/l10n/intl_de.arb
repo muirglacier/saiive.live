@@ -19,6 +19,7 @@
   "save": "Speichern",
   "add": "Hinzufügen",
   "visibility": "Sichtbarkeit",
+  "address": "Adresse",
   
   
   "test_info": "Danke fürs Testen!",
@@ -112,6 +113,7 @@
   "wallet_accounts_detail": "Konto Details",
   "wallet_accounts_empty": "Keine Adressen angelegt...",
   "wallet_accounts_address_add": "Neue Adresse anlegen",
+  "wallet_accounts_create": "Du musst zuerst eine Adresse anlegen!",
   "wallet_accounts_select_type": "Kontotyp auswählen",
   "wallet_accounts_add": "Konto anlegen",
   "wallet_accounts_edit": "Konto bearbeiten",

@@ -1,7 +1,6 @@
-As you already know - we have released the first mobile wallet for DeFiChain under the name "[saiive.live](https://saiive.live)". 
+As you already know - we have released the first mobile wallet for defichain under the name "[saiive.live](https://saiive.live)". 
 
 Now we want to propose for a funding within the next round of voting. Here is our CFP. I hope that we have reached your expectations on the wallet and would love to develop it further with and for the community :)
-
 
 # Overview
 
@@ -11,7 +10,7 @@ Now we want to propose for a funding within the next round of voting. Here is ou
 
 3. Receiving address: dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs
 
-4. Reddit discussion thread: TBD
+4. Reddit discussion thread: [Reddit](https://www.reddit.com/r/defiblockchain/comments/og39qh/saiivelive_defi_wallet_light_wallet_cfp_2/)
 
 5. Proposal fee (10 DFI) txid: ff25d42cee5e53ae693c3b3115c4934960d5aabf9cc3f8f9924ca8f870cefbfe (paid with the saiive.live wallet ;) - [Proof](https://imgur.com/a/Uhg1T75))
 
@@ -26,6 +25,13 @@ The goal of this project is not just to provide a mobile application to the Defi
 
 
 # Release
+## iOS
+We had some delay creating the company as we promised to do in the initial CFP. Our lawyers are very busy right now and needed some more time as thought first. 
+
+Therefore we wanted to publish the app with an personal developer account. Apple policy requires a company developer account for publishing crypto apps. This is the reason why we are having some delays with iOS store release.
+
+But our lawyers gave us green light and we can now move forward with the company creation. We already signed the regsitration papers this week, now we need to wait for the "Firmenbuch" (official company register). After that the iOS release should be straight forward. I hope you can understand the reasons why we are delayed with iOS - but hey - you will get more features in the mean time as well ;) 
+
 ## Current Status
 
  The app is fully functioning and has already implementing following functions:
@@ -87,8 +93,9 @@ Even if we were against the 5/10y masternode locking - we will create at least 1
 # Where can I get the app?
  - [GitHub](https://github.com/saiive/saiive.live/releases)
  - [Android](https://play.google.com/store/apps/details?id=at.saiive.live)
- - iOS - still in review
- - [MacOS](https://github.com/saiive/saiive.live/releases) 
+ - iOS TBD
+ - [macOS](https://github.com/saiive/saiive.live/releases)
+   - MacOS Store will follow as well
  - [Windows](https://github.com/saiive/saiive.live/releases)
  - [Linux](https://github.com/saiive/saiive.live/releases)
    -  Some manual steps needed to get it working right now
@@ -98,11 +105,14 @@ Even if we were against the 5/10y masternode locking - we will create at least 1
 What comes next?
 
  - Ledger Integration (WIP)
+ - Account management
+  - Import of private keys and readonly public keys
  - Atomic Swap
  - Stocks
  - DeFiChain Exchange
+ - Masternode Hosting Service
  - Implement user voice features (see GitHub issues)
 
 
  # Why saiive?
-saiive means to savely save your wealth. 
+saiive means to savely save safe your wealth.

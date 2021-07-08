@@ -48,7 +48,6 @@ class AesCrypto {
     Uint8List preHash = Uint8List(0);
 
     while (!enoughBytesForKey) {
-      int preHashLength = currentHash.length + password.length + salt.length;
       if (currentHash.length > 0)
         preHash = Uint8List.fromList(currentHash + password + salt);
       else

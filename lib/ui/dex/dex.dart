@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
@@ -18,6 +20,7 @@ import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -60,6 +63,8 @@ class _DexScreen extends State<DexScreen> {
 
   var _amountFromController = TextEditingController(text: '');
   var _amountToController = TextEditingController(text: '');
+
+  WalletAddress _toAddress;
 
   void resetForm() {
     setState(() {
@@ -330,7 +335,7 @@ class _DexScreen extends State<DexScreen> {
       _testSwapLoading = true;
 
       var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey(AddressType.P2SHSegwit);
+      var pubKey = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
 
       try {
         var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
@@ -395,7 +400,7 @@ class _DexScreen extends State<DexScreen> {
       _testSwapLoading = true;
 
       var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey(AddressType.P2SHSegwit);
+      var pubKey = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
 
       try {
         var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
@@ -433,18 +438,10 @@ class _DexScreen extends State<DexScreen> {
 
     final wallet = sl.get<DeFiChainWallet>();
 
-    if (wallet.isLocked()) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(S.of(context).wallet_locked),
-      ));
-
-      return;
-    }
-
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
     //int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
-    final walletTo = await wallet.getPublicKey(AddressType.P2SHSegwit);
+    final walletTo = _toAddress.publicKey;
     try {
       var streamController = StreamController<String>();
       var createSwapFuture =
@@ -596,12 +593,20 @@ class _DexScreen extends State<DexScreen> {
                           }))
                 ]),
                 TextField(controller: _amountToController, decoration: InputDecoration(hintText: S.of(context).dex_to_amount), keyboardType: TextInputType.number),
+                SizedBox(height: 20),
+                AccountSelectAddressWidget(
+                    label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _toAddress = newValue;
+                      });
+                    }),
                 if (_insufficientFunds)
                   Column(children: [
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text(S.of(context).dex_insufficient_funds, style: Theme.of(context).textTheme.headline6),
                   ]),
-                if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && !_insufficientFunds)
+                if (_selectedPoolPair != null && _amountTo != null && _amountFrom != null && !_insufficientFunds && _toAddress != null)
                   Column(children: [
                     SizedBox(height: 10),
                     Row(children: [
@@ -659,6 +664,22 @@ class _DexScreen extends State<DexScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).dex)), body: _buildDexPage(context));
+    return Scaffold(
+        appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
+            title: Row(children: [
+              if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+                Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        var key = StateContainer.of(context).scaffoldKey;
+                        key.currentState.openDrawer();
+                      },
+                      child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                    )),
+              Text(S.of(context).dex)
+            ])),
+        body: _buildDexPage(context));
   }
 }

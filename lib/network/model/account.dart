@@ -9,7 +9,9 @@ class Account {
   String chain;
   String network;
 
-  Account({this.token, this.address, this.balance, this.raw, this.chain, this.network});
+  String accountId;
+
+  Account({this.token, this.address, this.balance, this.raw, this.chain, this.network, this.accountId});
 
   String get key => token + "_" + address;
   double get balanceDisplay => balance / DefiChainConstants.COIN;
@@ -21,7 +23,8 @@ class Account {
         balance: double.parse(json['balance'].toString()).round(),
         raw: json['raw'] ?? '',
         chain: json['chain'],
-        network: json['network']);
+        network: json['network'],
+        accountId: json['accountId']);
   }
 
   FromAccount toFromAccount() {
@@ -29,5 +32,6 @@ class Account {
     return fromAccount;
   }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{'token': token, 'address': address, 'balance': balance, 'raw': raw, 'chain': chain, 'network': network};
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{'token': token, 'address': address, 'balance': balance, 'raw': raw, 'chain': chain, 'network': network, 'accountId': accountId};
 }

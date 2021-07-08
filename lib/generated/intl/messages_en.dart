@@ -19,16 +19,23 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(chains) => "It seems we are having some problems with the supernode (${chains}), we are working hard to restore our services. Check back later...";
+  static m0(appName) => "A new version of ${appName} is available!";
 
-  static m1(from, to) => "Refreshing addresses (${from}/${to})";
+  static m1(pubKey) => "Do you want to import the Private Key for the existing account? (${pubKey})";
 
-  static m2(from, to) => "Refreshing transactions (${from}/${to})";
+  static m2(chains) => "It seems we are having some problems with the supernode (${chains}), we are working hard to restore our services. Check back later...";
 
-  static m3(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
+  static m3(from, to) => "Refreshing addresses (${from}/${to})";
+
+  static m4(from, to) => "Refreshing transactions (${from}/${to})";
+
+  static m5(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "add" : MessageLookupByLibrary.simpleMessage("Add"),
+    "address" : MessageLookupByLibrary.simpleMessage("Address"),
+    "advanced" : MessageLookupByLibrary.simpleMessage("Advanced"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Please authenticate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -44,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_swap" : MessageLookupByLibrary.simpleMessage("Swap"),
     "dex_swap_show_transaction" : MessageLookupByLibrary.simpleMessage("In Explorer"),
     "dex_swap_successfull" : MessageLookupByLibrary.simpleMessage("Swap successfull"),
+    "dex_to_address" : MessageLookupByLibrary.simpleMessage("Receive tokens at"),
     "dex_to_amount" : MessageLookupByLibrary.simpleMessage("To Amount"),
     "dex_to_token" : MessageLookupByLibrary.simpleMessage("To Token"),
     "helloWorld" : MessageLookupByLibrary.simpleMessage("Hello World!"),
@@ -57,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "home_welcome_good_day" : MessageLookupByLibrary.simpleMessage("Good day"),
     "home_welcome_good_evening" : MessageLookupByLibrary.simpleMessage("Good evening"),
     "home_welcome_good_morning" : MessageLookupByLibrary.simpleMessage("Good morning"),
+    "label" : MessageLookupByLibrary.simpleMessage("Label"),
     "later" : MessageLookupByLibrary.simpleMessage("Later"),
     "light_mode" : MessageLookupByLibrary.simpleMessage("Light"),
     "liqudity_add_successfull" : MessageLookupByLibrary.simpleMessage("Add liquidity successfull"),
@@ -70,6 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "liquidity_add_max" : MessageLookupByLibrary.simpleMessage("max"),
     "liquidity_add_pool_share" : MessageLookupByLibrary.simpleMessage("Pool Share"),
     "liquidity_add_price" : MessageLookupByLibrary.simpleMessage("Price"),
+    "liquidity_add_shares_addr" : MessageLookupByLibrary.simpleMessage("Receive shares at"),
     "liquidity_add_token_a" : MessageLookupByLibrary.simpleMessage("Token A"),
     "liquidity_add_token_b" : MessageLookupByLibrary.simpleMessage("Token B"),
     "liquidity_add_total_pooled" : MessageLookupByLibrary.simpleMessage("Totally pooled"),
@@ -86,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pin_return" : MessageLookupByLibrary.simpleMessage("Return to first step"),
     "receive" : MessageLookupByLibrary.simpleMessage("Receive"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Address copied to Clipboard"),
+    "save" : MessageLookupByLibrary.simpleMessage("Save"),
     "send" : MessageLookupByLibrary.simpleMessage("Send"),
     "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "settings_auth_biometric" : MessageLookupByLibrary.simpleMessage("Biometric"),
@@ -119,7 +130,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "test_info_telegram" : MessageLookupByLibrary.simpleMessage("If you have any questions, we have created a Telegram group for that:"),
     "test_info_test" : MessageLookupByLibrary.simpleMessage("Thanks for helping us bringing the saiive.live to a bigger audience. Your feedback helps us a lot!"),
     "title" : MessageLookupByLibrary.simpleMessage("saiive.live"),
+    "update_cancel" : MessageLookupByLibrary.simpleMessage("Abort"),
+    "update_start" : MessageLookupByLibrary.simpleMessage("Install"),
+    "update_text" : m0,
+    "update_title" : MessageLookupByLibrary.simpleMessage("Update"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
+    "visibility" : MessageLookupByLibrary.simpleMessage("Visibility"),
+    "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Accounts"),
+    "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("Add account"),
+    "wallet_accounts_address_add" : MessageLookupByLibrary.simpleMessage("Create new address"),
+    "wallet_accounts_cannot_be_empty" : MessageLookupByLibrary.simpleMessage("The field cannot be empty!"),
+    "wallet_accounts_create" : MessageLookupByLibrary.simpleMessage("You need to create an address first!"),
+    "wallet_accounts_detail" : MessageLookupByLibrary.simpleMessage("Account details"),
+    "wallet_accounts_edit" : MessageLookupByLibrary.simpleMessage("Edit account"),
+    "wallet_accounts_empty" : MessageLookupByLibrary.simpleMessage("No address created yet..."),
+    "wallet_accounts_import" : MessageLookupByLibrary.simpleMessage("Import account"),
+    "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),
+    "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("The private key is invalid!"),
+    "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("The public key is invalid!"),
+    "wallet_accounts_import_priv_key_for_pub_key" : m1,
+    "wallet_accounts_saved" : MessageLookupByLibrary.simpleMessage("Account saved"),
+    "wallet_accounts_select_type" : MessageLookupByLibrary.simpleMessage("Select type"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Your wallet is empty!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Network"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet is synchronising right now!"),
@@ -143,7 +174,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Put the #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" word here"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" word"),
-    "wallet_offline" : m0,
+    "wallet_offline" : m2,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Building transaction"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creating auth tx"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparing account balance"),
@@ -152,8 +183,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict" : MessageLookupByLibrary.simpleMessage("Please wait for your transaction to be reflected in the next block before proceeding with a new transaction."),
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("We found some pending transactions. We try to wait for them, this could take some time!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Wallet is not synced. Please retry your transaction."),
-    "wallet_operation_refresh_addresses" : m1,
-    "wallet_operation_refresh_tx" : m2,
+    "wallet_operation_refresh_addresses" : m3,
+    "wallet_operation_refresh_tx" : m4,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refreshing utxo..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("Refreshing utxo...done"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Sending transaction"),
@@ -162,7 +193,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaction was successful :)"),
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Wait for confirmation..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Receive"),
-    "wallet_receive_warning" : m3,
+    "wallet_receive_warning" : m5,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("The accounts have been added to your local datastore! Your acounts will be synced in the background!"),

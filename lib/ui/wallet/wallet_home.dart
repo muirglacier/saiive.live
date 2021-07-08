@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
@@ -36,6 +37,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   StreamSubscription<WalletInitDoneEvent> _walletInitDoneSubscription;
   StreamSubscription<WalletSyncDoneEvent> _walletSyncDoneSubscription;
   StreamSubscription<BlockTipUpdatedEvent> _blockTipUpdatedEvent;
+  StreamSubscription<WalletSyncStartEvent> _walletSyncStartEvent;
 
   AnimationController _controller;
 
@@ -48,29 +50,31 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   List<AccountBalance> _accountBalance;
   RefreshController _refreshController = RefreshController(initialRefresh: true);
 
-  WalletService _wallet;
-
   _refresh() async {
     EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
     sl.get<IHealthService>().checkHealth(context);
 
     _refreshController.refreshCompleted();
-    final syncText = S.of(context).home_welcome_account_syncing;
-
-    _controller.forward();
-    setState(() {
-      _syncText = syncText;
-
-      _isSyncing = true;
-    });
   }
 
   _initWallet() async {
-    // return;
-    if (await _wallet.hasAccounts()) {
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    if (_walletSyncStartEvent == null) {
+      _walletSyncStartEvent = EventTaxiImpl.singleton().registerTo<WalletSyncStartEvent>().listen((event) async {
+        final syncText = S.of(context).home_welcome_account_syncing;
+
+        var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+
+        _controller.forward();
+        setState(() {
+          _accountBalance = accountBalance;
+          _syncText = syncText;
+
+          _isSyncing = true;
+        });
+      });
     }
+
     if (_walletInitDoneSubscription == null) {
       _walletInitDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletInitDoneEvent>().listen((event) async {
         var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
@@ -87,9 +91,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   _syncEvents() {
+    final wallet = sl.get<IWalletService>();
+
     if (_walletSyncDoneSubscription == null) {
       _walletSyncDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletSyncDoneEvent>().listen((event) async {
-        final accounts = await _wallet.getAccounts();
+        final accounts = await wallet.getAccounts();
         if (accounts.length == 0) {
           Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
         }
@@ -165,8 +171,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
-    _wallet = sl.get<IWalletService>();
-
     _syncEvents();
     _initWallet();
     _initLastSyncedBlock();
@@ -190,6 +194,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     if (_blockTipUpdatedEvent != null) {
       _blockTipUpdatedEvent.cancel();
       _blockTipUpdatedEvent = null;
+    }
+
+    if (_walletSyncStartEvent != null) {
+      _walletSyncStartEvent.cancel();
+      _walletSyncStartEvent = null;
     }
   }
 
@@ -324,20 +333,33 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(_welcomeText, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              Text(_syncText, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-              if (_lastSyncBlockTip != null)
-                Row(children: [
-                  Text(S.of(context).home_welcome_account_block_height, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-                  Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-                ]),
-            ],
-          ),
+          title: Row(children: [
+            if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+              Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      var key = StateContainer.of(context).scaffoldKey;
+                      key.currentState.openDrawer();
+                    },
+                    child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_welcomeText, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text(_syncText, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                if (_lastSyncBlockTip != null)
+                  Row(children: [
+                    Text(S.of(context).home_welcome_account_block_height, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                    Text(_lastSyncBlockTip.height.toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                  ]),
+              ],
+            )
+          ]),
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           actions: [
             Padding(

@@ -11,7 +11,7 @@ class WalletReceiveScreen extends StatefulWidget {
   final String pubKey;
   final ChainType chain;
 
-  WalletReceiveScreen({this.pubKey, this.chain});
+  WalletReceiveScreen({@required this.pubKey, @required this.chain});
 
   _WalletReceiveState createState() => _WalletReceiveState();
 }

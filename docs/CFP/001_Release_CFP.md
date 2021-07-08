@@ -1,28 +1,40 @@
+As you already know - we have released the first mobile wallet for defichain under the name "[saiive.live](https://saiive.live)". 
+
+Now we want to propose for a funding within the next round of voting. Here is our CFP. I hope that we have reached your expectations on the wallet and would love to develop it further with and for the community :)
+
 # Overview
 
-1. Requester(s): Dominik and Patrik Pfaffenbauer (eg. in future saiive.defichain GmbH)
+1. Requester(s): Dominik and Patrik
 
-2. Amount requested in DFI: 50.000
+2. Amount requested in DFI: 50.000 (as proposed in the first CFP)
 
 3. Receiving address: dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs
 
-4. Reddit discussion thread: https://www.reddit.com/r/defiblockchain/comments/nkyyhw/defichain_light_wallet_saiivelive_is_born/
+4. Reddit discussion thread: [Reddit](https://www.reddit.com/r/defiblockchain/comments/og39qh/saiivelive_defi_wallet_light_wallet_cfp_2/)
 
-5. Proposal fee (10 DFI) txid: TBD
+5. Proposal fee (10 DFI) txid: ff25d42cee5e53ae693c3b3115c4934960d5aabf9cc3f8f9924ca8f870cefbfe (paid with the saiive.live wallet ;) - [Proof](https://imgur.com/a/Uhg1T75))
 
    
 
-Dominik und Patrik Pfaffenbauer are actively developing a Light, non custodial Wallet for iOS, Android, Mac, Windows and Linux.  (https://github.com/saiive).
+Dominik und Patrik are actively developing a Light, non custodial Wallet for iOS, Android, Mac, Windows and Linux.  (https://github.com/saiive).
 
 **saiive.live** is a non-custodial light wallet Application that runs on iOS, Android, Windows, Mac and Linux. In it's current stage, it is fully functional and already working.
 
-The goal of this project is not just to provide a mobile application to the DefiChain Ecosystem, it is much more. It includes many necessary components to further decentralize DeFiChain and move away from the Foundation and Cake, enhancing also security and future possible projects. Our application solves one of the main problems running the foundation app on desktop: We don't run a full-node, we run the infrastructure in the cloud. (thus reducing decentralization, but accelerate adoption)
+The goal of this project is not just to provide a mobile application to the DefiChain Ecosystem, it is much more. It includes many necessary components to further decentralize DeFiChain and move away from the Foundation and Cake, enhancing also security and future possible prjects. Our application solves one of the main problems running the foundation app on desktop.
 
 
 
 # Release
+## iOS
+We had some delay creating the company as we promised to do in the initial CFP. Our lawyers are very busy right now and needed some more time as thought first. 
+
+Therefore we wanted to publish the app with an personal developer account. Apple policy requires a company developer account for publishing crypto apps. This is the reason why we are having some delays with iOS store release.
+
+But our lawyers gave us green light and we can now move forward with the company creation. We already signed the regsitration papers this week, now we need to wait for the "Firmenbuch" (official company register). After that the iOS release should be straight forward. I hope you can understand the reasons why we are delayed with iOS - but hey - you will get more features in the mean time as well ;) 
+
 ## Current Status
-The current state of the app is in testing phase for users applied to be part in the testing program. The app is fully functioning and has already implementing following functions:
+
+ The app is fully functioning and has already implementing following functions:
  - Offline signing of BTC transactions
  - Offline signing of DFI transactions
  - Send DAT and DFI (Converting account to UTXO if necessary)
@@ -46,21 +58,18 @@ The current state of the app is in testing phase for users applied to be part in
    - Show Seed
    - Remove Seed
    - Change Theme (Dark and Light Mode)
-   - Biotmetric Security for FaceID/TouchID or Fingerprint on Android / (TBD Pin Code and 2FA)
+   - Biotmetric Security for FaceID/TouchID or Fingerprint on Android / PIN on all Devices
    - Mainnet and Testnet
- - Secure Storage for Mmenonic Seed on Mobile devices through system provided Secure Storage Systems
+ - Secure Storage for Mmenonic Seed on Mobile devices through system provided Secure Storage Systems. Encrypted on Desktop OS
 
 For the app to be functional, we also provide the necessary infrastructure which currently is distributed into several data centers. This infrastructure consists of following services:
  - Full Node in testnet
  - Full Node in mainnet
  - Bitcore as a proxy API and database for blocks/transactions
  - Supernode as our Web3 API
-
-
-
-### How will the fund be spent?
-
-Mostly for infrastructure and employees. In the meantime we will create masternodes to get more security to the network. In the time we need the money we will resign on of the masternodes to pay out the needs.
+ - Running on different Cloud providers
+ - DEV/TEST/PROD environment to be indepentend from dev and test
+Check the [DeFiChain-Wiki](https://defichain-wiki.com/wiki/Saiive.live) for more informations about that!
 
 
 
@@ -73,3 +82,37 @@ No more:
 * high-end device to run the app
 
 I guess the benefits of our app should be clear to all :)
+
+
+# How will the fund be spent?
+
+Mostly for infrastructure and employees.
+Even if we were against the 5/10y masternode locking - we will create at least 1 masternode and lock the funds for 5years to show long-term commitment to the project. With the rewards from the masternodes we will pay the infrastructure and employee costs.
+
+
+# Where can I get the app?
+ - [GitHub](https://github.com/saiive/saiive.live/releases)
+ - [Android](https://play.google.com/store/apps/details?id=at.saiive.live)
+ - iOS TBD
+ - [macOS](https://github.com/saiive/saiive.live/releases)
+   - MacOS Store will follow as well
+ - [Windows](https://github.com/saiive/saiive.live/releases)
+ - [Linux](https://github.com/saiive/saiive.live/releases)
+   -  Some manual steps needed to get it working right now
+
+
+# Roadmap
+What comes next?
+
+ - Ledger Integration (WIP)
+ - Account management
+  - Import of private keys and readonly public keys
+ - Atomic Swap
+ - Stocks
+ - DeFiChain Exchange
+ - Masternode Hosting Service
+ - Implement user voice features (see GitHub issues)
+
+
+ # Why saiive?
+saiive means to savely save safe your wealth.

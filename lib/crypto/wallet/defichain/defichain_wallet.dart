@@ -5,6 +5,8 @@ import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/from_account.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet_helper.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
@@ -63,17 +65,18 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var fees = await getTxFee(0, 0);
     await prepareAccount(fees, loadingStream: loadingStream);
 
-    final key = mnemonicToSeed(seed);
-
     final txb = await createBaseTransaction(0, shareAddress, shareAddress, fees, (txb, inputTxs, nw) async {
       var tx = await getAuthInputsSmart(shareAddress, AuthTxMin, fees);
 
       txb.addRemoveLiquidityOutput(token, amount, shareAddress);
 
       final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+      final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 
-      final keyPair = HdWalletUtil.getKeyPair(
-          key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
+      if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+        throw new ReadOnlyAccountError();
+      }
+      var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
       final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
       if (inputContainsAuthTx.isEmpty) {
@@ -115,7 +118,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final tokenAType = await apiService.tokenService.getToken("DFI", tokenA);
     final tokenBType = await apiService.tokenService.getToken("DFI", tokenB);
-    final key = mnemonicToSeed(seed);
 
     final accountsA = await walletDatabase.getAccountBalancesForToken(tokenA);
     final accountsB = await walletDatabase.getAccountBalancesForToken(tokenB);
@@ -137,7 +139,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       if (otherUtxos.isNotEmpty) {
         useAddress = otherUtxos.first.address;
       } else {
-        useAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+        useAddress = await getPublicKey(true, AddressType.P2SHSegwit);
       }
     }
 
@@ -161,9 +163,25 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     inputTxs.add(authInputA);
     inputTxs.add(authInputB);
 
-    final txb = await HdWalletUtil.buildAddPollLiquidityTransaction(inputTxs, accountA.toFromAccount(), accountA.address, accountB.toFromAccount(), useAddress, walletDatabase,
-        tokenAType.id, tokenBType.id, shareAddress, amountA, amountB, fee, shareAddress, key, chain, network);
-    return txb.build().toHex();
+    final keys = List<ECPair>.empty(growable: true);
+
+    for (final tx in inputTxs) {
+      final address = await walletDatabase.getWalletAddress(tx.address);
+      final walletAccount = await walletDatabase.getAccount(address.accountId);
+
+      if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+        continue;
+      }
+
+      final key = await getPrivateKey(address, walletAccount);
+      keys.add(key);
+    }
+
+    final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, shareAddress, authInputA.value + authInputB.value, fee, shareAddress, (txb, txIn, nw) {
+      txb.addAddLiquidityOutput(tokenAType.id, accountA.address, amountA, tokenBType.id, useAddress, amountB, shareAddress);
+    }, chain, network);
+
+    return txb;
   }
 
   Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
@@ -189,7 +207,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       fromAmount = await prepareAccount(fromAmount, loadingStream: loadingStream);
     }
 
-    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
@@ -202,8 +220,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final toTok = await apiService.tokenService.getToken("DFI", toToken);
     final fromAccounts = await walletDatabase.getAccountBalancesForToken(fromToken);
     final fromAccount = await DefichainWalletHelper.getHighestAmountAddressForSymbol(fromAccounts, fromAmount);
-
-    final key = mnemonicToSeed(seed);
 
     final tokenBalance = await walletDatabase.getAccountBalance(fromToken, excludeAddresses: [fromAccount.address]);
 
@@ -224,9 +240,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
       if (inputContainsAuthTx.isEmpty) {
         final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+        final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 
-        final keyPair = HdWalletUtil.getKeyPair(
-            key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
+        if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+          throw new ReadOnlyAccountError();
+        }
+        var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
         var vin = txb.addInput(tx.mintTxId, tx.mintIndex);
         txb.addOutput(tx.address, tx.value);
@@ -241,21 +260,25 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   @override
   Future<String> createSendTransaction(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = await this.getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+    final changeAddress = await this.getPublicKey(true, AddressType.P2SHSegwit);
 
     if (DeFiConstants.isDfiToken(token)) {
+      var needsToRefresh = false;
       if (sendMax) {
         await moveAllTokensToUtxo(changeAddress);
       } else {
         var txHex = await prepareAccountToUtxosTransactions(changeAddress, amount, sendMax: sendMax, loadingStream: loadingStream);
 
         if (txHex != null) {
+          needsToRefresh = true;
           for (var txHexStr in txHex.item1) {
             final tx = await createTxAndWaitInternal(txHexStr, loadingStream: loadingStream);
 
             for (final unspentTx in tx.details.outputs) {
               if (unspentTx.address == changeAddress) {
-                await walletDatabase.addUnspentTransaction(unspentTx);
+                var address = await walletDatabase.getWalletAddress(unspentTx.address);
+                var walletAccount = await walletDatabase.getAccount(address.accountId);
+                await walletDatabase.addUnspentTransaction(unspentTx, walletAccount);
               }
             }
           }
@@ -265,7 +288,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       }
 
       if (sendMax) {
-        await ensureUtxoUnsafe(loadingStream: loadingStream);
+        if (needsToRefresh) {
+          await ensureUtxoUnsafe(loadingStream: loadingStream);
+        }
         amount = (await BalanceHelper().getAccountBalance(token, chain)).balance;
       }
 
@@ -287,7 +312,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     final tokenType = await apiService.tokenService.getToken("DFI", token);
-    final key = mnemonicToSeed(seed);
 
     final accounts = await walletDatabase.getAccountBalancesForToken(token);
     final useAccounts = List<FromAccount>.empty(growable: true);
@@ -298,29 +322,36 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     var curAmount = 0;
-    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
     var lastTxId = "";
     for (final txs in accounts) {
       if (txs.address == to) {
         continue;
       }
+      final addressInfo = await walletDatabase.getWalletAddress(txs.address);
+      final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 
+      final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
+      if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+        continue;
+      }
       final inputTxs = List<tx.Transaction>.empty(growable: true);
       final keys = List<ECPair>.empty(growable: true);
 
       final fromAccount = FromAccount(address: txs.address, amount: txs.balance);
       useAccounts.add(fromAccount);
 
-      final addressInfo = await walletDatabase.getWalletAddress(txs.address);
+      var inputTx = await getAuthInputsSmart(txs.address, AuthTxMin, fee, loadingStream: loadingStream);
+      inputTxs.add(inputTx);
 
-      inputTxs.add(await getAuthInputsSmart(txs.address, AuthTxMin, fee, loadingStream: loadingStream));
-
-      final keyPair = HdWalletUtil.getKeyPair(key, addressInfo.account, addressInfo.isChangeAddress, addressInfo.index, addressInfo.chain, addressInfo.network);
+      var keyPair = await getPrivateKey(addressInfo, walletAccount);
       keys.add(keyPair);
 
-      final txb = await HdWalletUtil.buildAccountToAccountTransaction(inputTxs, fromAccount, keys, tokenType.id, to, amount, fee, changeAddress, chain, network);
+      final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, to, inputTx.valueRaw, fee, changeAddress, (txb, txIn, nw) {
+        txb.addAccountToAccountOutputAt(tokenType.id, fromAccount.address, to, amount, 0);
+      }, chain, network);
+
       loadingStream?.add(S.current.wallet_operation_send_tx);
-      var txD = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb.build().toHex(), inputTxs, changeAddress), loadingStream: loadingStream);
+      var txD = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb, inputTxs, changeAddress), loadingStream: loadingStream);
 
       lastTxId = txD.txId;
 
@@ -334,7 +365,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<Tuple3<String, List<tx.Transaction>, String>> createAuthTx(String pubKey, int amount, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
 
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
@@ -386,8 +417,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     loadingStream?.add(S.current.wallet_operation_create_pepare_acc_tx);
 
-    final key = mnemonicToSeed(seed);
-
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
@@ -404,9 +433,13 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         continue;
       }
 
-      final address = await walletDatabase.getWalletAddress(tx.address);
-      final keyPair =
-          HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, ChainHelper.chainFromString(tx.chain), ChainHelper.networkFromString(tx.network));
+      final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+      final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+      if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+        throw new ReadOnlyAccountError();
+      }
+      var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
       keys.add(keyPair);
 
@@ -414,7 +447,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         break;
       }
     }
-    final changeAddress = await getPublicKeyFromAccount(account, true, AddressType.P2SHSegwit);
+    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
 
     final tokenType = await apiService.tokenService.getToken("DFI", DeFiConstants.DefiAccountSymbol);
 
@@ -443,7 +476,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
               token: DeFiConstants.DefiAccountSymbol,
               chain: ChainHelper.chainTypeString(chain),
               network: ChainHelper.chainNetworkString(network));
-          await walletDatabase.setAccountBalance(accBalance);
+          final addressInfo = await walletDatabase.getWalletAddress(input.address);
+          final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+          await walletDatabase.setAccountBalance(accBalance, walletAccount);
         }
       }
       if (checkAmount <= 0) {
@@ -479,23 +515,24 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<Tuple2<String, List<tx.Transaction>>> prepareAccountToUtxo(String pubKey, Token tokenType, Account account, int fees) async {
-    final key = mnemonicToSeed(seed);
-
     final useInputs = List<tx.Transaction>.empty(growable: true);
     final keys = List<ECPair>.empty(growable: true);
 
     final authTx = await getAuthInputsSmart(account.address, AuthTxMin, fees, sendMax: true);
     useInputs.add(authTx);
 
-    walletDatabase.addUnspentTransaction(authTx);
-
     if (!await walletDatabase.isOwnAddress(authTx.address)) {
       return null;
     }
 
-    final address = await walletDatabase.getWalletAddress(authTx.address);
-    final keyPair = HdWalletUtil.getKeyPair(
-        key, address.account, address.isChangeAddress, address.index, ChainHelper.chainFromString(authTx.chain), ChainHelper.networkFromString(authTx.network));
+    final addressInfo = await walletDatabase.getWalletAddress(authTx.address);
+    final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+    walletDatabase.addUnspentTransaction(authTx, walletAccount);
+
+    if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+      throw new ReadOnlyAccountError();
+    }
+    var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
     keys.add(keyPair);
 
@@ -530,12 +567,20 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     var neededUtxo = amount - tokenBalance.balance;
+
+    if (neededUtxo < MinKeepUTXO) {
+      neededUtxo = MinKeepUTXO;
+
+      if (neededUtxo > accountBalance.balance) {
+        neededUtxo = accountBalance.balance;
+      }
+    }
+
     final accounts = await walletDatabase.getAccountBalancesForToken(DeFiConstants.DefiAccountSymbol);
 
     if (accounts.length == 0) {
       throw new ArgumentError("No accounts found..");
     }
-    final key = mnemonicToSeed(seed);
     final usedInputs = List<tx.Transaction>.empty(growable: true);
     final fees = await getTxFee(0, 0);
 
@@ -552,16 +597,20 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       useInputs.add(authTx);
       usedInputs.add(authTx);
 
-      walletDatabase.addUnspentTransaction(authTx);
-      walletDatabase.setAccountBalance(Account(token: DeFiConstants.DefiTokenSymbol, address: acc.address, balance: acc.balance, chain: acc.chain, network: acc.network));
-
       if (!await walletDatabase.isOwnAddress(authTx.address)) {
         continue;
       }
 
-      final address = await walletDatabase.getWalletAddress(authTx.address);
-      final keyPair = HdWalletUtil.getKeyPair(
-          key, address.account, address.isChangeAddress, address.index, ChainHelper.chainFromString(authTx.chain), ChainHelper.networkFromString(authTx.network));
+      final addressInfo = await walletDatabase.getWalletAddress(authTx.address);
+      final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+      walletDatabase.addUnspentTransaction(authTx, walletAccount);
+      walletDatabase.setAccountBalance(
+          Account(token: DeFiConstants.DefiTokenSymbol, address: acc.address, balance: acc.balance, chain: acc.chain, network: acc.network), walletAccount);
+
+      if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+        continue;
+      }
+      var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
       keys.add(keyPair);
       var useAcc = acc;
@@ -578,8 +627,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       var txHex = await HdWalletUtil.buildTransaction(useInputs, keys, pubKey, 0, fees, pubKey, (txb, inputTxs, network) async {
         final mintingStartsAt = txb.tx.ins.length + 1;
 
-        txb.addOutput(pubKey, useAcc.balance);
-        txb.addAccountToUtxoOutput(tokenType.id, acc.address, useAcc.balance, mintingStartsAt);
+        if (useAcc.balance > 0) {
+          txb.addOutput(pubKey, useAcc.balance);
+          txb.addAccountToUtxoOutput(tokenType.id, acc.address, useAcc.balance, mintingStartsAt);
+        }
       }, chain, network);
 
       txs.add(txHex);

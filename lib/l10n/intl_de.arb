@@ -13,6 +13,13 @@
   "dark_mode": "Dunkel",
   "light_mode": "Hell",
   "ok": "Ok",
+  "label": "Label",
+  "advanced": "Erweitert",
+
+  "save": "Speichern",
+  "add": "Hinzufügen",
+  "visibility": "Sichtbarkeit",
+  "address": "Adresse",
   
   
   "test_info": "Danke fürs Testen!",
@@ -102,6 +109,22 @@
   "wallet_operation_mempool_conflict": "Bitte warte bis deine Transaktion dem nächsten Block hinzugefügt wurde, bevor du mit einer neuen Transaktion fortfährst.",
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
+  "wallet_accounts": "Konten",
+  "wallet_accounts_detail": "Konto Details",
+  "wallet_accounts_empty": "Keine Adressen angelegt...",
+  "wallet_accounts_address_add": "Neue Adresse anlegen",
+  "wallet_accounts_create": "Du musst zuerst eine Adresse anlegen!",
+  "wallet_accounts_select_type": "Kontotyp auswählen",
+  "wallet_accounts_add": "Konto anlegen",
+  "wallet_accounts_edit": "Konto bearbeiten",
+  "wallet_accounts_import": "Konto importieren",
+  "wallet_accounts_import_priv_key_for_pub_key": "Möchtest du den PrivateKey für das ReadOnly Konto {pubKey} hinzufügen?",
+  "wallet_accounts_import_invalid_pub_key": "Der Public Key ist ungültig!",
+  "wallet_accounts_import_invalid_priv_key": "Der Private Key ist ungültig!",
+  "wallet_accounts_import_invalid": "Der Inhalt ist ungültig!",
+  "wallet_accounts_cannot_be_empty": "Das Feld darf nicht leer sein!",
+  "wallet_accounts_saved": "Konto wurde gespeichert",
+
   "settings": "Einstellungen",
   "settings_wallet": "Wallet",
   "settings_common": "Allgemein",
@@ -154,6 +177,7 @@
   "dex_insufficient_funds": "Nicht genügend Balance für Tausch.",
   "dex_swap_successfull": "Swap erfolgreich",
   "dex_swap_show_transaction": "Im Explorer",
+  "dex_to_address": "Token erhalten an",
 
   "home_welcome_good_morning": "Guten Tag",
   "home_welcome_good_day": "Guten Tag",
@@ -171,6 +195,7 @@
   "liquidity_add_token_b": "Token B",
   "liquidity_add_amount_a": "Amount A",
   "liquidity_add_amount_b": "Amount B",
+  "liquidity_add_shares_addr": "Erhalte Anteil auf",
   "liquidity_add_pool_share": "Pool Share",
   "liquidity_add_total_pooled": "Insgesammt gepoolt",
   "liquidity_add_insufficient_funds": "Nicht genügend Balance für LM",
@@ -188,5 +213,11 @@
   "authenticate": "Authentifiziere Dich",
   "pin_return": "Zurück zum ersten Schritt",
   "pin_confirm": "PIN bestätigen",
-  "pin_enter": "PIN Eingabe"
+  "pin_enter": "PIN Eingabe",
+
+
+  "update_title": "Update",
+  "update_text": "Eine neue Version von {appName} ist verfügbar!",
+  "update_start": "Installieren",
+  "update_cancel": "Abbrechen"
 }

@@ -21,20 +21,26 @@ class RequestItem<T> {
     this.fromTransfer = fromTransfer;
   }
 
+  // ignore: unnecessary_getters_setters
   T get request => _request;
 
+  // ignore: unnecessary_getters_setters
   set request(T value) {
     _request = value;
   }
 
+  // ignore: unnecessary_getters_setters
   bool get isProcessing => _isProcessing;
 
+  // ignore: unnecessary_getters_setters
   set isProcessing(bool value) {
     _isProcessing = value;
   }
 
+  // ignore: unnecessary_getters_setters
   DateTime get expireDt => _expireDt;
 
+  // ignore: unnecessary_getters_setters
   set expireDt(DateTime value) {
     _expireDt = value;
   }

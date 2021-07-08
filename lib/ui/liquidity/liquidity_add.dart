@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
@@ -15,6 +15,7 @@ import 'package:saiive.live/network/model/pool_pair.dart';
 import 'package:saiive.live/network/model/token_balance.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -56,6 +57,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
 
   var _amountTokenAController = TextEditingController(text: '');
   var _amountTokenBController = TextEditingController(text: '');
+
+  WalletAddress _toAddress;
 
   @override
   void initState() {
@@ -347,7 +350,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
-    final walletTo = await wallet.getPublicKey(AddressType.P2SHSegwit);
+    final walletTo = _toAddress.publicKey;
 
     int amountTokenA = (_amountTokenA * DefiChainConstants.COIN).round();
     int amountTokenB = (_amountTokenB * DefiChainConstants.COIN).round();
@@ -494,12 +497,20 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 }))
       ]),
       TextField(controller: _amountTokenBController, decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b), keyboardType: TextInputType.number),
+      SizedBox(height: 20),
+      AccountSelectAddressWidget(
+          label: Text(S.of(context).liquidity_add_shares_addr, style: Theme.of(context).inputDecorationTheme.hintStyle),
+          onChanged: (newValue) {
+            setState(() {
+              _toAddress = newValue;
+            });
+          }),
       if (_insufficientFunds)
         Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
           Text(S.of(context).liquidity_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
         ]),
-      if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false)
+      if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false && _toAddress != null)
         Column(children: [
           SizedBox(height: 10),
           Row(children: [
@@ -581,6 +592,6 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquidity_add)),
-        body: Padding(padding: EdgeInsets.all(30), child: _buildAddLmPage(context)));
+        body: Padding(padding: EdgeInsets.all(30), child: SingleChildScrollView(child: Expanded(child: _buildAddLmPage(context)))));
   }
 }

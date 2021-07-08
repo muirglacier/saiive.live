@@ -20,7 +20,6 @@ import 'package:saiive.live/ui/utils/card-link.widget.dart';
 import 'package:saiive.live/ui/utils/legal_entities.dart';
 import 'package:saiive.live/ui/wallet/wallet_send.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
-import 'package:saiive.live/ui/model/authentication_method.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +34,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   var _version = "";
   EnvironmentType _currentEnvironment;
-  int _authMethod;
   int _theme;
 
   ChainNet _curNet;
@@ -51,14 +49,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _init() async {
     var currentEnvironment = EnvHelper.getEnvironment();
     var version = await new VersionHelper().getVersion();
-    var authMethod = await sl.get<SharedPrefsUtil>().getAuthMethod();
     var theme = await sl.get<SharedPrefsUtil>().getTheme();
     var chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
       _version = version;
-      _authMethod = authMethod.getIndex();
       _theme = theme.getIndex();
       _curNet = chainNet;
     });
@@ -253,26 +249,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           child: Column(
                         children: [
                           Image.asset('assets/logo.png', height: 100),
-                          if (!Platform.isIOS) Container(
-                              child: Padding(
-                                  padding: EdgeInsets.only(top: 20),
-                                  child: Text(
-                                    S.of(context).settings_donate,
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ))),
-                          if (!Platform.isIOS) Container(
-                              child: ElevatedButton(
-                            child: Text(
-                              "dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs",
-                              style: TextStyle(color: Colors.white),
-                              maxLines: 1,
-                            ),
-                            onPressed: () async {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (BuildContext context) => WalletSendScreen('DFI', ChainType.DeFiChain, toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
-                            },
-                          )),
+                          if (!Platform.isIOS)
+                            Container(
+                                child: Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text(
+                                      S.of(context).settings_donate,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ))),
+                          if (!Platform.isIOS)
+                            Container(
+                                child: ElevatedButton(
+                              child: Text(
+                                "dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs",
+                                style: TextStyle(color: Colors.white),
+                                maxLines: 1,
+                              ),
+                              onPressed: () async {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (BuildContext context) => WalletSendScreen('DFI', ChainType.DeFiChain, toAddress: 'dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs')));
+                              },
+                            )),
                           SizedBox(height: 20),
                           Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
                             Container(

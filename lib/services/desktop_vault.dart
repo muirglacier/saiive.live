@@ -43,8 +43,8 @@ class DesktopVault extends IVault {
     var unlock = sl.get<IUnlockHandler>();
 
     if (value == null) {
-      sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
-      sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key);
+      await sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
+      await sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key);
     } else {
       final hash = await sl.get<SharedPrefsUtil>().getPasswordHash();
       final lockEnabled = hash != null && hash.isNotEmpty;
@@ -52,9 +52,9 @@ class DesktopVault extends IVault {
       if (lockEnabled) {
         var unlockCode = await unlock.getUnlockCode();
         final encrypted = AesCrypto.encryptAESCryptoJS(value, unlockCode);
-        sharedPreferences.setString(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key, encrypted);
+        await sharedPreferences.setString(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key, encrypted);
       } else {
-        sharedPreferences.setString(EnvHelper.environmentToString(currentEnvironment) + "_" + key, value);
+        await sharedPreferences.setString(EnvHelper.environmentToString(currentEnvironment) + "_" + key, value);
       }
     }
 
@@ -97,5 +97,15 @@ class DesktopVault extends IVault {
   @override
   Future<String> setSeed(String seed) async {
     return await _write(IVault.seedKey, seed);
+  }
+
+  @override
+  Future<String> getPrivateKey(String id) async {
+    return await _read(IVault.privateKey + id);
+  }
+
+  @override
+  Future setPrivateKey(String id, String privateKey) async {
+    return await _write(IVault.privateKey + id, privateKey);
   }
 }

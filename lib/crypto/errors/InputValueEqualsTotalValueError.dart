@@ -17,16 +17,26 @@ class InputValueEqualsTotalValueError extends TransactionError {
     copyText += "\n\r";
 
     for (final tx in inputTxs) {
-      copyText += "Address: $tx.address, MintId: $tx.mintTxId, MintHeight: $tx.mintHeight, Value: $tx.value";
+      final addr = tx.address;
+      final mintId = tx.mintTxId;
+      final mintHeight = tx.mintHeight;
+      final value = tx.value;
+      copyText += "Address: $addr, MintId: $mintId, MintHeight: $mintHeight, Value: $value";
       copyText += "\n\r";
     }
 
+    copyText += "\n\r";
+    copyText += "\n\r";
     copyText += "Amount: $amount, To: $to, Fees: $fees, ChangeAddress: $changeAddress";
+    copyText += "\n\r";
     copyText += "\n\r";
 
     copyText += "Error:";
     copyText += "\n\r";
     copyText += "$error";
+
+    copyText += "\n\r";
+    copyText += "\n\r";
 
     return copyText;
   }

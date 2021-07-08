@@ -6,6 +6,7 @@ import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:uuid/uuid.dart';
 
 class MemoryDatabaseMock extends IWalletDatabase {
   List<Account> _accounts = List<Account>.empty(growable: true);
@@ -21,12 +22,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<WalletAccount> addAccount({String name, int account, ChainType chain, bool isSelected = false}) async {
-    var newAccount = WalletAccount();
-    newAccount.name = name;
-    newAccount.account = account;
-    newAccount.id = account;
-    newAccount.chain = chain;
-    newAccount.selected = isSelected;
+    var newAccount =
+        WalletAccount(name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, uniqueId: Uuid().v4());
 
     _walletAccounts.add(newAccount);
 
@@ -34,12 +31,26 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future addTransaction(Transaction transaction) async {
+  Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount) async {
+    await Future.delayed(Duration(microseconds: 1));
+
+    for (final acc in _walletAccounts) {
+      if (acc.uniqueId == walletAccount.uniqueId) {
+        acc.name = walletAccount.name;
+        return acc;
+      }
+    }
+    _walletAccounts.add(walletAccount);
+    return walletAccount;
+  }
+
+  @override
+  Future addTransaction(Transaction transaction, WalletAccount walletAccount) async {
     _transactions.add(transaction);
   }
 
   @override
-  Future addUnspentTransaction(Transaction transaction) async {
+  Future addUnspentTransaction(Transaction transaction, WalletAccount walletAccount) async {
     var txAlreadyInList = false;
 
     for (final tx in _unspentTransactions) {
@@ -54,22 +65,20 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future clearAccountBalances() async {}
+  Future clearAccountBalances(WalletAccount walletAccount) async {}
 
   @override
-  Future clearTransactions() async {
+  Future clearTransactions(WalletAccount walletAccount) async {
     _transactions.clear();
   }
 
   @override
-  Future clearUnspentTransactions() async {
+  Future clearUnspentTransactions(WalletAccount walletAccount) async {
     _unspentTransactions.clear();
   }
 
   @override
-  Future removeUnspentTransactions(List<Transaction> mintIds) async {
-    //TODO
-  }
+  Future removeUnspentTransactions(List<Transaction> mintIds) async {}
 
   @override
   Future close() async {}
@@ -84,6 +93,16 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
+    if (token == DeFiConstants.DefiTokenSymbol) {
+      final unspentTx = await getUnspentTransactions();
+      var amount = 0;
+
+      for (final unspent in unspentTx) {
+        amount += unspent.value;
+      }
+
+      return new AccountBalance(balance: amount, token: token, chain: ChainType.DeFiChain);
+    }
     var balance = 0;
     _accounts.sort((a, b) => b.balance.compareTo(a.balance));
 
@@ -97,13 +116,17 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<Account>> getAccountBalances() async {
+  Future<List<Account>> getAccountBalances(WalletAccount acc) async {
     return _accounts;
   }
 
   @override
+  Future<WalletAccount> getAccount(String uniqueId) async {
+    return _walletAccounts.firstWhere((element) => element.uniqueId == uniqueId);
+  }
+
+  @override
   Future<List<WalletAccount>> getAccounts() {
-    _walletAccounts.sort((a, b) => b.balance.compareTo(a.balance));
     return Future.value(_walletAccounts);
   }
 
@@ -113,13 +136,13 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
+  // ignore: override_on_non_overriding_member
   Future<List<AccountBalance>> getTotalBalances() {
-    // TODO: implement getTotalBalances
     throw UnimplementedError();
   }
 
   @override
-  Future<List<Transaction>> getTransactions() async {
+  Future<List<Transaction>> getTransactions(WalletAccount acc) async {
     return _transactions;
   }
 
@@ -158,13 +181,8 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future open() async {}
 
   @override
-  Future setAccountBalance(Account balance) async {
+  Future setAccountBalance(Account balance, WalletAccount acc) async {
     _accounts.add(balance);
-  }
-
-  @override
-  Future<WalletAccount> updateAccount(WalletAccount account) async {
-    return null;
   }
 
   @override
@@ -190,8 +208,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future addAddress(WalletAddress account) async {
+  Future<WalletAddress> addAddress(WalletAddress account) async {
     _addresses.add(account);
+    return account;
   }
 
   @override
@@ -217,6 +236,12 @@ class MemoryDatabaseMock extends IWalletDatabase {
   @override
   Future<List<WalletAddress>> getWalletAddresses(int account) async {
     return _addresses;
+  }
+
+  @override
+  Future<List<WalletAddress>> getWalletAddressesById(String uniqueId) {
+    var ret = _addresses.where((element) => element.accountId == uniqueId).toList();
+    return Future.value(ret);
   }
 
   @override

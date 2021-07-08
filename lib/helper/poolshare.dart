@@ -65,7 +65,6 @@ class PoolShareHelper {
 
       double customRewardDFI = 0;
       double blockCommissionDFI = 0;
-      double blockCommissionOther = 0;
 
       if (null != poolPair.customRewards) {
         poolPair.customRewards.forEach((e) {
@@ -80,10 +79,8 @@ class PoolShareHelper {
 
       if (poolPair.idTokenA == '0') {
         blockCommissionDFI = poolPair.blockCommissionA;
-        blockCommissionOther = poolPair.blockCommissionB;
       } else {
         blockCommissionDFI = poolPair.blockCommissionB;
-        blockCommissionOther = poolPair.blockCommissionA;
       }
 
       //30 seconds is the block time

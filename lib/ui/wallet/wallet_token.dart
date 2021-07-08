@@ -8,7 +8,6 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/account_history.dart';
-import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -45,7 +44,6 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   AnimationController _controller;
 
   bool _transactionsLoading = false;
-  List<Transaction> _transactions = [];
   List<AccountHistory> _history = [];
 
   ChainNet _chainNet;

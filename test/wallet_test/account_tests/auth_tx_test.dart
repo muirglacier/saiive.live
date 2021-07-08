@@ -30,16 +30,16 @@ void main() async {
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 16453181891,
           confirmations: -1);
-      await db.addTransaction(tx);
-      await db.addUnspentTransaction(tx);
+      await db.addTransaction(tx, walletAccount);
+      await db.addUnspentTransaction(tx, walletAccount);
 
       final btcAccount = Account(token: "BTC", address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 19205428099, raw: "192.05428099@BTC", chain: "DFI", network: "testnet");
 
-      await db.setAccountBalance(btcAccount);
+      await db.setAccountBalance(btcAccount, walletAccount);
 
       final dfiAccount = Account(token: "\$DFI", address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 16453181891, raw: "16453181891@\$DFI", chain: "DFI", network: "testnet");
 
-      await db.setAccountBalance(dfiAccount);
+      await db.setAccountBalance(dfiAccount, walletAccount);
     }
 
     Future destoryTest() async {

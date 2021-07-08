@@ -20,55 +20,63 @@ void main() async {
           WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
-      await db.addTransaction(Transaction(
-          id: "601496faf1963a034ec57842",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 1,
-          mintTxId: "c06adf474ef073fa320ab531bfc366546a9e2db2c39eac9e696790f30f428371",
-          mintHeight: 192706,
-          spentHeight: -2,
-          address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
-          value: 1000000000,
-          confirmations: -1));
-      await db.addTransaction(Transaction(
-          id: "60156e30dc5c117a2b211187",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 0,
-          mintTxId: "d85da07fec78d920cf24507156b71130565d7eaade8bc0ff337485bc5c8e2727",
-          mintHeight: 192738,
-          spentHeight: -2,
-          address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
-          value: 26999795496,
-          confirmations: -1));
-      await db.addUnspentTransaction(Transaction(
-          id: "601496faf1963a034ec57842",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 1,
-          mintTxId: "c06adf474ef073fa320ab531bfc366546a9e2db2c39eac9e696790f30f428371",
-          mintHeight: 192706,
-          spentHeight: -2,
-          address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
-          value: 1000000000,
-          confirmations: -1));
-      await db.addUnspentTransaction(Transaction(
-          id: "60156e30dc5c117a2b211187",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 0,
-          mintTxId: "d85da07fec78d920cf24507156b71130565d7eaade8bc0ff337485bc5c8e2727",
-          mintHeight: 192738,
-          spentHeight: -2,
-          address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
-          value: 26999795496,
-          confirmations: -1));
+      await db.addTransaction(
+          Transaction(
+              id: "601496faf1963a034ec57842",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 1,
+              mintTxId: "c06adf474ef073fa320ab531bfc366546a9e2db2c39eac9e696790f30f428371",
+              mintHeight: 192706,
+              spentHeight: -2,
+              address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
+              value: 1000000000,
+              confirmations: -1),
+          walletAccount);
+      await db.addTransaction(
+          Transaction(
+              id: "60156e30dc5c117a2b211187",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 0,
+              mintTxId: "d85da07fec78d920cf24507156b71130565d7eaade8bc0ff337485bc5c8e2727",
+              mintHeight: 192738,
+              spentHeight: -2,
+              address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
+              value: 26999795496,
+              confirmations: -1),
+          walletAccount);
+      await db.addUnspentTransaction(
+          Transaction(
+              id: "601496faf1963a034ec57842",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 1,
+              mintTxId: "c06adf474ef073fa320ab531bfc366546a9e2db2c39eac9e696790f30f428371",
+              mintHeight: 192706,
+              spentHeight: -2,
+              address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
+              value: 1000000000,
+              confirmations: -1),
+          walletAccount);
+      await db.addUnspentTransaction(
+          Transaction(
+              id: "60156e30dc5c117a2b211187",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 0,
+              mintTxId: "d85da07fec78d920cf24507156b71130565d7eaade8bc0ff337485bc5c8e2727",
+              mintHeight: 192738,
+              spentHeight: -2,
+              address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
+              value: 26999795496,
+              confirmations: -1),
+          walletAccount);
 
       final dfiToken =
           Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
 
-      await db.setAccountBalance(dfiToken);
+      await db.setAccountBalance(dfiToken, walletAccount);
     }
 
     Future destroyTest() async {
@@ -101,56 +109,64 @@ void main() async {
           WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
-      await db.addTransaction(Transaction(
-          id: "60157d3ddc5c117a2b26ae3d",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 1,
-          mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
-          mintHeight: 192804,
-          spentHeight: -2,
-          address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
-          value: 1000000000,
-          confirmations: -1));
-      await db.addTransaction(Transaction(
-          id: "60157d3ddc5c117a2b26ae3b",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 0,
-          mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
-          mintHeight: 192804,
-          spentHeight: -2,
-          address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
-          value: 26999794496,
-          confirmations: -1));
+      await db.addTransaction(
+          Transaction(
+              id: "60157d3ddc5c117a2b26ae3d",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 1,
+              mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
+              mintHeight: 192804,
+              spentHeight: -2,
+              address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
+              value: 1000000000,
+              confirmations: -1),
+          walletAccount);
+      await db.addTransaction(
+          Transaction(
+              id: "60157d3ddc5c117a2b26ae3b",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 0,
+              mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
+              mintHeight: 192804,
+              spentHeight: -2,
+              address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
+              value: 26999794496,
+              confirmations: -1),
+          walletAccount);
 
-      await db.addUnspentTransaction(Transaction(
-          id: "60157d3ddc5c117a2b26ae3d",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 1,
-          mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
-          mintHeight: 192804,
-          spentHeight: -2,
-          address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
-          value: 1000000000,
-          confirmations: -1));
-      await db.addUnspentTransaction(Transaction(
-          id: "60157d3ddc5c117a2b26ae3b",
-          chain: "DFI",
-          network: "testnet",
-          mintIndex: 0,
-          mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
-          mintHeight: 192804,
-          spentHeight: -2,
-          address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
-          value: 26999794496,
-          confirmations: -1));
+      await db.addUnspentTransaction(
+          Transaction(
+              id: "60157d3ddc5c117a2b26ae3d",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 1,
+              mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
+              mintHeight: 192804,
+              spentHeight: -2,
+              address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
+              value: 1000000000,
+              confirmations: -1),
+          walletAccount);
+      await db.addUnspentTransaction(
+          Transaction(
+              id: "60157d3ddc5c117a2b26ae3b",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 0,
+              mintTxId: "f9a02e425f14f57d21a18d4fadf87447161b7db78d52b0edc08fe930a5a0960c",
+              mintHeight: 192804,
+              spentHeight: -2,
+              address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
+              value: 26999794496,
+              confirmations: -1),
+          walletAccount);
 
       final dfiToken =
           Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
 
-      await db.setAccountBalance(dfiToken);
+      await db.setAccountBalance(dfiToken, walletAccount);
     }
 
     Future destroyTest() async {

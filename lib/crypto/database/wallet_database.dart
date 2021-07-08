@@ -17,22 +17,20 @@ abstract class IWalletDatabase {
   Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false});
   Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount);
 
-  Future clearTransactions();
-  Future<List<Transaction>> getTransactions();
+  Future clearTransactions(WalletAccount account);
+  Future<List<Transaction>> getTransactions(WalletAccount account);
   Future<Transaction> getTransaction(String id);
-  Future addTransaction(Transaction transaction);
+  Future addTransaction(Transaction transaction, WalletAccount account);
 
-  Future clearUnspentTransactions();
-  Future clearUnspenTransactionsForAccount(WalletAccount account);
+  Future clearUnspentTransactions(WalletAccount account);
   Future<List<Transaction>> getUnspentTransactions();
   Future removeUnspentTransactions(List<Transaction> mintIds);
   Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount);
-  Future addUnspentTransaction(Transaction transaction);
+  Future addUnspentTransaction(Transaction transaction, WalletAccount account);
 
-  Future clearAccountBalances();
-  Future clearAccountBalancesForAccount(WalletAccount account);
-  Future setAccountBalance(Account balance);
-  Future<List<Account>> getAccountBalances();
+  Future clearAccountBalances(WalletAccount account);
+  Future setAccountBalance(Account balance, WalletAccount account);
+  Future<List<Account>> getAccountBalances(WalletAccount account);
   Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses});
   Future<List<Account>> getAccountBalancesForToken(String token);
   Future<List<AccountBalance>> getTotalBalances();

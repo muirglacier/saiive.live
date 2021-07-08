@@ -335,7 +335,7 @@ class _DexScreen extends State<DexScreen> {
       _testSwapLoading = true;
 
       var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey(AddressType.P2SHSegwit);
+      var pubKey = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
 
       try {
         var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
@@ -400,7 +400,7 @@ class _DexScreen extends State<DexScreen> {
       _testSwapLoading = true;
 
       var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey(AddressType.P2SHSegwit);
+      var pubKey = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
 
       try {
         var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);

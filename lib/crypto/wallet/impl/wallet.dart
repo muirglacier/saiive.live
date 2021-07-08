@@ -35,7 +35,7 @@ import 'package:mutex/mutex.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class Wallet extends IWallet {
-  Map<int, IHdWallet> _wallets = Map<int, IHdWallet>();
+  Map<String, IHdWallet> _wallets = Map<String, IHdWallet>();
 
   int _account;
   final ChainType _chain;
@@ -108,7 +108,7 @@ abstract class Wallet extends IWallet {
 
       await wallet.init(_walletDatabase);
 
-      _wallets.putIfAbsent(account.account, () => wallet);
+      _wallets.putIfAbsent(account.uniqueId, () => wallet);
     }
 
     _isInitialized = true;
@@ -135,18 +135,6 @@ abstract class Wallet extends IWallet {
   String get walletType => ChainHelper.chainTypeString(_chain);
 
   @override
-  void setWorkingAccount(int account) {
-    isInitialzed();
-    _account = account;
-  }
-
-  @override
-  Future<String> getPublicKey(AddressType addressType) async {
-    isInitialzed();
-    return getPublicKeyFromAccount(_account, false, addressType);
-  }
-
-  @override
   Future<WalletAddress> getNextWalletAddress(AddressType addressType, bool isChangeAddress) async {
     isInitialzed();
 
@@ -170,15 +158,34 @@ abstract class Wallet extends IWallet {
     return keys;
   }
 
-  @override
-  Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress, AddressType addressType) async {
-    isInitialzed();
-    assert(_wallets.containsKey(account));
+  Future<String> getPublicKey(bool isChangeAddress, AddressType addressType) async {
+    var accounts = await _walletDatabase.getAccounts();
+    accounts = accounts.where((element) => element.chain == _chain).toList();
+    accounts = accounts.where((element) => element.selected).toList();
 
-    if (_wallets.containsKey(account)) {
-      return await _wallets[account].nextFreePublicKey(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+    if (accounts.isEmpty) {
+      throw new ArgumentError("no active account found...");
     }
-    throw UnimplementedError();
+    if (accounts.length == 1) {
+      final acc = accounts.single;
+      final walletAddr = await _wallets[acc.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+      return walletAddr.publicKey;
+    }
+
+    for (final wallet in accounts) {
+      final walletId = wallet.uniqueId;
+      final dbWallet = await _walletDatabase.getAccount(walletId);
+
+      if (dbWallet.selected) {
+        if (dbWallet.walletAccountType != WalletAccountType.HdAccount) {
+          continue;
+        }
+
+        final walletAddr = await _wallets[walletId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+        return walletAddr.publicKey;
+      }
+    }
+    throw new ArgumentError("");
   }
 
   @override
@@ -186,20 +193,6 @@ abstract class Wallet extends IWallet {
     final addresses = await _walletDatabase.getWalletAddressesById(walletAccount.uniqueId);
 
     return addresses;
-  }
-
-  @override
-  Future<WalletAddress> getPublicKeyFromAccounts(WalletAccount walletAccount) async {
-    if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
-      throw new ArgumentError("Not supported for hd wallets...");
-    }
-
-    final addresses = await this.getPublicKeysFromAccounts(walletAccount);
-
-    if (addresses.isNotEmpty) {
-      return addresses.first;
-    }
-    return null;
   }
 
   @override
@@ -308,8 +301,9 @@ abstract class Wallet extends IWallet {
       }
       return keyPair;
     } else if (walletAccount.walletAccountType == WalletAccountType.PrivateKey) {
+      final networkType = HdWalletUtil.getNetworkType(chain, network);
       final privKey = await sl.get<IVault>().getPrivateKey(walletAccount.uniqueId);
-      return ECPair.fromWIF(privKey);
+      return ECPair.fromWIF(privKey, network: networkType);
     }
 
     throw new ArgumentError("Something went wrong getting the correct private key!");
@@ -334,10 +328,6 @@ abstract class Wallet extends IWallet {
     var curAmount = 0.0;
     for (final tx in unspentTxs) {
       if (!await walletDatabase.isOwnAddress(tx.address)) {
-        continue;
-      }
-
-      if (tx.address == "7JXU13rknWneP7aJ9kxWg3i74diX4y6jYy") {
         continue;
       }
 
@@ -390,7 +380,9 @@ abstract class Wallet extends IWallet {
     await _walletDatabase.removeUnspentTransactions(tx.item2);
     for (var out in response.details.outputs) {
       if (await _walletDatabase.isOwnAddress(out.address)) {
-        await _walletDatabase.addUnspentTransaction(out);
+        final addressInfo = await walletDatabase.getWalletAddress(out.address);
+        final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+        await _walletDatabase.addUnspentTransaction(out, walletAccount);
 
         LogHelper.instance.i("Add unspent tx " + out.uniqueId);
       }

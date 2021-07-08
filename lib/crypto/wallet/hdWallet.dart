@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:saiive.live/crypto/database/wallet_database.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:tuple/tuple.dart';
@@ -8,6 +9,8 @@ import 'package:tuple/tuple.dart';
 import 'address_type.dart';
 
 abstract class IHdWallet {
+  WalletAccount get walletAccount;
+
   Future init(IWalletDatabase walletDatabase);
 
   Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase);

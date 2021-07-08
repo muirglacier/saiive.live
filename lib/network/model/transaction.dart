@@ -24,6 +24,8 @@ class Transaction {
   final int confirmations;
   final String script;
 
+  String accountId;
+
   int get valueRaw => (value).round();
   String get uniqueId => mintTxId + "_" + mintIndex.toString();
 
@@ -55,7 +57,8 @@ class Transaction {
       this.address,
       this.value,
       this.confirmations,
-      this.script});
+      this.script,
+      this.accountId});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
@@ -71,7 +74,8 @@ class Transaction {
         address: json['address'],
         script: json['script'],
         value: int.parse(json['value'].toString()),
-        confirmations: json['confirmations']);
+        confirmations: json['confirmations'],
+        accountId: json["accountId"]);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -87,6 +91,7 @@ class Transaction {
         'address': address,
         'value': value,
         'confirmationsid': confirmations,
-        'script': script
+        'script': script,
+        'accountId': accountId
       };
 }

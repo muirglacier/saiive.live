@@ -26,9 +26,8 @@ abstract class IWalletService {
   Future<bool> hasAccounts();
   Future<List<WalletAccount>> getAccounts();
 
-  Future<WalletAddress> getNextWalletAddress(ChainType chainType, bool isChangeAddress, AddressType addressType);
-  Future<WalletAddress> getPublicKeyFromAccount(WalletAccount account);
   Future<List<WalletAddress>> getPublicKeysFromAccount(WalletAccount account);
+  Future<WalletAddress> getNextWalletAddress(ChainType chainType, bool isChangeAddress, AddressType addressType);
 
   Future<String> getPublicKey(ChainType chainType, AddressType addressType);
   Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
@@ -117,9 +116,9 @@ class WalletService implements IWalletService {
   @override
   Future<String> getPublicKey(ChainType chainType, AddressType addressType) {
     if (chainType == ChainType.DeFiChain) {
-      return _defiWallet.getPublicKey(addressType);
+      return _defiWallet.getPublicKey(false, addressType);
     }
-    return _bitcoinWallet.getPublicKey(addressType);
+    return _bitcoinWallet.getPublicKey(false, addressType);
   }
 
   @override
@@ -128,14 +127,6 @@ class WalletService implements IWalletService {
       return _defiWallet.getPublicKeys();
     }
     return _bitcoinWallet.getPublicKeys();
-  }
-
-  @override
-  Future<WalletAddress> getPublicKeyFromAccount(WalletAccount account) {
-    if (account.chain == ChainType.DeFiChain) {
-      return _defiWallet.getPublicKeyFromAccounts(account);
-    }
-    return _bitcoinWallet.getPublicKeyFromAccounts(account);
   }
 
   @override

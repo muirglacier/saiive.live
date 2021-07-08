@@ -13,7 +13,6 @@ class AppCenterWrapper {
 
   Future start() async {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-      //TODO: DESKTOP
       return;
     }
 
@@ -82,7 +81,6 @@ class AppCenterWrapper {
 
   Future trackEvent(String eventName, Map<String, String> properties) async {
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
-      //TODO: DESKTOP
       return;
     }
 

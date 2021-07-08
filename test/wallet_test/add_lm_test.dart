@@ -30,8 +30,8 @@ void main() async {
           address: "tf2FrPGHzU3dGKFpUBQfABwta4VrpbKFo4",
           value: 99999202,
           confirmations: -1);
-      await db.addTransaction(tx);
-      await db.addUnspentTransaction(tx);
+      await db.addTransaction(tx, walletAccount);
+      await db.addUnspentTransaction(tx, walletAccount);
 
       final tx2 = Transaction(
           id: "6025801b779edc3b78b9386e",
@@ -44,8 +44,8 @@ void main() async {
           address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw",
           value: 66404174909,
           confirmations: -1);
-      await db.addTransaction(tx2);
-      await db.addUnspentTransaction(tx2);
+      await db.addTransaction(tx2, walletAccount);
+      await db.addUnspentTransaction(tx2, walletAccount);
       final tx4 = Transaction(
           id: "6033f00d701ca47b8616476f",
           chain: "DFI",
@@ -57,8 +57,8 @@ void main() async {
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 100000000,
           confirmations: -1);
-      await db.addTransaction(tx4);
-      await db.addUnspentTransaction(tx4);
+      await db.addTransaction(tx4, walletAccount);
+      await db.addUnspentTransaction(tx4, walletAccount);
 
       final tx3 = Transaction(
           id: "6025801b779edc3b78b9386e",
@@ -71,13 +71,13 @@ void main() async {
           address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
           value: 100000000,
           confirmations: -1);
-      await db.addTransaction(tx3);
-      await db.addUnspentTransaction(tx3);
+      await db.addTransaction(tx3, walletAccount);
+      await db.addUnspentTransaction(tx3, walletAccount);
 
       await db.setAccountBalance(
-          Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 49418047703, chain: "DFI", network: "testnet"));
-      await db.setAccountBalance(Account(token: "BTC", address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", balance: 22598748024, chain: "DFI", network: "testnet"));
-      await db.setAccountBalance(Account(token: "BTC", address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", balance: 12598748024, chain: "DFI", network: "testnet"));
+          Account(token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 49418047703, chain: "DFI", network: "testnet"), walletAccount);
+      await db.setAccountBalance(Account(token: "BTC", address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", balance: 22598748024, chain: "DFI", network: "testnet"), walletAccount);
+      await db.setAccountBalance(Account(token: "BTC", address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", balance: 12598748024, chain: "DFI", network: "testnet"), walletAccount);
     }
 
     Future destoryTest() async {

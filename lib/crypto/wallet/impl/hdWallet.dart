@@ -19,6 +19,7 @@ import 'package:hex/hex.dart';
 import 'package:tuple/tuple.dart';
 
 class HdWallet extends IHdWallet {
+  // ignore: unused_field
   final String _password;
   final WalletAccount _account;
   final ChainType _chain;
@@ -34,6 +35,9 @@ class HdWallet extends IHdWallet {
 
     return allAddresses;
   }
+
+  @override
+  WalletAccount get walletAccount => this._account;
 
   @override
   Future init(IWalletDatabase walletDatabase) async {
@@ -85,6 +89,11 @@ class HdWallet extends IHdWallet {
 
   @override
   Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+    if (_account.walletAccountType != WalletAccountType.HdAccount) {
+      var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
+      return walletAddresses.first.publicKey;
+    }
+
     var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
 
     var address = await getNextFreePublicKey(database, nextIndex, sharedPrefs, isChangeAddress, addressType);
@@ -94,8 +103,13 @@ class HdWallet extends IHdWallet {
 
   @override
   Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
-    var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
+    if (_account.walletAccountType != WalletAccountType.HdAccount) {
+      var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
+      var walletAddress = walletAddresses.first;
+      return _createAddress(false, -1, walletAddress.publicKey, walletAddress.addressType);
+    }
 
+    var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
     var address = await getNextFreePublicKey(database, nextIndex, sharedPrefs, isChangeAddress, addressType);
 
     return address;
@@ -183,16 +197,16 @@ class HdWallet extends IHdWallet {
         }
       }, loadingStream: loadingStream);
     }
-    await database.clearUnspenTransactionsForAccount(account);
+    await database.clearUnspentTransactions(account);
     newUtxos.forEach((element) async {
-      await database.addUnspentTransaction(element);
+      await database.addUnspentTransaction(element, account);
       print("tx with id ${element.mintTxId} has ${element.confirmations} confirmations (address is ${element.address})");
     });
 
-    await database.clearAccountBalancesForAccount(account);
+    await database.clearAccountBalances(account);
     for (final acc in newBalance) {
       for (final element in acc.accounts) {
-        await database.setAccountBalance(element);
+        await database.setAccountBalance(element, account);
       }
     }
 
@@ -201,7 +215,8 @@ class HdWallet extends IHdWallet {
 
   @override
   Future syncWalletTransactions(IWalletDatabase database, {StreamController<String> loadingStream}) async {
-    await database.clearTransactions();
+    final account = await database.getAccount(this._account.uniqueId);
+    await database.clearTransactions(account);
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
     await _syncWallet(database, (addresses, pos, max) async {
@@ -209,7 +224,7 @@ class HdWallet extends IHdWallet {
       final txs = await _apiService.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(_chain), addresses);
 
       txs.forEach((element) async {
-        await database.addTransaction(element);
+        await database.addTransaction(element, account);
       });
     }, loadingStream: loadingStream);
     loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);

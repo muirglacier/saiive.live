@@ -10,7 +10,12 @@ enum AppButtonType {
 class AppButton {
   // Primary button builder
   static Widget buildAppButton(BuildContext context, AppButtonType type, String buttonText,
-      {Function onPressed, IconData icon = null, double width = 300, bool enabled = true, Key key}) {
+      {Function onPressed,
+      // ignore: avoid_init_to_null
+      IconData icon = null,
+      double width = 300,
+      bool enabled = true,
+      Key key}) {
     switch (type) {
       case AppButtonType.PRIMARY:
         return SizedBox(

@@ -45,12 +45,12 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future addTransaction(Transaction transaction) async {
+  Future addTransaction(Transaction transaction, WalletAccount walletAccount) async {
     _transactions.add(transaction);
   }
 
   @override
-  Future addUnspentTransaction(Transaction transaction) async {
+  Future addUnspentTransaction(Transaction transaction, WalletAccount walletAccount) async {
     var txAlreadyInList = false;
 
     for (final tx in _unspentTransactions) {
@@ -65,15 +65,15 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future clearAccountBalances() async {}
+  Future clearAccountBalances(WalletAccount walletAccount) async {}
 
   @override
-  Future clearTransactions() async {
+  Future clearTransactions(WalletAccount walletAccount) async {
     _transactions.clear();
   }
 
   @override
-  Future clearUnspentTransactions() async {
+  Future clearUnspentTransactions(WalletAccount walletAccount) async {
     _unspentTransactions.clear();
   }
 
@@ -116,7 +116,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<Account>> getAccountBalances() async {
+  Future<List<Account>> getAccountBalances(WalletAccount acc) async {
     return _accounts;
   }
 
@@ -142,7 +142,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<Transaction>> getTransactions() async {
+  Future<List<Transaction>> getTransactions(WalletAccount acc) async {
     return _transactions;
   }
 
@@ -181,7 +181,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future open() async {}
 
   @override
-  Future setAccountBalance(Account balance) async {
+  Future setAccountBalance(Account balance, WalletAccount acc) async {
     _accounts.add(balance);
   }
 
@@ -279,10 +279,4 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
     return false;
   }
-
-  @override
-  Future clearAccountBalancesForAccount(WalletAccount account) async {}
-
-  @override
-  Future clearUnspenTransactionsForAccount(WalletAccount account) async {}
 }

@@ -39,6 +39,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   final StoreRef _addressesStoreInstance = stringMapStoreFactory.store(_addressesStore);
 
   final _accountStreamController = StreamController<List<WalletAccount>>.broadcast();
+
+  bool _isInMigration;
   Stream<List<WalletAccount>> get accountStream => _accountStreamController.stream;
 
   List<String> _activeWalletAddresses = List<String>.empty(growable: true);
@@ -231,8 +233,9 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future _migrateAccounts() async {
-    final oldAccounts = await _getOldAccounts();
+    _isInMigration = true;
 
+    final oldAccounts = await _getOldAccounts();
     for (final oldAcc in oldAccounts) {
       await addOrUpdateAccount(oldAcc);
     }
@@ -240,6 +243,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     var db = await database;
     var dbStore = _accountStoreInstance;
     await dbStore.delete(db);
+    _isInMigration = false;
   }
 
   @override
@@ -286,7 +290,9 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     await _accountV2StoreInstance.record(walletAccount.uniqueId).put(db, walletAccount.toJson());
 
-    _activeWalletAddresses = await _getActiveAddresses();
+    if (!_isInMigration) {
+      _activeWalletAddresses = await _getActiveAddresses();
+    }
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(walletAccount.uniqueId).get(db));
   }
 

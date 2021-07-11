@@ -20,12 +20,20 @@ class WalletDatabaseFactory implements IWalletDatabaseFactory {
     _databases = Map<ChainType, IWalletDatabase>();
   }
 
-  Future<IWalletDatabase> createInstance(ChainType chain, ChainNet network) async {
+  Future<String> _getPath(int version, ChainType chain, ChainNet network) async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
 
     var currentEnvironment = EnvHelper.getEnvironment();
-    final path = join(
-        documentsDirectory.path, "saiive.live", EnvHelper.environmentToString(currentEnvironment), ChainHelper.chainTypeString(chain), ChainHelper.chainNetworkString(network));
+    if (version == 1) {
+      return join(
+          documentsDirectory.path, "saiive.live", EnvHelper.environmentToString(currentEnvironment), ChainHelper.chainTypeString(chain), ChainHelper.chainNetworkString(network));
+    }
+    return join(documentsDirectory.path, "saiive.live", "v" + version.toString(), EnvHelper.environmentToString(currentEnvironment), ChainHelper.chainTypeString(chain),
+        ChainHelper.chainNetworkString(network));
+  }
+
+  Future<IWalletDatabase> createInstance(ChainType chain, ChainNet network) async {
+    final path = await _getPath(2, chain, network);
     var db = SembastWalletDatabase(path, chain);
     await db.open();
     return db;

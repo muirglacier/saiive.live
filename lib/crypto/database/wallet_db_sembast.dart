@@ -40,7 +40,6 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   final _accountStreamController = StreamController<List<WalletAccount>>.broadcast();
 
-  bool _isInMigration;
   Stream<List<WalletAccount>> get accountStream => _accountStreamController.stream;
 
   List<String> _activeWalletAddresses = List<String>.empty(growable: true);
@@ -232,21 +231,6 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
-  Future _migrateAccounts() async {
-    _isInMigration = true;
-
-    final oldAccounts = await _getOldAccounts();
-    for (final oldAcc in oldAccounts) {
-      oldAcc.setUniqueId(Uuid().v4());
-      await addOrUpdateAccount(oldAcc);
-    }
-
-    var db = await database;
-    var dbStore = _accountStoreInstance;
-    await dbStore.delete(db);
-    _isInMigration = false;
-  }
-
   @override
   Future<WalletAccount> getAccount(String uniqueId) async {
     var db = await database;
@@ -258,13 +242,10 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   Future<List<WalletAccount>> getAccounts() async {
-    await _migrateAccounts();
-
     var db = await database;
     var dbStore = _accountV2StoreInstance;
 
-    final accounts = await dbStore.find(db);
-
+    var accounts = await dbStore.find(db);
     final data = accounts.map((e) => e == null ? null : WalletAccount.fromJson(e.value))?.toList();
 
     _accountStreamController.add(data);
@@ -291,9 +272,8 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     await _accountV2StoreInstance.record(walletAccount.uniqueId).put(db, walletAccount.toJson());
 
-    if (!_isInMigration) {
-      _activeWalletAddresses = await _getActiveAddresses();
-    }
+    _activeWalletAddresses = await _getActiveAddresses();
+
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(walletAccount.uniqueId).get(db));
   }
 

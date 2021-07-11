@@ -21,7 +21,7 @@ class WalletAccount {
   get uniqueId => _uniqueId;
 
   setUniqueId(String uniqueId) {
-    if (uniqueId == null || uniqueId.isEmpty) {
+    if (this._uniqueId == null || this._uniqueId.isEmpty) {
       this._uniqueId = uniqueId;
     }
   }
@@ -42,7 +42,7 @@ class WalletAccount {
       {@required this.id, @required this.chain, @required this.account, @required this.walletAccountType, @required this.name, this.lastAccess, this.selected = false});
 
   factory WalletAccount.fromJson(Map<String, dynamic> json) {
-    return WalletAccount(json.containsKey("uniqueId") ? json["uniqueId"] : "00000000-0000-0000-0000-000000000000",
+    return WalletAccount(json.containsKey("uniqueId") ? json["uniqueId"] : null,
         account: json['account'],
         id: json['id'],
         chain: ChainType.values[json['chain']],

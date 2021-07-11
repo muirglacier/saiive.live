@@ -1,5 +1,6 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,8 +18,7 @@ void main() async {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      final walletAccount =
-          WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       final tx = Transaction(
@@ -59,7 +59,8 @@ void main() async {
 
       await wallet.init();
       final txController = sl.get<TransactionServiceMock>();
-      final tx = await wallet.prepareUtxoToAccountTransaction(240 * 100000000);
+      final to = await wallet.getPublicKey(true, AddressType.P2SHSegwit);
+      final tx = await wallet.prepareUtxoToAccountTransaction(to, 240 * 100000000);
       expect(tx, 240 * 100000000);
       expect(txController.lastTx, null);
       await destoryTest();
@@ -71,10 +72,11 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      await wallet.prepareUtxoToAccountTransaction(243 * 100000000);
+      final to = await wallet.getPublicKey(true, AddressType.P2SHSegwit);
+      await wallet.prepareUtxoToAccountTransaction(to, 243 * 100000000);
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
-          "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff020c984102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8701000000000c984102000000001dcb8e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f870247304402203b1f69baa507f118a3445d111d7b41ab83b6c38334803c29536a43b85978ce380220338b0477f647fc5a2ea54323bc9d3a6cec175a18e42f2e1aae5b969210fe7fad012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
+          "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff020c984102000000002d6a2b44665478550117a9146015a95984366c654bbd6ab55edab391ff8d747f8701000000000c984102000000001dcb8e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f87024730440220470def0cd670e8ad4b509b84e97a2f3355937934facef91f7f58931e64c350ae0220447c13146de073036f9715e8f9af6f2a94369e5fe8f9573bd3b1a67e00be39a3012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
       await destoryTest();
     });
   });

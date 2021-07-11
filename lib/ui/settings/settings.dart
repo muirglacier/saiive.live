@@ -11,6 +11,7 @@ import 'package:saiive.live/network/ihttp_service.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/expert/expert_screen.dart';
 import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import 'package:saiive.live/ui/model/available_themes.dart';
 import 'package:saiive.live/ui/settings/settings_seed.dart';
@@ -243,6 +244,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               padding: EdgeInsets.only(left: itemPaddingLeft), canOpenInBrowser: true),
                           CardItemWidget(S.of(context).welcome_legal, null, backgroundColor: Colors.transparent),
                           LegalEntitiesWidget(EdgeInsets.only(left: itemPaddingLeft, right: 0)),
+                          CardItemWidget(S.of(context).expert, null, backgroundColor: Colors.transparent),
+                          CardItemWidget(S.of(context).expert_title, () async {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertScreen()));
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                         ],
                       )),
                       Container(

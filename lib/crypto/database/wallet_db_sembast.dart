@@ -39,6 +39,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   final StoreRef _addressesStoreInstance = stringMapStoreFactory.store(_addressesStore);
 
   final _accountStreamController = StreamController<List<WalletAccount>>.broadcast();
+
   Stream<List<WalletAccount>> get accountStream => _accountStreamController.stream;
 
   List<String> _activeWalletAddresses = List<String>.empty(growable: true);
@@ -82,6 +83,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future<WalletAddress> addAddress(WalletAddress account) async {
     final db = await database;
     await _addressesStoreInstance.record(account.uniqueId).put(db, account.toJson());
+
+    _activeWalletAddresses = await _getActiveAddresses();
     return account;
   }
 
@@ -124,6 +127,20 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account) async {
+    var dbStore = _addressesStoreInstance;
+
+    var db = await database;
+
+    Finder finder = Finder(filter: Filter.equals('accountId', account.uniqueId));
+
+    final accounts = await dbStore.find(db, finder: finder);
+
+    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+
+    return data;
+  }
+
   Future<List<WalletAddress>> getWalletAddressesById(String uniqueId) async {
     var dbStore = _addressesStoreInstance;
 
@@ -139,18 +156,6 @@ class SembastWalletDatabase extends IWalletDatabase {
     }
 
     final accounts = await dbStore.find(db, finder: finder);
-
-    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
-
-    return data;
-  }
-
-  @override
-  Future<List<WalletAddress>> getWalletAddresses(int account) async {
-    var dbStore = _addressesStoreInstance;
-
-    var finder = Finder(filter: Filter.equals('account', account));
-    final accounts = await dbStore.find(await database, finder: finder);
 
     final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
 
@@ -217,31 +222,6 @@ class SembastWalletDatabase extends IWalletDatabase {
     return _database;
   }
 
-  Future<List<WalletAccount>> _getOldAccounts() async {
-    var db = await database;
-    var dbStore = _accountStoreInstance;
-
-    final accounts = await dbStore.find(db);
-
-    final data = accounts.map((e) => e == null ? null : WalletAccount.fromJson(e.value))?.toList();
-
-    _accountStreamController.add(data);
-
-    return data;
-  }
-
-  Future _migrateAccounts() async {
-    final oldAccounts = await _getOldAccounts();
-
-    for (final oldAcc in oldAccounts) {
-      await addOrUpdateAccount(oldAcc);
-    }
-
-    var db = await database;
-    var dbStore = _accountStoreInstance;
-    await dbStore.delete(db);
-  }
-
   @override
   Future<WalletAccount> getAccount(String uniqueId) async {
     var db = await database;
@@ -253,13 +233,10 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   Future<List<WalletAccount>> getAccounts() async {
-    await _migrateAccounts();
-
     var db = await database;
     var dbStore = _accountV2StoreInstance;
 
-    final accounts = await dbStore.find(db);
-
+    var accounts = await dbStore.find(db);
     final data = accounts.map((e) => e == null ? null : WalletAccount.fromJson(e.value))?.toList();
 
     _accountStreamController.add(data);
@@ -287,6 +264,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     await _accountV2StoreInstance.record(walletAccount.uniqueId).put(db, walletAccount.toJson());
 
     _activeWalletAddresses = await _getActiveAddresses();
+
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(walletAccount.uniqueId).get(db));
   }
 
@@ -294,8 +272,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     final db = await database;
 
     if (!await _accountV2StoreInstance.record(account).exists(db)) {
-      var newAccount =
-          WalletAccount(name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, uniqueId: Uuid().v4());
+      var newAccount = WalletAccount(Uuid().v4(), name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount);
 
       await addOrUpdateAccount(newAccount);
 

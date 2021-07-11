@@ -27,7 +27,7 @@ abstract class IWalletService {
   Future<List<WalletAccount>> getAccounts();
 
   Future<List<WalletAddress>> getPublicKeysFromAccount(WalletAccount account);
-  Future<WalletAddress> getNextWalletAddress(ChainType chainType, bool isChangeAddress, AddressType addressType);
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, bool isChangeAddress, AddressType addressType);
 
   Future<String> getPublicKey(ChainType chainType, AddressType addressType);
   Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
@@ -106,11 +106,11 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<WalletAddress> getNextWalletAddress(ChainType chainType, bool isChangeAddress, AddressType addressType) {
-    if (chainType == ChainType.DeFiChain) {
-      return _defiWallet.getNextWalletAddress(addressType, isChangeAddress);
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, bool isChangeAddress, AddressType addressType) {
+    if (walletAccount.chain == ChainType.DeFiChain) {
+      return _defiWallet.getNextWalletAddress(walletAccount, addressType, isChangeAddress);
     }
-    return _bitcoinWallet.getNextWalletAddress(addressType, isChangeAddress);
+    return _bitcoinWallet.getNextWalletAddress(walletAccount, addressType, isChangeAddress);
   }
 
   @override
@@ -205,8 +205,8 @@ class WalletService implements IWalletService {
     }
 
     if (result.item1.length == 0) {
-      final walletAccount = WalletAccount(
-          uniqueId: Uuid().v4(), id: 0, chain: chain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: ChainHelper.chainTypeString(chain), selected: true);
+      final walletAccount =
+          WalletAccount(Uuid().v4(), id: 0, chain: chain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: ChainHelper.chainTypeString(chain), selected: true);
       await db.addOrUpdateAccount(walletAccount);
     }
 

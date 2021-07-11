@@ -5,14 +5,12 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
-import 'package:saiive.live/network/response/error_response.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
@@ -80,39 +78,6 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     }
   }
 
-  Future utxoToAccount(StreamController<String> stream) async {
-    try {
-      final amount = double.parse(_amountController.text);
-      final totalAmount = (amount * DefiChainConstants.COIN).toInt();
-
-      sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
-
-      await sl.get<DeFiChainWallet>().prepareAccount(totalAmount, loadingStream: stream);
-
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("done"),
-      ));
-
-      sl.get<AppCenterWrapper>().trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
-    } catch (e) {
-      LogHelper.instance.e("Error creating tx", e);
-      if (e is ErrorResponse) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.error),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailureHandled", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.error});
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.toString()),
-        ));
-
-        sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
-      }
-    }
-  }
-
   handleSetMax() async {
     var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
     _amountController.text = (tokenAmount.balance / DefiChainConstants.COIN).toString();
@@ -150,24 +115,26 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         child: TextField(
                             controller: _addressController,
                             keyboardType: TextInputType.text,
-                            decoration: Platform.isMacOS ? InputDecoration(hintText: S.of(context).wallet_send_address) : InputDecoration(
-                              hintText: S.of(context).wallet_send_address,
-                              suffixIcon: IconButton(
-                                onPressed: () async {
-                                  var status = await Permission.camera.status;
-                                  if (!status.isGranted) {
-                                    final permission = await Permission.camera.request();
+                            decoration: Platform.isMacOS
+                                ? InputDecoration(hintText: S.of(context).wallet_send_address)
+                                : InputDecoration(
+                                    hintText: S.of(context).wallet_send_address,
+                                    suffixIcon: IconButton(
+                                      onPressed: () async {
+                                        var status = await Permission.camera.status;
+                                        if (!status.isGranted) {
+                                          final permission = await Permission.camera.request();
 
-                                    if (!permission.isGranted) {
-                                      return;
-                                    }
-                                  }
-                                  final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
-                                  _addressController.text = address;
-                                },
-                                icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
-                              ),
-                            ))))
+                                          if (!permission.isGranted) {
+                                            return;
+                                          }
+                                        }
+                                        final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
+                                        _addressController.text = address;
+                                      },
+                                      icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
+                                    ),
+                                  ))))
               ]),
               Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 Expanded(
@@ -202,24 +169,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         overlay.during(sendFunds(streamController));
                       });
                     },
-                  )),
-              if (_currentEnvironment == EnvironmentType.Development && widget.chainType == ChainType.DeFiChain)
-                Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: SizedBox(
-                        width: 250,
-                        child: ElevatedButton(
-                          child: Text("UTXO_TO_ACCOUNT"),
-                          style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
-                          onPressed: () async {
-                            sl.get<AuthenticationHelper>().forceAuth(context, () {
-                              final streamController = new StreamController<String>();
-                              final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
-
-                              overlay.during(utxoToAccount(streamController));
-                            });
-                          },
-                        )))
+                  ))
             ])));
   }
 }

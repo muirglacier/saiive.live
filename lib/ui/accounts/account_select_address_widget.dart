@@ -129,7 +129,12 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
               padding: EdgeInsets.only(bottom: _walletAddresses.isEmpty ? 30 : 10),
               child: IconButton(
                   onPressed: () async {
-                    await Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: "/accounts"), builder: (BuildContext context) => AccountsScreen()));
+                    await Navigator.of(context).push(MaterialPageRoute(
+                        settings: RouteSettings(name: "/accounts"),
+                        builder: (BuildContext context) => AccountsScreen(
+                              allowChangeVisibility: false,
+                              allowImport: false,
+                            )));
                     await _init();
                   },
                   icon: Icon(Icons.add)))

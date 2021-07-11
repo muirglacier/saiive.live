@@ -109,8 +109,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
     //propably a publicKey
     if (data.length == 34) {
       if (HdWalletUtil.isAddressValid(data, widget.chainType, currentNet)) {
-        final walletAccount = WalletAccount(
-            uniqueId: Uuid().v4(),
+        final walletAccount = WalletAccount(Uuid().v4(),
             id: -1,
             chain: widget.chainType,
             account: -1,
@@ -130,8 +129,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
     //propably a privateKey
     else if (data.length == 52) {
       if (HdWalletUtil.isPrivateKeyValid(data, widget.chainType, currentNet)) {
-        final walletAccount = WalletAccount(
-            uniqueId: Uuid().v4(),
+        final walletAccount = WalletAccount(Uuid().v4(),
             id: -1,
             chain: widget.chainType,
             account: -1,

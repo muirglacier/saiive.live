@@ -222,11 +222,12 @@
   "pin_enter": "Ingresa tu PIN",
 
 
-  
-  
-
   "update_title": "Versión",
   "update_text": "¡Una nueva versión de {appName} está disponible!",
   "update_start": "ACTUALIZAR",
-  "update_cancel": "MÁS TARDE"
+  "update_cancel": "MÁS TARDE",
+
+  
+  "expert_title": "Expert mode",
+  "expert": "Expert"
 }

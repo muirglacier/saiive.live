@@ -22,8 +22,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<WalletAccount> addAccount({String name, int account, ChainType chain, bool isSelected = false}) async {
-    var newAccount =
-        WalletAccount(name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, uniqueId: Uuid().v4());
+    var newAccount = WalletAccount(Uuid().v4(), name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount);
 
     _walletAccounts.add(newAccount);
 
@@ -234,8 +233,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<WalletAddress>> getWalletAddresses(int account) async {
-    return _addresses;
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account) {
+    var ret = _addresses.where((element) => element.accountId == account.uniqueId).toList();
+    return Future.value(ret);
   }
 
   @override

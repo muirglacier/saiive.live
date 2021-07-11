@@ -33,9 +33,19 @@ class _VersionWidget extends State<VersionWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(ChainHelper.chainNetworkString(_currentNet)),
-      Text(_version),
-      if (_environmentType != EnvironmentType.Production) Text(EnvHelper.environmentToString(_environmentType))
+      Text(
+        ChainHelper.chainNetworkString(_currentNet),
+        style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
+      ),
+      Text(
+        _version,
+        style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
+      ),
+      if (_environmentType != EnvironmentType.Production)
+        Text(
+          EnvHelper.environmentToString(_environmentType),
+          style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
+        )
     ]);
   }
 }

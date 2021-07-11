@@ -135,13 +135,13 @@ abstract class Wallet extends IWallet {
   String get walletType => ChainHelper.chainTypeString(_chain);
 
   @override
-  Future<WalletAddress> getNextWalletAddress(AddressType addressType, bool isChangeAddress) async {
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress) async {
     isInitialzed();
 
-    assert(_wallets.containsKey(account));
+    assert(_wallets.containsKey(walletAccount.uniqueId));
 
-    if (_wallets.containsKey(account)) {
-      return await _wallets[account].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+    if (_wallets.containsKey(walletAccount.uniqueId)) {
+      return await _wallets[walletAccount.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
     }
 
     throw UnimplementedError();
@@ -232,22 +232,20 @@ abstract class Wallet extends IWallet {
 
     if (unusedAccounts.item1.isEmpty) {
       var lastItem = accounts.last;
-      unusedAccounts.item1.add(WalletAccount(
+      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
           account: lastItem.account + 1,
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
-          walletAccountType: WalletAccountType.HdAccount,
-          uniqueId: Uuid().v4()));
+          walletAccountType: WalletAccountType.HdAccount));
     } else {
       var lastItem = unusedAccounts.item1.last;
-      unusedAccounts.item1.add(WalletAccount(
+      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
           account: lastItem.account + 1,
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
-          walletAccountType: WalletAccountType.HdAccount,
-          uniqueId: Uuid().v4()));
+          walletAccountType: WalletAccountType.HdAccount));
     }
     return unusedAccounts;
   }

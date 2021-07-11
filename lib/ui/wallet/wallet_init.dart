@@ -28,9 +28,9 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
       await wallet.init();
 
       final defaultDfiWalletAccount =
-          WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "DFI0", selected: true);
+          WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "DFI0", selected: true);
       final defaultBtcWalletAccount =
-          WalletAccount(uniqueId: Uuid().v4(), id: 0, chain: ChainType.Bitcoin, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "BTC0", selected: true);
+          WalletAccount(Uuid().v4(), id: 0, chain: ChainType.Bitcoin, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "BTC0", selected: true);
 
       await wallet.addAccount(defaultDfiWalletAccount);
       await wallet.addAccount(defaultBtcWalletAccount);

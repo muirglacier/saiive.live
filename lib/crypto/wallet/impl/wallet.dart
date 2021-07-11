@@ -232,22 +232,20 @@ abstract class Wallet extends IWallet {
 
     if (unusedAccounts.item1.isEmpty) {
       var lastItem = accounts.last;
-      unusedAccounts.item1.add(WalletAccount(
+      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
           account: lastItem.account + 1,
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
-          walletAccountType: WalletAccountType.HdAccount,
-          uniqueId: Uuid().v4()));
+          walletAccountType: WalletAccountType.HdAccount));
     } else {
       var lastItem = unusedAccounts.item1.last;
-      unusedAccounts.item1.add(WalletAccount(
+      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
           account: lastItem.account + 1,
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
-          walletAccountType: WalletAccountType.HdAccount,
-          uniqueId: Uuid().v4()));
+          walletAccountType: WalletAccountType.HdAccount));
     }
     return unusedAccounts;
   }

@@ -9,7 +9,7 @@ class WalletAccount {
   final int id;
   final ChainType chain;
 
-  final String uniqueId;
+  String _uniqueId;
 
   String name;
 
@@ -17,6 +17,14 @@ class WalletAccount {
   bool selected;
 
   WalletAccountType walletAccountType;
+
+  get uniqueId => _uniqueId;
+
+  setUniqueId(String uniqueId) {
+    if (uniqueId == null || uniqueId.isEmpty) {
+      this._uniqueId = uniqueId;
+    }
+  }
 
   static String getStringForWalletAccountType(WalletAccountType accountType) {
     switch (accountType) {
@@ -30,26 +38,18 @@ class WalletAccount {
     return "";
   }
 
-  WalletAccount(
-      {@required this.uniqueId,
-      @required this.id,
-      @required this.chain,
-      @required this.account,
-      @required this.walletAccountType,
-      @required this.name,
-      this.lastAccess,
-      this.selected = false});
+  WalletAccount(this._uniqueId,
+      {@required this.id, @required this.chain, @required this.account, @required this.walletAccountType, @required this.name, this.lastAccess, this.selected = false});
 
   factory WalletAccount.fromJson(Map<String, dynamic> json) {
-    return WalletAccount(
+    return WalletAccount(json.containsKey("uniqueId") ? json["uniqueId"] : "00000000-0000-0000-0000-000000000000",
         account: json['account'],
         id: json['id'],
         chain: ChainType.values[json['chain']],
         name: json['name'],
         lastAccess: json['lastAccess'],
         selected: json['selected'],
-        walletAccountType: json.containsKey("walletAccountType") ? WalletAccountType.values[json['walletAccountType']] : WalletAccountType.HdAccount,
-        uniqueId: json.containsKey("uniqueId") ? json["uniqueId"] : "00000000-0000-0000-0000-000000000000");
+        walletAccountType: json.containsKey("walletAccountType") ? WalletAccountType.values[json['walletAccountType']] : WalletAccountType.HdAccount);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -60,6 +60,6 @@ class WalletAccount {
         'lastAccess': lastAccess,
         'selected': selected,
         'walletAccountType': walletAccountType.index,
-        'uniqueId': uniqueId
+        'uniqueId': _uniqueId
       };
 }

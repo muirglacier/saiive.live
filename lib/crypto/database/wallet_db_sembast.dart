@@ -237,6 +237,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     final oldAccounts = await _getOldAccounts();
     for (final oldAcc in oldAccounts) {
+      oldAcc.setUniqueId(Uuid().v4());
       await addOrUpdateAccount(oldAcc);
     }
 
@@ -300,8 +301,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     final db = await database;
 
     if (!await _accountV2StoreInstance.record(account).exists(db)) {
-      var newAccount =
-          WalletAccount(name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, uniqueId: Uuid().v4());
+      var newAccount = WalletAccount(Uuid().v4(), name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount);
 
       await addOrUpdateAccount(newAccount);
 

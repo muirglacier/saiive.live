@@ -57,11 +57,10 @@ class WalletService implements IWalletService {
     _bitcoinWallet = sl.get<BitcoinWallet>();
     _defiWallet = sl.get<DeFiChainWallet>();
 
-
     for (final wallet in _wallets) {
       await wallet.close();
     }
-    
+
     _wallets.add(_bitcoinWallet);
     _wallets.add(_defiWallet);
 
@@ -206,8 +205,8 @@ class WalletService implements IWalletService {
     }
 
     if (result.item1.length == 0) {
-      final walletAccount = WalletAccount(
-          uniqueId: Uuid().v4(), id: 0, chain: chain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: ChainHelper.chainTypeString(chain), selected: true);
+      final walletAccount =
+          WalletAccount(Uuid().v4(), id: 0, chain: chain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: ChainHelper.chainTypeString(chain), selected: true);
       await db.addOrUpdateAccount(walletAccount);
     }
 

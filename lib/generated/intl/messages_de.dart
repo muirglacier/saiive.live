@@ -178,7 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_offline" : m2,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird erstellt"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Erstelle Auth TX"),
-    "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Account wird vorbereitet"),
+    "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Konto wird vorbereitet"),
     "wallet_operation_create_swap_tx" : MessageLookupByLibrary.simpleMessage("Swap transaktion wird erstellt"),
     "wallet_operation_failed" : MessageLookupByLibrary.simpleMessage("Transaktionsfehler :("),
     "wallet_operation_mempool_conflict" : MessageLookupByLibrary.simpleMessage("Bitte warte bis deine Transaktion dem nächsten Block hinzugefügt wurde, bevor du mit einer neuen Transaktion fortfährst."),

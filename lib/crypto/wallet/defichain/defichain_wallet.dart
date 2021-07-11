@@ -63,7 +63,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   Future<Tuple3<String, List<tx.Transaction>, String>> removePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream}) async {
     var fees = await getTxFee(0, 0);
-    await prepareAccount(fees, loadingStream: loadingStream);
+    await prepareAccount(shareAddress, fees, loadingStream: loadingStream);
 
     final txb = await createBaseTransaction(0, shareAddress, shareAddress, fees, (txb, inputTxs, nw) async {
       var tx = await getAuthInputsSmart(shareAddress, AuthTxMin, fees);
@@ -97,7 +97,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       throw ArgumentError("One of the 2 tokens must be DFI!");
     }
 
-    final useAmount = await prepareAccount(DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
+    final useAmount = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
 
     if (DeFiConstants.isDfiToken(tokenA)) {
       amountA = useAmount;
@@ -204,7 +204,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<Tuple3<String, List<tx.Transaction>, String>> createSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
       {StreamController<String> loadingStream}) async {
     if (DeFiConstants.isDfiToken(fromToken)) {
-      fromAmount = await prepareAccount(fromAmount, loadingStream: loadingStream);
+      fromAmount = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
     }
 
     final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
@@ -395,14 +395,14 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return retOut;
   }
 
-  Future<int> prepareUtxoToAccountTransaction(int amount, {StreamController<String> loadingStream}) async {
+  Future<int> prepareUtxoToAccountTransaction(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
     final accBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiAccountSymbol);
 
     final accountBalance = accBalance.balance != null ? accBalance.balance : 0;
     final totalBalance = (tokenBalance.balance != null ? tokenBalance.balance : 0) + accountBalance;
 
-    if (accountBalance > amount) {
+    if (accountBalance > amount && !force) {
       // we already have enough acc balance
       return amount;
     }
@@ -423,6 +423,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final fee = await getTxFee(0, 0);
 
     var checkAmount = (amount - accountBalance) + fee;
+
+    if (force) {
+      checkAmount = amount + fee;
+    }
 
     var curAmount = 0;
     for (final tx in unspentTxs) {
@@ -460,7 +464,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         burnFees = input.value;
       }
 
-      final txs = await createBaseTransaction(0, changeAddress, changeAddress, burnFees, (txb, inputTxs, nw) {
+      final txs = await createBaseTransaction(0, toAddress, changeAddress, burnFees, (txb, inputTxs, nw) {
         txb.addUtxosToAccountOutput(tokenType.id, input.address, needAmount, nw);
 
         checkAmount -= needAmount;
@@ -547,7 +551,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<Tuple3<List<String>, List<tx.Transaction>, int>> prepareAccountToUtxosTransactions(String pubKey, int amount,
-      {bool sendMax = false, StreamController<String> loadingStream}) async {
+      {bool sendMax = false, StreamController<String> loadingStream, bool force = false}) async {
     var tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (tokenBalance == null || tokenBalance.balance == 0) {
@@ -555,7 +559,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     // we have currently enough utxo
-    if (tokenBalance.balance > amount) {
+    if (tokenBalance.balance > amount && !force) {
       return null;
     }
 
@@ -574,6 +578,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       if (neededUtxo > accountBalance.balance) {
         neededUtxo = accountBalance.balance;
       }
+    }
+
+    if (force) {
+      neededUtxo = amount;
     }
 
     final accounts = await walletDatabase.getAccountBalancesForToken(DeFiConstants.DefiAccountSymbol);
@@ -647,7 +655,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return Tuple3(txs, usedInputs, fees * txs.length);
   }
 
-  Future<int> prepareAccount(int amount, {StreamController<String> loadingStream}) async {
-    return await prepareUtxoToAccountTransaction(amount, loadingStream: loadingStream);
+  Future<int> prepareAccount(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {
+    return await prepareUtxoToAccountTransaction(toAddress, amount, loadingStream: loadingStream, force: force);
   }
 }

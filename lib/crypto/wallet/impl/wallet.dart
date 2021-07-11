@@ -135,13 +135,13 @@ abstract class Wallet extends IWallet {
   String get walletType => ChainHelper.chainTypeString(_chain);
 
   @override
-  Future<WalletAddress> getNextWalletAddress(AddressType addressType, bool isChangeAddress) async {
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress) async {
     isInitialzed();
 
-    assert(_wallets.containsKey(account));
+    assert(_wallets.containsKey(walletAccount.uniqueId));
 
-    if (_wallets.containsKey(account)) {
-      return await _wallets[account].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+    if (_wallets.containsKey(walletAccount.uniqueId)) {
+      return await _wallets[walletAccount.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
     }
 
     throw UnimplementedError();
@@ -190,7 +190,7 @@ abstract class Wallet extends IWallet {
 
   @override
   Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount) async {
-    final addresses = await _walletDatabase.getWalletAllAddresses(walletAccount);
+    final addresses = await _walletDatabase.getWalletAddressesById(walletAccount.uniqueId);
 
     return addresses;
   }

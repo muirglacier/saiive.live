@@ -111,7 +111,7 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
 
                   WalletAddress walletAddress;
                   if (widget.isNewAddress) {
-                    walletAddress = await walletService.getNextWalletAddress(widget.walletAccount.chain, false, _addressType);
+                    walletAddress = await walletService.getNextWalletAddress(widget.walletAccount, false, _addressType);
                     walletAddress.createdAt = DateTime.now();
                   } else {
                     walletAddress = widget.walletAddress;

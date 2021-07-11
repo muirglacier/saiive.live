@@ -52,10 +52,15 @@ class _SaiiveDrawer extends State<SaiiveDrawer> {
         child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Container(child: Image.asset('assets/logo_wh.png', height: 100)),
           Column(children: [
-            Text(S.of(context).title),
-            Padding(padding: EdgeInsets.only(top: 5), child: Text(_version)),
-            Padding(padding: EdgeInsets.only(top: 5), child: Text(ChainHelper.chainNetworkString(_currentNet))),
-            if (_environmentType != EnvironmentType.Production) Padding(padding: EdgeInsets.only(top: 5), child: Text(EnvHelper.environmentToString(_environmentType)))
+            Text(S.of(context).title, style: TextStyle(color: StateContainer.of(context).curTheme.appBarText)),
+            Padding(padding: EdgeInsets.only(top: 5), child: Text(_version, style: TextStyle(color: StateContainer.of(context).curTheme.appBarText))),
+            Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(ChainHelper.chainNetworkString(_currentNet), style: TextStyle(color: StateContainer.of(context).curTheme.appBarText))),
+            if (_environmentType != EnvironmentType.Production)
+              Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(EnvHelper.environmentToString(_environmentType), style: TextStyle(color: StateContainer.of(context).curTheme.appBarText)))
           ])
         ]),
       ),
@@ -71,7 +76,15 @@ class _SaiiveDrawer extends State<SaiiveDrawer> {
                     final navItem = widget.navEntries[index];
                     return ListTile(
                         title: Row(
-                          children: [navItem.icon, Padding(padding: EdgeInsets.only(left: 5), child: Text(navItem.label))],
+                          children: [
+                            Icon(navItem.icon.icon, color: StateContainer.of(context).curTheme.text),
+                            Padding(
+                                padding: EdgeInsets.only(left: 5),
+                                child: Text(
+                                  navItem.label,
+                                  style: TextStyle(color: StateContainer.of(context).curTheme.text),
+                                ))
+                          ],
                         ),
                         onTap: () {
                           widget.selectionCallback(navItem);

@@ -115,7 +115,9 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
             Chip(
                 label: Text(
                   _balance.additionalDisplay,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: TextStyle(
+                    color: StateContainer.of(context).curTheme.lightColor,
+                  ),
                 ),
                 backgroundColor: Theme.of(context).primaryColor)
         ]),
@@ -211,6 +213,24 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
             Padding(
                 padding: EdgeInsets.only(left: 20),
                 child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton.extended(
+                    onPressed: () async {
+                      await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
+                      Navigator.of(context).pop();
+                    },
+                    heroTag: null,
+                    icon: Icon(Icons.arrow_upward, color: StateContainer.of(context).curTheme.lightColor),
+                    label: Text(
+                      S.of(context).send,
+                      style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                )),
+            Padding(
+                padding: EdgeInsets.only(right: 0),
+                child: Align(
                   alignment: Alignment.bottomLeft,
                   child: FloatingActionButton.extended(
                     onPressed: () async {
@@ -219,32 +239,14 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                       await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
                     },
                     heroTag: null,
-                    icon: Icon(Icons.arrow_downward, color: StateContainer.of(context).curTheme.text),
+                    icon: Icon(Icons.arrow_downward, color: StateContainer.of(context).curTheme.lightColor),
                     label: Text(
                       S.of(context).receive,
-                      style: TextStyle(color: StateContainer.of(context).curTheme.text),
+                      style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                )),
-            Padding(
-                padding: EdgeInsets.only(right: 0),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: FloatingActionButton.extended(
-                    onPressed: () async {
-                      await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletSendScreen(widget.token, widget.chainType)));
-                      Navigator.of(context).pop();
-                    },
-                    heroTag: null,
-                    icon: Icon(Icons.arrow_upward, color: StateContainer.of(context).curTheme.text),
-                    label: Text(
-                      S.of(context).send,
-                      style: TextStyle(color: StateContainer.of(context).curTheme.text),
-                    ),
-                    backgroundColor: Theme.of(context).primaryColor,
-                  ),
-                )),
+                ))
           ],
         ));
   }

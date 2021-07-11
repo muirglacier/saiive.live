@@ -15,6 +15,10 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'accounts_import_screen.dart';
 
 class AccountsScreen extends StatefulWidget {
+  final allowChangeVisibility;
+  final allowImport;
+  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true});
+
   @override
   State<StatefulWidget> createState() => _AccountScreen();
 }
@@ -28,6 +32,9 @@ class _AccountScreen extends State<AccountsScreen> {
   bool isSelectionMode = false;
 
   void onLongPress(bool isSelected, WalletAccount index) {
+    if (!widget.allowChangeVisibility) {
+      return;
+    }
     setState(() {
       index.selected = !isSelected;
       isSelectionMode = !isSelectionMode;
@@ -152,6 +159,9 @@ class _AccountScreen extends State<AccountsScreen> {
   }
 
   _buildFloatingActionButton(BuildContext context) {
+    if (!widget.allowChangeVisibility) {
+      return null;
+    }
     if (_isLoading) {
       return null;
     }
@@ -160,10 +170,10 @@ class _AccountScreen extends State<AccountsScreen> {
         await _save();
       },
       heroTag: null,
-      icon: Icon(isSelectionMode ? Icons.save : Icons.visibility_outlined, color: StateContainer.of(context).curTheme.text),
+      icon: Icon(isSelectionMode ? Icons.save : Icons.visibility_outlined, color: StateContainer.of(context).curTheme.appBarText),
       label: Text(
         S.of(context).visibility,
-        style: TextStyle(color: StateContainer.of(context).curTheme.text),
+        style: TextStyle(color: StateContainer.of(context).curTheme.appBarText),
       ),
       backgroundColor: Theme.of(context).primaryColor,
     );
@@ -188,7 +198,7 @@ class _AccountScreen extends State<AccountsScreen> {
             //       },
             //       child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
             //     )),
-            if (!_isLoading)
+            if (!_isLoading && widget.allowImport)
               Padding(
                   padding: EdgeInsets.only(right: 15.0),
                   child: GestureDetector(
@@ -201,7 +211,7 @@ class _AccountScreen extends State<AccountsScreen> {
                     },
                     child: Icon(Icons.upload, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   )),
-            if (!_isLoading)
+            if (!_isLoading && widget.allowChangeVisibility)
               Padding(
                   padding: EdgeInsets.only(right: 15.0),
                   child: GestureDetector(

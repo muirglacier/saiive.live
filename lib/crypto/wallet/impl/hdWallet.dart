@@ -200,7 +200,6 @@ class HdWallet extends IHdWallet {
     await database.clearUnspentTransactions(account);
     newUtxos.forEach((element) async {
       await database.addUnspentTransaction(element, account);
-      print("tx with id ${element.mintTxId} has ${element.confirmations} confirmations (address is ${element.address})");
     });
 
     await database.clearAccountBalances(account);

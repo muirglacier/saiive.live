@@ -64,11 +64,14 @@ class _ExpertScreen extends State<ExpertScreen> {
 
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
-
+      final wallet = sl.get<DeFiChainWallet>();
       if (_action == ExpertScreenAction.UtxoToAccount) {
-        await sl.get<DeFiChainWallet>().prepareAccount(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
+        await wallet.prepareAccount(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
       } else {
-        await sl.get<DeFiChainWallet>().prepareAccountToUtxosTransactions(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
+        final tx = await wallet.prepareAccountToUtxosTransactions(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
+        for (final txHex in tx.item1) {
+          await wallet.createRawTxAndWait(txHex);
+        }
       }
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
@@ -232,7 +235,7 @@ class _ExpertScreen extends State<ExpertScreen> {
 
   _buildExpertScreen(BuildContext context) {
     if (_isLoading) {
-      return Center(child: LoadingWidget(text: S.of(context).loading));
+      return Padding(padding: EdgeInsets.all(20), child: Center(child: LoadingWidget(text: S.of(context).loading)));
     }
 
     return Padding(

@@ -395,6 +395,10 @@ abstract class Wallet extends IWallet {
     return response;
   }
 
+  Future<TransactionData> createRawTxAndWait(String txHex, {StreamController<String> loadingStream}) async {
+    return createTxAndWaitInternal(txHex, loadingStream: loadingStream);
+  }
+
   @protected
   Future<TransactionData> createTxAndWaitInternal(String txHex, {StreamController<String> loadingStream}) async {
     final r = RetryOptions(maxAttempts: 30, maxDelay: Duration(seconds: 5));

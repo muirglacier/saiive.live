@@ -35,16 +35,16 @@ class _VersionWidget extends State<VersionWidget> {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text(
         ChainHelper.chainNetworkString(_currentNet),
-        style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
+        style: TextStyle(color: StateContainer.of(context).curTheme.appBarText),
       ),
       Text(
         _version,
-        style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
+        style: TextStyle(color: StateContainer.of(context).curTheme.appBarText),
       ),
       if (_environmentType != EnvironmentType.Production)
         Text(
           EnvHelper.environmentToString(_environmentType),
-          style: TextStyle(color: StateContainer.of(context).curTheme.lightColor),
+          style: TextStyle(color: StateContainer.of(context).curTheme.appBarText),
         )
     ]);
   }

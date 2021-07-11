@@ -98,7 +98,7 @@ class _ExpertScreen extends State<ExpertScreen> {
 
   _buildExpertScreen(BuildContext context) {
     if (_isLoading) {
-      return LoadingWidget(text: S.of(context).loading);
+      return Center(child: LoadingWidget(text: S.of(context).loading));
     }
 
     return Padding(padding: EdgeInsets.all(20), child: Row(children: [_buildDfiBalance(context), SizedBox(height: 20)]));

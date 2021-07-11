@@ -190,7 +190,7 @@ abstract class Wallet extends IWallet {
 
   @override
   Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount) async {
-    final addresses = await _walletDatabase.getWalletAddressesById(walletAccount.uniqueId);
+    final addresses = await _walletDatabase.getWalletAllAddresses(walletAccount);
 
     return addresses;
   }

@@ -30,7 +30,7 @@ class HdWallet extends IHdWallet {
   HdWallet(this._password, this._account, this._chain, this._network, this._seed, this._apiService);
 
   Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase) async {
-    final walletAddresses = await walletDatabase.getWalletAddressesById(_account.uniqueId);
+    final walletAddresses = await walletDatabase.getWalletAllAddresses(_account);
     final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
 
     return allAddresses;
@@ -41,7 +41,7 @@ class HdWallet extends IHdWallet {
 
   @override
   Future init(IWalletDatabase walletDatabase) async {
-    var addresses = await walletDatabase.getWalletAddressesById(_account.uniqueId);
+    var addresses = await walletDatabase.getWalletAllAddresses(_account);
 
     if (_account.walletAccountType != WalletAccountType.HdAccount) {
       return;
@@ -145,7 +145,7 @@ class HdWallet extends IHdWallet {
   Future _syncWallet(IWalletDatabase database, Function(List<String>, int, int) work, {StreamController<String> loadingStream}) async {
     var startDate = DateTime.now();
 
-    final walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
+    final walletAddresses = await database.getWalletAllAddresses(_account);
 
     final walletLen = walletAddresses.length;
     var i = 0;

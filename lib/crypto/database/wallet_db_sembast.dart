@@ -127,6 +127,20 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account) async {
+    var dbStore = _addressesStoreInstance;
+
+    var db = await database;
+
+    Finder finder = Finder(filter: Filter.equals('accountId', account.uniqueId));
+
+    final accounts = await dbStore.find(db, finder: finder);
+
+    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+
+    return data;
+  }
+
   Future<List<WalletAddress>> getWalletAddressesById(String uniqueId) async {
     var dbStore = _addressesStoreInstance;
 

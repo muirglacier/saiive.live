@@ -57,12 +57,12 @@ class WalletService implements IWalletService {
     _bitcoinWallet = sl.get<BitcoinWallet>();
     _defiWallet = sl.get<DeFiChainWallet>();
 
+    _wallets.add(_bitcoinWallet);
+    _wallets.add(_defiWallet);
+
     for (final wallet in _wallets) {
       await wallet.close();
     }
-
-    _wallets.add(_bitcoinWallet);
-    _wallets.add(_defiWallet);
 
     await Future.wait([_bitcoinWallet.init(), _defiWallet.init()]);
   }

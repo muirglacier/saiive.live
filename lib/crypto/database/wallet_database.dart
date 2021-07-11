@@ -40,6 +40,7 @@ abstract class IWalletDatabase {
   Future<bool> isOwnAddress(String pubKey);
   Future<WalletAddress> getWalletAddress(String pubKey);
   Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType);
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account);
   Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType);
   Future<bool> addressAlreadyUsed(String address);
 

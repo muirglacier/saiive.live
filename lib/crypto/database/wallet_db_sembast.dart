@@ -83,6 +83,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future<WalletAddress> addAddress(WalletAddress account) async {
     final db = await database;
     await _addressesStoreInstance.record(account.uniqueId).put(db, account.toJson());
+
+    _activeWalletAddresses = await _getActiveAddresses();
     return account;
   }
 
@@ -147,18 +149,6 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
-  Future<List<WalletAddress>> getWalletAddresses(int account) async {
-    var dbStore = _addressesStoreInstance;
-
-    var finder = Finder(filter: Filter.equals('account', account));
-    final accounts = await dbStore.find(await database, finder: finder);
-
-    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
-
-    return data;
-  }
-
-  @override
   Future<bool> addressAlreadyUsed(String address) async {
     var dbStore = _transactionStoreInstance;
 
@@ -216,19 +206,6 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     _database = await databaseFactoryIo.openDatabase(path);
     return _database;
-  }
-
-  Future<List<WalletAccount>> _getOldAccounts() async {
-    var db = await database;
-    var dbStore = _accountStoreInstance;
-
-    final accounts = await dbStore.find(db);
-
-    final data = accounts.map((e) => e == null ? null : WalletAccount.fromJson(e.value))?.toList();
-
-    _accountStreamController.add(data);
-
-    return data;
   }
 
   @override

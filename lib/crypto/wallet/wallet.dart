@@ -28,11 +28,12 @@ abstract class IWallet {
   Future<Transaction> getTransaction(String id);
 
   Future<List<WalletAccount>> getAccounts();
-  Future<WalletAccount> addAccount(String name, int account);
+  Future<WalletAccount> addAccount(WalletAccount account);
 
-  void setWorkingAccount(int id);
-  Future<String> getPublicKey(AddressType type);
-  Future<String> getPublicKeyFromAccount(int account, bool isChangeAddress, AddressType addressType);
+  Future<WalletAddress> updateAddress(WalletAddress address);
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress);
+
+  Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount);
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 

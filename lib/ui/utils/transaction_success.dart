@@ -60,16 +60,17 @@ class TransactionSuccessScreen extends StatelessWidget {
               additional,
               style: TextStyle(fontSize: 30, color: Colors.white),
             ),
-          GestureDetector(
-              onTap: () async {
-                await this.openExplorerLink(context);
-              },
-              child: Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: Text(
-                    showTxText,
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-                  ))),
+          if (txId != null && txId.isNotEmpty)
+            GestureDetector(
+                onTap: () async {
+                  await this.openExplorerLink(context);
+                },
+                child: Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Text(
+                      showTxText,
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                    ))),
           GestureDetector(
               onTap: () async {
                 await this.openExplorerLink(context);

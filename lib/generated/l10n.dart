@@ -155,6 +155,66 @@ class S {
     );
   }
 
+  /// `Label`
+  String get label {
+    return Intl.message(
+      'Label',
+      name: 'label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advanced`
+  String get advanced {
+    return Intl.message(
+      'Advanced',
+      name: 'advanced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visibility`
+  String get visibility {
+    return Intl.message(
+      'Visibility',
+      name: 'visibility',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address`
+  String get address {
+    return Intl.message(
+      'Address',
+      name: 'address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get add {
+    return Intl.message(
+      'Add',
+      name: 'add',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Dark`
   String get dark_mode {
     return Intl.message(
@@ -935,6 +995,156 @@ class S {
     );
   }
 
+  /// `Accounts`
+  String get wallet_accounts {
+    return Intl.message(
+      'Accounts',
+      name: 'wallet_accounts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account details`
+  String get wallet_accounts_detail {
+    return Intl.message(
+      'Account details',
+      name: 'wallet_accounts_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No address created yet...`
+  String get wallet_accounts_empty {
+    return Intl.message(
+      'No address created yet...',
+      name: 'wallet_accounts_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create new address`
+  String get wallet_accounts_address_add {
+    return Intl.message(
+      'Create new address',
+      name: 'wallet_accounts_address_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select type`
+  String get wallet_accounts_select_type {
+    return Intl.message(
+      'Select type',
+      name: 'wallet_accounts_select_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to create an address first!`
+  String get wallet_accounts_create {
+    return Intl.message(
+      'You need to create an address first!',
+      name: 'wallet_accounts_create',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add account`
+  String get wallet_accounts_add {
+    return Intl.message(
+      'Add account',
+      name: 'wallet_accounts_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit account`
+  String get wallet_accounts_edit {
+    return Intl.message(
+      'Edit account',
+      name: 'wallet_accounts_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import account`
+  String get wallet_accounts_import {
+    return Intl.message(
+      'Import account',
+      name: 'wallet_accounts_import',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to import the Private Key for the existing account? ({pubKey})`
+  String wallet_accounts_import_priv_key_for_pub_key(Object pubKey) {
+    return Intl.message(
+      'Do you want to import the Private Key for the existing account? ($pubKey)',
+      name: 'wallet_accounts_import_priv_key_for_pub_key',
+      desc: '',
+      args: [pubKey],
+    );
+  }
+
+  /// `The public key is invalid!`
+  String get wallet_accounts_import_invalid_pub_key {
+    return Intl.message(
+      'The public key is invalid!',
+      name: 'wallet_accounts_import_invalid_pub_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The private key is invalid!`
+  String get wallet_accounts_import_invalid_priv_key {
+    return Intl.message(
+      'The private key is invalid!',
+      name: 'wallet_accounts_import_invalid_priv_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The content is invalid!`
+  String get wallet_accounts_import_invalid {
+    return Intl.message(
+      'The content is invalid!',
+      name: 'wallet_accounts_import_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The field cannot be empty!`
+  String get wallet_accounts_cannot_be_empty {
+    return Intl.message(
+      'The field cannot be empty!',
+      name: 'wallet_accounts_cannot_be_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account saved`
+  String get wallet_accounts_saved {
+    return Intl.message(
+      'Account saved',
+      name: 'wallet_accounts_saved',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(
@@ -1425,6 +1635,16 @@ class S {
     );
   }
 
+  /// `Receive tokens at`
+  String get dex_to_address {
+    return Intl.message(
+      'Receive tokens at',
+      name: 'dex_to_address',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(
@@ -1560,6 +1780,16 @@ class S {
     return Intl.message(
       'Amount B',
       name: 'liquidity_add_amount_b',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Receive shares at`
+  String get liquidity_add_shares_addr {
+    return Intl.message(
+      'Receive shares at',
+      name: 'liquidity_add_shares_addr',
       desc: '',
       args: [],
     );
@@ -1724,6 +1954,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Update`
+  String get update_title {
+    return Intl.message(
+      'Update',
+      name: 'update_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A new version of {appName} is available!`
+  String update_text(Object appName) {
+    return Intl.message(
+      'A new version of $appName is available!',
+      name: 'update_text',
+      desc: '',
+      args: [appName],
+    );
+  }
+
+  /// `Install`
+  String get update_start {
+    return Intl.message(
+      'Install',
+      name: 'update_start',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Abort`
+  String get update_cancel {
+    return Intl.message(
+      'Abort',
+      name: 'update_cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expert mode`
+  String get expert_title {
+    return Intl.message(
+      'Expert mode',
+      name: 'expert_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expert`
+  String get expert {
+    return Intl.message(
+      'Expert',
+      name: 'expert',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -1733,6 +2023,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'es'),
     ];
   }
 

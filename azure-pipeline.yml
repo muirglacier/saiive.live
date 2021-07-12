@@ -1,5 +1,6 @@
 trigger:
 - main
+- develop
 - features/*
 - fix/*
 name: $(BuildID)
@@ -243,6 +244,17 @@ stages:
           buildName: $(AppVersion)'
           apkTargetPlatform: 'android-arm,android-arm64,android-x64'
           buildFlavour: 'stagingappcenter'
+          entryPoint: 'lib/main_staging.dart'
+          buildNumber: $(Build.BuildNumber)
+
+      - task: FlutterBuild@0
+        displayName: Android Release APK
+        inputs:
+          target: 'apk'
+          projectDirectory: '$(Build.SourcesDirectory)'
+          buildName: $(AppVersion)'
+          apkTargetPlatform: 'android-arm,android-arm64,android-x64'
+          buildFlavour: 'staginggooglePlay'
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
 

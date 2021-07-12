@@ -11,6 +11,7 @@ import 'package:saiive.live/network/api_service.dart';
 import 'package:hex/hex.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:tuple/tuple.dart';
+import 'package:uuid/uuid.dart';
 
 class WalletRestore {
   static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
@@ -35,8 +36,10 @@ class WalletRestore {
 
     do {
       if (!existingAccounts.contains(i)) {
-        final p2sh = await _restore(i, key, api, chain, network, AddressType.P2SHSegwit);
-        final legacy = await _restore(i, key, api, chain, network, AddressType.Legacy);
+        final account = WalletAccount(Uuid().v4(),
+            name: ChainHelper.chainTypeString(chain) + (i + 1).toString(), id: i, account: i, chain: chain, walletAccountType: WalletAccountType.HdAccount, selected: true);
+        final p2sh = await _restore(account, key, api, chain, network, AddressType.P2SHSegwit);
+        final legacy = await _restore(account, key, api, chain, network, AddressType.Legacy);
         final result = List<WalletAddress>.from(p2sh);
         result.addAll(legacy);
 
@@ -44,7 +47,7 @@ class WalletRestore {
           max--;
         } else {
           walletAddresses.addAll(result);
-          ret..add(WalletAccount(name: ChainHelper.chainTypeString(chain) + (i + 1).toString(), id: i, account: i, chain: chain));
+          ret..add(account);
           max = IWallet.MaxUnusedAccountScan;
         }
       }
@@ -55,7 +58,7 @@ class WalletRestore {
     return Tuple2(ret, walletAddresses);
   }
 
-  static Future<List<WalletAddress>> _restore(int account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType) async {
+  static Future<List<WalletAddress>> _restore(WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType) async {
     int i = 0;
     int maxEmpty = IWallet.MaxUnusedIndexScan;
     var startDate = DateTime.now();
@@ -63,8 +66,8 @@ class WalletRestore {
 
     do {
       try {
-        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account, IWallet.KeysPerQuery * i, chain, net, addressType, IWallet.KeysPerQuery);
-        var path = HdWalletUtil.derivePathsWithChange(account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account.account, IWallet.KeysPerQuery * i, chain, net, addressType, IWallet.KeysPerQuery);
+        var path = HdWalletUtil.derivePathsWithChange(account.account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
         LogHelper.instance.d("($chain) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
@@ -75,12 +78,14 @@ class WalletRestore {
 
           if (!addresses.any((element) => element.publicKey == tx.address)) {
             final walletAddress = WalletAddress(
-                account: account,
+                account: account.account,
+                accountId: account.uniqueId,
                 index: HdWalletUtil.getIndexFromPath(pathString),
                 isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
                 chain: chain,
                 network: net,
-                publicKey: publicKeys[keyIndex]);
+                publicKey: publicKeys[keyIndex],
+                addressType: addressType);
 
             addresses.add(walletAddress);
           }

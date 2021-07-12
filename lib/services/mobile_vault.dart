@@ -31,4 +31,14 @@ class MobileVault extends IVault {
 
   @override
   Future reEncryptData(String oldPassword, String newPassword) async {}
+
+  @override
+  Future<String> getPrivateKey(String id) async {
+    return await _read(IVault.privateKey + id);
+  }
+
+  @override
+  Future setPrivateKey(String id, String privateKey) async {
+    return await _write(IVault.privateKey + id, privateKey);
+  }
 }

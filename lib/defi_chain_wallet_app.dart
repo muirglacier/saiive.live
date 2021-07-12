@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
@@ -19,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger_flutter/logger_flutter.dart';
+import 'package:saiive.live/util/debug/SaiiveRouteObserver.dart';
 import 'package:window_size/window_size.dart';
 
 const String APP_TITLE = "saiive.live";
@@ -92,6 +92,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     ThemeData theme = ThemeData();
 
     return MaterialApp(
+        navigatorObservers: [SaiiveRouteObserver()],
         debugShowCheckedModeBanner: env["ENV"] == "dev",
         localizationsDelegates: [
           S.delegate,
@@ -99,7 +100,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [const Locale('en', ''), const Locale('de', '')],
+        supportedLocales: [const Locale('en', ''), const Locale('de', ''), const Locale('es', '')],
         locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
             ? null
             : StateContainer.of(context).curLanguage.getLocale(),
@@ -137,8 +138,6 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
             fontFamily: 'Helvetica, Arial, sans-serif',
             tabBarTheme: TabBarTheme(labelColor: appBarTextColor),
             elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
-            cursorColor: StateContainer.of(context).curTheme.primary,
-            textSelectionColor: StateContainer.of(context).curTheme.primary,
             textSelectionTheme: TextSelectionThemeData(cursorColor: StateContainer.of(context).curTheme.primary, selectionHandleColor: StateContainer.of(context).curTheme.primary),
             inputDecorationTheme: InputDecorationTheme(
                 counterStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),

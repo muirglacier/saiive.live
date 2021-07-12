@@ -23,7 +23,6 @@ import 'package:saiive.live/services/desktop_vault.dart';
 import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
-import 'package:saiive.live/ui/lock/base_unlock_handler.dart';
 import 'package:saiive.live/ui/lock/desktop_unlock_handler.dart';
 import 'package:saiive.live/ui/lock/mobile_unlock_handler.dart';
 import 'package:saiive.live/ui/lock/unlock_handler.dart';

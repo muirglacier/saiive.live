@@ -1,26 +1,28 @@
 import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
-import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
-import 'package:saiive.live/helper/version.dart';
-import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
+import 'package:saiive.live/ui/drawer.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
+import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
-import 'package:saiive.live/util/sharedprefsutil.dart';
+import 'package:saiive.live/ui/widgets/version_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class _NavigationEntry {
+class NavigationEntry {
   final Icon icon;
   final String label;
   final Widget page;
+  final bool visibleForBottomNav;
+  final String routeSettingName;
 
-  _NavigationEntry({this.icon, this.label, this.page});
+  NavigationEntry({this.icon, this.label, this.page, this.visibleForBottomNav = true, this.routeSettingName});
 }
 
 class HomeScreen extends StatefulWidget {
@@ -31,22 +33,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  ChainNet _currentNet = ChainNet.Testnet;
-  String _version = "";
 
-  static List<_NavigationEntry> _navigationEntries = [];
+  static List<NavigationEntry> _navigationEntries = [];
 
   void initMenu(BuildContext context) {
     _navigationEntries = [
-      _NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen()),
-      _NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen()),
-      _NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen()),
-      _NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen())
+      NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen(), routeSettingName: "/home"),
+      NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(), routeSettingName: "/liqudity"),
+      NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(), routeSettingName: "/dex"),
+      NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen(), routeSettingName: "/tokens"),
+      NavigationEntry(icon: Icon(Icons.account_box), label: S.of(context).wallet_accounts, page: AccountsScreen(), visibleForBottomNav: false, routeSettingName: "/accounts"),
+      NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen(), visibleForBottomNav: false, routeSettingName: "/settings")
     ];
-
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      _navigationEntries.add(_NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen()));
-    }
   }
 
   void _onItemTapped(int index) {
@@ -55,24 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  void _init() async {
-    _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-    _version = await VersionHelper().getVersion();
-
-    setState(() {});
-  }
-
   _buildContent(BuildContext context) {
     if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia) {
-      return Center(
+      return AppUpdateAlert(
+          child: Center(
         child: _navigationEntries.elementAt(_selectedIndex).page,
-      );
+      ));
     }
 
     final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();
@@ -103,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
                         Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(height: 5),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(ChainHelper.chainNetworkString(_currentNet)), Text(_version)]),
+                        VersionWidget(),
                         if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
                       ]),
                     ),
@@ -127,7 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return null;
     }
 
-    final List<BottomNavigationBarItem> bottomNavBar = _navigationEntries.map((e) => BottomNavigationBarItem(icon: e.icon, label: e.label)).toList();
+    final List<BottomNavigationBarItem> bottomNavBar =
+        _navigationEntries.where((a) => a.visibleForBottomNav).map((e) => BottomNavigationBarItem(icon: e.icon, label: e.label)).toList();
 
     return BottomNavigationBar(
       items: bottomNavBar,
@@ -140,9 +127,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  drawerNavigate(NavigationEntry nav) {
+    if (nav.visibleForBottomNav) {
+      setState(() {
+        _selectedIndex = _navigationEntries.indexOf(nav);
+      });
+      Navigator.pop(context);
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: nav.routeSettingName), builder: (BuildContext context) => nav.page));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     initMenu(context);
-    return Scaffold(body: _buildContent(context), bottomNavigationBar: _buildBottomNavBar(context));
+    StateContainer.of(context).scaffoldKey = GlobalKey<ScaffoldState>();
+    return Scaffold(
+        key: StateContainer.of(context).scaffoldKey,
+        body: _buildContent(context),
+        bottomNavigationBar: _buildBottomNavBar(context),
+        drawer: SaiiveDrawer(_navigationEntries, drawerNavigate));
   }
 }

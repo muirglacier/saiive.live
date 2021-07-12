@@ -11,35 +11,40 @@ abstract class IWalletDatabase {
   Future<int> getNextFreeIndex(int account);
 
   Future<List<WalletAccount>> getAccounts();
-  Future<WalletAccount> updateAccount(WalletAccount account);
+  Future<WalletAccount> getAccount(String uniqueId);
+
+  @deprecated
   Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false});
+  Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount);
 
-  Future clearTransactions();
-  Future<List<Transaction>> getTransactions();
+  Future clearTransactions(WalletAccount account);
+  Future<List<Transaction>> getTransactions(WalletAccount account);
   Future<Transaction> getTransaction(String id);
-  Future addTransaction(Transaction transaction);
+  Future addTransaction(Transaction transaction, WalletAccount account);
 
-  Future clearUnspentTransactions();
+  Future clearUnspentTransactions(WalletAccount account);
   Future<List<Transaction>> getUnspentTransactions();
   Future removeUnspentTransactions(List<Transaction> mintIds);
   Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount);
-  Future addUnspentTransaction(Transaction transaction);
+  Future addUnspentTransaction(Transaction transaction, WalletAccount account);
 
-  Future clearAccountBalances();
-  Future setAccountBalance(Account balance);
-  Future<List<Account>> getAccountBalances();
+  Future clearAccountBalances(WalletAccount account);
+  Future setAccountBalance(Account balance, WalletAccount account);
+  Future<List<Account>> getAccountBalances(WalletAccount account);
   Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses});
   Future<List<Account>> getAccountBalancesForToken(String token);
   Future<List<AccountBalance>> getTotalBalances();
   Future<Account> getAccountBalanceForPubKey(String pubKey, String token);
 
-  Future addAddress(WalletAddress address);
+  Future<WalletAddress> addAddress(WalletAddress address);
   Future<bool> isOwnAddress(String pubKey);
   Future<WalletAddress> getWalletAddress(String pubKey);
   Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType);
-  Future<List<WalletAddress>> getWalletAddresses(int account);
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account);
   Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType);
   Future<bool> addressAlreadyUsed(String address);
+
+  Future<List<WalletAddress>> getWalletAddressesById(String uniqueId);
 
   int getAddressCreationCount();
 

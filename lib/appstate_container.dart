@@ -67,6 +67,8 @@ class StateContainerState extends State<StateContainer> {
   AppCenterWrapper appCenter;
   Logger get logger => LogHelper.instance;
 
+  GlobalKey<ScaffoldState> scaffoldKey;
+
   bool _walletSyncing = false;
 
   StreamSubscription<WalletInitStartEvent> _walletInitSubscribe;

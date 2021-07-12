@@ -1,10 +1,13 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:uuid/uuid.dart';
 import '../mock/transaction_service_mock.dart';
 import '../wallet_test_base.dart';
 
@@ -15,7 +18,9 @@ void main() async {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      await db.addAccount(name: "acc", account: 0, chain: ChainType.DeFiChain);
+      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      await db.addOrUpdateAccount(walletAccount);
+
       final tx = Transaction(
           id: "6026c7e3779edc3b788b6928",
           chain: "DFI",
@@ -27,17 +32,17 @@ void main() async {
           address: "toMR4jje52shBy5Mi5wEGWvAETLBCsZprw",
           value: 66904421465,
           confirmations: -1);
-      await db.addTransaction(tx);
-      await db.addUnspentTransaction(tx);
+      await db.addTransaction(tx, walletAccount);
+      await db.addUnspentTransaction(tx, walletAccount);
 
       final dfiAccount = Account(
           token: DeFiConstants.DefiAccountSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 24262150804, raw: "242.62150804@DFI", chain: "DFI", network: "testnet");
 
-      await db.setAccountBalance(dfiAccount);
+      await db.setAccountBalance(dfiAccount, walletAccount);
       final dfiToken = Account(
           token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 100000000, raw: "100000000@\$DFI", chain: "DFI", network: "testnet");
 
-      await db.setAccountBalance(dfiToken);
+      await db.setAccountBalance(dfiToken, walletAccount);
     }
 
     Future destoryTest() async {
@@ -54,7 +59,8 @@ void main() async {
 
       await wallet.init();
       final txController = sl.get<TransactionServiceMock>();
-      final tx = await wallet.prepareUtxoToAccountTransaction(240 * 100000000);
+      final to = await wallet.getPublicKey(true, AddressType.P2SHSegwit);
+      final tx = await wallet.prepareUtxoToAccountTransaction(to, 240 * 100000000);
       expect(tx, 240 * 100000000);
       expect(txController.lastTx, null);
       await destoryTest();
@@ -66,10 +72,11 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      await wallet.prepareUtxoToAccountTransaction(243 * 100000000);
+      final to = await wallet.getPublicKey(true, AddressType.P2SHSegwit);
+      await wallet.prepareUtxoToAccountTransaction(to, 243 * 100000000);
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
-          "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff0224944102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b870100000000249441020000000053d38e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f87024830450221009f5f792f26aa41e9730a59503cd60286cbd7ff14fa2083cafb7c739ae64ada6e0220774853dd60e36252baed56005ddc958196d934b57551acb214b2b1618600cedf012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
+          "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff020c984102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8701000000000c984102000000001dcb8e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f870247304402203b1f69baa507f118a3445d111d7b41ab83b6c38334803c29536a43b85978ce380220338b0477f647fc5a2ea54323bc9d3a6cec175a18e42f2e1aae5b969210fe7fad012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
       await destoryTest();
     });
   });

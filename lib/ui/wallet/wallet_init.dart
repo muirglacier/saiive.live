@@ -1,10 +1,12 @@
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wakelock/wakelock.dart';
 
 class WalletInitScreen extends StatefulWidget {
@@ -25,8 +27,13 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
       final wallet = sl.get<IWalletService>();
       await wallet.init();
 
-      await wallet.addAccount(name: "DFI0", account: 0, chain: ChainType.DeFiChain);
-      await wallet.addAccount(name: "BTC0", account: 0, chain: ChainType.Bitcoin);
+      final defaultDfiWalletAccount =
+          WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "DFI0", selected: true);
+      final defaultBtcWalletAccount =
+          WalletAccount(Uuid().v4(), id: 0, chain: ChainType.Bitcoin, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "BTC0", selected: true);
+
+      await wallet.addAccount(defaultDfiWalletAccount);
+      await wallet.addAccount(defaultBtcWalletAccount);
       await wallet.close();
 
       await wallet.init();

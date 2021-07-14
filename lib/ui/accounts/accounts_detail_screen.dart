@@ -47,13 +47,11 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
   Widget _buildWalletAddressWidget(BuildContext context, WalletAddress address) {
     return Card(
         child: ListTile(
-            trailing: Flexible(
-              child: IconButton(
-                  onPressed: () async {
-                    await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(chain: address.chain, pubKey: address.publicKey)));
-                  },
-                  icon: Icon(Icons.qr_code)),
-            ),
+            trailing: IconButton(
+                onPressed: () async {
+                  await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(chain: address.chain, pubKey: address.publicKey)));
+                },
+                icon: Icon(Icons.qr_code)),
             title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
               if (address.name != null) Text(address.name, style: Theme.of(context).textTheme.headline3),
               SizedBox(width: 10),
@@ -85,7 +83,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
                     shrinkWrap: true,
                     itemCount: _walletAddresses.length,
                     itemBuilder: (context, index) {
-                      return Expanded(child: _buildWalletAddressWidget(context, _walletAddresses.elementAt(index)));
+                      return _buildWalletAddressWidget(context, _walletAddresses.elementAt(index));
                     }))));
   }
 

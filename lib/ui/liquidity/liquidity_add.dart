@@ -114,51 +114,56 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   }
 
   _init() async {
-    var tokenMap = List<TokenBalance>.empty(growable: true);
-    var pairs = await sl.get<IPoolPairService>().getPoolPairs('DFI');
-    var uniqueTokenList = Map<String, String>();
+    try {
+      var tokenMap = List<TokenBalance>.empty(growable: true);
+      var pairs = await sl.get<IPoolPairService>().getPoolPairs('DFI');
+      var uniqueTokenList = Map<String, String>();
 
-    for (var i = 0; i < pairs.length; i++) {
-      var element = pairs[i];
+      for (var i = 0; i < pairs.length; i++) {
+        var element = pairs[i];
 
-      var symbol = element.symbol;
-      var symbolList = symbol.split('-');
+        var symbol = element.symbol;
+        var symbolList = symbol.split('-');
 
-      if (!uniqueTokenList.containsKey(element.idTokenA)) {
-        uniqueTokenList[element.idTokenA] = symbolList[0];
+        if (!uniqueTokenList.containsKey(element.idTokenA)) {
+          uniqueTokenList[element.idTokenA] = symbolList[0];
+        }
+
+        if (!uniqueTokenList.containsKey(element.idTokenB)) {
+          uniqueTokenList[element.idTokenB] = symbolList[1];
+        }
       }
 
-      if (!uniqueTokenList.containsKey(element.idTokenB)) {
-        uniqueTokenList[element.idTokenB] = symbolList[1];
+      var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
+      var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
+
+      if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
+        accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));
       }
+
+      uniqueTokenList.forEach((symbolKey, tokenId) {
+        var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
+        var finalBalance = account != null ? account.balance : 0;
+
+        if (account != null) {
+          tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
+        } else {
+          tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
+        }
+      });
+
+      _poolPairs = pairs;
+      _tokenMap = tokenMap;
+
+      setState(() {
+        _fromTokens = tokenMap;
+        _toTokens = tokenMap;
+        _isLoading = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).wallet_offline(e.toString()))));
+      sl.get<AppCenterWrapper>().trackEvent("addLiquidityInitError", <String, String>{'error': e.toString()});
     }
-
-    var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
-    var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
-
-    if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));
-    }
-
-    uniqueTokenList.forEach((symbolKey, tokenId) {
-      var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
-      var finalBalance = account != null ? account.balance : 0;
-
-      if (account != null) {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
-      } else {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
-      }
-    });
-
-    _poolPairs = pairs;
-    _tokenMap = tokenMap;
-
-    setState(() {
-      _fromTokens = tokenMap;
-      _toTokens = tokenMap;
-      _isLoading = false;
-    });
   }
 
   findPoolPair(TokenBalance tokenA, TokenBalance tokenB) {
@@ -592,6 +597,6 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquidity_add)),
-        body: Padding(padding: EdgeInsets.all(30), child: SingleChildScrollView(child: Expanded(child: _buildAddLmPage(context)))));
+        body: Padding(padding: EdgeInsets.all(30), child: SingleChildScrollView(child: _buildAddLmPage(context))));
   }
 }

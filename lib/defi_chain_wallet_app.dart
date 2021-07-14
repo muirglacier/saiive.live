@@ -1,6 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:logger/logger.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
 import 'package:saiive.live/ui/splash.dart';
@@ -36,7 +40,15 @@ void run() async {
 
   // Run app
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
-    runApp(new StateContainer(child: new SaiiveLiveApp()));
+    runZonedGuarded(() async {
+      runApp(new StateContainer(child: new SaiiveLiveApp())); // starting point of app
+    }, (error, stackTrace) {
+      LogHelper.instance.e("Unhandled Error!", error, stackTrace);
+      print("Error FROM OUT_SIDE FRAMEWORK ");
+      print("--------------------------------");
+      print("Error :  $error");
+      print("StackTrace :  $stackTrace");
+    });
   });
 }
 
@@ -48,6 +60,20 @@ class SaiiveLiveApp extends StatefulWidget {
 class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
   void init() {
     LogConsole.init();
+
+    Logger.addLogListener((e) {
+      try {
+        if (e.level == Level.error) {
+          sl.get<AppCenterWrapper>().trackEvent("logger", <String, String>{
+            'message': e.message,
+            'error': e.error,
+            'stackTrace': e.stackTrace.toString(),
+          });
+        }
+      } catch (e) {
+        //ignore
+      }
+    });
   }
 
   @override

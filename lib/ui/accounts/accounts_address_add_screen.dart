@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
@@ -106,22 +107,27 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
           Center(
             child: ElevatedButton(
               onPressed: () async {
-                if (_nameController.text != null && _nameController.text.isNotEmpty) {
-                  final walletService = sl.get<IWalletService>();
+                try {
+                  if (_nameController.text != null && _nameController.text.isNotEmpty) {
+                    final walletService = sl.get<IWalletService>();
 
-                  WalletAddress walletAddress;
-                  if (widget.isNewAddress) {
-                    walletAddress = await walletService.getNextWalletAddress(widget.walletAccount, false, _addressType);
-                    walletAddress.createdAt = DateTime.now();
-                  } else {
-                    walletAddress = widget.walletAddress;
+                    WalletAddress walletAddress;
+                    if (widget.isNewAddress) {
+                      walletAddress = await walletService.getNextWalletAddress(widget.walletAccount, false, _addressType);
+                      walletAddress.createdAt = DateTime.now();
+                    } else {
+                      walletAddress = widget.walletAddress;
+                    }
+
+                    walletAddress.name = _nameController.text;
+
+                    await walletService.updateAddress(walletAddress);
+
+                    Navigator.of(context).pop();
                   }
-
-                  walletAddress.name = _nameController.text;
-
-                  await walletService.updateAddress(walletAddress);
-
-                  Navigator.of(context).pop();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).wallet_offline(e.toString()))));
+                  sl.get<AppCenterWrapper>().trackEvent("addAccountAddressError", <String, String>{'error': e.toString()});
                 }
               },
               child: Text(widget.isNewAddress ? S.of(context).add : S.of(context).save),

@@ -118,6 +118,7 @@
   "wallet_accounts_add": "Konto anlegen",
   "wallet_accounts_edit": "Konto bearbeiten",
   "wallet_accounts_import": "Konto importieren",
+  "wallet_accounts_import_info": "Private Keys müssen im WIF Format sein. Public Keys als Legacy oder SegWit Adresse!",
   "wallet_accounts_import_priv_key_for_pub_key": "Möchtest du den PrivateKey für das ReadOnly Konto {pubKey} hinzufügen?",
   "wallet_accounts_import_invalid_pub_key": "Der Public Key ist ungültig!",
   "wallet_accounts_import_invalid_priv_key": "Der Private Key ist ungültig!",

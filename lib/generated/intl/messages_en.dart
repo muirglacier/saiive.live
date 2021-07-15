@@ -147,6 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_edit" : MessageLookupByLibrary.simpleMessage("Edit account"),
     "wallet_accounts_empty" : MessageLookupByLibrary.simpleMessage("No address created yet..."),
     "wallet_accounts_import" : MessageLookupByLibrary.simpleMessage("Import account"),
+    "wallet_accounts_import_info" : MessageLookupByLibrary.simpleMessage("Private Keys must be WIF formatted. Public Keys as Legacy oder SegWit addresses!"),
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),
     "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("The private key is invalid!"),
     "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("The public key is invalid!"),

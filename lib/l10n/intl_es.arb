@@ -120,6 +120,7 @@
   "wallet_accounts_add": "Add account",
   "wallet_accounts_edit": "Edit account",
   "wallet_accounts_import": "Import account",
+  "wallet_accounts_import_info": "Private Keys must be WIF formatted. Public Keys as Legacy oder SegWit addresses!",
   "wallet_accounts_import_priv_key_for_pub_key": "Do you want to import the Private Key for the existing account? ({pubKey})",
   "wallet_accounts_import_invalid_pub_key": "The public key is invalid!",
   "wallet_accounts_import_invalid_priv_key": "The private key is invalid!",

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qr_reader/qrcode_reader_view.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -16,6 +15,7 @@ import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/accounts/accounts_edit_screen.dart';
+import 'package:saiive.live/ui/utils/qr_code_scan.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:uuid/uuid.dart';
 
@@ -29,32 +29,11 @@ class AccountsImportScreen extends StatefulWidget {
 }
 
 class _AccountsImportScreen extends State<AccountsImportScreen> {
-  bool _cameraAllowed = false;
-
   final _keyController = TextEditingController();
-
-  _init() async {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      return;
-    }
-
-    var status = await Permission.camera.status;
-    if (!status.isGranted) {
-      final permission = await Permission.camera.request();
-
-      if (!permission.isGranted) {
-        return;
-      }
-    }
-    setState(() {
-      _cameraAllowed = true;
-    });
-  }
 
   @override
   initState() {
     super.initState();
-    _init();
   }
 
   popToAccountsPage() {
@@ -165,22 +144,11 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
   }
 
   _buildAccountAddScreen(BuildContext context) {
-    if (Platform.isAndroid || Platform.isLinux || Platform.isIOS) {
-      if (_cameraAllowed) {
-        return Center(
-            child: QrcodeReaderView(
-                onScan: onScan,
-                helpWidget: Container(),
-                headerWidget: AppBar(
-                  toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-                  backgroundColor: Colors.transparent,
-                  elevation: 0.0,
-                )));
-      }
-    }
     return Padding(
         padding: EdgeInsets.all(20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+          Text(S.of(context).wallet_accounts_import_info),
+          SizedBox(height: 20),
           TextFormField(
             controller: _keyController,
             // The validator receives the text that the user has entered.
@@ -190,6 +158,25 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
               }
               return null;
             },
+            decoration: Platform.isMacOS
+                ? InputDecoration(hintText: S.of(context).wallet_send_address)
+                : InputDecoration(
+                    hintText: S.of(context).wallet_send_address,
+                    suffixIcon: IconButton(
+                      onPressed: () async {
+                        var status = await Permission.camera.status;
+                        if (!status.isGranted) {
+                          final permission = await Permission.camera.request();
+
+                          if (!permission.isGranted) {
+                            return;
+                          }
+                        }
+                        final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
+                        _keyController.text = address;
+                      },
+                      icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
+                    )),
           ),
           SizedBox(height: 20),
           Center(

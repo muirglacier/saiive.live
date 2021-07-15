@@ -1085,6 +1085,16 @@ class S {
     );
   }
 
+  /// `Private Keys must be WIF formatted. Public Keys as Legacy oder SegWit addresses!`
+  String get wallet_accounts_import_info {
+    return Intl.message(
+      'Private Keys must be WIF formatted. Public Keys as Legacy oder SegWit addresses!',
+      name: 'wallet_accounts_import_info',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Do you want to import the Private Key for the existing account? ({pubKey})`
   String wallet_accounts_import_priv_key_for_pub_key(Object pubKey) {
     return Intl.message(

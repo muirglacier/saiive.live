@@ -208,10 +208,20 @@ class WalletService implements IWalletService {
       final walletAccount =
           WalletAccount(Uuid().v4(), id: 0, chain: chain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: ChainHelper.chainTypeString(chain), selected: true);
       await db.addOrUpdateAccount(walletAccount);
+
+      var walletAddress = await wallet.getNextWalletAddress(walletAccount, AddressType.P2SHSegwit, false);
+      walletAddress.name = ChainHelper.chainTypeString(chain);
+      await db.addAddress(walletAddress);
+    } else {
+      var i = 0;
+      for (var address in result.item2) {
+        address.name = ChainHelper.chainTypeString(chain) + " " + i.toString();
+        await db.addAddress(address);
+        i++;
+      }
     }
 
-    await wallet.init();
-    await wallet.syncAll();
+    await wallet.close();
     return result;
   }
 

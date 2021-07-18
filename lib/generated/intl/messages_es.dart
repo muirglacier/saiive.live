@@ -33,13 +33,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "add" : MessageLookupByLibrary.simpleMessage("Agregar"),
     "address" : MessageLookupByLibrary.simpleMessage("Habla a"),
     "advanced" : MessageLookupByLibrary.simpleMessage("Avanzada"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Por favor, autentícate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Error de autenticación biométrica"),
     "cancel" : MessageLookupByLibrary.simpleMessage("cancelar"),
     "dark_mode" : MessageLookupByLibrary.simpleMessage("Oscuro"),
+    "details" : MessageLookupByLibrary.simpleMessage("Detalles"),
     "dex" : MessageLookupByLibrary.simpleMessage("DEX"),
     "dex_add_max" : MessageLookupByLibrary.simpleMessage("max"),
     "dex_amount" : MessageLookupByLibrary.simpleMessage("Cantidad"),

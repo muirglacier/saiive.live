@@ -20,9 +20,10 @@
   "advanced": "Avanzada",
   "visibility": "Visibilidad",
   "address": "Habla a",
+  "details": "Detalles",
 
   "save": "Ahorrar",
-  "add": "Agregar",
+  "aDd": "Agregar",
   
   "dark_mode": "Oscuro",
   "light_mode": "Claro",

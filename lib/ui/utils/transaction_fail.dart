@@ -93,7 +93,8 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
         ),
         backgroundColor: Colors.red,
         body: Center(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+            child: SingleChildScrollView(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.error_outline_outlined, size: 50),
           Text(
             widget.text,
@@ -120,6 +121,6 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
                 },
                 child: Icon(Icons.share, size: 26.0, color: Colors.white),
               ))
-        ])));
+        ]))));
   }
 }

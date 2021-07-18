@@ -127,7 +127,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
         } else {
           Navigator.of(context).push(MaterialPageRoute(
               settings: RouteSettings(name: "/accountsEditScreen"),
-              builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, p2sh, AddressType.Legacy, privateKey: data)));
+              builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, p2sh, AddressType.P2SHSegwit, privateKey: data)));
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

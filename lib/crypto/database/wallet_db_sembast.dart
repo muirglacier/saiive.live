@@ -226,7 +226,11 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future<WalletAccount> getAccount(String uniqueId) async {
     var db = await database;
 
-    var walletAccount = WalletAccount.fromJson(await _accountV2StoreInstance.record(uniqueId).get(db));
+    var account = await _accountV2StoreInstance.record(uniqueId).get(db);
+    if (account == null) {
+      return null;
+    }
+    var walletAccount = WalletAccount.fromJson(account);
 
     return walletAccount;
   }

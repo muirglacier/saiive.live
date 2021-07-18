@@ -70,10 +70,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await sl.get<IWalletService>().destroy();
 
     Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
-
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(S.of(context).settings_removed_seed),
-    ));
   }
 
   Future doChainNetSwitch(ChainNet net, ChainNet old) async {

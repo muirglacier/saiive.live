@@ -58,7 +58,8 @@ class HdWallet extends IHdWallet {
     }
 
     final seed = HEX.decode(_seed);
-    await _checkAndCreateIfExists(walletDatabase, seed, 0, true, AddressType.Legacy);
+    // await _checkAndCreateIfExists(walletDatabase, seed, 0, true, AddressType.Legacy);
+
     for (int i = 0; i < walletDatabase.getAddressCreationCount(); i++) {
       await _checkAndCreateIfExists(walletDatabase, seed, i, true, AddressType.P2SHSegwit);
       await _checkAndCreateIfExists(walletDatabase, seed, i, false, AddressType.P2SHSegwit);
@@ -184,7 +185,7 @@ class HdWallet extends IHdWallet {
 
     final account = await database.getAccount(this._account.uniqueId);
 
-    if (account.selected) {
+    if (account != null && account.selected) {
       await _syncWallet(database, (addresses, pos, max) async {
         loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
         final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
@@ -201,11 +202,12 @@ class HdWallet extends IHdWallet {
     newUtxos.forEach((element) async {
       await database.addUnspentTransaction(element, account);
     });
-
-    await database.clearAccountBalances(account);
-    for (final acc in newBalance) {
-      for (final element in acc.accounts) {
-        await database.setAccountBalance(element, account);
+    if (account != null) {
+      await database.clearAccountBalances(account);
+      for (final acc in newBalance) {
+        for (final element in acc.accounts) {
+          await database.setAccountBalance(element, account);
+        }
       }
     }
 

@@ -13,6 +13,7 @@ import 'package:saiive.live/network/model/block.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -377,12 +378,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
             Padding(
                 padding: EdgeInsets.only(right: 10.0),
                 child: GestureDetector(
-                  onTap: () async {
-                    var wallet = sl.get<IWalletService>();
-                    var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain, AddressType.P2SHSegwit);
-                    var pubKeyBTC = await wallet.getPublicKey(ChainType.Bitcoin, AddressType.P2SHSegwit);
-
-                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletHomeReceiveScreen(pubKeyDFI: pubKeyDFI, pubKeyBTC: pubKeyBTC)));
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsScreen()));
                   },
                   child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),

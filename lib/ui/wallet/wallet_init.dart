@@ -1,6 +1,7 @@
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
@@ -37,6 +38,15 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
       await wallet.close();
 
       await wallet.init();
+
+      var walletAddress = await wallet.getNextWalletAddress(defaultDfiWalletAccount, false, AddressType.P2SHSegwit);
+      walletAddress.name = ChainHelper.chainTypeString(ChainType.DeFiChain);
+      await wallet.updateAddress(walletAddress);
+
+      var btcWalletAddress = await wallet.getNextWalletAddress(defaultBtcWalletAccount, false, AddressType.P2SHSegwit);
+      btcWalletAddress.name = ChainHelper.chainTypeString(ChainType.Bitcoin);
+      await wallet.updateAddress(btcWalletAddress);
+
       Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
     } finally {
       Wakelock.disable();

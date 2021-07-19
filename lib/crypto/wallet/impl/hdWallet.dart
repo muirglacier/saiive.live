@@ -217,17 +217,19 @@ class HdWallet extends IHdWallet {
   @override
   Future syncWalletTransactions(IWalletDatabase database, {StreamController<String> loadingStream}) async {
     final account = await database.getAccount(this._account.uniqueId);
-    await database.clearTransactions(account);
+    if (account != null) {
+      await database.clearTransactions(account);
 
-    loadingStream?.add(S.current.wallet_operation_refresh_utxo);
-    await _syncWallet(database, (addresses, pos, max) async {
-      loadingStream?.add(S.current.wallet_operation_refresh_tx(pos, max));
-      final txs = await _apiService.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(_chain), addresses);
+      loadingStream?.add(S.current.wallet_operation_refresh_utxo);
+      await _syncWallet(database, (addresses, pos, max) async {
+        loadingStream?.add(S.current.wallet_operation_refresh_tx(pos, max));
+        final txs = await _apiService.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(_chain), addresses);
 
-      txs.forEach((element) async {
-        await database.addTransaction(element, account);
-      });
-    }, loadingStream: loadingStream);
-    loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+        txs.forEach((element) async {
+          await database.addTransaction(element, account);
+        });
+      }, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+    }
   }
 }

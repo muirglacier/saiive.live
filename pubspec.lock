@@ -385,6 +385,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  group_list_view:
+    dependency: "direct main"
+    description:
+      name: group_list_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   hex:
     dependency: transitive
     description:
@@ -697,13 +704,6 @@ packages:
     dependency: transitive
     description:
       name: pub_semver
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  pull_to_refresh:
-    dependency: "direct main"
-    description:
-      name: pull_to_refresh
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"

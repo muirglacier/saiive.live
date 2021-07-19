@@ -16,6 +16,7 @@ abstract class IWalletDatabase {
   @deprecated
   Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false});
   Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount);
+  Future removeAccount(WalletAccount walletAccount);
 
   Future clearTransactions(WalletAccount account);
   Future<List<Transaction>> getTransactions(WalletAccount account);
@@ -23,7 +24,7 @@ abstract class IWalletDatabase {
   Future addTransaction(Transaction transaction, WalletAccount account);
 
   Future clearUnspentTransactions(WalletAccount account);
-  Future<List<Transaction>> getUnspentTransactions();
+  Future<List<Transaction>> getUnspentTransactions({bool spentable = true});
   Future removeUnspentTransactions(List<Transaction> mintIds);
   Future<List<Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount);
   Future addUnspentTransaction(Transaction transaction, WalletAccount account);
@@ -31,9 +32,9 @@ abstract class IWalletDatabase {
   Future clearAccountBalances(WalletAccount account);
   Future setAccountBalance(Account balance, WalletAccount account);
   Future<List<Account>> getAccountBalances(WalletAccount account);
-  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses});
+  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses, bool spentable = true});
   Future<List<Account>> getAccountBalancesForToken(String token);
-  Future<List<AccountBalance>> getTotalBalances();
+  Future<List<AccountBalance>> getTotalBalances({bool spentable = true});
   Future<Account> getAccountBalanceForPubKey(String pubKey, String token);
 
   Future<WalletAddress> addAddress(WalletAddress address);

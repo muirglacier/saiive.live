@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -10,6 +11,7 @@ import 'package:saiive.live/ui/accounts/accounts_address_add_screen.dart';
 import 'package:saiive.live/ui/wallet/wallet_receive.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 class AccountsDetailScreen extends StatefulWidget {
   final WalletAccount walletAccount;
@@ -87,21 +89,62 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
                     }))));
   }
 
-  _buildActionsButton(BuildContext context) {
-    if (widget.walletAccount.walletAccountType != WalletAccountType.HdAccount) {
-      return null;
-    }
+  List<Widget> _buildActionsButton(BuildContext context) {
     return [
-      Padding(
-          padding: EdgeInsets.only(right: 15.0),
-          child: GestureDetector(
-            onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddressAddScreen(widget.walletAccount, true)));
+      if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount)
+        Padding(
+            padding: EdgeInsets.only(right: 15.0),
+            child: GestureDetector(
+              onTap: () async {
+                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddressAddScreen(widget.walletAccount, true)));
 
-              await _init();
-            },
-            child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-          ))
+                await _init();
+              },
+              child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+            )),
+      if (widget.walletAccount.walletAccountType != WalletAccountType.HdAccount && widget.walletAccount.id != 0)
+        Padding(
+            padding: EdgeInsets.only(right: 15.0),
+            child: GestureDetector(
+              onTap: () async {
+                Widget okButton = TextButton(
+                  child: Text(S.of(context).ok),
+                  onPressed: () async {
+                    final walletDbFactory = sl.get<IWalletDatabaseFactory>();
+                    final currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+                    final walletDb = await walletDbFactory.getDatabase(widget.walletAccount.chain, currentNet);
+
+                    await walletDb.removeAccount(widget.walletAccount);
+
+                    Navigator.of(context, rootNavigator: true).popUntil(ModalRoute.withName("/home"));
+
+                    // await doChainNetSwitch(net, _curNet);
+                  },
+                );
+                Widget cancelButton = TextButton(
+                  child: Text(S.of(context).cancel),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                );
+
+                // set up the AlertDialog
+                AlertDialog alert = AlertDialog(
+                  title: Text(S.of(context).delete),
+                  content: Text(S.of(context).wallet_accounts_delete),
+                  actions: [okButton, cancelButton],
+                );
+
+                // show the dialog
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
+              },
+              child: Icon(Icons.delete, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+            ))
     ];
   }
 

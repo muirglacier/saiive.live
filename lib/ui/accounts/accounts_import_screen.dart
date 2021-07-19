@@ -84,20 +84,44 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
     LogHelper.instance.d(data);
 
     final currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    final walletDbFactory = sl.get<IWalletDatabaseFactory>();
+    final walletDb = await walletDbFactory.getDatabase(widget.chainType, currentNet);
 
     //propably a publicKey
     if (data.length == 34) {
+      final isOwnAddress = await walletDb.isOwnAddress(data);
+
+      if (isOwnAddress) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(S.of(context).wallet_accounts_key_already_imported),
+        ));
+        Navigator.popUntil(context, ModalRoute.withName('/home'));
+        return;
+      }
+
       if (HdWalletUtil.isAddressValid(data, widget.chainType, currentNet)) {
         final walletAccount = WalletAccount(Uuid().v4(),
             id: -1,
             chain: widget.chainType,
             account: -1,
+            selected: true,
             walletAccountType: WalletAccountType.PublicKey,
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 
+        var addressType = HdWalletUtil.getAddressType(data, widget.chainType, currentNet);
+
+        if (addressType == null || addressType == AddressType.Legacy) {
+          //TODO: Change as soon as we support legacy addresses
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(S.of(context).wallet_accounts_import_unsupported_key),
+          ));
+
+          return;
+        }
+
         Navigator.of(context).push(MaterialPageRoute(
             settings: RouteSettings(name: "/accountsEditScreen"),
-            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, data, AddressType.Legacy, privateKey: null)));
+            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, data, AddressType.P2SHSegwit, privateKey: null)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_accounts_import_invalid_pub_key),
@@ -116,8 +140,6 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 
         var p2sh = HdWalletUtil.getPublicAddressFromWif(data, widget.chainType, currentNet, AddressType.P2SHSegwit);
-        final walletDbFactory = sl.get<IWalletDatabaseFactory>();
-        final walletDb = await walletDbFactory.getDatabase(widget.chainType, currentNet);
 
         final isOwnAddress = await walletDb.isOwnAddress(p2sh);
 

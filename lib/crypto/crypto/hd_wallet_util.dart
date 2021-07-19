@@ -101,11 +101,37 @@ class HdWalletUtil {
     return address;
   }
 
-  static String _getPublicAddressFromKeyPair(Uint8List publicKey, ChainType chainType, ChainNet network, AddressType addressType) {
-    final net = getNetworkType(chainType, network);
-    final address = P2SH(data: PaymentData(redeem: P2WPKH(data: PaymentData(pubkey: publicKey), network: net).data), network: net).data.address;
-
-    return address;
+  static AddressType getAddressType(String address, ChainType chain, ChainNet network) {
+    if (chain == ChainType.Bitcoin) {
+      if (network == ChainNet.Mainnet) {
+        if (address.startsWith("3")) {
+          return AddressType.P2SHSegwit;
+        } else if (address.startsWith("1")) {
+          return AddressType.Legacy;
+        }
+      } else {
+        if (address.startsWith("2")) {
+          return AddressType.P2SHSegwit;
+        } else if (address.startsWith("m") || address.startsWith("n")) {
+          return AddressType.Legacy;
+        }
+      }
+    } else if (chain == ChainType.DeFiChain) {
+      if (network == ChainNet.Mainnet) {
+        if (address.startsWith("d")) {
+          return AddressType.P2SHSegwit;
+        } else if (address.startsWith("8")) {
+          return AddressType.Legacy;
+        }
+      } else {
+        if (address.startsWith("t")) {
+          return AddressType.P2SHSegwit;
+        } else if (address.startsWith("7")) {
+          return AddressType.Legacy;
+        }
+      }
+    }
+    return null;
   }
 
   static NetworkType getNetworkType(ChainType chain, ChainNet network) {
@@ -128,6 +154,10 @@ class HdWalletUtil {
     var network = getNetworkType(chain, net);
 
     assert(inputTxs.length == keys.length);
+
+    if (inputTxs.length != keys.length) {
+      throw new ArgumentError("InputTxs and Keys need to have the same size!");
+    }
 
     final txb = TransactionBuilder(network: network);
     txb.setVersion(2);
@@ -174,56 +204,6 @@ class HdWalletUtil {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
       final redeemScript = p2wpkh.output;
       final witnessValue = inputTxs[index].valueRaw;
-
-      txb.sign(vin: index, keyPair: key, witnessValue: witnessValue, redeemScript: redeemScript);
-      index++;
-    }
-
-    return txb.build().toHex();
-  }
-
-  static Future<String> buildAccountToUtxosTransaction(List<tx.Transaction> inputTxs, List<ECPair> keys, String to, int amount, int fee, String returnAddress,
-      Function(TransactionBuilder, NetworkType) additional, ChainType chain, ChainNet net) async {
-    var network = getNetworkType(chain, net);
-
-    assert(inputTxs.length == keys.length);
-
-    final txb = TransactionBuilder(network: network);
-    txb.setVersion(2);
-    txb.setLockTime(0);
-
-    int totalInputValue = 0;
-    for (final tx in inputTxs) {
-      txb.addInput(tx.mintTxId, tx.mintIndex);
-
-      final mintTxId = tx.mintTxId;
-      final mintIndex = tx.mintIndex;
-      final inValue = tx.value;
-      LogHelper.instance.d("set tx input $mintTxId@$mintIndex input value is $inValue");
-
-      totalInputValue += tx.valueRaw;
-    }
-
-    if (totalInputValue > (amount)) {
-      var changeAmount = totalInputValue - amount - fee;
-      txb.addOutput(returnAddress, changeAmount);
-      LogHelper.instance.d("set tx output (change) $returnAddress value is $changeAmount");
-    }
-    if (amount > 0) {
-      txb.addOutput(to, amount);
-      LogHelper.instance.d("set tx output $to value is $amount");
-    }
-
-    additional(txb, network);
-
-    int index = 0;
-    for (final key in keys) {
-      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
-      final redeemScript = p2wpkh.output;
-      final pubKey = _getPublicAddressFromKeyPair(key.publicKey, chain, net, AddressType.P2SHSegwit);
-      final input = inputTxs[index].mintTxId;
-      final witnessValue = inputTxs[index].valueRaw;
-      LogHelper.instance.d("sign tx $input with privateKey from $pubKey witnessValue. $witnessValue");
 
       txb.sign(vin: index, keyPair: key, witnessValue: witnessValue, redeemScript: redeemScript);
       index++;

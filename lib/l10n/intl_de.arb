@@ -15,6 +15,7 @@
   "ok": "Ok",
   "label": "Label",
   "advanced": "Erweitert",
+  "delete": "Löschen",
 
   "save": "Speichern",
   "add": "Hinzufügen",
@@ -111,6 +112,9 @@
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
   "wallet_accounts": "Konten",
+  "wallet_accounts_readonly": "Nur Lesen",
+  "wallet_accounts_spentable": "Versendbar",
+  "wallet_accounts_delete": "Möchtest du dieses Konto löschen?",
   "wallet_accounts_detail": "Konto Details",
   "wallet_accounts_empty": "Keine Adressen angelegt...",
   "wallet_accounts_address_add": "Neue Adresse anlegen",
@@ -119,11 +123,13 @@
   "wallet_accounts_add": "Konto anlegen",
   "wallet_accounts_edit": "Konto bearbeiten",
   "wallet_accounts_import": "Konto importieren",
-  "wallet_accounts_import_info": "Private Keys müssen im WIF Format sein. Public Keys als Legacy oder SegWit Adresse!",
+  "wallet_accounts_import_info": "Private Keys müssen im WIF Format sein. Public Keys als P2SH Adresse!",
   "wallet_accounts_import_priv_key_for_pub_key": "Möchtest du den PrivateKey für das ReadOnly Konto {pubKey} hinzufügen?",
   "wallet_accounts_import_invalid_pub_key": "Der Public Key ist ungültig!",
+  "wallet_accounts_import_unsupported_key": "Der Public Key wird nicht unterstützt!",
   "wallet_accounts_import_invalid_priv_key": "Der Private Key ist ungültig!",
   "wallet_accounts_import_invalid": "Der Inhalt ist ungültig!",
+  "wallet_accounts_key_already_imported": "Der Schlüssel ist bereits importiert!",
   "wallet_accounts_cannot_be_empty": "Das Feld darf nicht leer sein!",
   "wallet_accounts_saved": "Konto wurde gespeichert",
 

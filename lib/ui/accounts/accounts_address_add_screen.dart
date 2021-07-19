@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
-import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';

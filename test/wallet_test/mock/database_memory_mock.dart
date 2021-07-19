@@ -91,9 +91,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
+  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses, bool spentable = true}) async {
     if (token == DeFiConstants.DefiTokenSymbol) {
-      final unspentTx = await getUnspentTransactions();
+      final unspentTx = await getUnspentTransactions(spentable: spentable);
       var amount = 0;
 
       for (final unspent in unspentTx) {
@@ -136,7 +136,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   // ignore: override_on_non_overriding_member
-  Future<List<AccountBalance>> getTotalBalances() {
+  Future<List<AccountBalance>> getTotalBalances({bool spentable = true}) {
     throw UnimplementedError();
   }
 
@@ -157,7 +157,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<Transaction>> getUnspentTransactions() {
+  Future<List<Transaction>> getUnspentTransactions({bool spentable = true}) {
     _transactions.sort((a, b) => b.valueRaw.compareTo(a.valueRaw));
     return Future.value(_transactions);
   }
@@ -278,5 +278,11 @@ class MemoryDatabaseMock extends IWalletDatabase {
     }
 
     return false;
+  }
+
+  @override
+  Future removeAccount(WalletAccount walletAccount) {
+    // TODO: implement removeAccount
+    throw UnimplementedError();
   }
 }

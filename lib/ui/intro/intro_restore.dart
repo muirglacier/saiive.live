@@ -38,6 +38,8 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
 
       if (Platform.isAndroid || Platform.isWindows) {
         demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+        demoWords2 =
+            "ask shuffle liar build hero pyramid soccer explain arrive ball walk prevent decade fantasy reveal airport course cost blue festival clerk between market depart";
       }
       //demoWords2 = "capital sick crisp frozen dial black syrup burden fruit loan material wheel giraffe slight sentence long cancel quit parrot arena wine island mutual praise";
       // demoWords2 = "";

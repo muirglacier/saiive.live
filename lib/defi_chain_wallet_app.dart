@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
 import 'package:saiive.live/ui/splash.dart';
@@ -118,6 +119,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     ThemeData theme = ThemeData();
 
     return MaterialApp(
+        navigatorKey: NavigationHelper.navigatorKey,
         navigatorObservers: [SaiiveRouteObserver()],
         debugShowCheckedModeBanner: env["ENV"] == "dev",
         localizationsDelegates: [

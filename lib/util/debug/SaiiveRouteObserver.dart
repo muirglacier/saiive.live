@@ -8,6 +8,8 @@ class SaiiveRouteObserver extends RouteObserver<PageRoute<dynamic>> {
 
     if (route is NoTransitionRoute) {
       LogHelper.instance.d("[Navigation] RouteName: $screenName Route to " + route.builder.toString());
+    } else if (route is MaterialPageRoute) {
+      LogHelper.instance.d("[Navigation] RouteName: $screenName Route to " + route.builder.toString());
     }
 
     // do something with it, ie. send it to your analytics service collector

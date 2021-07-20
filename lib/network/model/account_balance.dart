@@ -53,6 +53,8 @@ class MixedAccountBalance extends AccountBalance {
   int utxoBalance = 0;
   int tokenBalance = 0;
 
+  int get totalBalance => utxoBalance + tokenBalance;
+
   double get utxoBalanceDisplay => utxoBalance / DefiChainConstants.COIN;
   double get tokenBalanceDisplay => tokenBalance / DefiChainConstants.COIN;
 

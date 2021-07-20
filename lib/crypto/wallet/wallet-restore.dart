@@ -39,9 +39,14 @@ class WalletRestore {
         final account = WalletAccount(Uuid().v4(),
             name: ChainHelper.chainTypeString(chain) + (i + 1).toString(), id: i, account: i, chain: chain, walletAccountType: WalletAccountType.HdAccount, selected: true);
         final p2sh = await _restore(account, key, api, chain, network, AddressType.P2SHSegwit);
-        final legacy = await _restore(account, key, api, chain, network, AddressType.Legacy);
+
+        //TODO: Change as soon as we support legacy addresses
+        // final legacy = await _restore(account, key, api, chain, network, AddressType.Legacy);
+
         final result = List<WalletAddress>.from(p2sh);
-        result.addAll(legacy);
+
+        //TODO: Change as soon as we support legacy addresses
+        // result.addAll(legacy);
 
         if (result.isEmpty) {
           max--;

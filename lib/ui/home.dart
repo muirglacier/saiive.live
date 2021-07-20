@@ -41,8 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
       NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen(), routeSettingName: "/home"),
       NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(), routeSettingName: "/liqudity"),
       NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(), routeSettingName: "/dex"),
-      NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen(), routeSettingName: "/tokens"),
-      NavigationEntry(icon: Icon(Icons.account_box), label: S.of(context).wallet_accounts, page: AccountsScreen(), visibleForBottomNav: false, routeSettingName: "/accounts"),
+      NavigationEntry(icon: Icon(Icons.account_box), label: S.of(context).wallet_accounts, page: AccountsScreen(), visibleForBottomNav: true, routeSettingName: "/accounts"),
+      NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen(), visibleForBottomNav: false, routeSettingName: "/tokens"),
       NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen(), visibleForBottomNav: false, routeSettingName: "/settings")
     ];
   }

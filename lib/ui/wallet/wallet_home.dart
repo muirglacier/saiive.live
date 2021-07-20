@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
+import 'package:group_list_view/group_list_view.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
-import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/events.dart';
@@ -13,10 +14,10 @@ import 'package:saiive.live/network/model/block.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
-import 'package:saiive.live/ui/wallet/wallet_home_receive.dart';
 import 'package:saiive.live/ui/wallet/wallet_token.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
@@ -24,7 +25,6 @@ import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class WalletHomeScreen extends StatefulWidget {
   @override
@@ -48,14 +48,12 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   bool _isSyncing = false;
 
   List<AccountBalance> _accountBalance;
-  RefreshController _refreshController = RefreshController(initialRefresh: true);
+  List<AccountBalance> _readonlyAccountBalance;
 
   _refresh() async {
     EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
     sl.get<IHealthService>().checkHealth(context);
-
-    _refreshController.refreshCompleted();
   }
 
   _initWallet() async {
@@ -63,11 +61,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       _walletSyncStartEvent = EventTaxiImpl.singleton().registerTo<WalletSyncStartEvent>().listen((event) async {
         final syncText = S.of(context).home_welcome_account_syncing;
 
-        var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+        final balanceHelper = new BalanceHelper();
+        var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
+        var readonlyAccountBalance = await balanceHelper.getDisplayAccountBalance(spentable: false);
 
         _controller.forward();
         setState(() {
           _accountBalance = accountBalance;
+          _readonlyAccountBalance = readonlyAccountBalance;
           _syncText = syncText;
 
           _isSyncing = true;
@@ -77,10 +78,13 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     if (_walletInitDoneSubscription == null) {
       _walletInitDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletInitDoneEvent>().listen((event) async {
-        var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+        final balanceHelper = new BalanceHelper();
+        var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
+        var readonlyAccountBalance = await balanceHelper.getDisplayAccountBalance(spentable: false);
 
         setState(() {
           _accountBalance = accountBalance;
+          _readonlyAccountBalance = readonlyAccountBalance;
         });
 
         _initSyncText();
@@ -99,8 +103,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
         if (accounts.length == 0) {
           Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
         }
-
-        var accountBalance = await new BalanceHelper().getDisplayAccountBalance();
+        final balanceHelper = new BalanceHelper();
+        var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
+        var readonlyAccountBalance = await balanceHelper.getDisplayAccountBalance(spentable: false);
 
         setState(() {
           _controller.stop();
@@ -110,6 +115,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
           _syncText = S.of(context).home_welcome_account_synced;
           _accountBalance = accountBalance;
+          _readonlyAccountBalance = readonlyAccountBalance;
         });
       });
     }
@@ -121,8 +127,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
         });
       });
     }
-
-    _refreshController.loadComplete();
   }
 
   _initLastSyncedBlock() async {
@@ -174,6 +178,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     _syncEvents();
     _initWallet();
     _initLastSyncedBlock();
+    _refresh();
 
     _welcomeText = "Welcome";
   }
@@ -286,25 +291,67 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     ));
   }
 
-  buildWalletScreen(BuildContext context) {
-    if (_accountBalance == null) {
+  buildMultiWalletScreen(BuildContext context) {
+    if (_accountBalance == null || _readonlyAccountBalance == null) {
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    if (_accountBalance.isEmpty) {
-      return Padding(padding: EdgeInsets.all(30), child: Row(children: [Text(S.of(context).wallet_empty)]));
+    var map = {S.of(context).wallet_accounts_spentable: _accountBalance};
+
+    if (_readonlyAccountBalance.isNotEmpty) {
+      map.putIfAbsent(S.of(context).wallet_accounts_readonly, () => _readonlyAccountBalance);
     }
 
+    return buildGroupedList(context, map);
+  }
+
+  buildGroupedList(BuildContext context, Map<String, List<AccountBalance>> items) {
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: RefreshIndicator(
+            onRefresh: () async {
+              return await _refresh();
+            },
+            child: GroupListView(
+              sectionsCount: items.keys.toList().length,
+              countOfItemInSection: (int section) {
+                return items.values.toList()[section].length;
+              },
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, IndexPath index) {
+                return _buildAccountEntry(items.values.toList()[index.section][index.index]);
+              },
+              groupHeaderBuilder: (BuildContext context, int section) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  child: Text(
+                    items.keys.toList()[section],
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                );
+              },
+              dragStartBehavior: DragStartBehavior.down,
+              separatorBuilder: (context, index) => SizedBox(height: 5),
+              sectionSeparatorBuilder: (context, section) => SizedBox(height: 5),
+            )));
+  }
+
+  buildWalletScreen(BuildContext context, bool useReadonlyData) {
+    var balances = _accountBalance;
+
+    if (useReadonlyData) {
+      balances = _readonlyAccountBalance;
+    }
     return Padding(
         padding: EdgeInsets.all(30),
         child: CustomScrollView(physics: BouncingScrollPhysics(), scrollDirection: Axis.vertical, slivers: <Widget>[
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                final account = _accountBalance.elementAt(index);
+                final account = balances.elementAt(index);
                 return _buildAccountEntry(account);
               },
-              childCount: _accountBalance.length,
+              childCount: balances.length,
             ),
           )
         ]));
@@ -377,12 +424,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
             Padding(
                 padding: EdgeInsets.only(right: 10.0),
                 child: GestureDetector(
-                  onTap: () async {
-                    var wallet = sl.get<IWalletService>();
-                    var pubKeyDFI = await wallet.getPublicKey(ChainType.DeFiChain, AddressType.P2SHSegwit);
-                    var pubKeyBTC = await wallet.getPublicKey(ChainType.Bitcoin, AddressType.P2SHSegwit);
-
-                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletHomeReceiveScreen(pubKeyDFI: pubKeyDFI, pubKeyBTC: pubKeyBTC)));
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsScreen(allowChangeVisibility: false, allowImport: false)));
                   },
                   child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),
@@ -396,7 +439,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 ))
           ],
         ),
-        body: SmartRefresher(
-            controller: _refreshController, enablePullDown: true, enablePullUp: true, onRefresh: _refresh, onLoading: _initWallet, child: buildWalletScreen(context)));
+        body: buildMultiWalletScreen(context));
   }
 }

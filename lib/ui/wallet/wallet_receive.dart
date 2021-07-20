@@ -2,6 +2,7 @@ import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/ui/widgets/wallet_receive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _WalletReceiveState extends State<WalletReceiveScreen> {
                   child: GestureDetector(
                     onTap: () {
                       ClipboardManager.copyToClipBoard(widget.pubKey).then((result) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
                           content: Text(S.of(context).receive_address_copied_to_clipboard),
                         ));
                       });

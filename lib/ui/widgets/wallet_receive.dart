@@ -8,8 +8,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 class WalletReceiveWidget extends StatefulWidget {
   final String pubKey;
   final ChainType chain;
+  final bool showOnlyQr;
 
-  WalletReceiveWidget({this.pubKey, this.chain});
+  WalletReceiveWidget({this.pubKey, this.chain, this.showOnlyQr = false});
 
   _WalletReceiveWidgetState createState() => _WalletReceiveWidgetState();
 }
@@ -23,7 +24,7 @@ class _WalletReceiveWidgetState extends State<WalletReceiveWidget> {
           child: Column(children: [
             Container(
                 child: Column(children: [
-              Text(S.of(context).wallet_receive_warning(ChainHelper.chainTypeString(widget.chain)), style: TextStyle(fontWeight: FontWeight.bold)),
+              if (!widget.showOnlyQr) Text(S.of(context).wallet_receive_warning(ChainHelper.chainTypeString(widget.chain)), style: TextStyle(fontWeight: FontWeight.bold)),
               ConstrainedBox(
                   constraints: BoxConstraints(minWidth: 100, maxWidth: 200),
                   child: QrImage(

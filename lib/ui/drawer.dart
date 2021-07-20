@@ -64,32 +64,31 @@ class _SaiiveDrawer extends State<SaiiveDrawer> {
           ])
         ]),
       ),
-      Expanded(
-          child: Scrollbar(
-              child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  padding: EdgeInsets.only(bottom: 100),
-                  shrinkWrap: true,
-                  itemCount: widget.navEntries.length,
-                  itemBuilder: (context, index) {
-                    final navItem = widget.navEntries[index];
-                    return ListTile(
-                        title: Row(
-                          children: [
-                            Icon(navItem.icon.icon, color: StateContainer.of(context).curTheme.text),
-                            Padding(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Text(
-                                  navItem.label,
-                                  style: TextStyle(color: StateContainer.of(context).curTheme.text),
-                                ))
-                          ],
-                        ),
-                        onTap: () {
-                          widget.selectionCallback(navItem);
-                        });
-                  })))
+      Scrollbar(
+          child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              padding: EdgeInsets.only(bottom: 100),
+              shrinkWrap: true,
+              itemCount: widget.navEntries.length,
+              itemBuilder: (context, index) {
+                final navItem = widget.navEntries[index];
+                return ListTile(
+                    title: Row(
+                      children: [
+                        Icon(navItem.icon.icon, color: StateContainer.of(context).curTheme.text),
+                        Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Text(
+                              navItem.label,
+                              style: TextStyle(color: StateContainer.of(context).curTheme.text),
+                            ))
+                      ],
+                    ),
+                    onTap: () {
+                      widget.selectionCallback(navItem);
+                    });
+              }))
     ]));
   }
 }

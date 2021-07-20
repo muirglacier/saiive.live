@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +20,11 @@ import 'accounts_import_screen.dart';
 class AccountsScreen extends StatefulWidget {
   final allowChangeVisibility;
   final allowImport;
-  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true});
+
+  final useOnlyFilter;
+  final ChainType chainType;
+
+  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true, this.useOnlyFilter = false, this.chainType = ChainType.DeFiChain});
 
   @override
   State<StatefulWidget> createState() => _AccountScreen();
@@ -47,14 +54,20 @@ class _AccountScreen extends State<AccountsScreen> {
         account.selected = !account.selected;
       });
     } else {
-      await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsDetailScreen(account)));
+      await Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: "/accountsDetails"), builder: (BuildContext context) => AccountsDetailScreen(account)));
+
+      await _init();
     }
   }
 
-  void _init() async {
+  Future _init() async {
     _walletService = sl.get<IWalletService>();
 
     var accounts = await _walletService.getAccounts();
+
+    if (widget.useOnlyFilter) {
+      accounts = accounts.where((element) => element.chain == widget.chainType).toList();
+    }
 
     setState(() {
       _walletAccounts = accounts;
@@ -104,7 +117,7 @@ class _AccountScreen extends State<AccountsScreen> {
           color: Theme.of(context).primaryColor,
         ),
         SizedBox(width: 10),
-        Text(account.name, style: Theme.of(context).textTheme.headline3)
+        AutoSizeText(account.name, style: Theme.of(context).textTheme.headline3)
       ]);
     } else {
       return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -113,7 +126,7 @@ class _AccountScreen extends State<AccountsScreen> {
           color: Theme.of(context).primaryColor,
         ),
         SizedBox(width: 10),
-        Text(account.name, style: Theme.of(context).textTheme.headline3)
+        AutoSizeText(account.name, style: Theme.of(context).textTheme.headline3)
       ]);
     }
   }
@@ -184,7 +197,19 @@ class _AccountScreen extends State<AccountsScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Text(S.of(context).wallet_accounts),
+          title: Row(children: [
+            if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+              Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      var key = StateContainer.of(context).scaffoldKey;
+                      key.currentState.openDrawer();
+                    },
+                    child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
+            Text(S.of(context).wallet_accounts)
+          ]),
           actions: [
             // Padding(
             //     padding: EdgeInsets.only(right: 15.0),
@@ -202,12 +227,14 @@ class _AccountScreen extends State<AccountsScreen> {
               Padding(
                   padding: EdgeInsets.only(right: 15.0),
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => AccountsSelectActionScreen((chainType) {
-                                Navigator.of(context).push(
+                    onTap: () async {
+                      await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => AccountsSelectActionScreen((chainType) async {
+                                await Navigator.of(context).push(
                                     MaterialPageRoute(settings: RouteSettings(name: "/accountsImportScreen"), builder: (BuildContext context) => AccountsImportScreen(chainType)));
                               })));
+
+                      await _init();
                     },
                     child: Icon(Icons.upload, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   )),

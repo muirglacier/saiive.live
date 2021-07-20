@@ -195,6 +195,26 @@ class S {
     );
   }
 
+  /// `Details`
+  String get details {
+    return Intl.message(
+      'Details',
+      name: 'details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(
@@ -1005,6 +1025,36 @@ class S {
     );
   }
 
+  /// `Readonly`
+  String get wallet_accounts_readonly {
+    return Intl.message(
+      'Readonly',
+      name: 'wallet_accounts_readonly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spentable`
+  String get wallet_accounts_spentable {
+    return Intl.message(
+      'Spentable',
+      name: 'wallet_accounts_spentable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to delete this account?`
+  String get wallet_accounts_delete {
+    return Intl.message(
+      'Do you want to delete this account?',
+      name: 'wallet_accounts_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Account details`
   String get wallet_accounts_detail {
     return Intl.message(
@@ -1085,6 +1135,16 @@ class S {
     );
   }
 
+  /// `Private Keys must be WIF formatted. Public Keys as P2SH addresses!`
+  String get wallet_accounts_import_info {
+    return Intl.message(
+      'Private Keys must be WIF formatted. Public Keys as P2SH addresses!',
+      name: 'wallet_accounts_import_info',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Do you want to import the Private Key for the existing account? ({pubKey})`
   String wallet_accounts_import_priv_key_for_pub_key(Object pubKey) {
     return Intl.message(
@@ -1105,6 +1165,16 @@ class S {
     );
   }
 
+  /// `The public key is not supported!`
+  String get wallet_accounts_import_unsupported_key {
+    return Intl.message(
+      'The public key is not supported!',
+      name: 'wallet_accounts_import_unsupported_key',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `The private key is invalid!`
   String get wallet_accounts_import_invalid_priv_key {
     return Intl.message(
@@ -1120,6 +1190,16 @@ class S {
     return Intl.message(
       'The content is invalid!',
       name: 'wallet_accounts_import_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The key is already imported!`
+  String get wallet_accounts_key_already_imported {
+    return Intl.message(
+      'The key is already imported!',
+      name: 'wallet_accounts_key_already_imported',
       desc: '',
       args: [],
     );

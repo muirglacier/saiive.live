@@ -71,9 +71,8 @@ class _AccountsEditScreen extends State<AccountsEditScreen> {
                     await walletDb.addAddress(walletAddress);
                   }
                   await walletDb.addOrUpdateAccount(widget.account);
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).wallet_accounts_saved)));
-
-                  Navigator.of(context).popUntil(ModalRoute.withName("/accounts"));
+                  Navigator.popUntil(context, ModalRoute.withName('/home'));
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).wallet_accounts_saved)));
                 }
               },
               child: Text(widget.isNewAccount ? S.of(context).add : S.of(context).save),

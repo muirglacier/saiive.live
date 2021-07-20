@@ -20,7 +20,11 @@ import 'accounts_import_screen.dart';
 class AccountsScreen extends StatefulWidget {
   final allowChangeVisibility;
   final allowImport;
-  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true});
+
+  final useOnlyFilter;
+  final ChainType chainType;
+
+  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true, this.useOnlyFilter = false, this.chainType = ChainType.DeFiChain});
 
   @override
   State<StatefulWidget> createState() => _AccountScreen();
@@ -60,6 +64,10 @@ class _AccountScreen extends State<AccountsScreen> {
     _walletService = sl.get<IWalletService>();
 
     var accounts = await _walletService.getAccounts();
+
+    if (widget.useOnlyFilter) {
+      accounts = accounts.where((element) => element.chain == widget.chainType).toList();
+    }
 
     setState(() {
       _walletAccounts = accounts;

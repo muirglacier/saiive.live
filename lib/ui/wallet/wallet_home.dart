@@ -425,7 +425,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 padding: EdgeInsets.only(right: 10.0),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsScreen(allowChangeVisibility: false, allowImport: false)));
                   },
                   child: Icon(Icons.arrow_downward, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                 )),

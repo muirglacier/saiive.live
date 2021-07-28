@@ -466,7 +466,8 @@ class SembastWalletDatabase extends IWalletDatabase {
     final db = await database;
     var finder = Finder(filter: Filter.equals('token', token));
 
-    final activeAddresses = _activeWalletAddresses;
+    final activeAddresses = spentable ? _activeSpentableWalletAddresses : _activeWalletAddresses;
+
     final accounts = await dbStore.find(db, finder: finder);
 
     var data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
@@ -513,7 +514,10 @@ class SembastWalletDatabase extends IWalletDatabase {
     var finder = Finder(filter: Filter.equals('token', token), sortOrders: [SortOrder("balance", false)]);
     final accounts = await dbStore.find(await database, finder: finder);
 
-    final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    final activeAddresses = _activeSpentableWalletAddresses;
+
+    var data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    data = data.where((element) => activeAddresses.contains(element.address)).toList();
 
     return data;
   }

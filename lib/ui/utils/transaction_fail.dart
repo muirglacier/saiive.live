@@ -1,3 +1,4 @@
+import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
@@ -50,6 +51,9 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
       _errorText = txError.error;
 
       _copyText += txError.copyText() + "\r\n" + stackTrace;
+    } else if (widget.error is ReadOnlyAccountError) {
+      _errorText = "We used a readonly address to create the transaction. This should not happen!";
+      _copyText += _errorText;
     } else {
       _errorText = widget.error.toString();
       _copyText += _errorText + "\r\n" + stackTrace;

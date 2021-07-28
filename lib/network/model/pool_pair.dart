@@ -54,7 +54,7 @@ class PoolPair {
       reserveA: double.tryParse(json['reserveA'].toString()),
       reserveB: double.tryParse(json['reserveB'].toString()),
       commission: double.tryParse(json['commission'].toString()),
-      totalLiquidity: json['totalLiquidity'],
+      totalLiquidity: double.tryParse(json['totalLiquidity'].toString()),
       reserveADivReserveB: double.tryParse(json['reserveADivReserveB'].toString()),
       reserveBDivReserveA: double.tryParse(json['reserveBDivReserveA'].toString()),
       tradeEnabled: json['tradeEnabled'],

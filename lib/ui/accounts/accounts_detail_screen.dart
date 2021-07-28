@@ -7,6 +7,7 @@ import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/accounts/accounts_add_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_address_add_screen.dart';
 import 'package:saiive.live/ui/wallet/wallet_receive.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
@@ -91,6 +92,16 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
 
   List<Widget> _buildActionsButton(BuildContext context) {
     return [
+      Padding(
+          padding: EdgeInsets.only(right: 15.0),
+          child: GestureDetector(
+            onTap: () async {
+              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddScreen(widget.walletAccount, false)));
+
+              await _init();
+            },
+            child: Icon(Icons.edit, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+          )),
       if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount)
         Padding(
             padding: EdgeInsets.only(right: 15.0),

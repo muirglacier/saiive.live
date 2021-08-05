@@ -347,7 +347,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       keys.add(keyPair);
 
       final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, to, inputTx.valueRaw, fee, changeAddress, (txb, txIn, nw) {
-        txb.addAccountToAccountOutputAt(tokenType.id, fromAccount.address, to, amount, 0);
+        var useAmount = amount;
+        if (fromAccount.amount < useAmount) {
+          useAmount = fromAccount.amount;
+        }
+        txb.addAccountToAccountOutputAt(tokenType.id, fromAccount.address, to, useAmount, 0);
       }, chain, network);
 
       loadingStream?.add(S.current.wallet_operation_send_tx);

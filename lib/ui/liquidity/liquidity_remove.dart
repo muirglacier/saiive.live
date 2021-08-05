@@ -88,7 +88,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
       try {
         lastTx = await overlay.during(createRemoveFuture);
       } catch (error) {
-        LogHelper.instance.e("addpool-tx error...($error)");
+        LogHelper.instance.e("removepool-tx error...($error)");
         hasError = true;
         lastError = error;
       } finally {

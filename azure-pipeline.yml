@@ -1430,6 +1430,7 @@ stages:
   jobs:
           
   - job: BuildLinuxDev
+    continueOnError: true 
     displayName: "Build Linux DEV"
     pool:
       vmImage: 'ubuntu-latest'
@@ -1535,6 +1536,7 @@ stages:
           ArtifactName: 'dev-linux'
 
   - job: BuildLinuxStaging
+    continueOnError: true 
     displayName: "Build Linux STAGING"
     pool:
       vmImage: 'ubuntu-latest'
@@ -1604,6 +1606,7 @@ stages:
           ArtifactName: 'staging-linux'
   
   - job: BuildLinuxProd
+    continueOnError: true 
     displayName: "Build Linux PROD"
     pool:
       vmImage: 'ubuntu-latest'

@@ -87,9 +87,10 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
       StateContainer.of(context).appCenter.trackEvent(eventType, {});
       StateContainer.of(context).logger.d("Event " + eventType + " called...");
     });
-
-    SetupOptions options = (new SetupOptionsBuilder('90484613300490c5e47eca1b903860aef6fb6904')).build();
-    Smartlook.setupAndStartRecording(options);
+    if (Platform.isIOS || Platform.isAndroid) {
+      SetupOptions options = (new SetupOptionsBuilder('90484613300490c5e47eca1b903860aef6fb6904')).build();
+      Smartlook.setupAndStartRecording(options);
+    }
 
     init();
   }

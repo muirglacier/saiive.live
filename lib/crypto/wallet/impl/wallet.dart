@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:typed_data';
 
 import 'package:defichaindart/defichaindart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
@@ -99,12 +100,13 @@ abstract class Wallet extends IWallet {
     _seed = await sl.get<IVault>().getSeed();
     _account = 0; //default account, for now only 0!
 
-    seedList = mnemonicToSeed(seed);
+    seedList = await compute(mnemonicToSeed, seed);
 
+    final seedHex = await compute(mnemonicToSeedHex, _seed);
     final accounts = await _walletDatabase.getAccounts();
 
     for (var account in accounts) {
-      final wallet = new HdWallet(_password, account, _chain, _network, mnemonicToSeedHex(_seed), _apiService);
+      final wallet = new HdWallet(_password, account, _chain, _network, seedHex, _apiService);
 
       await wallet.init(_walletDatabase);
 

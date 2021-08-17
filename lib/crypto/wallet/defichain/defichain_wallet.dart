@@ -369,15 +369,13 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<Tuple3<String, List<tx.Transaction>, String>> createAuthTx(String pubKey, int amount, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
-
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (tokenBalance.balance < amount) {
       amount = tokenBalance.balance;
     }
-
-    var baseTx = await createBaseTransaction(amount, pubKey, changeAddress, 0, (txb, inputTxs, nw) {
+    //
+    var baseTx = await createBaseTransaction(amount, pubKey, pubKey, 0, (txb, inputTxs, nw) {
       txb.addAuthOutput(outputIndex: 0);
     }, sendMax: tokenBalance.balance == amount);
     loadingStream?.add(S.current.wallet_operation_create_auth_tx);

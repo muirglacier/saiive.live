@@ -184,17 +184,23 @@ class HdWalletUtil {
     }
 
     var changeAmount = totalInputValue - amount - fee;
-    if (totalInputValue > (amount)) {
-      if (changeAmount > 0) {
-        txb.addOutput(returnAddress, changeAmount);
+    if (to != returnAddress) {
+      if (totalInputValue > (amount)) {
+        if (changeAmount > 0) {
+          txb.addOutput(returnAddress, changeAmount);
+        }
       }
     }
-    if (amount > 0) {
-      if (changeAmount < 0) {
-        txb.addOutput(to, amount - fee);
-      } else {
-        txb.addOutput(to, amount);
+    if (to != returnAddress) {
+      if (amount > 0) {
+        if (changeAmount < 0) {
+          txb.addOutput(to, amount - fee);
+        } else {
+          txb.addOutput(to, amount);
+        }
       }
+    } else {
+      txb.addOutput(to, totalInputValue - fee);
     }
 
     await additional(txb, inputTxs, network);

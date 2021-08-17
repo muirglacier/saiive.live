@@ -25,6 +25,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logger_flutter/logger_flutter.dart';
 import 'package:saiive.live/util/debug/SaiiveRouteObserver.dart';
 import 'package:window_size/window_size.dart';
+import 'package:smartlook/smartlook.dart';
 
 const String APP_TITLE = "saiive.live";
 
@@ -86,6 +87,9 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
       StateContainer.of(context).appCenter.trackEvent(eventType, {});
       StateContainer.of(context).logger.d("Event " + eventType + " called...");
     });
+
+    SetupOptions options = (new SetupOptionsBuilder('90484613300490c5e47eca1b903860aef6fb6904')).build();
+    Smartlook.setupAndStartRecording(options);
 
     init();
   }

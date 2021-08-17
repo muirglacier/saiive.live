@@ -26,8 +26,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  smartlook:
-
   cupertino_icons: ^1.0.1
   intl: ^0.17.0
   path_provider: ^2.0.1

@@ -78,6 +78,7 @@
   "wallet_recovery_phrase_test_title": "Prueba frase de recuperación",
 
   "wallet_operation_failed": "Transacción fallida :(",
+  "wallet_operation_no_utxo": "No UTXO existing. To create a transaction your wallet needs to have some UTXO!",
   "wallet_operation_wait_for_confirmation": "Esperando confirmación...",
   "wallet_operation_success": "Transacción exitosa :)",
   "wallet_operation_show_tx": "Mostrar transacción en el explorador...",

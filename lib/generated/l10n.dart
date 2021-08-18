@@ -705,6 +705,16 @@ class S {
     );
   }
 
+  /// `No UTXO existing. To create a transaction your wallet needs to have some UTXO!`
+  String get wallet_operation_no_utxo {
+    return Intl.message(
+      'No UTXO existing. To create a transaction your wallet needs to have some UTXO!',
+      name: 'wallet_operation_no_utxo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Wait for confirmation...`
   String get wallet_operation_wait_for_confirmation {
     return Intl.message(

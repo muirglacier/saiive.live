@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:bip32_defichain/bip32.dart' as bip32;
 import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/errors/NoUtxoError.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/helper/logger/LogHelper.dart';
@@ -153,6 +154,10 @@ class HdWalletUtil {
       Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional, ChainType chain, ChainNet net) async {
     var network = getNetworkType(chain, net);
 
+    if (inputTxs.length == 0) {
+      throw new NoUtxoError();
+    }
+
     assert(inputTxs.length == keys.length);
 
     if (inputTxs.length != keys.length) {
@@ -160,7 +165,7 @@ class HdWalletUtil {
     }
 
     final txb = TransactionBuilder(network: network);
-    txb.setVersion(2);
+    txb.setVersion(4);
     txb.setLockTime(0);
 
     int totalInputValue = 0;

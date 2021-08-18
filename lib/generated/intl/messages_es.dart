@@ -192,6 +192,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict" : MessageLookupByLibrary.simpleMessage("Espere a que su transacción se refleje en el siguiente bloque antes de continuar con una nueva transacción."),
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("Encontramos transacciones pendientes. Vamos a esperarlas, ¡esto podría llevar algo de tiempo!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Tu Wallet no está sincronizado. Vuelva a intentar la transacción."),
+    "wallet_operation_no_utxo" : MessageLookupByLibrary.simpleMessage("No UTXO existing. To create a transaction your wallet needs to have some UTXO!"),
     "wallet_operation_refresh_addresses" : m3,
     "wallet_operation_refresh_tx" : m4,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refrescando utxo..."),

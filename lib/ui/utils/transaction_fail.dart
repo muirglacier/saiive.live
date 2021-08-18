@@ -1,3 +1,4 @@
+import 'package:saiive.live/crypto/errors/NoUtxoError.dart';
 import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -29,6 +30,9 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
 
   bool _isLoading = true;
 
+  bool _isMissingUtxoError = false;
+  String utxoRechargerUrl = "http://utxo.mydeficha.in/";
+
   _transformError() {
     if (widget.error == null) {
       return;
@@ -54,6 +58,10 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     } else if (widget.error is ReadOnlyAccountError) {
       _errorText = "We used a readonly address to create the transaction. This should not happen!";
       _copyText += _errorText;
+    } else if (widget.error is NoUtxoError) {
+      _errorText = S.of(context).wallet_operation_no_utxo;
+      _copyText += _errorText;
+      _isMissingUtxoError = true;
     } else {
       _errorText = widget.error.toString();
       _copyText += _errorText + "\r\n" + stackTrace;
@@ -77,6 +85,10 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     super.initState();
 
     _init();
+  }
+
+  Widget utxoRechagerLink(BuildContext context) {
+    return Container();
   }
 
   @override
@@ -124,7 +136,8 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
                   await Share.share(_copyText, subject: "Error");
                 },
                 child: Icon(Icons.share, size: 26.0, color: Colors.white),
-              ))
+              )),
+          if (_isMissingUtxoError) utxoRechagerLink(context)
         ]))));
   }
 }

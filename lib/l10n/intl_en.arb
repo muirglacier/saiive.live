@@ -78,6 +78,7 @@
 
   "wallet_operation_share": "Share...",
   "wallet_operation_failed": "Transaction failed :(",
+  "wallet_operation_no_utxo": "No UTXO existing. To create a transaction your wallet needs to have some UTXO!",
   "wallet_operation_wait_for_confirmation": "Wait for confirmation...",
   "wallet_operation_success": "Transaction was successful :)",
   "wallet_operation_show_tx": "Show transaction in the explorer...",

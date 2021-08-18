@@ -304,7 +304,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (token == DeFiConstants.DefiTokenSymbol) {
       throw new ArgumentError("$token not supported for account transactions...");
     }
-
     final tokenBalance = await walletDatabase.getAccountBalance(token, excludeAddresses: excludeAddresses);
 
     if (amount > tokenBalance.balance) {
@@ -346,7 +345,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       var keyPair = await getPrivateKey(addressInfo, walletAccount);
       keys.add(keyPair);
 
-      final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, to, inputTx.valueRaw, fee, changeAddress, (txb, txIn, nw) {
+      final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, fromAccount.address, inputTx.valueRaw, fee, changeAddress, (txb, txIn, nw) {
         var useAmount = amount;
         if (fromAccount.amount < useAmount) {
           useAmount = fromAccount.amount;

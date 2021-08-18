@@ -31,7 +31,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   final StoreRef _accountStoreInstance = intMapStoreFactory.store(_accountStore);
   final StoreRef _accountV2StoreInstance = stringMapStoreFactory.store(_accountV2Store);
 
-  final StoreRef _transactionStoreInstance = stringMapStoreFactory.store(_transactionStore);
+  final StoreRef _transactionStoreInstance = StoreRef<String, dynamic>(_transactionStore);
   final StoreRef _unspentStoreInstance = stringMapStoreFactory.store(_unspentStore);
 
   final StoreRef _balancesStoreInstance = stringMapStoreFactory.store(_balanceStore);
@@ -401,11 +401,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   Future clearUnspentTransactions(WalletAccount account) async {
-    var txs = await getUnspentTransactionsForWalletAccount(account);
-    final txIds = txs.map((e) => e.uniqueId);
-    if (txIds.isNotEmpty) {
-      await _unspentStoreInstance.records(txIds).delete(await database);
-    }
+    await _unspentStoreInstance.delete(await database);
   }
 
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {
@@ -548,7 +544,6 @@ class SembastWalletDatabase extends IWalletDatabase {
       final addresses = await this._getWalletAddressesByAccount(acc);
       activeAddresses.addAll(addresses.map((e) => e.publicKey));
     }
-    print("test");
     return activeAddresses;
   }
 

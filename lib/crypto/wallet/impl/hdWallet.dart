@@ -15,7 +15,6 @@ import 'package:saiive.live/network/api_service.dart';
 import 'package:saiive.live/network/model/key_account_wrapper.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
-import 'package:hex/hex.dart';
 import 'package:tuple/tuple.dart';
 
 class HdWallet extends IHdWallet {
@@ -24,7 +23,7 @@ class HdWallet extends IHdWallet {
   final WalletAccount _account;
   final ChainType _chain;
   final ChainNet _network;
-  final String _seed;
+  final Uint8List _seed;
   final ApiService _apiService;
 
   HdWallet(this._password, this._account, this._chain, this._network, this._seed, this._apiService);
@@ -57,12 +56,11 @@ class HdWallet extends IHdWallet {
       return;
     }
 
-    final seed = HEX.decode(_seed);
     // await _checkAndCreateIfExists(walletDatabase, seed, 0, true, AddressType.Legacy);
 
     for (int i = 0; i < walletDatabase.getAddressCreationCount(); i++) {
-      await _checkAndCreateIfExists(walletDatabase, seed, i, true, AddressType.P2SHSegwit);
-      await _checkAndCreateIfExists(walletDatabase, seed, i, false, AddressType.P2SHSegwit);
+      await _checkAndCreateIfExists(walletDatabase, _seed, i, true, AddressType.P2SHSegwit);
+      await _checkAndCreateIfExists(walletDatabase, _seed, i, false, AddressType.P2SHSegwit);
     }
   }
 
@@ -71,7 +69,8 @@ class HdWallet extends IHdWallet {
 
     if (!alreadyExists) {
       final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType);
-
+      final walletType = ChainHelper.chainTypeString(_chain);
+      LogHelper.instance.d("Create address for $walletType: $pubKey");
       await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
   }

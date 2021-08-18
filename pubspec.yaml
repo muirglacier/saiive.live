@@ -91,7 +91,7 @@ dependencies:
   http: ^0.13.1
 
   #database
-  sembast: ^3.0.0+4
+  sembast: ^3.1.0+2
   sqflite: ^2.0.0+3
 
   # Eventbus

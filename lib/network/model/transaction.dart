@@ -73,7 +73,7 @@ class Transaction {
         spentHeight: json['spentHeight'],
         address: json['address'],
         script: json['script'],
-        value: int.parse(json['value'].toString()),
+        value: json['value'],
         confirmations: json['confirmations'],
         accountId: json["accountId"]);
   }

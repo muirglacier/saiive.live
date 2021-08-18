@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:group_list_view/group_list_view.dart';
+import 'package:mutex/mutex.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -49,11 +50,21 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
   List<AccountBalance> _accountBalance;
   List<AccountBalance> _readonlyAccountBalance;
+  Timer _timer;
+  Mutex _refreshtMutex = Mutex();
 
   _refresh() async {
-    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    if (_refreshtMutex.isLocked) {
+      return;
+    }
+    try {
+      _refreshtMutex.acquire();
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
-    sl.get<IHealthService>().checkHealth(context);
+      sl.get<IHealthService>().checkHealth(context);
+    } finally {
+      _refreshtMutex.release();
+    }
   }
 
   _initWallet() async {
@@ -158,6 +169,15 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     });
   }
 
+  void _startTimer() {
+    _timer = new Timer.periodic(
+      Duration(seconds: 30),
+      (Timer timer) async {
+        // await _refresh();
+      },
+    );
+  }
+
   @override
   void initState() {
     _controller = AnimationController(
@@ -173,6 +193,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     super.initState();
 
+    _startTimer();
+
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
 
     _syncEvents();
@@ -186,6 +208,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   @override
   void deactivate() {
     super.deactivate();
+    _timer.cancel();
 
     if (_walletInitDoneSubscription != null) {
       _walletInitDoneSubscription.cancel();
@@ -417,7 +440,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                       icon: Icon(Icons.refresh, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                       onPressed: !_isSyncing
                           ? () async {
+                              _timer.cancel();
                               await _refresh();
+                              _startTimer();
                             }
                           : null,
                     ))),

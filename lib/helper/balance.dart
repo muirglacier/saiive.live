@@ -92,7 +92,6 @@ class BalanceHelper {
       }
     }
 
-    print("test");
     return accountBalance;
   }
 }

@@ -100,13 +100,12 @@ abstract class Wallet extends IWallet {
     _seed = await sl.get<IVault>().getSeed();
     _account = 0; //default account, for now only 0!
 
-    seedList = await compute(mnemonicToSeed, seed);
+    seedList = mnemonicToSeed(seed);
 
-    final seedHex = await compute(mnemonicToSeedHex, _seed);
     final accounts = await _walletDatabase.getAccounts();
 
     for (var account in accounts) {
-      final wallet = new HdWallet(_password, account, _chain, _network, seedHex, _apiService);
+      final wallet = new HdWallet(_password, account, _chain, _network, seedList, _apiService);
 
       await wallet.init(_walletDatabase);
 

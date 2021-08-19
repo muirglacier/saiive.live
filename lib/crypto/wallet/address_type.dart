@@ -1,1 +1,1 @@
-enum AddressType { Legacy, P2SHSegwit }
+enum AddressType { Legacy, P2SHSegwit, Bech32 }

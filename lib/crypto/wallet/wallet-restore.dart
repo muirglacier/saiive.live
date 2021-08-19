@@ -37,7 +37,13 @@ class WalletRestore {
     do {
       if (!existingAccounts.contains(i)) {
         final account = WalletAccount(Uuid().v4(),
-            name: ChainHelper.chainTypeString(chain) + (i + 1).toString(), id: i, account: i, chain: chain, walletAccountType: WalletAccountType.HdAccount, selected: true);
+            name: ChainHelper.chainTypeString(chain) + (i + 1).toString(),
+            id: i,
+            account: i,
+            chain: chain,
+            walletAccountType: WalletAccountType.HdAccount,
+            derivationPathType: DerivationPathType.BIP32,
+            selected: true);
         final p2sh = await _restore(account, key, api, chain, network, AddressType.P2SHSegwit);
 
         //TODO: Change as soon as we support legacy addresses
@@ -71,8 +77,9 @@ class WalletRestore {
 
     do {
       try {
-        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account.account, IWallet.KeysPerQuery * i, chain, net, addressType, IWallet.KeysPerQuery);
-        var path = HdWalletUtil.derivePathsWithChange(account.account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(
+            key, account.account, IWallet.KeysPerQuery * i, chain, net, addressType, account.derivationPathType, IWallet.KeysPerQuery);
+        var path = HdWalletUtil.derivePathsWithChange(account.account, IWallet.KeysPerQuery * i, account.derivationPathType, IWallet.KeysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
         LogHelper.instance.d("($chain) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");

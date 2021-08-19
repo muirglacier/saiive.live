@@ -238,6 +238,7 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
+          derivationPathType: DerivationPathType.BIP32,
           walletAccountType: WalletAccountType.HdAccount));
     } else {
       var lastItem = unusedAccounts.item1.last;
@@ -246,6 +247,7 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
+          derivationPathType: DerivationPathType.BIP32,
           walletAccountType: WalletAccountType.HdAccount));
     }
     return unusedAccounts;
@@ -292,8 +294,9 @@ abstract class Wallet extends IWallet {
   Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
     if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
       final key = seedList;
-      final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network);
-      final pubKey = HdWalletUtil.getPublicKey(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType);
+      final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, walletAccount.derivationPathType);
+      final pubKey = HdWalletUtil.getPublicKey(
+          key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType, walletAccount.derivationPathType);
 
       if (pubKey != address.publicKey) {
         throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");

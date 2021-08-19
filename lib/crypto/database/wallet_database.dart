@@ -14,7 +14,8 @@ abstract class IWalletDatabase {
   Future<WalletAccount> getAccount(String uniqueId);
 
   @deprecated
-  Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false});
+  Future<WalletAccount> addAccount(
+      {@required String name, @required int account, @required ChainType chain, @required DerivationPathType derivationPathType, bool isSelected = false});
   Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount);
   Future removeAccount(WalletAccount walletAccount);
 

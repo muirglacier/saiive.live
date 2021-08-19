@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../chain.dart';
 
 enum WalletAccountType { HdAccount, PublicKey, PrivateKey }
+enum DerivationPathType { BIP32, BIP44, JellyfishBullshit, SingleKey }
 
 class WalletAccount {
   final int account;
@@ -17,6 +18,7 @@ class WalletAccount {
   bool selected;
 
   WalletAccountType walletAccountType;
+  DerivationPathType derivationPathType;
 
   get uniqueId => _uniqueId;
 
@@ -39,7 +41,14 @@ class WalletAccount {
   }
 
   WalletAccount(this._uniqueId,
-      {@required this.id, @required this.chain, @required this.account, @required this.walletAccountType, @required this.name, this.lastAccess, this.selected = false});
+      {@required this.id,
+      @required this.chain,
+      @required this.account,
+      @required this.walletAccountType,
+      @required this.name,
+      @required this.derivationPathType,
+      this.lastAccess,
+      this.selected = false});
 
   factory WalletAccount.fromJson(Map<String, dynamic> json) {
     return WalletAccount(json.containsKey("uniqueId") ? json["uniqueId"] : null,
@@ -49,7 +58,8 @@ class WalletAccount {
         name: json['name'],
         lastAccess: json['lastAccess'],
         selected: json['selected'],
-        walletAccountType: json.containsKey("walletAccountType") ? WalletAccountType.values[json['walletAccountType']] : WalletAccountType.HdAccount);
+        walletAccountType: json.containsKey("walletAccountType") ? WalletAccountType.values[json['walletAccountType']] : WalletAccountType.HdAccount,
+        derivationPathType: json.containsKey("derivationPathType") ? DerivationPathType.values[json['derivationPathType']] : DerivationPathType.BIP32);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -60,6 +70,7 @@ class WalletAccount {
         'lastAccess': lastAccess,
         'selected': selected,
         'walletAccountType': walletAccountType.index,
+        'derivationPathType': derivationPathType.index,
         'uniqueId': _uniqueId
       };
 }

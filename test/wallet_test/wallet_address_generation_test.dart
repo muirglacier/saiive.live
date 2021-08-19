@@ -16,7 +16,8 @@ void main() async {
     initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, derivationPathType: DerivationPathType.BIP32, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
     }
 
@@ -33,7 +34,8 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, derivationPathType: DerivationPathType.BIP32, name: "acc", selected: true);
 
       var address = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
       var address2 = await wallet.getPublicKey(false, AddressType.P2SHSegwit);

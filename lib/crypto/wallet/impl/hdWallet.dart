@@ -59,16 +59,17 @@ class HdWallet extends IHdWallet {
     // await _checkAndCreateIfExists(walletDatabase, seed, 0, true, AddressType.Legacy);
 
     for (int i = 0; i < walletDatabase.getAddressCreationCount(); i++) {
-      await _checkAndCreateIfExists(walletDatabase, _seed, i, true, AddressType.P2SHSegwit);
-      await _checkAndCreateIfExists(walletDatabase, _seed, i, false, AddressType.P2SHSegwit);
+      await _checkAndCreateIfExists(walletDatabase, _seed, i, true, AddressType.P2SHSegwit, _account.derivationPathType);
+      await _checkAndCreateIfExists(walletDatabase, _seed, i, false, AddressType.P2SHSegwit, _account.derivationPathType);
     }
   }
 
-  Future _checkAndCreateIfExists(IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress, AddressType addressType) async {
+  Future _checkAndCreateIfExists(
+      IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress, AddressType addressType, DerivationPathType derivationPathType) async {
     final alreadyExists = await walletDatabase.addressExists(_account.account, isChangeAddress, index, addressType);
 
     if (!alreadyExists) {
-      final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType);
+      final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType, derivationPathType);
       final walletType = ChainHelper.chainTypeString(_chain);
       LogHelper.instance.d("Create address for $walletType: $pubKey");
       await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));

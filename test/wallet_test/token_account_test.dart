@@ -17,7 +17,8 @@ void main() async {
     initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, derivationPathType: DerivationPathType.BIP32, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       await db.addTransaction(
@@ -103,7 +104,8 @@ void main() async {
   group("#2 create 2nd tx", () {
     initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, derivationPathType: DerivationPathType.BIP32, name: "acc", selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       await db.addTransaction(

@@ -299,11 +299,13 @@ class SembastWalletDatabase extends IWalletDatabase {
     await _initAddresses();
   }
 
-  Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false}) async {
+  Future<WalletAccount> addAccount(
+      {@required String name, @required int account, @required ChainType chain, @required DerivationPathType derivationPathType, bool isSelected = false}) async {
     final db = await database;
 
     if (!await _accountV2StoreInstance.record(account).exists(db)) {
-      var newAccount = WalletAccount(Uuid().v4(), name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount);
+      var newAccount = WalletAccount(Uuid().v4(),
+          name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, derivationPathType: derivationPathType);
 
       await addOrUpdateAccount(newAccount);
 

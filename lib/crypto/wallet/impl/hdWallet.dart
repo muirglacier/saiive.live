@@ -131,7 +131,7 @@ class HdWallet extends IHdWallet {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
     }
 
-    await sharedPrefs.setAddressIndex(startIndex, isChangeAddress);
+    await sharedPrefs.setAddressIndex(startIndex++, isChangeAddress);
     return address;
   }
 

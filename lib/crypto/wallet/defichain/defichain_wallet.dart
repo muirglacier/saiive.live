@@ -487,16 +487,18 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
       for (var input in txData.details.inputs) {
         if (await walletDatabase.isOwnAddress(input.address)) {
-          final accBalance = new Account(
+          var existingBalance = await walletDatabase.getAccountBalanceForPubKey(input.address, DeFiConstants.DefiAccountSymbol);
+          print("test");
+          final uaccBalance = new Account(
               address: input.address,
-              balance: needAmount,
+              balance: needAmount + (existingBalance == null ? 0 : existingBalance.balance),
               token: DeFiConstants.DefiAccountSymbol,
               chain: ChainHelper.chainTypeString(chain),
               network: ChainHelper.chainNetworkString(network));
           final addressInfo = await walletDatabase.getWalletAddress(input.address);
           final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 
-          await walletDatabase.setAccountBalance(accBalance, walletAccount);
+          await walletDatabase.setAccountBalance(uaccBalance, walletAccount);
         }
       }
       if (checkAmount <= 0) {

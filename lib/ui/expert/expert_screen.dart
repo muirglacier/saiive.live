@@ -65,6 +65,8 @@ class _ExpertScreen extends State<ExpertScreen> {
       final amount = double.parse(_amountController.text);
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
       final wallet = sl.get<DeFiChainWallet>();
+      await wallet.ensureUtxoUnsafe(loadingStream: stream);
+
       if (_action == ExpertScreenAction.UtxoToAccount) {
         await wallet.prepareAccount(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
       } else {

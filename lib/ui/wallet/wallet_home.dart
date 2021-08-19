@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:group_list_view/group_list_view.dart';
-import 'package:mutex/mutex.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -14,7 +13,6 @@ import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/block.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
-import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -51,20 +49,16 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   List<AccountBalance> _accountBalance;
   List<AccountBalance> _readonlyAccountBalance;
   Timer _timer;
-  Mutex _refreshtMutex = Mutex();
 
   _refresh() async {
-    if (_refreshtMutex.isLocked) {
-      return;
-    }
-    try {
-      _refreshtMutex.acquire();
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+    _controller.forward();
+    EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
-      sl.get<IHealthService>().checkHealth(context);
-    } finally {
-      _refreshtMutex.release();
-    }
+    sl.get<IHealthService>().checkHealth(context);
+
+    setState(() {
+      _isSyncing = true;
+    });
   }
 
   _initWallet() async {
@@ -105,32 +99,33 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     EventTaxiImpl.singleton().fire(WalletInitStartEvent());
   }
 
-  _syncEvents() {
-    final wallet = sl.get<IWalletService>();
+  _updateBalances() async {
+    final balanceHelper = new BalanceHelper();
+    var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
+    var readonlyAccountBalance = await balanceHelper.getDisplayAccountBalance(spentable: false);
 
+    setState(() {
+      _accountBalance = accountBalance;
+      _readonlyAccountBalance = readonlyAccountBalance;
+    });
+  }
+
+  _syncEvents() {
     if (_walletSyncDoneSubscription == null) {
       _walletSyncDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletSyncDoneEvent>().listen((event) async {
-        try {
-          final accounts = await wallet.getAccounts();
-          if (accounts.length == 0) {
-            Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
-          }
-          final balanceHelper = new BalanceHelper();
-          var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
-          var readonlyAccountBalance = await balanceHelper.getDisplayAccountBalance(spentable: false);
+        print("---------------------- 11..wallet sync done event is called....");
+        await _updateBalances();
 
-          _accountBalance = accountBalance;
-          _readonlyAccountBalance = readonlyAccountBalance;
-        } finally {
-          setState(() {
-            _controller.stop();
-            _controller.reset();
+        setState(() {
+          _controller.stop();
+          _controller.reset();
 
-            _isSyncing = false;
+          _isSyncing = false;
 
-            _syncText = S.of(context).home_welcome_account_synced;
-          });
-        }
+          _syncText = S.of(context).home_welcome_account_synced;
+        });
+
+        print("---------------------- wallet sync done event is called....");
       });
     }
 
@@ -196,15 +191,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     super.initState();
 
-    _startTimer();
-
     sl.get<AppCenterWrapper>().trackEvent("openWalletHome", <String, String>{});
-
+    _updateBalances();
     _syncEvents();
     _initWallet();
     _initLastSyncedBlock();
     _refresh();
 
+    _startTimer();
     _welcomeText = "Welcome";
   }
 

@@ -50,6 +50,10 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
       final httpError = widget.error as HttpException;
       _errorText = httpError.error.error;
       _copyText += _errorText + "\r\n" + stackTrace;
+    } else if (widget.error is NoUtxoError) {
+      _errorText = S.of(context).wallet_operation_no_utxo;
+      _copyText += _errorText;
+      _isMissingUtxoError = true;
     } else if (widget.error is TransactionError) {
       final txError = widget.error as TransactionError;
       _errorText = txError.error;
@@ -58,10 +62,6 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     } else if (widget.error is ReadOnlyAccountError) {
       _errorText = "We used a readonly address to create the transaction. This should not happen!";
       _copyText += _errorText;
-    } else if (widget.error is NoUtxoError) {
-      _errorText = S.of(context).wallet_operation_no_utxo;
-      _copyText += _errorText;
-      _isMissingUtxoError = true;
     } else {
       _errorText = widget.error.toString();
       _copyText += _errorText + "\r\n" + stackTrace;

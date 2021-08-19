@@ -110,24 +110,27 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     if (_walletSyncDoneSubscription == null) {
       _walletSyncDoneSubscription = EventTaxiImpl.singleton().registerTo<WalletSyncDoneEvent>().listen((event) async {
-        final accounts = await wallet.getAccounts();
-        if (accounts.length == 0) {
-          Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
-        }
-        final balanceHelper = new BalanceHelper();
-        var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
-        var readonlyAccountBalance = await balanceHelper.getDisplayAccountBalance(spentable: false);
+        try {
+          final accounts = await wallet.getAccounts();
+          if (accounts.length == 0) {
+            Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
+          }
+          final balanceHelper = new BalanceHelper();
+          var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
+          var readonlyAccountBalance = await balanceHelper.getDisplayAccountBalance(spentable: false);
 
-        setState(() {
-          _controller.stop();
-          _controller.reset();
-
-          _isSyncing = false;
-
-          _syncText = S.of(context).home_welcome_account_synced;
           _accountBalance = accountBalance;
           _readonlyAccountBalance = readonlyAccountBalance;
-        });
+        } finally {
+          setState(() {
+            _controller.stop();
+            _controller.reset();
+
+            _isSyncing = false;
+
+            _syncText = S.of(context).home_welcome_account_synced;
+          });
+        }
       });
     }
 
@@ -209,6 +212,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   void deactivate() {
     super.deactivate();
     _timer.cancel();
+
+    _controller.dispose();
 
     if (_walletInitDoneSubscription != null) {
       _walletInitDoneSubscription.cancel();

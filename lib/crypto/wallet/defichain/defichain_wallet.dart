@@ -108,6 +108,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final tokenABalance = await walletDatabase.getAccountBalance(tokenA);
     final tokenBBalance = await walletDatabase.getAccountBalance(tokenB);
 
+    final utxo = await walletDatabase.getUnspentTransactions();
+
+    if (utxo.length == 1) {
+      await createSendTransaction(utxo[0].value ~/ 2, DeFiConstants.DefiTokenSymbol, utxo[0].address, loadingStream: loadingStream);
+    }
+
     if (tokenABalance.balance < amountA) {
       throw new ArgumentError("Insufficient balance...");
     }

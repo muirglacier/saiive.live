@@ -174,9 +174,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
   void _startTimer() {
     _timer = new Timer.periodic(
-      Duration(seconds: 30),
+      Duration(minutes: 5),
       (Timer timer) async {
-        // await _refresh();
+        await _refresh();
       },
     );
   }

@@ -111,7 +111,13 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final utxo = await walletDatabase.getUnspentTransactions();
 
     if (utxo.length == 1) {
-      await createSendTransaction(utxo[0].value ~/ 2, DeFiConstants.DefiTokenSymbol, utxo[0].address, loadingStream: loadingStream);
+      var changeAddress = await getPublicKey(false, AddressType.P2SHSegwit);
+      if (changeAddress == utxo[0].address) {
+        do {
+          changeAddress = await getPublicKey(false, AddressType.P2SHSegwit);
+        } while (changeAddress == utxo[0].address);
+      }
+      await createSendTransaction(utxo[0].value ~/ 2, DeFiConstants.DefiTokenSymbol, changeAddress, loadingStream: loadingStream);
     }
 
     if (tokenABalance.balance < amountA) {

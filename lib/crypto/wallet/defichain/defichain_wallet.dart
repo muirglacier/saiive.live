@@ -143,37 +143,16 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       //handle account to account - move account balance to new address
       await createAccountTransaction(tokenA, amountA - accountA.balance, accountA.address, loadingStream: loadingStream);
     }
-    var useAddress = accountB.address;
-    if (accountA.address == accountB.address) {
-      var utxos = await walletDatabase.getUnspentTransactions();
-      var otherUtxos = utxos.where((element) => element.address != accountA.address);
 
-      if (otherUtxos.isNotEmpty) {
-        useAddress = otherUtxos.first.address;
-      } else {
-        useAddress = await getPublicKey(true, AddressType.P2SHSegwit);
-      }
-    }
-
-    if (amountB > accountB.balance || accountA.address == accountB.address) {
+    if (amountB > accountB.balance || accountA.address != accountB.address) {
       //handle account to account - move account balance to new address
-      var useAmountB = amountB;
-
-      if (accountA.address == accountB.address) {
-        useAmountB = amountB;
-      } else {
-        useAmountB = amountB - accountB.balance;
-      }
-
-      await createAccountTransaction(tokenB, useAmountB, useAddress, loadingStream: loadingStream);
+      await createAccountTransaction(tokenB, amountB, accountA.address, loadingStream: loadingStream);
     }
 
     final authInputA = await getAuthInputsSmart(accountA.address, AuthTxMin, 0, loadingStream: loadingStream);
-    final authInputB = await getAuthInputsSmart(useAddress, AuthTxMin, 0, loadingStream: loadingStream);
 
     var inputTxs = List<tx.Transaction>.empty(growable: true);
     inputTxs.add(authInputA);
-    inputTxs.add(authInputB);
 
     final keys = List<ECPair>.empty(growable: true);
 
@@ -189,8 +168,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       keys.add(key);
     }
 
-    final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, shareAddress, authInputA.value + authInputB.value, fee, shareAddress, (txb, txIn, nw) {
-      txb.addAddLiquidityOutput(tokenAType.id, accountA.address, amountA, tokenBType.id, useAddress, amountB, shareAddress);
+    final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, shareAddress, authInputA.value, fee, shareAddress, (txb, txIn, nw) {
+      txb.addAddLiquidityOutputSingleAddress(accountA.address, tokenAType.id, amountA, tokenBType.id, amountB, shareAddress);
     }, chain, network);
 
     return txb;

@@ -70,8 +70,8 @@ class HdWallet extends IHdWallet {
 
     if (!alreadyExists) {
       final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType, derivationPathType);
-      final walletType = ChainHelper.chainTypeString(_chain);
-      LogHelper.instance.d("Create address for $walletType: $pubKey");
+      // final walletType = ChainHelper.chainTypeString(_chain);
+      // LogHelper.instance.d("Create address for $walletType: $pubKey");
       await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
   }

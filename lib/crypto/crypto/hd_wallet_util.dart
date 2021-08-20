@@ -48,12 +48,12 @@ class HdWalletUtil {
 
   static bip32.BIP32 _getBip32Key(DerivationPathType derivationPathType, Uint8List seed, bip32.NetworkType networkType) {
     switch (derivationPathType) {
-      case DerivationPathType.JellyfishBullshit:
-        return bip32.BIP32.fromSeedWithCustomKey(seed, _getEncryptionKey(derivationPathType), networkType);
-      default:
+      case DerivationPathType.FullNodeWallet:
         final hdSeed = bip32.BIP32.fromSeedWithCustomKey(seed, _getEncryptionKey(derivationPathType), networkType);
         final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
         return xMasterPriv;
+      default:
+        return bip32.BIP32.fromSeedWithCustomKey(seed, _getEncryptionKey(derivationPathType), networkType);
     }
   }
 
@@ -64,8 +64,8 @@ class HdWalletUtil {
     final hdSeed = _getBip32Key(derivationPathType, seed, networkType);
 
     final path = derivePath(account, changeAddress, index, derivationPathType);
-
-    final address = getPublicAddress(hdSeed.derivePath(path), chainType, network, addressType);
+    final derivedKey = hdSeed.derivePath(path);
+    final address = getPublicAddress(derivedKey, chainType, network, addressType);
 
     //   LogHelper.instance
     //     .d("PublicKey for $path is $address from xMasterPriv $xMasterPrivWif");
@@ -286,6 +286,7 @@ class HdWalletUtil {
   static String derivePath(int account, bool changeAddress, int index, DerivationPathType derivationPathType) {
     switch (derivationPathType) {
       case DerivationPathType.BIP32:
+      case DerivationPathType.FullNodeWallet:
         return "m/$account'/${changeAddress ? 1 : 0}'/$index'";
         break;
       case DerivationPathType.BIP44:

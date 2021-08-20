@@ -106,7 +106,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             account: -1,
             selected: true,
             walletAccountType: WalletAccountType.PublicKey,
-            derivationPathType: DerivationPathType.BIP32,
+            derivationPathType: DerivationPathType.FullNodeWallet,
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 
         var addressType = HdWalletUtil.getAddressType(data, widget.chainType, currentNet);

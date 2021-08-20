@@ -33,11 +33,17 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
           chain: ChainType.DeFiChain,
           account: 0,
           walletAccountType: WalletAccountType.HdAccount,
-          derivationPathType: DerivationPathType.BIP32,
+          derivationPathType: DerivationPathType.FullNodeWallet,
           name: "DFI0",
           selected: true);
       final defaultBtcWalletAccount = WalletAccount(Uuid().v4(),
-          id: 0, chain: ChainType.Bitcoin, account: 0, walletAccountType: WalletAccountType.HdAccount, derivationPathType: DerivationPathType.BIP32, name: "BTC0", selected: true);
+          id: 0,
+          chain: ChainType.Bitcoin,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: DerivationPathType.FullNodeWallet,
+          name: "BTC0",
+          selected: true);
 
       await wallet.addAccount(defaultDfiWalletAccount);
       await wallet.addAccount(defaultBtcWalletAccount);

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../chain.dart';
 
 enum WalletAccountType { HdAccount, PublicKey, PrivateKey }
-enum DerivationPathType { BIP32, BIP44, JellyfishBullshit, SingleKey }
+enum DerivationPathType { FullNodeWallet, BIP32, BIP44, JellyfishBullshit, SingleKey }
 
 class WalletAccount {
   final int account;
@@ -59,7 +59,7 @@ class WalletAccount {
         lastAccess: json['lastAccess'],
         selected: json['selected'],
         walletAccountType: json.containsKey("walletAccountType") ? WalletAccountType.values[json['walletAccountType']] : WalletAccountType.HdAccount,
-        derivationPathType: json.containsKey("derivationPathType") ? DerivationPathType.values[json['derivationPathType']] : DerivationPathType.BIP32);
+        derivationPathType: json.containsKey("derivationPathType") ? DerivationPathType.values[json['derivationPathType']] : DerivationPathType.FullNodeWallet);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{

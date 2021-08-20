@@ -42,7 +42,7 @@ class WalletRestore {
             account: i,
             chain: chain,
             walletAccountType: WalletAccountType.HdAccount,
-            derivationPathType: DerivationPathType.BIP32,
+            derivationPathType: DerivationPathType.FullNodeWallet,
             selected: true);
         final p2sh = await _restore(account, key, api, chain, network, AddressType.P2SHSegwit);
 

@@ -238,7 +238,7 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
-          derivationPathType: DerivationPathType.BIP32,
+          derivationPathType: DerivationPathType.FullNodeWallet,
           walletAccountType: WalletAccountType.HdAccount));
     } else {
       var lastItem = unusedAccounts.item1.last;
@@ -247,7 +247,7 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
-          derivationPathType: DerivationPathType.BIP32,
+          derivationPathType: DerivationPathType.FullNodeWallet,
           walletAccountType: WalletAccountType.HdAccount));
     }
     return unusedAccounts;

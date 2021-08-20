@@ -658,7 +658,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
       txs.add(txHex);
 
-      if (accBalance > neededUtxo) {
+      if (accBalance >= neededUtxo) {
         break;
       }
     }

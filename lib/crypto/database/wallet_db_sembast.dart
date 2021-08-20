@@ -405,7 +405,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {
-    final txIds = txs.map((e) => e.uniqueId);
+    final txIds = txs.map((e) => e.uniqueId).toList();
     await _unspentStoreInstance.records(txIds).delete(await database);
   }
 

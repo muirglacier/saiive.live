@@ -159,6 +159,7 @@
   "settings_network": "Red",
   "settings_remove_seed": "Eliminar Seed",
   "settings_show_logs": "Mostrar logs",
+  "settings_logs_copied": "Logs copied...",
   "settings_show_wallet_addresses": "Dirección Wallet",
   "settings_show_seed": "Mostrar Seed",
   "settings_removed_seed": "Eliminar seed guardado",

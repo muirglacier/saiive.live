@@ -46,7 +46,7 @@ dependencies:
   #utils
   sprintf: ^6.0.0 
   logger: ^0.7.0
-  logger_flutter: ^0.7.1
+  logger_flutter_console: ^0.7.1+1
   retry: ^3.1.0 
   tuple: ^2.0.0
   mutex: ^3.0.0

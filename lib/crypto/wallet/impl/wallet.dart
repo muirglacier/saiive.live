@@ -148,12 +148,21 @@ abstract class Wallet extends IWallet {
     throw UnimplementedError();
   }
 
+  Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) async {
+    assert(_wallets.containsKey(account.uniqueId));
+
+    return await _wallets[account.uniqueId].getPublicKeys(walletDatabase);
+  }
+
   Future<List<String>> getPublicKeys() async {
     isInitialzed();
     List<String> keys = [];
 
     for (var wallet in _wallets.values) {
-      keys.addAll(await wallet.getPublicKeys(_walletDatabase));
+      final walletAddresses = await wallet.getPublicKeys(_walletDatabase);
+      final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
+
+      keys.addAll(allAddresses);
     }
 
     return keys;

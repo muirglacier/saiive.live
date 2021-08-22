@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/cache_response.dart';
 import 'package:saiive.live/network/ihttp_service.dart';
 import 'package:saiive.live/network/model/error.dart';
@@ -54,6 +55,8 @@ class HttpService extends IHttpService {
       headers: {'Content-type': 'application/json'},
     );
 
+    LogHelper.instance.d("Response (${response.statusCode}) for $url\n${response.body}");
+
     if (response.statusCode != 200) {
       var error = ErrorResponse(response: response, error: response.body);
       throw error;
@@ -87,6 +90,7 @@ class HttpService extends IHttpService {
       Uri.parse(finalUrl),
       headers: {'Content-type': 'application/json'},
     );
+    LogHelper.instance.d("Response (${response.statusCode}) for $url\n${response.body}");
 
     if (response.statusCode != 200) {
       return ErrorResponse(response: response, error: response.body);
@@ -104,6 +108,8 @@ class HttpService extends IHttpService {
     final body = json.encode(request.toJson());
 
     http.Response response = await http.post(Uri.parse(finalUrl), headers: {'Content-type': 'application/json', 'Accept': 'application/json'}, body: body);
+
+    LogHelper.instance.d("Response (${response.statusCode}) for $url\n${response.body}");
     if (response.statusCode != 200) {
       return ErrorResponse(response: response, error: response.body);
     }

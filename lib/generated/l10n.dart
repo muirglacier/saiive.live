@@ -1425,6 +1425,16 @@ class S {
     );
   }
 
+  /// `Logs copied...`
+  String get settings_logs_copied {
+    return Intl.message(
+      'Logs copied...',
+      name: 'settings_logs_copied',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Wallet addresses`
   String get settings_show_wallet_addresses {
     return Intl.message(

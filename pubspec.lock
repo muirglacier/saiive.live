@@ -483,13 +483,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0+2"
-  logger_flutter:
+  logger_flutter_console:
     dependency: "direct main"
     description:
-      name: logger_flutter
+      name: logger_flutter_console
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.1"
+    version: "0.7.1+1"
   logging:
     dependency: transitive
     description:

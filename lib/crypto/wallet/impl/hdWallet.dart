@@ -28,11 +28,10 @@ class HdWallet extends IHdWallet {
 
   HdWallet(this._password, this._account, this._chain, this._network, this._seed, this._apiService);
 
-  Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase) async {
+  Future<List<WalletAddress>> getPublicKeys(IWalletDatabase walletDatabase) async {
     final walletAddresses = await walletDatabase.getWalletAllAddresses(_account);
-    final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
 
-    return allAddresses;
+    return walletAddresses;
   }
 
   @override

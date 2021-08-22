@@ -159,6 +159,7 @@
   "settings_network": "Network",
   "settings_remove_seed": "Remove Seed",
   "settings_show_logs": "Show logs",
+  "settings_logs_copied": "Logs copied...",
   "settings_show_wallet_addresses": "Wallet addresses",
   "settings_show_seed": "Show Seed",
   "settings_removed_seed": "Removed saved seed",

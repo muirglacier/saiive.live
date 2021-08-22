@@ -26,6 +26,7 @@ abstract class IWalletService {
   Future<bool> hasAccounts();
   Future<List<WalletAccount>> getAccounts();
 
+  Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account);
   Future<List<WalletAddress>> getPublicKeysFromAccount(WalletAccount account);
   Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, bool isChangeAddress, AddressType addressType);
 
@@ -135,6 +136,14 @@ class WalletService implements IWalletService {
       return _defiWallet.getPublicKeysFromAccounts(account);
     }
     return _bitcoinWallet.getPublicKeysFromAccounts(account);
+  }
+
+  @override
+  Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) {
+    if (account.chain == ChainType.DeFiChain) {
+      return _defiWallet.getAllPublicKeysFromAccount(account);
+    }
+    return _bitcoinWallet.getAllPublicKeysFromAccount(account);
   }
 
   @override

@@ -13,7 +13,7 @@ abstract class IHdWallet {
 
   Future init(IWalletDatabase walletDatabase);
 
-  Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase);
+  Future<List<WalletAddress>> getPublicKeys(IWalletDatabase walletDatabase);
   @deprecated
   Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType);
   Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType);

@@ -22,7 +22,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:logger_flutter/logger_flutter.dart';
+import 'package:logger_flutter_console/logger_flutter_console.dart';
 import 'package:saiive.live/util/debug/SaiiveRouteObserver.dart';
 import 'package:window_size/window_size.dart';
 

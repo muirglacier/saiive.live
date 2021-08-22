@@ -110,6 +110,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_common" : MessageLookupByLibrary.simpleMessage("Common"),
     "settings_disclaimer" : MessageLookupByLibrary.simpleMessage("No one who is contributing to this project is taking any responsibility of what happens to your funds."),
     "settings_donate" : MessageLookupByLibrary.simpleMessage("If you want to help making the App even better, you can donate \$DFI here:"),
+    "settings_logs_copied" : MessageLookupByLibrary.simpleMessage("Logs copied..."),
     "settings_network" : MessageLookupByLibrary.simpleMessage("Network"),
     "settings_network_changed" : MessageLookupByLibrary.simpleMessage("Network updated..."),
     "settings_remove_seed" : MessageLookupByLibrary.simpleMessage("Remove Seed"),

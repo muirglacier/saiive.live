@@ -745,10 +745,10 @@ class S {
     );
   }
 
-  /// `We did not found a used account, but we have created on for you!`
+  /// `We did not found a used account, but we have created one for you!`
   String get wallet_restore_noAccountFound {
     return Intl.message(
-      'We did not found a used account, but we have created on for you!',
+      'We did not found a used account, but we have created one for you!',
       name: 'wallet_restore_noAccountFound',
       desc: '',
       args: [],

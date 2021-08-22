@@ -213,7 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_restore_enterWords" : MessageLookupByLibrary.simpleMessage("Selelct phrase words"),
     "wallet_restore_invalidMnemonic" : MessageLookupByLibrary.simpleMessage("The recovery phrase is invalid!"),
     "wallet_restore_loading" : MessageLookupByLibrary.simpleMessage("Restoring your wallet, this can take up some time!"),
-    "wallet_restore_noAccountFound" : MessageLookupByLibrary.simpleMessage("We did not found a used account, but we have created on for you!"),
+    "wallet_restore_noAccountFound" : MessageLookupByLibrary.simpleMessage("We did not found a used account, but we have created one for you!"),
     "wallet_restore_not_safed" : MessageLookupByLibrary.simpleMessage("You didn\'t safed your recovery words, wanna do that now?"),
     "wallet_restore_recoveryPhrase" : MessageLookupByLibrary.simpleMessage("Recovery phrase"),
     "wallet_restore_word_empty" : MessageLookupByLibrary.simpleMessage("Please enter Word"),

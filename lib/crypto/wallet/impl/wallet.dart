@@ -149,7 +149,9 @@ abstract class Wallet extends IWallet {
   }
 
   Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) async {
-    assert(_wallets.containsKey(account.uniqueId));
+    if (!_wallets.containsKey(account.uniqueId)) {
+      return List<WalletAddress>.empty();
+    }
 
     return await _wallets[account.uniqueId].getPublicKeys(walletDatabase);
   }

@@ -108,6 +108,18 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                               //     },
                               //   ),
                               // ),
+                              // ListTile(
+                              //   title: const Text('Bech32'),
+                              //   leading: Radio<AddressType>(
+                              //     value: AddressType.Bech32,
+                              //     groupValue: _addressType,
+                              //     onChanged: (AddressType value) {
+                              //       setState(() {
+                              //         _addressType = value;
+                              //       });
+                              //     },
+                              //   ),
+                              // ),
                             ],
                           ),
                           isExpanded: _isExpanded)
@@ -147,10 +159,11 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                               leading: Text(S.of(context).address + ": "),
                               title: Text(widget.walletAddress.publicKey),
                             ),
-                            ListTile(
-                              leading: const Text('Path' + ": "),
-                              title: Text(widget.walletAddress.path(widget.walletAccount)),
-                            ),
+                            if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount)
+                              ListTile(
+                                leading: const Text('Path' + ": "),
+                                title: Text(widget.walletAddress.path(widget.walletAccount)),
+                              ),
                             ListTile(
                               leading: const Text('Type' + ": "),
                               title: Text(widget.walletAddress.addressType.toString()),

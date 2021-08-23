@@ -151,15 +151,23 @@ class HdWalletUtil {
       }
     } else if (chain == ChainType.DeFiChain) {
       if (network == ChainNet.Mainnet) {
+        if (address.startsWith("df")) {
+          return AddressType.Bech32;
+        }
         if (address.startsWith("d")) {
           return AddressType.P2SHSegwit;
-        } else if (address.startsWith("8")) {
+        }
+        if (address.startsWith("8")) {
           return AddressType.Legacy;
         }
       } else {
+        if (address.startsWith("tf")) {
+          return AddressType.Bech32;
+        }
         if (address.startsWith("t")) {
           return AddressType.P2SHSegwit;
-        } else if (address.startsWith("7")) {
+        }
+        if (address.startsWith("7")) {
           return AddressType.Legacy;
         }
       }

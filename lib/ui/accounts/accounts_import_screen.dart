@@ -92,7 +92,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
     final walletDb = await walletDbFactory.getDatabase(widget.chainType, currentNet);
 
     //propably a publicKey
-    if (data.length == 34) {
+    if (data.length == 34 || data.length == 42) {
       final isOwnAddress = await walletDb.isOwnAddress(data);
 
       if (isOwnAddress) {
@@ -107,6 +107,8 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             content: Text(S.of(context).wallet_accounts_key_already_imported),
           ));
         }
+
+        popToAccountsPage();
 
         return;
       }
@@ -123,18 +125,9 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
 
         var addressType = HdWalletUtil.getAddressType(data, widget.chainType, currentNet);
 
-        if (addressType == null || addressType == AddressType.Legacy) {
-          //TODO: Change as soon as we support legacy addresses
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(S.of(context).wallet_accounts_import_unsupported_key),
-          ));
-
-          return;
-        }
-
         await Navigator.of(context).push(MaterialPageRoute(
             settings: RouteSettings(name: "/accountsEditScreen"),
-            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, data, AddressType.P2SHSegwit, privateKey: null)));
+            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, data, addressType, privateKey: null)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_accounts_import_invalid_pub_key),

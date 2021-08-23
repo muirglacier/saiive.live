@@ -403,7 +403,15 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   Future clearUnspentTransactions(WalletAccount account) async {
-    await _unspentStoreInstance.delete(await database);
+    var dbStore = _unspentStoreInstance;
+
+    final db = await database;
+    final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('accountId', account.uniqueId)));
+
+    var transactionData = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+    final transactionsIds = transactionData.map((e) => e.accountId).toList();
+
+    await _unspentStoreInstance.records(transactionsIds).delete(await database);
   }
 
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {

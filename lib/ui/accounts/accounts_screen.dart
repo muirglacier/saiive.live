@@ -132,9 +132,10 @@ class _AccountScreen extends State<AccountsScreen> {
   }
 
   Widget _buildAccountEntry(BuildContext context, WalletAccount account) {
+    final width = MediaQuery.of(context).size.width;
     return Card(
         child: ListTile(
-      leading: SizedBox(width: 100, child: _buildSelectIcon(account.selected, account)),
+      leading: SizedBox(width: width / 3, child: _buildSelectIcon(account.selected, account)),
       title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

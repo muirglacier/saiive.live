@@ -21,7 +21,9 @@
   "address": "Address",
   "details": "Details",
   "delete": "Delete",
-  
+  "show": "Display",
+  "copy": "Copy",
+
   "save": "Save",
   "add": "Add",
   
@@ -135,6 +137,7 @@
   "wallet_accounts_key_already_imported": "The key is already imported!",
   "wallet_accounts_cannot_be_empty": "The field cannot be empty!",
   "wallet_accounts_saved": "Account saved",
+  "wallet_account_export_private_key": "Export private key",
 
   "wallet_send": "Send",
   "wallet_send_address": "Address",

@@ -8,6 +8,9 @@ import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
+import 'package:saiive.live/ui/accounts/accounts_wallet_address_export_private_key.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/widgets/wallet_receive.dart';
 
 class AccountsAddressAddScreen extends StatefulWidget {
@@ -29,6 +32,7 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
   bool _isExpanded = false;
   bool _isDetailsExpanded = true;
   bool _isQrExpanded = false;
+  bool _isExpertModeExpanded = false;
 
   _init() {
     if (!widget.isNewAddress) {
@@ -201,6 +205,52 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                                 ));
                           },
                           body: Column(children: <Widget>[WalletReceiveWidget(pubKey: widget.walletAddress.publicKey, chain: widget.walletAccount.chain, showOnlyQr: true)]))
+                    ])),
+          if (!widget.isNewAddress)
+            Padding(
+                padding: EdgeInsets.only(top: 20, bottom: 20, left: 5, right: 5),
+                child: ExpansionPanelList(
+                    expandedHeaderPadding: EdgeInsets.all(5),
+                    expansionCallback: (int index, bool isExpanded) {
+                      setState(() {
+                        _isExpertModeExpanded = !_isExpertModeExpanded;
+                      });
+                    },
+                    children: [
+                      ExpansionPanel(
+                          isExpanded: _isExpertModeExpanded,
+                          headerBuilder: (context, isOpen) {
+                            return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isExpertModeExpanded = !_isExpertModeExpanded;
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    S.of(context).expert_title,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ));
+                          },
+                          body: Column(children: <Widget>[
+                            ElevatedButton(
+                                onPressed: () async {
+                                  sl.get<AuthenticationHelper>().forceAuth(context, () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        settings: RouteSettings(name: "/accounts/exportPrivateKey"),
+                                        builder: (BuildContext context) =>
+                                            AccountsWalletAddressExportPrivateKeyPage(account: widget.walletAccount, address: widget.walletAddress)));
+                                  });
+                                },
+                                child: Text(S.of(context).wallet_account_export_private_key)),
+                            SizedBox(
+                              height: 20,
+                            )
+                          ]))
                     ])),
           SizedBox(height: 20),
           Center(

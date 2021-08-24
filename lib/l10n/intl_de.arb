@@ -22,7 +22,8 @@
   "visibility": "Sichtbarkeit",
   "address": "Adresse",
   "details": "Details",
-  
+  "show": "Anzeigen",
+  "copy": "Kopieren",
   
   "test_info": "Danke fürs Testen!",
   "test_info_test": "Danke für deine Hilfe das saiive.live für alle verfügbar zu machen. Dein Feedback hilft uns sehr!",
@@ -133,6 +134,7 @@
   "wallet_accounts_key_already_imported": "Der Schlüssel ist bereits importiert!",
   "wallet_accounts_cannot_be_empty": "Das Feld darf nicht leer sein!",
   "wallet_accounts_saved": "Konto wurde gespeichert",
+  "wallet_account_export_private_key": "Private Key exportieren",
 
   "settings": "Einstellungen",
   "settings_wallet": "Wallet",

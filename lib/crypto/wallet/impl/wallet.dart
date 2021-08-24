@@ -301,7 +301,6 @@ abstract class Wallet extends IWallet {
     return tx.txId;
   }
 
-  @protected
   Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
     if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
       final key = seedList;

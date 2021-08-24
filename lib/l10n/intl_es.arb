@@ -22,6 +22,8 @@
   "address": "Habla a",
   "details": "Detalles",
   "delete": "Borrar",
+  "show": "Display",
+  "copy": "Copy",
 
   "save": "Ahorrar",
   "aDd": "Agregar",
@@ -135,6 +137,7 @@
   "wallet_accounts_key_already_imported": "The key is already imported!",
   "wallet_accounts_cannot_be_empty": "The field cannot be empty!",
   "wallet_accounts_saved": "Account saved",
+  "wallet_account_export_private_key": "Export private key",
 
   "wallet_send": "Enviar",
   "wallet_send_address": "Dirección",

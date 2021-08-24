@@ -72,6 +72,7 @@ dependencies:
   webview_flutter: ^2.0.7
   wakelock: ^0.5.2
   share_plus: ^2.1.4
+  blur: ^3.0.0
 
   # Desktop
   window_size:

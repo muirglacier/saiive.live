@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
@@ -44,6 +45,7 @@ abstract class IWalletService {
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards);
 
   Future<Map<String, bool>> getIsAlive();
+  Future<String> getWifPrivateKey(WalletAccount account, WalletAddress address);
 }
 
 class WalletService implements IWalletService {
@@ -192,6 +194,16 @@ class WalletService implements IWalletService {
       return await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, token, !includeRewards);
     }
     return List<AccountHistory>.empty();
+  }
+
+  Future<String> getWifPrivateKey(WalletAccount walletAccount, WalletAddress address) async {
+    ECPair privateKey;
+    if (walletAccount.chain == ChainType.DeFiChain) {
+      privateKey = await _defiWallet.getPrivateKey(address, walletAccount);
+    } else {
+      privateKey = await _bitcoinWallet.getPrivateKey(address, walletAccount);
+    }
+    return privateKey.toWIF();
   }
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet) async {

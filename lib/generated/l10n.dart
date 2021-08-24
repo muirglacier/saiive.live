@@ -215,6 +215,26 @@ class S {
     );
   }
 
+  /// `Display`
+  String get show {
+    return Intl.message(
+      'Display',
+      name: 'show',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy`
+  String get copy {
+    return Intl.message(
+      'Copy',
+      name: 'copy',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(
@@ -1230,6 +1250,16 @@ class S {
     return Intl.message(
       'Account saved',
       name: 'wallet_accounts_saved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export private key`
+  String get wallet_account_export_private_key {
+    return Intl.message(
+      'Export private key',
+      name: 'wallet_account_export_private_key',
       desc: '',
       args: [],
     );

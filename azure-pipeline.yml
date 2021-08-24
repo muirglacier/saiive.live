@@ -125,18 +125,6 @@ stages:
           useLegacyPattern: false
           enableTelemetry: false
 
-      - task: ReplaceInFilesTextByText@2
-        inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(azure-blob-key-staging)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
-
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:

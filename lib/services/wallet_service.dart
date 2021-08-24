@@ -231,7 +231,7 @@ class WalletService implements IWalletService {
           chain: chain,
           account: 0,
           walletAccountType: WalletAccountType.HdAccount,
-          derivationPathType: DerivationPathType.FullNodeWallet,
+          derivationPathType: PathDerivationType.FullNodeWallet,
           name: ChainHelper.chainTypeString(chain),
           selected: true);
 

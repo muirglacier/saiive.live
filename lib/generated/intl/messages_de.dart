@@ -181,6 +181,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_info5_header" : MessageLookupByLibrary.simpleMessage("Familien Konto?"),
     "wallet_new_info5_text" : MessageLookupByLibrary.simpleMessage("Du kannst deine Wiederherstellungswörter mit Personen in deinem Haushalt teilen um ein gemeinsames Haushaltskonto zu führen!"),
     "wallet_new_phrase_info" : MessageLookupByLibrary.simpleMessage("Das sind deine Wiederherstellungswörter. Schreibe sie auf, und verliere sie nicht!"),
+    "wallet_new_phrase_path_derivation_type" : MessageLookupByLibrary.simpleMessage("Adresspfad Typ"),
     "wallet_new_reveal" : MessageLookupByLibrary.simpleMessage("Zeig meine Wiederherstellungswörter"),
     "wallet_new_test_confirm" : MessageLookupByLibrary.simpleMessage("Bestätige deine Wiederherstellungswörter"),
     "wallet_new_test_invalid" : MessageLookupByLibrary.simpleMessage("Ungültiges Wort"),

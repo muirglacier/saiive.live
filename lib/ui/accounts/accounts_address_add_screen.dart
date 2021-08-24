@@ -1,11 +1,14 @@
+import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
@@ -204,7 +207,25 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                                   ),
                                 ));
                           },
-                          body: Column(children: <Widget>[WalletReceiveWidget(pubKey: widget.walletAddress.publicKey, chain: widget.walletAccount.chain, showOnlyQr: true)]))
+                          body: Column(children: <Widget>[
+                            WalletReceiveWidget(pubKey: widget.walletAddress.publicKey, chain: widget.walletAccount.chain, showOnlyQr: true),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                    await ClipboardManager.copyToClipBoard(
+                                      widget.walletAddress.publicKey,
+                                    );
+                                    ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
+                                      content: Text(S.of(context).receive_address_copied_to_clipboard),
+                                    ));
+
+                                    await Clipboard.setData(new ClipboardData(
+                                      text: widget.walletAddress.publicKey,
+                                    ));
+                                  });
+                                },
+                                child: Text(S.of(context).copy)),
+                          ]))
                     ])),
           if (!widget.isNewAddress)
             Padding(
@@ -249,7 +270,7 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                                 child: Text(S.of(context).wallet_account_export_private_key)),
                             SizedBox(
                               height: 20,
-                            )
+                            ),
                           ]))
                     ])),
           SizedBox(height: 20),

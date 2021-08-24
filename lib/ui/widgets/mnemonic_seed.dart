@@ -1,4 +1,5 @@
 import 'package:defichaindart/defichaindart.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/bip39/english.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 
 class MnemonicSeedWidget extends StatefulWidget {
   final List<String> words;
-  final Function(String) onNext;
+  final Function(String, PathDerivationType pathDerivationType) onNext;
   final bool readOnly;
   final bool showNextButton;
 
@@ -24,6 +25,10 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
   Map<int, TextEditingController> _textControllers = new Map<int, TextEditingController>();
   final _formKey = GlobalKey<FormState>();
 
+  bool _isExpanded = false;
+
+  PathDerivationType _pathDerivationType = PathDerivationType.FullNodeWallet;
+
   String getPhrase() {
     return _textFields.values.map((e) => e.controller.text).join(" ");
   }
@@ -39,10 +44,9 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
         return;
       }
 
-      widget.onNext(phrase);
+      widget.onNext(phrase, _pathDerivationType);
     }
   }
-
 
   @override
   void initState() {
@@ -52,6 +56,90 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
       _textControllers[i] = TextEditingController();
       _textControllers[i].text = widget.words.length > i ? widget.words[i] : "";
     }
+  }
+
+  Widget buildDerivationPathType(BuildContext context) {
+    return ExpansionPanelList(
+        expandedHeaderPadding: EdgeInsets.all(5),
+        expansionCallback: (int index, bool isExpanded) {
+          setState(() {
+            _isExpanded = !_isExpanded;
+          });
+        },
+        children: [
+          ExpansionPanel(
+              isExpanded: _isExpanded,
+              headerBuilder: (context, isOpen) {
+                return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isExpanded = !_isExpanded;
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        S.of(context).details,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ));
+              },
+              body: Column(children: <Widget>[
+                Column(children: <Widget>[
+                  Text(S.of(context).wallet_new_phrase_path_derivation_type),
+                  ListTile(
+                    title: const Text('FullNodeWallet'),
+                    leading: Radio<PathDerivationType>(
+                      value: PathDerivationType.FullNodeWallet,
+                      groupValue: _pathDerivationType,
+                      onChanged: (PathDerivationType value) {
+                        setState(() {
+                          _pathDerivationType = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('BIP32'),
+                    leading: Radio<PathDerivationType>(
+                      value: PathDerivationType.BIP32,
+                      groupValue: _pathDerivationType,
+                      onChanged: (PathDerivationType value) {
+                        setState(() {
+                          _pathDerivationType = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('BIP44'),
+                    leading: Radio<PathDerivationType>(
+                      value: PathDerivationType.BIP44,
+                      groupValue: _pathDerivationType,
+                      onChanged: (PathDerivationType value) {
+                        setState(() {
+                          _pathDerivationType = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Jellyfish'),
+                    leading: Radio<PathDerivationType>(
+                      value: PathDerivationType.JellyfishBullshit,
+                      groupValue: _pathDerivationType,
+                      onChanged: (PathDerivationType value) {
+                        setState(() {
+                          _pathDerivationType = value;
+                        });
+                      },
+                    ),
+                  ),
+                ])
+              ]))
+        ]);
   }
 
   @override
@@ -103,6 +191,8 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
                       child: Column(children: [
                         row,
                         Padding(padding: EdgeInsets.only(top: 30)),
+                        if (widget.readOnly) buildDerivationPathType(context),
+                        if (widget.readOnly) SizedBox(height: 10),
                         if (widget.showNextButton)
                           ElevatedButton(
                             child: Text(S.of(context).next),

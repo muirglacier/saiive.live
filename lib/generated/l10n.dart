@@ -665,6 +665,16 @@ class S {
     );
   }
 
+  /// `Path derviation type`
+  String get wallet_new_phrase_path_derivation_type {
+    return Intl.message(
+      'Path derviation type',
+      name: 'wallet_new_phrase_path_derivation_type',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `We are preparing your wallet, hang on a second.`
   String get wallet_new_creating {
     return Intl.message(

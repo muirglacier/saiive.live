@@ -299,7 +299,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future<WalletAccount> addAccount(
-      {@required String name, @required int account, @required ChainType chain, @required DerivationPathType derivationPathType, bool isSelected = false}) async {
+      {@required String name, @required int account, @required ChainType chain, @required PathDerivationType derivationPathType, bool isSelected = false}) async {
     final db = await database;
 
     if (!await _accountV2StoreInstance.record(account).exists(db)) {

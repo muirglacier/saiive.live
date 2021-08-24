@@ -66,31 +66,33 @@ class WalletRestore {
       }
     }
 
-    var fullNode = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.FullNodeWallet);
+    var fullNode = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
     checkIfExistingAndAddToList(fullNode);
 
-    var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.JellyfishBullshit);
+    var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
     checkIfExistingAndAddToList(jellyFish);
 
-    var bip32 = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.BIP32);
+    var bip32 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
     checkIfExistingAndAddToList(bip32);
 
-    var bip44 = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.BIP44);
+    var bip44 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
     checkIfExistingAndAddToList(bip44);
 
     return Tuple2(walletAccounts, walletAddresses);
   }
 
   static Future<Tuple2<WalletAccount, List<WalletAddress>>> _restoreDerivationPath(
-      int account, List<int> key, ApiService api, ChainType chain, ChainNet network, DerivationPathType derivationPathType) async {
+      int account, List<int> key, ApiService api, ChainType chain, ChainNet network, PathDerivationType pathDerivationType) async {
     final walletAccount = WalletAccount(Uuid().v4(),
-        name: ChainHelper.chainTypeString(chain) + (account + 1).toString(),
+        name: "${ChainHelper.chainTypeString(chain)}_${pathDerivationTypeString(pathDerivationType)}_${(account + 1)}",
         id: account,
         account: account,
         chain: chain,
         walletAccountType: WalletAccountType.HdAccount,
-        derivationPathType: DerivationPathType.FullNodeWallet,
+        derivationPathType: pathDerivationType,
+        defaultAddressType: getDefaultAddressTypeForPathDerivation(pathDerivationType),
         selected: true);
+
     final addresses = await _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit);
     final addressesBech32 = await _restore(walletAccount, key, api, chain, network, AddressType.Bech32);
 
@@ -115,7 +117,7 @@ class WalletRestore {
         var path = HdWalletUtil.derivePathsWithChange(account.account, IWallet.KeysPerQuery * i, account.derivationPathType, IWallet.KeysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
-        LogHelper.instance.d("($chain) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
+        LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
         for (final tx in transactions) {
           final keyIndex = publicKeys.indexWhere((item) => item == tx.address);

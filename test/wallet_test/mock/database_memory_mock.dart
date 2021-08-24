@@ -21,7 +21,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<WalletAccount> addAccount({String name, int account, ChainType chain, DerivationPathType derivationPathType, bool isSelected = false}) async {
+  Future<WalletAccount> addAccount({String name, int account, ChainType chain, PathDerivationType derivationPathType, bool isSelected = false}) async {
     var newAccount = WalletAccount(Uuid().v4(),
         name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, derivationPathType: derivationPathType);
 

@@ -71,7 +71,8 @@
   "wallet_new_test_put2": " word here",
   "wallet_new_test_confirm": "Confirm recovery phrase",
   "wallet_new_test_confirm_info": "Just to make sure that you wrote down the correct words!",
-  "wallet_new_phrase_info": "This is your recovery phrase! Write it down, and do not lose it!",
+  "wallet_new_phrase_info": "This is your recovery phrase! Write it down, and do not lose it!", 
+  "wallet_new_phrase_path_derivation_type": "Path derviation type",
   "wallet_new_creating": "We are preparing your wallet, hang on a second.",
   "wallet_new_creating_title": "Wallet preparing",
 

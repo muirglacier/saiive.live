@@ -36,8 +36,8 @@ void main() {
       final seedHex = defichain.mnemonicToSeedHex(mnemonic, passphrase: "");
       final seed = HEX.decode(seedHex);
 
-      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.P2SHSegwit, DerivationPathType.FullNodeWallet, 20);
-      var changeKeys = await HdWalletUtil.derivePublicKeys(seed, 0, true, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.P2SHSegwit, DerivationPathType.FullNodeWallet, 20);
+      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.P2SHSegwit, PathDerivationType.FullNodeWallet, 20);
+      var changeKeys = await HdWalletUtil.derivePublicKeys(seed, 0, true, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.P2SHSegwit, PathDerivationType.FullNodeWallet, 20);
 
       expect(keys.length, 20);
       expect(changeKeys.length, 20);
@@ -60,7 +60,7 @@ void main() {
       final seedHex = defichain.mnemonicToSeedHex(mnemonic, passphrase: "");
       final seed = HEX.decode(seedHex);
 
-      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.Bitcoin, ChainNet.Testnet, AddressType.Legacy, DerivationPathType.BIP32, 20);
+      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.Bitcoin, ChainNet.Testnet, AddressType.Legacy, PathDerivationType.BIP32, 20);
 
       expect(keys.length, 20);
       expect(keys[0], "mnhVftGjJG8wB3299oKFahZBJVWaQYSPmf");
@@ -77,7 +77,7 @@ void main() {
       final seedHex = defichain.mnemonicToSeedHex(mnemonic, passphrase: "");
       final seed = HEX.decode(seedHex);
 
-      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Mainnet, AddressType.Bech32, DerivationPathType.JellyfishBullshit, 1);
+      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Mainnet, AddressType.Bech32, PathDerivationType.JellyfishBullshit, 1);
       expect(keys.contains("df1qjgsn8d8wxx4pfehcg6cuhk8l7av2302yfe8g34"), true);
     });
 
@@ -87,7 +87,7 @@ void main() {
       final seedHex = defichain.mnemonicToSeedHex(mnemonic, passphrase: "");
       final seed = HEX.decode(seedHex);
 
-      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.Bech32, DerivationPathType.JellyfishBullshit, 1);
+      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.Bech32, PathDerivationType.JellyfishBullshit, 1);
       expect(keys.contains("tf1q0sdhm4s642cw4cfj952ghpxykgs4grqcvc7amc"), true);
     });
 
@@ -97,8 +97,8 @@ void main() {
       final seedHex = defichain.mnemonicToSeedHex(mnemonic, passphrase: "");
       final seed = HEX.decode(seedHex);
 
-      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.Legacy, DerivationPathType.FullNodeWallet, 20);
-      var changeKeys = await HdWalletUtil.derivePublicKeys(seed, 0, true, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.Legacy, DerivationPathType.FullNodeWallet, 20);
+      var keys = await HdWalletUtil.derivePublicKeys(seed, 0, false, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.Legacy, PathDerivationType.FullNodeWallet, 20);
+      var changeKeys = await HdWalletUtil.derivePublicKeys(seed, 0, true, 0, ChainType.DeFiChain, ChainNet.Testnet, AddressType.Legacy, PathDerivationType.FullNodeWallet, 20);
 
       expect(keys.length, 20);
       expect(changeKeys.length, 20);

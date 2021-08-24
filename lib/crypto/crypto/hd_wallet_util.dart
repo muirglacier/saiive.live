@@ -4,9 +4,11 @@ import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/errors/NoUtxoError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:tuple/tuple.dart';
 
 class PublicPrivateKeyPair {
   final String privateKey;
@@ -37,18 +39,18 @@ class HdWalletUtil {
     }
   }
 
-  static String _getEncryptionKey(DerivationPathType derivationPathType) {
+  static String _getEncryptionKey(PathDerivationType derivationPathType) {
     switch (derivationPathType) {
-      case DerivationPathType.JellyfishBullshit:
+      case PathDerivationType.JellyfishBullshit:
         return "@defichain/jellyfish-wallet-mnemonic";
       default:
         return "Bitcoin seed";
     }
   }
 
-  static bip32.BIP32 _getBip32Key(DerivationPathType derivationPathType, Uint8List seed, bip32.NetworkType networkType) {
+  static bip32.BIP32 _getBip32Key(PathDerivationType derivationPathType, Uint8List seed, bip32.NetworkType networkType) {
     switch (derivationPathType) {
-      case DerivationPathType.FullNodeWallet:
+      case PathDerivationType.FullNodeWallet:
         final hdSeed = bip32.BIP32.fromSeedWithCustomKey(seed, _getEncryptionKey(derivationPathType), networkType);
         final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
         return xMasterPriv;
@@ -58,7 +60,7 @@ class HdWalletUtil {
   }
 
   static String getPublicKey(
-      Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType, DerivationPathType derivationPathType) {
+      Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType, PathDerivationType derivationPathType) {
     final networkType = _getNetwork(chainType, network);
 
     final hdSeed = _getBip32Key(derivationPathType, seed, networkType);
@@ -73,7 +75,7 @@ class HdWalletUtil {
     return address;
   }
 
-  static ECPair getKeyPair(Uint8List seed, int account, bool isChangeAddress, int index, ChainType chainType, ChainNet network, DerivationPathType derivationPathType) {
+  static ECPair getKeyPair(Uint8List seed, int account, bool isChangeAddress, int index, ChainType chainType, ChainNet network, PathDerivationType derivationPathType) {
     final networkType = _getNetwork(chainType, network);
 
     final path = derivePath(account, isChangeAddress, index, derivationPathType);
@@ -190,7 +192,7 @@ class HdWalletUtil {
     return 9;
   }
 
-  static Future<String> buildTransaction(List<tx.Transaction> inputTxs, List<ECPair> keys, String to, int amount, int fee, String returnAddress,
+  static Future<String> buildTransaction(List<tx.Transaction> inputTxs, List<Tuple2<WalletAddress, ECPair>> keys, String to, int amount, int fee, String returnAddress,
       Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional, ChainType chain, ChainNet net) async {
     var network = getNetworkType(chain, net);
 
@@ -209,8 +211,18 @@ class HdWalletUtil {
     txb.setLockTime(0);
 
     int totalInputValue = 0;
+    int pos = 0;
     for (final tx in inputTxs) {
-      txb.addInput(tx.mintTxId, tx.mintIndex);
+      var key = keys[pos];
+
+      if (key.item1.addressType == AddressType.Bech32) {
+        final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.item2.publicKey), network: network).data;
+        final redeemScript = p2wpkh.output;
+
+        txb.addInput(tx.mintTxId, tx.mintIndex, null, redeemScript);
+      } else {
+        txb.addInput(tx.mintTxId, tx.mintIndex);
+      }
 
       final mintTxId = tx.mintTxId;
       final mintIndex = tx.mintIndex;
@@ -218,6 +230,7 @@ class HdWalletUtil {
       LogHelper.instance.d("set tx input $mintTxId@$mintIndex input value is $inValue");
 
       totalInputValue += tx.valueRaw;
+      pos++;
     }
 
     if (totalInputValue == amount) {
@@ -249,11 +262,19 @@ class HdWalletUtil {
 
     int index = 0;
     for (final key in keys) {
-      final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.publicKey)).data;
-      final redeemScript = p2wpkh.output;
-      final witnessValue = inputTxs[index].valueRaw;
+      if (key.item1.addressType == AddressType.P2SHSegwit) {
+        final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.item2.publicKey)).data;
+        final redeemScript = p2wpkh.output;
+        final witnessValue = inputTxs[index].valueRaw;
 
-      txb.sign(vin: index, keyPair: key, witnessValue: witnessValue, redeemScript: redeemScript);
+        txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue, redeemScript: redeemScript);
+      } else if (key.item1.addressType == AddressType.Bech32) {
+        final witnessValue = inputTxs[index].valueRaw;
+
+        txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue);
+      } else {
+        throw new ArgumentError("${key.item1.addressType} not supported...");
+      }
       index++;
     }
 
@@ -261,14 +282,14 @@ class HdWalletUtil {
   }
 
   static Future<String> derivePublicKey(
-      Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType, DerivationPathType derivationPathType) async {
+      Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType, PathDerivationType derivationPathType) async {
     final address = getPublicKey(seed, account, changeAddress, index, chainType, network, addressType, derivationPathType);
 
     return Future.value(address);
   }
 
   static Future<List<String>> derivePublicKeys(Uint8List seed, int account, bool changeAddress, int index, ChainType chainType, ChainNet network, AddressType addressType,
-      DerivationPathType derivationPathType, int count) async {
+      PathDerivationType derivationPathType, int count) async {
     final list = List<String>.empty(growable: true);
     for (int i = 0; i < count; i++) {
       final key = await derivePublicKey(seed, account, changeAddress, index + i, chainType, network, addressType, derivationPathType);
@@ -278,7 +299,7 @@ class HdWalletUtil {
   }
 
   static Future<List<String>> derivePublicKeysWithChange(
-      Uint8List seed, int account, int index, ChainType chainType, ChainNet network, AddressType addressType, DerivationPathType derivationPathType, int count) async {
+      Uint8List seed, int account, int index, ChainType chainType, ChainNet network, AddressType addressType, PathDerivationType derivationPathType, int count) async {
     final list = List<String>.empty(growable: true);
     for (int i = 0; i < count; i++) {
       final key = await derivePublicKey(seed, account, false, index + i, chainType, network, addressType, derivationPathType);
@@ -291,19 +312,19 @@ class HdWalletUtil {
     return list;
   }
 
-  static String derivePath(int account, bool changeAddress, int index, DerivationPathType derivationPathType) {
+  static String derivePath(int account, bool changeAddress, int index, PathDerivationType derivationPathType) {
     switch (derivationPathType) {
-      case DerivationPathType.BIP32:
-      case DerivationPathType.FullNodeWallet:
+      case PathDerivationType.BIP32:
+      case PathDerivationType.FullNodeWallet:
         return "m/$account'/${changeAddress ? 1 : 0}'/$index'";
         break;
-      case DerivationPathType.BIP44:
+      case PathDerivationType.BIP44:
         return "m/44'/$DEFICHAIN_COIN_TYPE'/$account'/${changeAddress ? 1 : 0}'/$index'";
         break;
-      case DerivationPathType.JellyfishBullshit:
+      case PathDerivationType.JellyfishBullshit:
         return "$DEFICHAIN_COIN_TYPE/$account/${changeAddress ? 1 : 0}/$index";
         break;
-      case DerivationPathType.SingleKey:
+      case PathDerivationType.SingleKey:
         throw ArgumentError("Not supported for single key!");
     }
     throw ArgumentError("Missing case in switch statement!");
@@ -329,7 +350,7 @@ class HdWalletUtil {
     return int.parse(addressIndex);
   }
 
-  static List<String> derivePaths(int account, bool changeAddress, int index, DerivationPathType derivationPathType, int count) {
+  static List<String> derivePaths(int account, bool changeAddress, int index, PathDerivationType derivationPathType, int count) {
     final list = List<String>.empty(growable: true);
 
     for (int i = 0; i < count; i++) {
@@ -338,7 +359,7 @@ class HdWalletUtil {
     return list;
   }
 
-  static List<String> derivePathsWithChange(int account, int index, DerivationPathType derivationPathType, int count) {
+  static List<String> derivePathsWithChange(int account, int index, PathDerivationType derivationPathType, int count) {
     final list = List<String>.empty(growable: true);
 
     for (int i = 0; i < count; i++) {

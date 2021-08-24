@@ -1,9 +1,36 @@
 import 'package:flutter/cupertino.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 
 import '../chain.dart';
 
 enum WalletAccountType { HdAccount, PublicKey, PrivateKey }
-enum DerivationPathType { FullNodeWallet, BIP32, BIP44, JellyfishBullshit, SingleKey }
+enum PathDerivationType { FullNodeWallet, BIP32, BIP44, JellyfishBullshit, SingleKey }
+
+String pathDerivationTypeString(PathDerivationType pathDerivationType) {
+  switch (pathDerivationType) {
+    case PathDerivationType.FullNodeWallet:
+      return "FullNodeWallet";
+    case PathDerivationType.BIP32:
+      return "BIP32";
+    case PathDerivationType.BIP44:
+      return "BIP44";
+    case PathDerivationType.JellyfishBullshit:
+      return "JellyfishBS";
+    case PathDerivationType.SingleKey:
+      return "SingleKey";
+    default:
+      return "NOTFOUND!";
+  }
+}
+
+AddressType getDefaultAddressTypeForPathDerivation(PathDerivationType pathDerivationType) {
+  switch (pathDerivationType) {
+    case PathDerivationType.JellyfishBullshit:
+      return AddressType.Bech32;
+    default:
+      return AddressType.P2SHSegwit;
+  }
+}
 
 class WalletAccount {
   final int account;
@@ -18,7 +45,8 @@ class WalletAccount {
   bool selected;
 
   WalletAccountType walletAccountType;
-  DerivationPathType derivationPathType;
+  PathDerivationType derivationPathType;
+  AddressType defaultAddressType = AddressType.P2SHSegwit;
 
   get uniqueId => _uniqueId;
 
@@ -31,7 +59,7 @@ class WalletAccount {
   static String getStringForWalletAccountType(WalletAccountType accountType) {
     switch (accountType) {
       case WalletAccountType.HdAccount:
-        return "HDAccount";
+        return "HD";
       case WalletAccountType.PublicKey:
         return "PublicKey";
       case WalletAccountType.PrivateKey:
@@ -48,7 +76,12 @@ class WalletAccount {
       @required this.name,
       @required this.derivationPathType,
       this.lastAccess,
-      this.selected = false});
+      this.defaultAddressType,
+      this.selected = false}) {
+    if (this.defaultAddressType == null) {
+      this.defaultAddressType = getDefaultAddressTypeForPathDerivation(this.derivationPathType);
+    }
+  }
 
   factory WalletAccount.fromJson(Map<String, dynamic> json) {
     return WalletAccount(json.containsKey("uniqueId") ? json["uniqueId"] : null,
@@ -59,7 +92,8 @@ class WalletAccount {
         lastAccess: json['lastAccess'],
         selected: json['selected'],
         walletAccountType: json.containsKey("walletAccountType") ? WalletAccountType.values[json['walletAccountType']] : WalletAccountType.HdAccount,
-        derivationPathType: json.containsKey("derivationPathType") ? DerivationPathType.values[json['derivationPathType']] : DerivationPathType.FullNodeWallet);
+        derivationPathType: json.containsKey("pathDerivationType") ? PathDerivationType.values[json['pathDerivationType']] : PathDerivationType.FullNodeWallet,
+        defaultAddressType: json.containsKey("defaultAddressType") ? AddressType.values[json['defaultAddressType']] : AddressType.P2SHSegwit);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -70,7 +104,8 @@ class WalletAccount {
         'lastAccess': lastAccess,
         'selected': selected,
         'walletAccountType': walletAccountType.index,
-        'derivationPathType': derivationPathType.index,
-        'uniqueId': _uniqueId
+        'pathDerivationType': derivationPathType.index,
+        'uniqueId': _uniqueId,
+        "defaultAddressType": defaultAddressType.index
       };
 }

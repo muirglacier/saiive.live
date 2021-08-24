@@ -7,6 +7,7 @@ import 'package:saiive.live/crypto/crypto/from_account.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet_helper.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
@@ -142,7 +143,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var inputTxs = List<tx.Transaction>.empty(growable: true);
     inputTxs.add(authInputA);
 
-    final keys = List<ECPair>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
 
     for (final tx in inputTxs) {
       final address = await walletDatabase.getWalletAddress(tx.address);
@@ -153,7 +154,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       }
 
       final key = await getPrivateKey(address, walletAccount);
-      keys.add(key);
+      keys.add(Tuple2(address, key));
     }
 
     final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, shareAddress, authInputA.value, fee, shareAddress, (txb, txIn, nw) {
@@ -313,7 +314,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         continue;
       }
       final inputTxs = List<tx.Transaction>.empty(growable: true);
-      final keys = List<ECPair>.empty(growable: true);
+      final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
 
       final fromAccount = FromAccount(address: txs.address, amount: txs.balance);
       useAccounts.add(fromAccount);
@@ -322,7 +323,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       inputTxs.add(inputTx);
 
       var keyPair = await getPrivateKey(addressInfo, walletAccount);
-      keys.add(keyPair);
+      keys.add(Tuple2(addressInfo, keyPair));
 
       final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, fromAccount.address, inputTx.valueRaw, fee, changeAddress, (txb, txIn, nw) {
         var useAmount = amount;
@@ -498,7 +499,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   Future<Tuple2<String, List<tx.Transaction>>> prepareAccountToUtxo(String pubKey, Token tokenType, Account account, int fees) async {
     final useInputs = List<tx.Transaction>.empty(growable: true);
-    final keys = List<ECPair>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
 
     final authTx = await getAuthInputsSmart(account.address, AuthTxMin, fees, sendMax: true);
     useInputs.add(authTx);
@@ -516,7 +517,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
     var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
-    keys.add(keyPair);
+    keys.add(Tuple2(addressInfo, keyPair));
 
     var txHex = await HdWalletUtil.buildTransaction(useInputs, keys, pubKey, 0, fees, pubKey, (txb, inputTxs, network) async {
       final mintingStartsAt = txb.tx.ins.length + 1;
@@ -577,7 +578,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     for (final acc in accounts) {
       final useInputs = List<tx.Transaction>.empty(growable: true);
-      final keys = List<ECPair>.empty(growable: true);
+      final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
 
       final authTx = await getAuthInputsSmart(acc.address, AuthTxMin, fees, loadingStream: loadingStream);
       useInputs.add(authTx);
@@ -598,7 +599,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       }
       var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
-      keys.add(keyPair);
+      keys.add(Tuple2(addressInfo, keyPair));
       var useAcc = acc;
 
       if ((accBalance + acc.balance) >= neededUtxo) {

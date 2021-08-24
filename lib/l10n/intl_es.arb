@@ -73,6 +73,7 @@
   "wallet_new_test_confirm": "Confirma tu frase de recuperación",
   "wallet_new_test_confirm_info": "¡Asegúrate de haber escrito las palabras correctas!",
   "wallet_new_phrase_info": "¡Ésta es tu frase de recuperación! Anótala y no la pierdas!",
+  "wallet_new_phrase_path_derivation_type": "Path derviation type",
   "wallet_new_creating": "Estamos preparando tu wallet, espera un segundo.",
   "wallet_new_creating_title": "Preparándo billetera",
 

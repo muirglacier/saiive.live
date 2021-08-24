@@ -63,8 +63,8 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
                 words: split,
                 readOnly: true,
                 showNextButton: widget.showNextButton,
-                onNext: (seed) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split)));
+                onNext: (seed, pathType) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split, pathType)));
                 },
               )))),
             ]))));

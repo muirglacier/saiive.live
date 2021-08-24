@@ -99,10 +99,9 @@ class _AccountScreen extends State<AccountsScreen> {
 
   List<Widget> _buildPublicKeyAddress(BuildContext context, WalletAccount account) {
     if (account.walletAccountType == WalletAccountType.HdAccount) {
+      var text = "${WalletAccount.getStringForWalletAccountType(account.walletAccountType)}";
       return [
-        Text(WalletAccount.getStringForWalletAccountType(account.walletAccountType)),
-        Text(" | Id: ", style: Theme.of(context).textTheme.bodyText1),
-        Text(account.account.toString(), style: Theme.of(context).textTheme.bodyText1),
+        Text(text),
       ];
     }
 
@@ -132,11 +131,14 @@ class _AccountScreen extends State<AccountsScreen> {
   }
 
   Widget _buildAccountEntry(BuildContext context, WalletAccount account) {
-    final width = MediaQuery.of(context).size.width;
     return Card(
         child: ListTile(
-      leading: SizedBox(width: width / 3, child: _buildSelectIcon(account.selected, account)),
-      title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))]),
+      title: Expanded(
+          child: Row(children: [
+        _buildSelectIcon(account.selected, account),
+        SizedBox(width: 10),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))])
+      ])),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

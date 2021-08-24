@@ -249,7 +249,7 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
-          derivationPathType: DerivationPathType.FullNodeWallet,
+          derivationPathType: PathDerivationType.FullNodeWallet,
           walletAccountType: WalletAccountType.HdAccount));
     } else {
       var lastItem = unusedAccounts.item1.last;
@@ -258,7 +258,7 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
-          derivationPathType: DerivationPathType.FullNodeWallet,
+          derivationPathType: PathDerivationType.FullNodeWallet,
           walletAccountType: WalletAccountType.HdAccount));
     }
     return unusedAccounts;
@@ -333,7 +333,7 @@ abstract class Wallet extends IWallet {
 
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
-    final keys = List<ECPair>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
 
     final checkAmount = amount + additionalFees;
 
@@ -358,7 +358,7 @@ abstract class Wallet extends IWallet {
       curAmount += tx.valueRaw;
 
       var keyPair = await getPrivateKey(address, walletAccount);
-      keys.add(keyPair);
+      keys.add(Tuple2(address, keyPair));
 
       if (curAmount >= checkAmount) {
         break;

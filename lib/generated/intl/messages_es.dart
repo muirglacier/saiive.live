@@ -180,6 +180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_info5_header" : MessageLookupByLibrary.simpleMessage("Cuenta familiar?"),
     "wallet_new_info5_text" : MessageLookupByLibrary.simpleMessage("¡Puedes compartir tu frase de recuperación con las personas de tu hogar!"),
     "wallet_new_phrase_info" : MessageLookupByLibrary.simpleMessage("¡Ésta es tu frase de recuperación! Anótala y no la pierdas!"),
+    "wallet_new_phrase_path_derivation_type" : MessageLookupByLibrary.simpleMessage("Path derviation type"),
     "wallet_new_reveal" : MessageLookupByLibrary.simpleMessage("Revela mi frase de recuperación"),
     "wallet_new_test_confirm" : MessageLookupByLibrary.simpleMessage("Confirma tu frase de recuperación"),
     "wallet_new_test_confirm_info" : MessageLookupByLibrary.simpleMessage("¡Asegúrate de haber escrito las palabras correctas!"),

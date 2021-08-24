@@ -68,6 +68,7 @@
   "wallet_new_test_confirm": "Bestätige deine Wiederherstellungswörter",
   "wallet_new_test_confirm:info": "Nur um sicher zu gehen, dass du die Richtigen Wörter hast.",
   "wallet_new_phrase_info": "Das sind deine Wiederherstellungswörter. Schreibe sie auf, und verliere sie nicht!",
+  "wallet_new_phrase_path_derivation_type": "Adresspfad Typ",
   "wallet_new_creating": "Wir bereiten dein Wallet vor, dies dauert einige Sekunden.",
   "wallet_new_creating_title": "Wallet",
 

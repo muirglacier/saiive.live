@@ -22,7 +22,7 @@ void main() async {
           chain: ChainType.DeFiChain,
           account: 0,
           walletAccountType: WalletAccountType.HdAccount,
-          derivationPathType: DerivationPathType.FullNodeWallet,
+          derivationPathType: PathDerivationType.FullNodeWallet,
           name: "acc",
           selected: true);
       await db.addOrUpdateAccount(walletAccount);
@@ -115,7 +115,7 @@ void main() async {
           chain: ChainType.DeFiChain,
           account: 0,
           walletAccountType: WalletAccountType.HdAccount,
-          derivationPathType: DerivationPathType.FullNodeWallet,
+          derivationPathType: PathDerivationType.FullNodeWallet,
           name: "acc",
           selected: true);
       await db.addOrUpdateAccount(walletAccount);

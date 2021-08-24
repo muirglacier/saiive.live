@@ -107,9 +107,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, pastebin-api-key'
           RunAsPreJob: true
           
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -204,9 +215,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, pastebin-api-key'
           RunAsPreJob: true
-
+          
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -284,8 +306,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, pastebin-api-key'
           RunAsPreJob: true
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -358,8 +392,21 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password'
+          SecretsFilter: 'apple-adhoc-cert-password, pastebin-api-key'
           RunAsPreJob: true
+
+      
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -440,8 +487,21 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password'
+          SecretsFilter: 'apple-adhoc-cert-password, pastebin-api-key'
           RunAsPreJob: true
+
+      
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -527,8 +587,21 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
           RunAsPreJob: true
+
+      
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -648,9 +721,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
           RunAsPreJob: true
 
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'DP3rdPartyMacDeveloper.p12'
@@ -768,8 +852,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
           RunAsPreJob: true
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -875,8 +971,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
           RunAsPreJob: true
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -1000,9 +1108,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
           RunAsPreJob: true
 
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1142,8 +1261,20 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
           RunAsPreJob: true
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1251,8 +1382,21 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
           RunAsPreJob: true
+
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1357,6 +1501,26 @@ stages:
       vmImage: 'windows-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
+          RunAsPreJob: true
+
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1441,6 +1605,25 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'pastebin-api-key'
+          RunAsPreJob: true
+
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1547,6 +1730,25 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'pastebin-api-key'
+          RunAsPreJob: true
+
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1617,6 +1819,25 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'pastebin-api-key'
+          RunAsPreJob: true
+
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1686,6 +1907,25 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'pastebin-api-key'
+          RunAsPreJob: true
+
+
+      - task: ReplaceInFilesTextByText@2
+        inputs:
+          parameterSearchDirectory: '$(Build.SourcesDirectory)'
+          parameterSearchText: '$$PASTEBIN_API_KEY$$'
+          parameterReplaceText: '$(pastebin-api-key)'
+          parameterTypeOfSearch: 'filesList'
+          parameterFilesPattern: '*.env*'
+          parameterFilesList: |
+            .env-Debug
+            .env-Staging
+            .env-Prod
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:

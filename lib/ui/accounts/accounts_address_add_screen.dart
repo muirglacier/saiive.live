@@ -11,7 +11,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
-import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/accounts/accounts_wallet_address_export_private_key.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/widgets/wallet_receive.dart';

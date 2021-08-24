@@ -80,9 +80,8 @@ class HdWalletUtil {
 
     final path = derivePath(account, isChangeAddress, index, derivationPathType);
 
-    final hdSeed = bip32.BIP32.fromSeed(seed, networkType);
-    final xMasterPriv = bip32.BIP32.fromSeed(hdSeed.privateKey, networkType);
-    final keyPair = ECPair.fromPrivateKey(xMasterPriv.derivePath(path).privateKey, network: getNetworkType(chainType, network));
+    final hdSeed = _getBip32Key(derivationPathType, seed, networkType);
+    final keyPair = ECPair.fromPrivateKey(hdSeed.derivePath(path).privateKey, network: getNetworkType(chainType, network));
 
     return keyPair;
   }
@@ -217,9 +216,8 @@ class HdWalletUtil {
 
       if (key.item1.addressType == AddressType.Bech32) {
         final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.item2.publicKey), network: network).data;
-        final redeemScript = p2wpkh.output;
 
-        txb.addInput(tx.mintTxId, tx.mintIndex, null, redeemScript);
+        txb.addInput(tx.mintTxId, tx.mintIndex, null, p2wpkh.output);
       } else {
         txb.addInput(tx.mintTxId, tx.mintIndex);
       }
@@ -269,9 +267,7 @@ class HdWalletUtil {
 
         txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue, redeemScript: redeemScript);
       } else if (key.item1.addressType == AddressType.Bech32) {
-        final witnessValue = inputTxs[index].valueRaw;
-
-        txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue);
+        txb.sign(vin: index, keyPair: key.item2, witnessValue: inputTxs[index].valueRaw);
       } else {
         throw new ArgumentError("${key.item1.addressType} not supported...");
       }

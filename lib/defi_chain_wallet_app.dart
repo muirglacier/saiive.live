@@ -60,7 +60,7 @@ class SaiiveLiveApp extends StatefulWidget {
 
 class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
   void init() {
-    LogConsole.init();
+    LogConsole.init(bufferSize: 200);
 
     Logger.addLogListener((e) {
       try {

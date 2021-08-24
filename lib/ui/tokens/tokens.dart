@@ -8,6 +8,8 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
 class TokensScreen extends StatefulWidget {
+  const TokensScreen({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _TokensScreen();

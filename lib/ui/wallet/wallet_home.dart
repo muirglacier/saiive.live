@@ -26,6 +26,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class WalletHomeScreen extends StatefulWidget {
+  const WalletHomeScreen({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _WalletHomeScreenScreen();

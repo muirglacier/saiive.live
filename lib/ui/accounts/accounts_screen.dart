@@ -24,7 +24,7 @@ class AccountsScreen extends StatefulWidget {
   final useOnlyFilter;
   final ChainType chainType;
 
-  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true, this.useOnlyFilter = false, this.chainType = ChainType.DeFiChain});
+  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true, this.useOnlyFilter = false, this.chainType = ChainType.DeFiChain, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AccountScreen();

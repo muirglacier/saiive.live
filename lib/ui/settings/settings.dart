@@ -30,7 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:logger_flutter_console/logger_flutter_console.dart';
 
 class SettingsScreen extends StatefulWidget {
-  SettingsScreen();
+  const SettingsScreen({Key key}) : super(key: key);
 
   _SettingsScreenState createState() => _SettingsScreenState();
 }

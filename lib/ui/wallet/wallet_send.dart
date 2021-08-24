@@ -71,7 +71,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     } catch (e) {
       sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, widget.chainType, error: e),
       ));
     } finally {
       Wakelock.disable();

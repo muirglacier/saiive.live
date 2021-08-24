@@ -121,10 +121,19 @@ class HdWallet extends IHdWallet {
       await sharedPrefs.setAddressIndex(0, isChangeAddress);
       startIndex = 0;
 
-      return await database.getWalletAddressById(_account.account, isChangeAddress, 0, addressType);
+      var address = await database.getWalletAddressById(_account.account, isChangeAddress, 0, addressType);
+
+      if (address == null) {
+        address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
+      }
+      return address;
     }
 
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
+
+    if (address == null) {
+      address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
+    }
     var addressUsed = await database.addressAlreadyUsed(address.publicKey);
 
     if (addressUsed || address.createdAt != null) {

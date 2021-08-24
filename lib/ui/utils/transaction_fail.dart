@@ -1,3 +1,5 @@
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/errors/NoUtxoError.dart';
 import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
@@ -7,16 +9,19 @@ import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:share_plus/share_plus.dart';
 
 class TransactionFailScreen extends StatefulWidget {
   final String text;
+  final ChainType chain;
 
   final String additional;
   final dynamic error;
 
-  TransactionFailScreen(this.text, {this.additional, this.error});
+  TransactionFailScreen(this.text, this.chain, {this.additional, this.error});
 
   @override
   _TransactionFailScreenState createState() => _TransactionFailScreenState();
@@ -33,7 +38,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
   bool _isMissingUtxoError = false;
   String utxoRechargerUrl = "http://utxo.mydeficha.in/";
 
-  _transformError() {
+  _transformError() async {
     if (widget.error == null) {
       return;
     }
@@ -41,9 +46,23 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     if (widget.error is Error) {
       stackTrace = (widget.error as Error).stackTrace.toString();
     }
+
+    final sharedPrefsUtil = sl.get<SharedPrefsUtil>();
+    final network = await sharedPrefsUtil.getChainNetwork();
+    final walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(this.widget.chain, network);
+
+    final unspentTx = await walletDatabase.getUnspentTransactions();
+
     _copyText = "";
     _copyText += "\r\n";
     _copyText += _version;
+    _copyText += "\r\n";
+    _copyText += "Unspent transactions:";
+
+    unspentTx.forEach((element) {
+      _copyText += " * ${element.mintTxId} ${element.mintIndex} (${element.spentTxId})";
+    });
+
     _copyText += "\r\n";
 
     if (widget.error is HttpException) {

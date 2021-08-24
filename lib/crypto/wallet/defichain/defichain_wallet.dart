@@ -128,12 +128,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final accountB = await DefichainWalletHelper.getHighestAmountAddressForSymbol(accountsB, amountB);
 
     if (amountA > accountA.balance) {
-      //handle account to account - move account balance to new address
+      //handle account to account - move account balance to make sure we have enough balance
       await createAccountTransaction(tokenA, amountA - accountA.balance, accountA.address, loadingStream: loadingStream);
     }
 
     if (amountB > accountB.balance || accountA.address != accountB.address) {
-      //handle account to account - move account balance to new address
+      //handle account to account - move account balance to make sure we have enough balance
       await createAccountTransaction(tokenB, amountB, accountA.address, loadingStream: loadingStream);
     }
 
@@ -399,7 +399,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
-    final keys = List<ECPair>.empty(growable: true);
     final fee = await getTxFee(0, 0);
 
     var checkAmount = (amount - accountBalance) + fee;
@@ -423,9 +422,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
         throw new ReadOnlyAccountError();
       }
-      var keyPair = await getPrivateKey(addressInfo, walletAccount);
-
-      keys.add(keyPair);
 
       if (curAmount >= checkAmount) {
         break;

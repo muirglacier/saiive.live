@@ -396,7 +396,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       Navigator.popUntil(context, ModalRoute.withName('/home'));
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
 
       sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailure", <String, String>{

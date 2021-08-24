@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
@@ -105,7 +106,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
     EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
     if (hasError || totalToRemove > 0) {
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: lastError),
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: lastError),
       ));
     } else {
       await Navigator.of(context).push(MaterialPageRoute(

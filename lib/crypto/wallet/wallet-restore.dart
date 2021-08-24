@@ -36,29 +36,15 @@ class WalletRestore {
 
     do {
       if (!existingAccounts.contains(i)) {
-        final account = WalletAccount(Uuid().v4(),
-            name: ChainHelper.chainTypeString(chain) + (i + 1).toString(),
-            id: i,
-            account: i,
-            chain: chain,
-            walletAccountType: WalletAccountType.HdAccount,
-            derivationPathType: DerivationPathType.FullNodeWallet,
-            selected: true);
-        final p2sh = await _restore(account, key, api, chain, network, AddressType.P2SHSegwit);
+        var all = await _restoreAll(i, key, api, chain, network);
 
-        //TODO: Change as soon as we support legacy addresses
-        // final legacy = await _restore(account, key, api, chain, network, AddressType.Legacy);
-
-        final result = List<WalletAddress>.from(p2sh);
-
-        //TODO: Change as soon as we support legacy addresses
-        // result.addAll(legacy);
+        final result = List<WalletAddress>.from(all.item2);
 
         if (result.isEmpty) {
           max--;
         } else {
           walletAddresses.addAll(result);
-          ret..add(account);
+          ret.addAll(all.item1);
           max = IWallet.MaxUnusedAccountScan;
         }
       }
@@ -67,6 +53,53 @@ class WalletRestore {
     } while (max > 0);
 
     return Tuple2(ret, walletAddresses);
+  }
+
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreAll(int account, List<int> key, ApiService api, ChainType chain, ChainNet network) async {
+    var walletAccounts = List<WalletAccount>.empty(growable: true);
+    var walletAddresses = List<WalletAddress>.empty(growable: true);
+
+    void checkIfExistingAndAddToList(Tuple2<WalletAccount, List<WalletAddress>> data) {
+      if (data.item2.isNotEmpty) {
+        walletAccounts.add(data.item1);
+        walletAddresses.addAll(data.item2);
+      }
+    }
+
+    var fullNode = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.FullNodeWallet);
+    checkIfExistingAndAddToList(fullNode);
+
+    var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.JellyfishBullshit);
+    checkIfExistingAndAddToList(jellyFish);
+
+    var bip32 = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.BIP32);
+    checkIfExistingAndAddToList(bip32);
+
+    var bip44 = await _restoreDerivationPath(account, key, api, chain, network, DerivationPathType.BIP44);
+    checkIfExistingAndAddToList(bip44);
+
+    return Tuple2(walletAccounts, walletAddresses);
+  }
+
+  static Future<Tuple2<WalletAccount, List<WalletAddress>>> _restoreDerivationPath(
+      int account, List<int> key, ApiService api, ChainType chain, ChainNet network, DerivationPathType derivationPathType) async {
+    final walletAccount = WalletAccount(Uuid().v4(),
+        name: ChainHelper.chainTypeString(chain) + (account + 1).toString(),
+        id: account,
+        account: account,
+        chain: chain,
+        walletAccountType: WalletAccountType.HdAccount,
+        derivationPathType: DerivationPathType.FullNodeWallet,
+        selected: true);
+    final addresses = await _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit);
+    final addressesBech32 = await _restore(walletAccount, key, api, chain, network, AddressType.Bech32);
+
+    //TODO: change as soon as we support legay addresses
+    //final legacy = await _restore(walletAccount, key, api, chain, network, AddressType.Legacy);
+    //addresses.addAll(legacy);
+
+    addresses.addAll(addressesBech32);
+    return Tuple2(walletAccount, addresses);
   }
 
   static Future<List<WalletAddress>> _restore(WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType) async {

@@ -34,6 +34,8 @@ import 'package:flutter/material.dart';
 import 'package:wakelock/wakelock.dart';
 
 class DexScreen extends StatefulWidget {
+  const DexScreen({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _DexScreen();
@@ -467,7 +469,7 @@ class _DexScreen extends State<DexScreen> {
       resetForm();
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
 
       sl.get<AppCenterWrapper>().trackEvent("swapFailure",

@@ -221,7 +221,6 @@ class SembastWalletDatabase extends IWalletDatabase {
       accounts = await dbStore.find(await database, finder: finder);
     }
     final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
-    //TODO IF EMPTY - CREATE NEW ADDRESS!!!
     return data.firstOrNull;
   }
 
@@ -587,6 +586,6 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   int getAddressCreationCount() {
-    return 50;
+    return 20;
   }
 }

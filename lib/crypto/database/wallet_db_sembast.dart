@@ -408,7 +408,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('accountId', account.uniqueId)));
 
     var transactionData = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
-    final transactionsIds = transactionData.map((e) => e.accountId).toList();
+    final transactionsIds = transactionData.map((e) => e.uniqueId).toList();
 
     await _unspentStoreInstance.records(transactionsIds).delete(await database);
   }

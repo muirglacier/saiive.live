@@ -212,6 +212,7 @@ class HdWallet extends IHdWallet {
     newUtxos.forEach((element) async {
       await database.addUnspentTransaction(element, account);
     });
+
     if (account != null) {
       await database.clearAccountBalances(account);
       for (final acc in newBalance) {

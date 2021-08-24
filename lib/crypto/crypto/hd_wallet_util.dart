@@ -268,6 +268,8 @@ class HdWalletUtil {
         txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue, redeemScript: redeemScript);
       } else if (key.item1.addressType == AddressType.Bech32) {
         txb.sign(vin: index, keyPair: key.item2, witnessValue: inputTxs[index].valueRaw);
+      } else if (key.item1.addressType == AddressType.Legacy) {
+        txb.sign(vin: index, keyPair: key.item2);
       } else {
         throw new ArgumentError("${key.item1.addressType} not supported...");
       }

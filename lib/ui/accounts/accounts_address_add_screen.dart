@@ -103,30 +103,30 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                                   },
                                 ),
                               ),
-                              // ListTile(
-                              //   title: const Text('Legacy'),
-                              //   leading: Radio<AddressType>(
-                              //     value: AddressType.Legacy,
-                              //     groupValue: _addressType,
-                              //     onChanged: (AddressType value) {
-                              //       setState(() {
-                              //         _addressType = value;
-                              //       });
-                              //     },
-                              //   ),
-                              // ),
-                              // ListTile(
-                              //   title: const Text('Bech32'),
-                              //   leading: Radio<AddressType>(
-                              //     value: AddressType.Bech32,
-                              //     groupValue: _addressType,
-                              //     onChanged: (AddressType value) {
-                              //       setState(() {
-                              //         _addressType = value;
-                              //       });
-                              //     },
-                              //   ),
-                              // ),
+                              ListTile(
+                                title: const Text('Legacy'),
+                                leading: Radio<AddressType>(
+                                  value: AddressType.Legacy,
+                                  groupValue: _addressType,
+                                  onChanged: (AddressType value) {
+                                    setState(() {
+                                      _addressType = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              ListTile(
+                                title: const Text('Bech32'),
+                                leading: Radio<AddressType>(
+                                  value: AddressType.Bech32,
+                                  groupValue: _addressType,
+                                  onChanged: (AddressType value) {
+                                    setState(() {
+                                      _addressType = value;
+                                    });
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                           isExpanded: _isExpanded)

@@ -55,8 +55,6 @@ class HdWallet extends IHdWallet {
       return;
     }
 
-    // await _checkAndCreateIfExists(walletDatabase, seed, 0, true, AddressType.Legacy);
-
     for (int i = 0; i < walletDatabase.getAddressCreationCount(); i++) {
       await _checkAndCreateIfExists(walletDatabase, _seed, i, true, _account.defaultAddressType, _account.derivationPathType);
       await _checkAndCreateIfExists(walletDatabase, _seed, i, false, _account.defaultAddressType, _account.derivationPathType);

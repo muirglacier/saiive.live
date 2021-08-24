@@ -32,7 +32,7 @@ abstract class IWalletService {
   Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, bool isChangeAddress, AddressType addressType);
 
   Future<String> getPublicKey(ChainType chainType, AddressType addressType);
-  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, String retAddress, {StreamController<String> loadingStream, bool sendMax = false});
   Future<List<String>> getPublicKeys(ChainType chainType);
 
   Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network);
@@ -90,11 +90,11 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) {
+  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, String retAddress, {StreamController<String> loadingStream, bool sendMax = false}) {
     if (chainType == ChainType.DeFiChain) {
-      return _defiWallet.createAndSend(amount, token, to, loadingStream: loadingStream, sendMax: sendMax);
+      return _defiWallet.createAndSend(amount, token, to, retAddress, loadingStream: loadingStream, sendMax: sendMax);
     }
-    return _bitcoinWallet.createAndSend(amount, token, to, loadingStream: loadingStream, sendMax: sendMax);
+    return _bitcoinWallet.createAndSend(amount, token, to, retAddress, loadingStream: loadingStream, sendMax: sendMax);
   }
 
   @override

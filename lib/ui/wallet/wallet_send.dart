@@ -5,6 +5,7 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
@@ -14,6 +15,7 @@ import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/utils/qr_code_scan.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
@@ -41,6 +43,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _amountController = TextEditingController(text: '1');
   EnvironmentType _currentEnvironment;
 
+  WalletAddress _toAddress;
+
   Future sendFunds(StreamController<String> stream) async {
     try {
       Wakelock.enable();
@@ -52,9 +56,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl
-          .get<IWalletService>()
-          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
+      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress.publicKey,
+          loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");
@@ -145,7 +148,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
                     ))),
-                SizedBox(width: 20),
+                SizedBox(height: 20),
                 ButtonTheme(
                     height: 30,
                     minWidth: 40,
@@ -156,6 +159,14 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         }))
               ]),
               SizedBox(height: 20),
+              AccountSelectAddressWidget(
+                  label: Text(S.of(context).wallet_return_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _toAddress = newValue;
+                    });
+                  }),
+              SizedBox(width: 20),
               SizedBox(
                   width: 250,
                   child: ElevatedButton(

@@ -95,11 +95,9 @@ class WalletRestore {
 
     final addresses = await _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit);
     final addressesBech32 = await _restore(walletAccount, key, api, chain, network, AddressType.Bech32);
+    final legacy = await _restore(walletAccount, key, api, chain, network, AddressType.Legacy);
 
-    //TODO: change as soon as we support legay addresses
-    //final legacy = await _restore(walletAccount, key, api, chain, network, AddressType.Legacy);
-    //addresses.addAll(legacy);
-
+    addresses.addAll(legacy);
     addresses.addAll(addressesBech32);
     return Tuple2(walletAccount, addresses);
   }

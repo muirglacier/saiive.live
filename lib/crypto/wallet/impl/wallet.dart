@@ -265,7 +265,7 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<String> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
+  Future<String> createAndSend(int amount, String token, String to, String retAddress, {StreamController<String> loadingStream, bool sendMax = false}) async {
     isInitialzed();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
@@ -275,7 +275,7 @@ abstract class Wallet extends IWallet {
 
     try {
       loadingStream?.add(S.current.wallet_operation_build_tx);
-      var txData = await createSendTransaction(amount, token, to, sendMax: sendMax, loadingStream: loadingStream);
+      var txData = await createSendTransaction(amount, token, to, retAddress, sendMax: sendMax, loadingStream: loadingStream);
 
       return txData;
     } catch (error) {

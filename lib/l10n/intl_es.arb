@@ -141,6 +141,7 @@
   "wallet_account_export_private_key": "Export private key",
 
   "wallet_send": "Enviar",
+  "wallet_return_address": "Change address",
   "wallet_send_address": "Dirección",
   "wallet_send_address_scan": "Escanear",
   "wallet_send_amount": "Cantidad",

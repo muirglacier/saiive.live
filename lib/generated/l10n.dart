@@ -1285,6 +1285,16 @@ class S {
     );
   }
 
+  /// `Change address`
+  String get wallet_return_address {
+    return Intl.message(
+      'Change address',
+      name: 'wallet_return_address',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Address`
   String get wallet_send_address {
     return Intl.message(

@@ -222,6 +222,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_restore_word_empty" : MessageLookupByLibrary.simpleMessage("Por favor, introduce una palabra"),
     "wallet_restore_word_hint" : MessageLookupByLibrary.simpleMessage("Introducir palabra"),
     "wallet_restore_word_invalid" : MessageLookupByLibrary.simpleMessage("La palabra no es válida"),
+    "wallet_return_address" : MessageLookupByLibrary.simpleMessage("Change address"),
     "wallet_send" : MessageLookupByLibrary.simpleMessage("Enviar"),
     "wallet_send_address" : MessageLookupByLibrary.simpleMessage("Dirección"),
     "wallet_send_address_scan" : MessageLookupByLibrary.simpleMessage("Escanear"),

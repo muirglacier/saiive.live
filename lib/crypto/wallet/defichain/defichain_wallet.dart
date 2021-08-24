@@ -239,8 +239,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   @override
-  Future<String> createSendTransaction(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = await this.getPublicKey(true, AddressType.P2SHSegwit);
+  Future<String> createSendTransaction(int amount, String token, String to, String retAddr, {StreamController<String> loadingStream, bool sendMax = false}) async {
+    final changeAddress = retAddr != null ? retAddr : await this.getPublicKey(true, AddressType.P2SHSegwit);
 
     if (DeFiConstants.isDfiToken(token)) {
       var needsToRefresh = false;

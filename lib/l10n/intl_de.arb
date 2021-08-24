@@ -89,7 +89,9 @@
   "wallet_empty": "Dein Wallet ist leer!",
   "wallet_receive": "Empfangen",
   "wallet_receive_warning": "Sende nur {coin} an diese Adresse. Wenn du einen anderen Coin als {coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!",
+  
   "wallet_send": "Senden",
+  "wallet_return_address": "Rücksende Adresse",
   "wallet_send_address": "Adresse",
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Menge",

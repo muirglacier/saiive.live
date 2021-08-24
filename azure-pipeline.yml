@@ -107,14 +107,29 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, pastebin-api-key'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, azure-blob-key-dev'
           RunAsPreJob: true
-          
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Debug
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
+
       - task: ReplaceInFilesTextByText@2
         inputs:
           parameterSearchDirectory: '$(Build.SourcesDirectory)'
           parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
+          parameterReplaceText: '$(azure-blob-key-staging)'
           parameterTypeOfSearch: 'filesList'
           parameterFilesPattern: '*.env*'
           parameterFilesList: |
@@ -215,20 +230,26 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, pastebin-api-key'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, azure-blob-key-staging'
           RunAsPreJob: true
           
-      - task: ReplaceInFilesTextByText@2
+
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -306,20 +327,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, pastebin-api-key'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, azure-blob-key-prod'
           RunAsPreJob: true
 
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -392,21 +417,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password, pastebin-api-key'
+          SecretsFilter: 'apple-adhoc-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
 
-      
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -487,21 +515,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password, pastebin-api-key'
+          SecretsFilter: 'apple-adhoc-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
-      
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -587,21 +618,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-dev'
           RunAsPreJob: true
 
-      
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Dev
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -721,20 +755,23 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
-
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'DP3rdPartyMacDeveloper.p12'
@@ -852,20 +889,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -971,20 +1012,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, pastebin-api-key'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -1108,20 +1153,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-dev'
           RunAsPreJob: true
 
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Dev
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1261,20 +1310,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-staging'
           RunAsPreJob: true
 
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1382,21 +1435,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-prod'
           RunAsPreJob: true
 
-
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1505,21 +1561,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password, pastebin-api-key'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-prod'
           RunAsPreJob: true
 
-
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1609,21 +1668,26 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'pastebin-api-key'
+          SecretsFilter: 'azure-blob-key-dev'
           RunAsPreJob: true
 
 
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Dev
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1734,21 +1798,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'pastebin-api-key'
+          SecretsFilter: 'azure-blob-key-staging'
           RunAsPreJob: true
 
-
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1823,21 +1890,25 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'pastebin-api-key'
+          SecretsFilter: 'azure-blob-key-prod'
           RunAsPreJob: true
 
-
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1911,21 +1982,25 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'pastebin-api-key'
+          SecretsFilter: 'azure-blob-key-prod'
           RunAsPreJob: true
 
-
-      - task: ReplaceInFilesTextByText@2
+      - task: replacetokens@4
         inputs:
-          parameterSearchDirectory: '$(Build.SourcesDirectory)'
-          parameterSearchText: '$$PASTEBIN_API_KEY$$'
-          parameterReplaceText: '$(pastebin-api-key)'
-          parameterTypeOfSearch: 'filesList'
-          parameterFilesPattern: '*.env*'
-          parameterFilesList: |
-            .env-Debug
-            .env-Staging
-            .env-Prod
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false      
+          
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:

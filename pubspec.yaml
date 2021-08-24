@@ -46,7 +46,7 @@ dependencies:
   #utils
   sprintf: ^6.0.0 
   logger: ^0.7.0
-  logger_flutter_console: ^0.7.1+1
+  logger_flutter_console: ^0.7.1+2
   retry: ^3.1.0 
   tuple: ^2.0.0
   mutex: ^3.0.0
@@ -54,6 +54,7 @@ dependencies:
   upgrader: ^3.3.1
   in_app_update: ^2.0.0
   group_list_view : ^1.1.1
+  azblob: ^2.0.0
 
   #ui libs
   carousel_slider: ^3.0.0

@@ -235,6 +235,16 @@ class S {
     );
   }
 
+  /// `Open in explorer`
+  String get show_in_explorer {
+    return Intl.message(
+      'Open in explorer',
+      name: 'show_in_explorer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(

@@ -24,6 +24,8 @@
   "delete": "Borrar",
   "show": "Display",
   "copy": "Copy",
+  
+  "show_in_explorer": "Open in explorer",
 
   "save": "Ahorrar",
   "aDd": "Agregar",

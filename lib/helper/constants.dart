@@ -11,16 +11,20 @@ class DefiChainConstants {
   static getExplorerUrlForNet(ChainNet net) {
     switch (net) {
       case ChainNet.Mainnet:
-        return "https://mainnet-supernode.saiive.live/explorer/#/DFI/mainnet/";
+        return "https://mainnet-supernode.saiive.live/explorer/#/DFI/mainnet";
         break;
       case ChainNet.Testnet:
-        return "https://testnet-supernode.saiive.live/testnet/#/DFI/testnet/";
+        return "https://testnet-supernode.saiive.live/testnet/#/DFI/testnet";
         break;
     }
   }
 
   static getExplorerUrl(ChainNet net, String txId) {
     return getExplorerUrlForNet(net) + "/tx/" + txId;
+  }
+
+  static getExplorerAddressUrl(ChainNet net, String address) {
+    return getExplorerUrlForNet(net) + "/address/" + address;
   }
 
   static getExplorerBlockUrl(ChainNet net, String blockHash) {

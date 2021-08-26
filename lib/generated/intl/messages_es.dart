@@ -129,6 +129,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_support_wiki" : MessageLookupByLibrary.simpleMessage("Wiki"),
     "settings_wallet" : MessageLookupByLibrary.simpleMessage("Wallet"),
     "show" : MessageLookupByLibrary.simpleMessage("Display"),
+    "show_in_explorer" : MessageLookupByLibrary.simpleMessage("Open in explorer"),
     "test_info" : MessageLookupByLibrary.simpleMessage("Gracias por testear!"),
     "test_info_epilogue" : MessageLookupByLibrary.simpleMessage("La aplicación probablemente tenga algunos errores, si obtienes un error al crear una transacción, simplemente vuelve a intentarlo. No olvides crear una incidencia en GitHub. También puedes proporcionarnos todas tus direcciones publicKey, ¡simplemente cópialas desde la página de Configuración!"),
     "test_info_feedback" : MessageLookupByLibrary.simpleMessage("Si deseas mandarnos un comentario o encontraste algún error, puedes crear una incidencia en GitHub aquí:"),

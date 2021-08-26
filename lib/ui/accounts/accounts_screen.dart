@@ -133,12 +133,11 @@ class _AccountScreen extends State<AccountsScreen> {
   Widget _buildAccountEntry(BuildContext context, WalletAccount account) {
     return Card(
         child: ListTile(
-      title: Expanded(
-          child: Row(children: [
+      title: Row(children: [
         _buildSelectIcon(account.selected, account),
         SizedBox(width: 10),
         Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))])
-      ])),
+      ]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

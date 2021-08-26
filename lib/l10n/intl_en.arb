@@ -144,6 +144,7 @@
 
   "wallet_send": "Send",
   "wallet_return_address": "Change address",
+  "wallet_use_custom_return_address": "Use custom change address",
   "wallet_send_address": "Address",
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Amount",

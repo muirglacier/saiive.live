@@ -232,6 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_token_show_in_explorer" : MessageLookupByLibrary.simpleMessage("Abrir en el explorador"),
     "wallet_token_transactions" : MessageLookupByLibrary.simpleMessage("Transacciones"),
     "wallet_uptime_stats" : MessageLookupByLibrary.simpleMessage("Mostrar estado"),
+    "wallet_use_custom_return_address" : MessageLookupByLibrary.simpleMessage("Use custom change address"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Bienvenido"),
     "welcome_accept_terms_and_privacy" : MessageLookupByLibrary.simpleMessage("He leído y acepto los Términos de servicio y el Aviso de privacidad."),
     "welcome_legal" : MessageLookupByLibrary.simpleMessage("Legal"),

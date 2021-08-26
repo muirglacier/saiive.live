@@ -43,6 +43,9 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _amountController = TextEditingController(text: '1');
   EnvironmentType _currentEnvironment;
 
+  var _isExpanded = false;
+  var _useCustomReturnAddress = false;
+
   WalletAddress _toAddress;
 
   Future sendFunds(StreamController<String> stream) async {
@@ -56,8 +59,13 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress.publicKey,
-          loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
+      var returnAddress = "";
+      if (_useCustomReturnAddress) {
+        returnAddress = _toAddress.publicKey;
+      }
+      final tx = await sl
+          .get<IWalletService>()
+          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, returnAddress, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");
@@ -159,13 +167,62 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         }))
               ]),
               SizedBox(height: 20),
-              AccountSelectAddressWidget(
-                  label: Text(S.of(context).wallet_return_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
-                  onChanged: (newValue) {
+              ExpansionPanelList(
+                  expandedHeaderPadding: EdgeInsets.all(5),
+                  expansionCallback: (int index, bool isExpanded) {
                     setState(() {
-                      _toAddress = newValue;
+                      _isExpanded = !_isExpanded;
                     });
-                  }),
+                  },
+                  children: [
+                    ExpansionPanel(
+                        isExpanded: _isExpanded,
+                        headerBuilder: (context, isOpen) {
+                          return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isExpanded = !_isExpanded;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  S.of(context).expert,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ));
+                        },
+                        body: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(children: <Widget>[
+                              Column(children: <Widget>[
+                                Row(
+                                  children: [
+                                    Text(S.of(context).wallet_use_custom_return_address),
+                                    Checkbox(
+                                      value: this._useCustomReturnAddress,
+                                      onChanged: (bool value) {
+                                        setState(() {
+                                          this._useCustomReturnAddress = value;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                if (this._useCustomReturnAddress)
+                                  AccountSelectAddressWidget(
+                                      showLabel: false,
+                                      label: Text(S.of(context).wallet_return_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _toAddress = newValue;
+                                        });
+                                      }),
+                              ])
+                            ])))
+                  ]),
               SizedBox(width: 20),
               SizedBox(
                   width: 250,

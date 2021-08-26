@@ -93,6 +93,7 @@
   "wallet_receive_warning": "Sende nur {coin} an diese Adresse. Wenn du einen anderen Coin als {coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!",
   
   "wallet_send": "Senden",
+  "wallet_use_custom_return_address": "Verwende Rücksende Adresse",
   "wallet_return_address": "Rücksende Adresse",
   "wallet_send_address": "Adresse",
   "wallet_send_address_scan": "Scan",

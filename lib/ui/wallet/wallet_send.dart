@@ -59,7 +59,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      var returnAddress = "";
+      var returnAddress = null;
       if (_useCustomReturnAddress) {
         returnAddress = _toAddress.publicKey;
       }

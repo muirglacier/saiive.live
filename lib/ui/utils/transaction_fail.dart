@@ -109,7 +109,8 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
       var buffer = LogConsole.getCachedEvents();
 
       var storage = AzureStorage.parse(EnvHelper.getAzBlobKey());
-      var allCopyText = _copyText;
+
+      var allCopyText = errorText + "\r\n" + _copyText;
       allCopyText += "\r\n";
       allCopyText += "\r\n";
       allCopyText += "\r\n----- LOGS ----";

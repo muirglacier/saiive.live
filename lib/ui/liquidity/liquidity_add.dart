@@ -390,7 +390,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).liqudity_add_successfull),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx.txId, S.of(context).liqudity_add_successfull),
       ));
 
       Navigator.popUntil(context, ModalRoute.withName('/home'));

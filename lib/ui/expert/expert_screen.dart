@@ -80,7 +80,7 @@ class _ExpertScreen extends State<ExpertScreen> {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen("", S.of(context).wallet_operation_success),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, "", S.of(context).wallet_operation_success),
       ));
 
       Navigator.of(context).pop();

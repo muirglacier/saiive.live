@@ -25,7 +25,7 @@ class WalletReceiveWidget extends StatefulWidget {
 class _WalletReceiveWidgetState extends State<WalletReceiveWidget> {
   openExplorerLink(BuildContext context) async {
     var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-    var uri = DefiChainConstants.getExplorerAddressUrl(_chainNet, widget.pubKey);
+    var uri = DefiChainConstants.getExplorerAddressUrl(widget.chain, _chainNet, widget.pubKey);
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (await canLaunch(uri)) {
         await launch(uri);

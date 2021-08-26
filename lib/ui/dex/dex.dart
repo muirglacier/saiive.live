@@ -463,7 +463,7 @@ class _DexScreen extends State<DexScreen> {
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).dex_swap_successfull),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx.txId, S.of(context).dex_swap_successfull),
       ));
 
       resetForm();

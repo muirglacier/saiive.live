@@ -110,7 +110,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
       ));
     } else {
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(lastTx.txId, S.of(context).liquidity_remove_successfull),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTx.txId, S.of(context).liquidity_remove_successfull),
       ));
 
       Navigator.popUntil(context, ModalRoute.withName('/home'));

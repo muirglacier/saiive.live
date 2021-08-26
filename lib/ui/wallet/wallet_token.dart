@@ -161,7 +161,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                           child: InkWell(
                               child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor), textAlign: TextAlign.right),
                               onTap: () async {
-                                var uri = DefiChainConstants.getExplorerUrl(_chainNet, history.txid);
+                                var uri = DefiChainConstants.getExplorerUrl(widget.chainType, _chainNet, history.txid);
                                 if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
                                   if (await canLaunch(uri)) {
                                     await launch(uri);

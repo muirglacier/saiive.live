@@ -64,7 +64,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(txId, S.of(context).wallet_operation_success),
+        builder: (BuildContext context) => TransactionSuccessScreen(widget.chainType, txId, S.of(context).wallet_operation_success),
       ));
 
       Navigator.of(context).pop();

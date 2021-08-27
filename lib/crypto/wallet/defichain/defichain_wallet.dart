@@ -34,12 +34,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   static const int MinKeepUTXO = 2000000;
 
   @override
-  Future<TransactionData> createAndSendRemovePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
+  Future<TransactionData> createAndSendRemovePoolLiquidity(int token, int amount, String shareAddress, {String returnAddress, StreamController<String> loadingStream}) async {
     await walletMutex.acquire();
 
     try {
-      var removeLiq = await removePoolLiquidity(token, amount, shareAddress, loadingStream: loadingStream);
+      var removeLiq = await removePoolLiquidity(token, amount, shareAddress, returnAddress: returnAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       return await createTxAndWait(removeLiq, loadingStream: loadingStream);
     } finally {
@@ -49,12 +48,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   @override
   Future<TransactionData> createAndSendAddPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
-      {StreamController<String> loadingStream}) async {
+      {String returnAddress, StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
-      var addLiq = await addPoolLiquidity(tokenA, amountA, tokenB, amountB, shareAddress, loadingStream: loadingStream);
+      var addLiq = await addPoolLiquidity(tokenA, amountA, tokenB, amountB, shareAddress, returnAddress: returnAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       return await createTxAndWaitInternal(addLiq, loadingStream: loadingStream);
     } finally {
@@ -62,11 +61,14 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
   }
 
-  Future<Tuple3<String, List<tx.Transaction>, String>> removePoolLiquidity(int token, int amount, String shareAddress, {StreamController<String> loadingStream}) async {
+  Future<Tuple3<String, List<tx.Transaction>, String>> removePoolLiquidity(int token, int amount, String shareAddress,
+      {String returnAddress, StreamController<String> loadingStream}) async {
     var fees = await getTxFee(0, 0);
     await prepareAccount(shareAddress, fees, loadingStream: loadingStream);
 
-    final txb = await createBaseTransaction(0, shareAddress, shareAddress, fees, (txb, inputTxs, nw) async {
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+
+    final txb = await createBaseTransaction(0, shareAddress, changeAddress, fees, (txb, inputTxs, nw) async {
       var tx = await getAuthInputsSmart(shareAddress, AuthTxMin, fees);
 
       txb.addRemoveLiquidityOutput(token, amount, shareAddress);
@@ -93,7 +95,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txb;
   }
 
-  Future<String> addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress, {StreamController<String> loadingStream}) async {
+  Future<String> addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
+      {String returnAddress, StreamController<String> loadingStream}) async {
     if (!DeFiConstants.isDfiToken(tokenA) && !DeFiConstants.isDfiToken(tokenB)) {
       throw ArgumentError("One of the 2 tokens must be DFI!");
     }
@@ -105,7 +108,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     } else {
       amountB = useAmount;
     }
-
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     final tokenABalance = await walletDatabase.getAccountBalance(tokenA);
     final tokenBBalance = await walletDatabase.getAccountBalance(tokenB);
 
@@ -157,7 +160,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       keys.add(Tuple2(address, key));
     }
 
-    final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, shareAddress, authInputA.value, fee, shareAddress, (txb, txIn, nw) {
+    final txb = await HdWalletUtil.buildTransaction(inputTxs, keys, shareAddress, authInputA.value, fee, changeAddress, (txb, txIn, nw) {
       txb.addAddLiquidityOutputSingleAddress(accountA.address, tokenAType.id, amountA, tokenBType.id, amountB, shareAddress);
     }, chain, network);
 
@@ -165,7 +168,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
-      {StreamController<String> loadingStream}) async {
+      {String returnAddress, StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
@@ -182,12 +185,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<Tuple3<String, List<tx.Transaction>, String>> createSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
-      {StreamController<String> loadingStream}) async {
+      {String returnAddress, StreamController<String> loadingStream}) async {
     if (DeFiConstants.isDfiToken(fromToken)) {
       fromAmount = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
     }
 
-    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
@@ -240,7 +243,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   @override
   Future<String> createSendTransaction(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = returnAddress != null ? returnAddress : await this.getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await this.getPublicKey(true, AddressType.P2SHSegwit);
 
     if (DeFiConstants.isDfiToken(token)) {
       var needsToRefresh = false;

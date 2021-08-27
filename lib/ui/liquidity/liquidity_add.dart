@@ -27,6 +27,7 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 class LiquidityAddScreen extends StatefulWidget {
@@ -59,6 +60,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   var _amountTokenBController = TextEditingController(text: '');
 
   WalletAddress _toAddress;
+  String _returnAddress;
 
   @override
   void initState() {
@@ -370,7 +372,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       "shareAddress": walletTo
     });
 
-    var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo, loadingStream: streamController);
+    var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo,
+        returnAddress: _returnAddress, loadingStream: streamController);
     final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
 
     try {
@@ -581,6 +584,19 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                   ],
                 )),
           ]),
+          SizedBox(
+            height: 20,
+          ),
+          WalletReturnAddressWidget(
+            onChanged: (v) {
+              setState(() {
+                _returnAddress = v;
+              });
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
           ElevatedButton(
             child: Text(S.of(context).liquidity_add),
             onPressed: () async {

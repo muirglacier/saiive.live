@@ -9,7 +9,7 @@ class BitcoinWallet extends Wallet {
 
   @override
   Future<String> createSendTransaction(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = returnAddress != null ? returnAddress : await this.getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await this.getPublicKey(true, AddressType.P2SHSegwit);
     return await createUtxoTransaction(amount, to, changeAddress);
   }
 }

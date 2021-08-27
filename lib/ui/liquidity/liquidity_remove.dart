@@ -20,6 +20,7 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 class LiquidityRemoveScreen extends StatefulWidget {
@@ -35,6 +36,8 @@ class LiquidityRemoveScreen extends StatefulWidget {
 
 class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
   double totalAmount = 0.0;
+
+  String _returnAddress;
 
   @override
   void initState() {
@@ -75,6 +78,9 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
 
     dynamic lastError;
     TransactionData lastTx;
+    var streamController = StreamController<String>();
+    await wallet.ensureUtxoUnsafe(loadingStream: streamController);
+
     for (final poolShare in widget.liquidity.poolShares) {
       var amount = poolShare.amount;
 
@@ -82,8 +88,8 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         amount = totalToRemove;
       }
 
-      var streamController = StreamController<String>();
-      var createRemoveFuture = wallet.createAndSendRemovePoolLiquidity(int.parse(poolShare.poolID), (amount * 100000000).toInt(), poolShare.owner, loadingStream: streamController);
+      var createRemoveFuture = wallet.createAndSendRemovePoolLiquidity(int.parse(poolShare.poolID), (amount * 100000000).toInt(), poolShare.owner,
+          returnAddress: _returnAddress, loadingStream: streamController);
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
 
       try {
@@ -92,9 +98,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         LogHelper.instance.e("removepool-tx error...($error)");
         hasError = true;
         lastError = error;
-      } finally {
-        streamController.close();
-      }
+      } finally {}
 
       totalToRemove -= amount;
 
@@ -102,6 +106,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         break;
       }
     }
+    streamController.close();
 
     EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
     if (hasError || totalToRemove > 0) {
@@ -225,6 +230,17 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
               )),
         ]),
         SizedBox(height: 10),
+        WalletReturnAddressWidget(
+          onChanged: (v) {
+            setState(() {
+              _returnAddress = v;
+            });
+          },
+        ),
+        SizedBox(
+          width: 20,
+          height: 20,
+        ),
         if (percentage > 0)
           ElevatedButton(
             child: Text(S.of(context).liquidity_remove),

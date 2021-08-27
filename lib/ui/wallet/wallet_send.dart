@@ -5,7 +5,6 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
@@ -15,7 +14,6 @@ import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
-import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/utils/qr_code_scan.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
@@ -23,6 +21,7 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 class WalletSendScreen extends StatefulWidget {
@@ -43,10 +42,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _amountController = TextEditingController(text: '1');
   EnvironmentType _currentEnvironment;
 
-  var _isExpanded = false;
-  var _useCustomReturnAddress = false;
-
-  WalletAddress _toAddress;
+  String _toAddress;
 
   Future sendFunds(StreamController<String> stream) async {
     try {
@@ -59,13 +55,9 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      var returnAddress = null;
-      if (_useCustomReturnAddress) {
-        returnAddress = _toAddress.publicKey;
-      }
       final tx = await sl
           .get<IWalletService>()
-          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, returnAddress, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
+          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");
@@ -167,63 +159,17 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         }))
               ]),
               SizedBox(height: 20),
-              ExpansionPanelList(
-                  expandedHeaderPadding: EdgeInsets.all(5),
-                  expansionCallback: (int index, bool isExpanded) {
-                    setState(() {
-                      _isExpanded = !_isExpanded;
-                    });
-                  },
-                  children: [
-                    ExpansionPanel(
-                        isExpanded: _isExpanded,
-                        headerBuilder: (context, isOpen) {
-                          return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isExpanded = !_isExpanded;
-                                });
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                child: Text(
-                                  S.of(context).expert,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ));
-                        },
-                        body: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Column(children: <Widget>[
-                              Column(children: <Widget>[
-                                Row(
-                                  children: [
-                                    Text(S.of(context).wallet_use_custom_return_address),
-                                    Checkbox(
-                                      value: this._useCustomReturnAddress,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          this._useCustomReturnAddress = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                if (this._useCustomReturnAddress)
-                                  AccountSelectAddressWidget(
-                                      showLabel: false,
-                                      label: Text(S.of(context).wallet_return_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          _toAddress = newValue;
-                                        });
-                                      }),
-                              ])
-                            ])))
-                  ]),
-              SizedBox(width: 20),
+              WalletReturnAddressWidget(
+                onChanged: (v) {
+                  setState(() {
+                    _toAddress = v;
+                  });
+                },
+              ),
+              SizedBox(
+                width: 20,
+                height: 20,
+              ),
               SizedBox(
                   width: 250,
                   child: ElevatedButton(

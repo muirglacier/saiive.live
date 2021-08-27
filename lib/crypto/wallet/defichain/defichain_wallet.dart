@@ -67,10 +67,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     await prepareAccount(shareAddress, fees, loadingStream: loadingStream);
 
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    var tx = await getAuthInputsSmart(shareAddress, AuthTxMin, fees, loadingStream: loadingStream);
 
     final txb = await createBaseTransaction(0, shareAddress, changeAddress, fees, (txb, inputTxs, nw) async {
-      var tx = await getAuthInputsSmart(shareAddress, AuthTxMin, fees);
-
       txb.addRemoveLiquidityOutput(token, amount, shareAddress);
 
       final addressInfo = await walletDatabase.getWalletAddress(tx.address);

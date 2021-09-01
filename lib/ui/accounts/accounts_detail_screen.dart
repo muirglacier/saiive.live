@@ -96,7 +96,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
           padding: EdgeInsets.only(right: 15.0),
           child: GestureDetector(
             onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddScreen(widget.walletAccount, false)));
+              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddScreen(widget.walletAccount.chain, widget.walletAccount, false)));
 
               await _init();
             },

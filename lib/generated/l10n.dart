@@ -1075,6 +1075,16 @@ class S {
     );
   }
 
+  /// `Account index`
+  String get wallet_account_index {
+    return Intl.message(
+      'Account index',
+      name: 'wallet_account_index',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Readonly`
   String get wallet_accounts_readonly {
     return Intl.message(

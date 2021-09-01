@@ -47,6 +47,8 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
     super.initState();
 
     _init();
+
+    _addressType = widget.walletAccount.defaultAddressType;
   }
 
   _buildAccountAddressAddScreen(BuildContext context) {

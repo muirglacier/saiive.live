@@ -120,6 +120,7 @@
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
   "wallet_accounts": "Konten",
+  "wallet_account_index": "Konto Index",
   "wallet_accounts_readonly": "Nur Lesen",
   "wallet_accounts_spentable": "Versendbar",
   "wallet_accounts_delete": "Möchtest du dieses Konto löschen?",

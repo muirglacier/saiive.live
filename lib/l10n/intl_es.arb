@@ -120,6 +120,7 @@
 
 
   "wallet_accounts": "Accounts",
+  "wallet_account_index": "Account index",
   "wallet_accounts_readonly": "Readonly",
   "wallet_accounts_spentable": "Spentable",
   "wallet_accounts_detail": "Account details",

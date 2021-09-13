@@ -25,5 +25,5 @@ A seemless and easy switch between different wallets.
 
 
 # Screenshots (Version 0.7)
-![1](https://github.com/saiive/saiive.live/tree/main/docs/CFP/j1.jpg)
-![2](https://github.com/saiive/saiive.live/tree/main/docs/CFP/j2.jpg)
+![1](https://raw.githubusercontent.com/saiive/saiive.live/main/docs/CFP/j1.jpg)
+![2](https://raw.githubusercontent.com/saiive/saiive.live/main/docs/CFP/j2.jpg)

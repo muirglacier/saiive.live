@@ -22,7 +22,10 @@
   "visibility": "Sichtbarkeit",
   "address": "Adresse",
   "details": "Details",
-  
+  "show": "Anzeigen",
+  "copy": "Kopieren",
+
+  "show_in_explorer": "Im Explorer anzeigen",
   
   "test_info": "Danke fürs Testen!",
   "test_info_test": "Danke für deine Hilfe das saiive.live für alle verfügbar zu machen. Dein Feedback hilft uns sehr!",
@@ -67,6 +70,7 @@
   "wallet_new_test_confirm": "Bestätige deine Wiederherstellungswörter",
   "wallet_new_test_confirm:info": "Nur um sicher zu gehen, dass du die Richtigen Wörter hast.",
   "wallet_new_phrase_info": "Das sind deine Wiederherstellungswörter. Schreibe sie auf, und verliere sie nicht!",
+  "wallet_new_phrase_path_derivation_type": "Adresspfad Typ",
   "wallet_new_creating": "Wir bereiten dein Wallet vor, dies dauert einige Sekunden.",
   "wallet_new_creating_title": "Wallet",
 
@@ -87,7 +91,10 @@
   "wallet_empty": "Dein Wallet ist leer!",
   "wallet_receive": "Empfangen",
   "wallet_receive_warning": "Sende nur {coin} an diese Adresse. Wenn du einen anderen Coin als {coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!",
+  
   "wallet_send": "Senden",
+  "wallet_use_custom_return_address": "Verwende Rücksende Adresse",
+  "wallet_return_address": "Rücksende Adresse",
   "wallet_send_address": "Adresse",
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Menge",
@@ -113,6 +120,7 @@
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
   "wallet_accounts": "Konten",
+  "wallet_account_index": "Konto Index",
   "wallet_accounts_readonly": "Nur Lesen",
   "wallet_accounts_spentable": "Versendbar",
   "wallet_accounts_delete": "Möchtest du dieses Konto löschen?",
@@ -133,6 +141,7 @@
   "wallet_accounts_key_already_imported": "Der Schlüssel ist bereits importiert!",
   "wallet_accounts_cannot_be_empty": "Das Feld darf nicht leer sein!",
   "wallet_accounts_saved": "Konto wurde gespeichert",
+  "wallet_account_export_private_key": "Private Key exportieren",
 
   "settings": "Einstellungen",
   "settings_wallet": "Wallet",
@@ -152,6 +161,7 @@
   "settings_network": "Netzwerk",
   "settings_remove_seed": "Seed löschen",
   "settings_show_logs": "Logs zeigen",
+  "settings_logs_copied": "Logs kopiert...",
   "settings_show_wallet_addresses": "Wallet Adressen",
   "settings_show_seed": "Seed anzeigen",
   "settings_removed_seed": "Seed gelöscht",

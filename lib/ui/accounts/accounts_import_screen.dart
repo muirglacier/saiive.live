@@ -14,6 +14,7 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/accounts/accounts_address_add_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_edit_screen.dart';
 import 'package:saiive.live/ui/utils/qr_code_scan.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
@@ -37,7 +38,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
   }
 
   popToAccountsPage() {
-    Navigator.of(context).popUntil(ModalRoute.withName("/accounts"));
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   Future shouldImportPrivateKeyForPublicKey(String pubKey, String privKey, IWalletDatabase database) async {
@@ -83,19 +84,32 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
   Future onScan(String data) async {
     LogHelper.instance.d(data);
 
+    data = data.trimLeft();
+    data = data.trimRight();
+
     final currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
     final walletDbFactory = sl.get<IWalletDatabaseFactory>();
     final walletDb = await walletDbFactory.getDatabase(widget.chainType, currentNet);
 
     //propably a publicKey
-    if (data.length == 34) {
+    if (data.length == 34 || data.length == 42) {
       final isOwnAddress = await walletDb.isOwnAddress(data);
 
       if (isOwnAddress) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(S.of(context).wallet_accounts_key_already_imported),
-        ));
-        Navigator.popUntil(context, ModalRoute.withName('/home'));
+        final walletAddress = await walletDb.getWalletAddress(data);
+
+        final walletAccount = await walletDb.getAccount(walletAddress.accountId);
+
+        if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
+          await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddressAddScreen(walletAccount, false, walletAddress: walletAddress)));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(S.of(context).wallet_accounts_key_already_imported),
+          ));
+        }
+
+        popToAccountsPage();
+
         return;
       }
 
@@ -106,22 +120,14 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             account: -1,
             selected: true,
             walletAccountType: WalletAccountType.PublicKey,
+            derivationPathType: PathDerivationType.FullNodeWallet,
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 
         var addressType = HdWalletUtil.getAddressType(data, widget.chainType, currentNet);
 
-        if (addressType == null || addressType == AddressType.Legacy) {
-          //TODO: Change as soon as we support legacy addresses
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(S.of(context).wallet_accounts_import_unsupported_key),
-          ));
-
-          return;
-        }
-
-        Navigator.of(context).push(MaterialPageRoute(
+        await Navigator.of(context).push(MaterialPageRoute(
             settings: RouteSettings(name: "/accountsEditScreen"),
-            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, data, AddressType.P2SHSegwit, privateKey: null)));
+            builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, data, addressType, privateKey: null)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(S.of(context).wallet_accounts_import_invalid_pub_key),
@@ -136,6 +142,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             id: -1,
             chain: widget.chainType,
             account: -1,
+            derivationPathType: PathDerivationType.SingleKey,
             walletAccountType: WalletAccountType.PrivateKey,
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 

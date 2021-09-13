@@ -31,9 +31,12 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 class DexScreen extends StatefulWidget {
+  const DexScreen({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _DexScreen();
@@ -65,6 +68,7 @@ class _DexScreen extends State<DexScreen> {
   var _amountToController = TextEditingController(text: '');
 
   WalletAddress _toAddress;
+  String _returnAddress;
 
   void resetForm() {
     setState(() {
@@ -444,8 +448,8 @@ class _DexScreen extends State<DexScreen> {
     final walletTo = _toAddress.publicKey;
     try {
       var streamController = StreamController<String>();
-      var createSwapFuture =
-          wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807, loadingStream: streamController);
+      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807,
+          returnAddress: _returnAddress, loadingStream: streamController);
 
       sl
           .get<AppCenterWrapper>()
@@ -461,13 +465,13 @@ class _DexScreen extends State<DexScreen> {
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).dex_swap_successfull),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx.txId, S.of(context).dex_swap_successfull),
       ));
 
       resetForm();
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
 
       sl.get<AppCenterWrapper>().trackEvent("swapFailure",
@@ -649,6 +653,17 @@ class _DexScreen extends State<DexScreen> {
                             ],
                           )),
                     ]),
+                    WalletReturnAddressWidget(
+                      onChanged: (v) {
+                        setState(() {
+                          _returnAddress = v;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                    ),
                     ElevatedButton(
                       child: Text(S.of(context).dex_swap),
                       onPressed: () async {

@@ -21,8 +21,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<WalletAccount> addAccount({String name, int account, ChainType chain, bool isSelected = false}) async {
-    var newAccount = WalletAccount(Uuid().v4(), name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount);
+  Future<WalletAccount> addAccount({String name, int account, ChainType chain, PathDerivationType derivationPathType, bool isSelected = false}) async {
+    var newAccount = WalletAccount(Uuid().v4(),
+        name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, derivationPathType: derivationPathType);
 
     _walletAccounts.add(newAccount);
 
@@ -282,7 +283,6 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future removeAccount(WalletAccount walletAccount) {
-    // TODO: implement removeAccount
     throw UnimplementedError();
   }
 }

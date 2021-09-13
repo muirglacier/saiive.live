@@ -221,7 +221,6 @@ class SembastWalletDatabase extends IWalletDatabase {
       accounts = await dbStore.find(await database, finder: finder);
     }
     final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
-
     return data.firstOrNull;
   }
 
@@ -299,11 +298,13 @@ class SembastWalletDatabase extends IWalletDatabase {
     await _initAddresses();
   }
 
-  Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false}) async {
+  Future<WalletAccount> addAccount(
+      {@required String name, @required int account, @required ChainType chain, @required PathDerivationType derivationPathType, bool isSelected = false}) async {
     final db = await database;
 
     if (!await _accountV2StoreInstance.record(account).exists(db)) {
-      var newAccount = WalletAccount(Uuid().v4(), name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount);
+      var newAccount = WalletAccount(Uuid().v4(),
+          name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, derivationPathType: derivationPathType);
 
       await addOrUpdateAccount(newAccount);
 
@@ -401,7 +402,15 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   Future clearUnspentTransactions(WalletAccount account) async {
-    await _unspentStoreInstance.delete(await database);
+    var dbStore = _unspentStoreInstance;
+
+    final db = await database;
+    final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('accountId', account.uniqueId)));
+
+    var transactionData = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+    final transactionsIds = transactionData.map((e) => e.uniqueId).toList();
+
+    await _unspentStoreInstance.records(transactionsIds).delete(await database);
   }
 
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {
@@ -577,6 +586,6 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   int getAddressCreationCount() {
-    return 50;
+    return 20;
   }
 }

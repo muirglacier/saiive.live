@@ -11,6 +11,7 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/accounts/accounts_add_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_detail_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_select_action_screen.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
@@ -24,7 +25,7 @@ class AccountsScreen extends StatefulWidget {
   final useOnlyFilter;
   final ChainType chainType;
 
-  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true, this.useOnlyFilter = false, this.chainType = ChainType.DeFiChain});
+  AccountsScreen({this.allowChangeVisibility = true, this.allowImport = true, this.useOnlyFilter = false, this.chainType = ChainType.DeFiChain, Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AccountScreen();
@@ -98,11 +99,12 @@ class _AccountScreen extends State<AccountsScreen> {
   }
 
   List<Widget> _buildPublicKeyAddress(BuildContext context, WalletAccount account) {
+    final width = MediaQuery.of(context).size.width;
+
     if (account.walletAccountType == WalletAccountType.HdAccount) {
+      var text = "${WalletAccount.getStringForWalletAccountType(account.walletAccountType)}(${pathDerivationTypeString(account.derivationPathType)})";
       return [
-        Text(WalletAccount.getStringForWalletAccountType(account.walletAccountType)),
-        Text(" | Id: ", style: Theme.of(context).textTheme.bodyText1),
-        Text(account.account.toString(), style: Theme.of(context).textTheme.bodyText1),
+        SizedBox(width: width / 5, child: AutoSizeText(text, maxLines: 1, overflow: TextOverflow.ellipsis)),
       ];
     }
 
@@ -110,6 +112,8 @@ class _AccountScreen extends State<AccountsScreen> {
   }
 
   Widget _buildSelectIcon(bool isSelected, WalletAccount account) {
+    final width = MediaQuery.of(context).size.width;
+
     if (isSelectionMode) {
       return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
         Icon(
@@ -117,7 +121,7 @@ class _AccountScreen extends State<AccountsScreen> {
           color: Theme.of(context).primaryColor,
         ),
         SizedBox(width: 10),
-        AutoSizeText(account.name, style: Theme.of(context).textTheme.headline3)
+        SizedBox(width: width / 3, child: AutoSizeText(account.name, maxLines: 1, style: Theme.of(context).textTheme.headline3))
       ]);
     } else {
       return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -126,7 +130,7 @@ class _AccountScreen extends State<AccountsScreen> {
           color: Theme.of(context).primaryColor,
         ),
         SizedBox(width: 10),
-        AutoSizeText(account.name, style: Theme.of(context).textTheme.headline3)
+        SizedBox(width: width / 3, child: AutoSizeText(account.name, maxLines: 1, style: Theme.of(context).textTheme.headline3))
       ]);
     }
   }
@@ -134,8 +138,11 @@ class _AccountScreen extends State<AccountsScreen> {
   Widget _buildAccountEntry(BuildContext context, WalletAccount account) {
     return Card(
         child: ListTile(
-      leading: SizedBox(width: 100, child: _buildSelectIcon(account.selected, account)),
-      title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))]),
+      title: Row(children: [
+        _buildSelectIcon(account.selected, account),
+        SizedBox(width: 10),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))])
+      ]),
       trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -211,18 +218,19 @@ class _AccountScreen extends State<AccountsScreen> {
             Text(S.of(context).wallet_accounts)
           ]),
           actions: [
-            // Padding(
-            //     padding: EdgeInsets.only(right: 15.0),
-            //     child: GestureDetector(
-            //       onTap: () {
-            //         Navigator.of(context).push(MaterialPageRoute(
-            //             builder: (BuildContext context) => AccountsSelectActionScreen((chainType) {
-            //                   Navigator.of(context)
-            //                       .push(MaterialPageRoute(settings: RouteSettings(name: "/accountsAddScreen"), builder: (BuildContext context) => AccountsAddScreen(chainType)));
-            //                 })));
-            //       },
-            //       child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-            //     )),
+            Padding(
+                padding: EdgeInsets.only(right: 15.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => AccountsSelectActionScreen((chainType) async {
+                              await Navigator.of(context).push(MaterialPageRoute(
+                                  settings: RouteSettings(name: "/accountsAddScreen"), builder: (BuildContext context) => AccountsAddScreen(chainType, null, true)));
+                              await _init();
+                            })));
+                  },
+                  child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
             if (!_isLoading && widget.allowImport)
               Padding(
                   padding: EdgeInsets.only(right: 15.0),

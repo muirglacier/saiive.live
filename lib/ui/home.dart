@@ -35,16 +35,35 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   static List<NavigationEntry> _navigationEntries = [];
+  final PageStorageBucket _storeBucket = PageStorageBucket();
 
   void initMenu(BuildContext context) {
-    _navigationEntries = [
-      NavigationEntry(icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen(), routeSettingName: "/home"),
-      NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(), routeSettingName: "/liqudity"),
-      NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(), routeSettingName: "/dex"),
-      NavigationEntry(icon: Icon(Icons.account_box), label: S.of(context).wallet_accounts, page: AccountsScreen(), visibleForBottomNav: true, routeSettingName: "/accounts"),
-      NavigationEntry(icon: Icon(Icons.radio_button_unchecked), label: S.of(context).home_tokens, page: TokensScreen(), visibleForBottomNav: false, routeSettingName: "/tokens"),
-      NavigationEntry(icon: Icon(Icons.settings), label: S.of(context).settings, page: SettingsScreen(), visibleForBottomNav: false, routeSettingName: "/settings")
-    ];
+    if (_navigationEntries.isEmpty) {
+      _navigationEntries = [
+        NavigationEntry(
+            icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen(key: PageStorageKey('WalletHome')), routeSettingName: "/home"),
+        NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(key: PageStorageKey('Liquidity')), routeSettingName: "/liqudity"),
+        NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(key: PageStorageKey('DEX')), routeSettingName: "/dex"),
+        NavigationEntry(
+            icon: Icon(Icons.account_box),
+            label: S.of(context).wallet_accounts,
+            page: AccountsScreen(key: PageStorageKey('Accounts')),
+            visibleForBottomNav: true,
+            routeSettingName: "/accounts"),
+        NavigationEntry(
+            icon: Icon(Icons.radio_button_unchecked),
+            label: S.of(context).home_tokens,
+            page: TokensScreen(key: PageStorageKey('Tokens')),
+            visibleForBottomNav: false,
+            routeSettingName: "/tokens"),
+        NavigationEntry(
+            icon: Icon(Icons.settings),
+            label: S.of(context).settings,
+            page: SettingsScreen(key: PageStorageKey('Settings')),
+            visibleForBottomNav: false,
+            routeSettingName: "/settings")
+      ];
+    }
   }
 
   void _onItemTapped(int index) {
@@ -57,8 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia) {
       return AppUpdateAlert(
           child: Center(
-        child: _navigationEntries.elementAt(_selectedIndex).page,
-      ));
+              child: PageStorage(
+        bucket: _storeBucket,
+        child: _navigationEntries[_selectedIndex].page,
+      )));
     }
 
     final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();

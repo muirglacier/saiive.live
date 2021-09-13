@@ -215,6 +215,36 @@ class S {
     );
   }
 
+  /// `Display`
+  String get show {
+    return Intl.message(
+      'Display',
+      name: 'show',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy`
+  String get copy {
+    return Intl.message(
+      'Copy',
+      name: 'copy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open in explorer`
+  String get show_in_explorer {
+    return Intl.message(
+      'Open in explorer',
+      name: 'show_in_explorer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(
@@ -645,6 +675,16 @@ class S {
     );
   }
 
+  /// `Path derviation type`
+  String get wallet_new_phrase_path_derivation_type {
+    return Intl.message(
+      'Path derviation type',
+      name: 'wallet_new_phrase_path_derivation_type',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `We are preparing your wallet, hang on a second.`
   String get wallet_new_creating {
     return Intl.message(
@@ -745,10 +785,10 @@ class S {
     );
   }
 
-  /// `We did not found a used account, but we have created on for you!`
+  /// `We did not found a used account, but we have created one for you!`
   String get wallet_restore_noAccountFound {
     return Intl.message(
-      'We did not found a used account, but we have created on for you!',
+      'We did not found a used account, but we have created one for you!',
       name: 'wallet_restore_noAccountFound',
       desc: '',
       args: [],
@@ -1035,6 +1075,16 @@ class S {
     );
   }
 
+  /// `Account index`
+  String get wallet_account_index {
+    return Intl.message(
+      'Account index',
+      name: 'wallet_account_index',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Readonly`
   String get wallet_accounts_readonly {
     return Intl.message(
@@ -1235,11 +1285,41 @@ class S {
     );
   }
 
+  /// `Export private key`
+  String get wallet_account_export_private_key {
+    return Intl.message(
+      'Export private key',
+      name: 'wallet_account_export_private_key',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(
       'Send',
       name: 'wallet_send',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change address`
+  String get wallet_return_address {
+    return Intl.message(
+      'Change address',
+      name: 'wallet_return_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use custom change address`
+  String get wallet_use_custom_return_address {
+    return Intl.message(
+      'Use custom change address',
+      name: 'wallet_use_custom_return_address',
       desc: '',
       args: [],
     );
@@ -1420,6 +1500,16 @@ class S {
     return Intl.message(
       'Show logs',
       name: 'settings_show_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logs copied...`
+  String get settings_logs_copied {
+    return Intl.message(
+      'Logs copied...',
+      name: 'settings_logs_copied',
       desc: '',
       args: [],
     );

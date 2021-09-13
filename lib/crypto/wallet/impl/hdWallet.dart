@@ -28,11 +28,10 @@ class HdWallet extends IHdWallet {
 
   HdWallet(this._password, this._account, this._chain, this._network, this._seed, this._apiService);
 
-  Future<List<String>> getPublicKeys(IWalletDatabase walletDatabase) async {
+  Future<List<WalletAddress>> getPublicKeys(IWalletDatabase walletDatabase) async {
     final walletAddresses = await walletDatabase.getWalletAllAddresses(_account);
-    final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
 
-    return allAddresses;
+    return walletAddresses;
   }
 
   @override
@@ -47,28 +46,27 @@ class HdWallet extends IHdWallet {
     }
 
     if (addresses.length >= walletDatabase.getAddressCreationCount()) {
-      // for (final address in addresses) {
-      //   final pubKey = address.publicKey;
-      //   final pathString = address.account.toString() + "/" + (address.isChangeAddress ? "1" : "0") + "/" + address.index.toString();
-      //   // LogHelper.instance.i("Wallet $_chain uses address $pubKey at $pathString");
-      // }
+      for (final address in addresses) {
+        final pubKey = address.publicKey;
+        final pathString = address.account.toString() + "/" + (address.isChangeAddress ? "1" : "0") + "/" + address.index.toString();
+        LogHelper.instance.i("Wallet $_chain uses address $pubKey at $pathString");
+      }
 
       return;
     }
 
-    // await _checkAndCreateIfExists(walletDatabase, seed, 0, true, AddressType.Legacy);
-
     for (int i = 0; i < walletDatabase.getAddressCreationCount(); i++) {
-      await _checkAndCreateIfExists(walletDatabase, _seed, i, true, AddressType.P2SHSegwit);
-      await _checkAndCreateIfExists(walletDatabase, _seed, i, false, AddressType.P2SHSegwit);
+      await _checkAndCreateIfExists(walletDatabase, _seed, i, true, _account.defaultAddressType, _account.derivationPathType);
+      await _checkAndCreateIfExists(walletDatabase, _seed, i, false, _account.defaultAddressType, _account.derivationPathType);
     }
   }
 
-  Future _checkAndCreateIfExists(IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress, AddressType addressType) async {
+  Future _checkAndCreateIfExists(
+      IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress, AddressType addressType, PathDerivationType derivationPathType) async {
     final alreadyExists = await walletDatabase.addressExists(_account.account, isChangeAddress, index, addressType);
 
     if (!alreadyExists) {
-      final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType);
+      final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType, derivationPathType);
       final walletType = ChainHelper.chainTypeString(_chain);
       LogHelper.instance.d("Create address for $walletType: $pubKey");
       await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
@@ -121,10 +119,19 @@ class HdWallet extends IHdWallet {
       await sharedPrefs.setAddressIndex(0, isChangeAddress);
       startIndex = 0;
 
-      return await database.getWalletAddressById(_account.account, isChangeAddress, 0, addressType);
+      var address = await database.getWalletAddressById(_account.account, isChangeAddress, 0, addressType);
+
+      if (address == null) {
+        address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
+      }
+      return address;
     }
 
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
+
+    if (address == null) {
+      address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
+    }
     var addressUsed = await database.addressAlreadyUsed(address.publicKey);
 
     if (addressUsed || address.createdAt != null) {
@@ -188,7 +195,9 @@ class HdWallet extends IHdWallet {
       await _syncWallet(database, (addresses, pos, max) async {
         loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
         final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
-
+        utxo.forEach((element) {
+          LogHelper.instance.d("UTXO tx ${element.mintTxId} for ${element.address} with value ${element.value} (${element.valueRaw})(${element.correctValueRounded})");
+        });
         newUtxos.addAll(utxo);
 
         if (_chain == ChainType.DeFiChain) {
@@ -201,6 +210,7 @@ class HdWallet extends IHdWallet {
     newUtxos.forEach((element) async {
       await database.addUnspentTransaction(element, account);
     });
+
     if (account != null) {
       await database.clearAccountBalances(account);
       for (final acc in newBalance) {

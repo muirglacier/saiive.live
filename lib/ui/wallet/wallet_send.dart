@@ -21,6 +21,7 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 class WalletSendScreen extends StatefulWidget {
@@ -41,6 +42,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _amountController = TextEditingController(text: '1');
   EnvironmentType _currentEnvironment;
 
+  String _toAddress;
+
   Future sendFunds(StreamController<String> stream) async {
     try {
       Wakelock.enable();
@@ -54,14 +57,14 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       final tx = await sl
           .get<IWalletService>()
-          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
+          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(txId, S.of(context).wallet_operation_success),
+        builder: (BuildContext context) => TransactionSuccessScreen(widget.chainType, txId, S.of(context).wallet_operation_success),
       ));
 
       Navigator.of(context).pop();
@@ -71,7 +74,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     } catch (e) {
       sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, widget.chainType, error: e),
       ));
     } finally {
       Wakelock.disable();
@@ -145,7 +148,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
                     ))),
-                SizedBox(width: 20),
+                SizedBox(height: 20),
                 ButtonTheme(
                     height: 30,
                     minWidth: 40,
@@ -156,6 +159,17 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         }))
               ]),
               SizedBox(height: 20),
+              WalletReturnAddressWidget(
+                onChanged: (v) {
+                  setState(() {
+                    _toAddress = v;
+                  });
+                },
+              ),
+              SizedBox(
+                width: 20,
+                height: 20,
+              ),
               SizedBox(
                   width: 250,
                   child: ElevatedButton(

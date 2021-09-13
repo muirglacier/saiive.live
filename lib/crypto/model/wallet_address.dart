@@ -21,7 +21,7 @@ class WalletAddress {
 
   String get uniqueId => accountId + "_" + chain.index.toString() + "_" + account.toString() + "_" + (isChangeAddress ? "1" : "0") + "_" + index.toString();
 
-  String path(WalletAccount account) => HdWalletUtil.derivePath(account.account, isChangeAddress, index);
+  String path(WalletAccount account) => HdWalletUtil.derivePath(account.account, isChangeAddress, index, account.derivationPathType);
 
   WalletAddress(
       {@required this.accountId,

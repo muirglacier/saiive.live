@@ -148,12 +148,23 @@ abstract class Wallet extends IWallet {
     throw UnimplementedError();
   }
 
+  Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) async {
+    if (!_wallets.containsKey(account.uniqueId)) {
+      return List<WalletAddress>.empty();
+    }
+
+    return await _wallets[account.uniqueId].getPublicKeys(walletDatabase);
+  }
+
   Future<List<String>> getPublicKeys() async {
     isInitialzed();
     List<String> keys = [];
 
     for (var wallet in _wallets.values) {
-      keys.addAll(await wallet.getPublicKeys(_walletDatabase));
+      final walletAddresses = await wallet.getPublicKeys(_walletDatabase);
+      final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
+
+      keys.addAll(allAddresses);
     }
 
     return keys;
@@ -238,6 +249,7 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
+          derivationPathType: PathDerivationType.FullNodeWallet,
           walletAccountType: WalletAccountType.HdAccount));
     } else {
       var lastItem = unusedAccounts.item1.last;
@@ -246,13 +258,14 @@ abstract class Wallet extends IWallet {
           id: lastItem.account + 1,
           chain: _chain,
           name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
+          derivationPathType: PathDerivationType.FullNodeWallet,
           walletAccountType: WalletAccountType.HdAccount));
     }
     return unusedAccounts;
   }
 
   @override
-  Future<String> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) async {
+  Future<String> createAndSend(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
     isInitialzed();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
@@ -262,7 +275,7 @@ abstract class Wallet extends IWallet {
 
     try {
       loadingStream?.add(S.current.wallet_operation_build_tx);
-      var txData = await createSendTransaction(amount, token, to, sendMax: sendMax, loadingStream: loadingStream);
+      var txData = await createSendTransaction(amount, token, to, returnAddress: returnAddress, sendMax: sendMax, loadingStream: loadingStream);
 
       return txData;
     } catch (error) {
@@ -288,12 +301,12 @@ abstract class Wallet extends IWallet {
     return tx.txId;
   }
 
-  @protected
   Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
     if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
       final key = seedList;
-      final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network);
-      final pubKey = HdWalletUtil.getPublicKey(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType);
+      final keyPair = HdWalletUtil.getKeyPair(key, address.account, address.isChangeAddress, address.index, address.chain, address.network, walletAccount.derivationPathType);
+      final pubKey = HdWalletUtil.getPublicKey(
+          key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType, walletAccount.derivationPathType);
 
       if (pubKey != address.publicKey) {
         throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");
@@ -320,7 +333,7 @@ abstract class Wallet extends IWallet {
 
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
-    final keys = List<ECPair>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
 
     final checkAmount = amount + additionalFees;
 
@@ -345,7 +358,7 @@ abstract class Wallet extends IWallet {
       curAmount += tx.valueRaw;
 
       var keyPair = await getPrivateKey(address, walletAccount);
-      keys.add(keyPair);
+      keys.add(Tuple2(address, keyPair));
 
       if (curAmount >= checkAmount) {
         break;

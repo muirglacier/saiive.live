@@ -8,22 +8,32 @@ class DefiChainConstants {
 
   static const int COIN = 100000000;
 
-  static getExplorerUrlForNet(ChainNet net) {
+  static getExplorerUrlForNet(ChainType chainType, ChainNet net) {
     switch (net) {
       case ChainNet.Mainnet:
-        return "https://mainnet-supernode.saiive.live/explorer/#/DFI/mainnet/";
+        if (chainType == ChainType.DeFiChain)
+          return "https://mainnet-supernode.saiive.live/explorer/#/DFI/mainnet";
+        else
+          return "https://blockstream.info";
         break;
       case ChainNet.Testnet:
-        return "https://testnet-supernode.saiive.live/testnet/#/DFI/testnet/";
+        if (chainType == ChainType.DeFiChain)
+          return "https://testnet-supernode.saiive.live/testnet/#/DFI/testnet";
+        else
+          return "https://blockstream.info/testnet";
         break;
     }
   }
 
-  static getExplorerUrl(ChainNet net, String txId) {
-    return getExplorerUrlForNet(net) + "/tx/" + txId;
+  static getExplorerUrl(ChainType chain, ChainNet net, String txId) {
+    return getExplorerUrlForNet(chain, net) + "/tx/" + txId;
   }
 
-  static getExplorerBlockUrl(ChainNet net, String blockHash) {
-    return getExplorerUrlForNet(net) + "/block/" + blockHash;
+  static getExplorerAddressUrl(ChainType chain, ChainNet net, String address) {
+    return getExplorerUrlForNet(chain, net) + "/address/" + address;
+  }
+
+  static getExplorerBlockUrl(ChainType chain, ChainNet net, String blockHash) {
+    return getExplorerUrlForNet(chain, net) + "/block/" + blockHash;
   }
 }

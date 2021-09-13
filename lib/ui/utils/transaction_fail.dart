@@ -1,22 +1,32 @@
+import 'package:azblob/azblob.dart';
+import 'package:logger_flutter_console/logger_flutter_console.dart';
+import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/errors/NoUtxoError.dart';
 import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/ui/widgets/loading_overlay.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionFailScreen extends StatefulWidget {
   final String text;
+  final ChainType chain;
 
   final String additional;
   final dynamic error;
 
-  TransactionFailScreen(this.text, {this.additional, this.error});
+  TransactionFailScreen(this.text, this.chain, {this.additional, this.error});
 
   @override
   _TransactionFailScreenState createState() => _TransactionFailScreenState();
@@ -33,7 +43,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
   bool _isMissingUtxoError = false;
   String utxoRechargerUrl = "http://utxo.mydeficha.in/";
 
-  _transformError() {
+  _transformError() async {
     if (widget.error == null) {
       return;
     }
@@ -41,9 +51,23 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     if (widget.error is Error) {
       stackTrace = (widget.error as Error).stackTrace.toString();
     }
+
+    final sharedPrefsUtil = sl.get<SharedPrefsUtil>();
+    final network = await sharedPrefsUtil.getChainNetwork();
+    final walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(this.widget.chain, network);
+
+    final unspentTx = await walletDatabase.getUnspentTransactions();
+
     _copyText = "";
     _copyText += "\r\n";
     _copyText += _version;
+    _copyText += "\r\n";
+    _copyText += "Unspent transactions:";
+
+    unspentTx.forEach((element) {
+      _copyText += " * ${element.mintTxId} ${element.mintIndex} (${element.spentTxId})\r\n";
+    });
+
     _copyText += "\r\n";
 
     if (widget.error is HttpException) {
@@ -51,7 +75,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
       _errorText = httpError.error.error;
       _copyText += _errorText + "\r\n" + stackTrace;
     } else if (widget.error is NoUtxoError) {
-      _errorText = S.of(context).wallet_operation_no_utxo;
+      _errorText = S.of(this.context).wallet_operation_no_utxo;
       _copyText += _errorText;
       _isMissingUtxoError = true;
     } else if (widget.error is TransactionError) {
@@ -78,6 +102,34 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  Future<dynamic> pasteAndShare() async {
+    try {
+      var buffer = LogConsole.getCachedEvents();
+
+      var storage = AzureStorage.parse(EnvHelper.getAzBlobKey());
+
+      var allCopyText = _errorText + "\r\n" + _copyText;
+      allCopyText += "\r\n";
+      allCopyText += "\r\n";
+      allCopyText += "\r\n----- LOGS ----";
+      allCopyText += "\r\n";
+      buffer.forEach((event) {
+        var text = event.lines.join('\n');
+        allCopyText += text;
+      });
+      allCopyText += "\r\n";
+
+      var id = Uuid().v4();
+
+      final fileName = "/errors/$id.txt";
+      await storage.putBlob(fileName, body: allCopyText);
+      await Share.share(fileName, subject: "Error");
+    } catch (e) {
+      await Share.share(_copyText, subject: "Error");
+    }
+    return true;
   }
 
   @override
@@ -133,7 +185,9 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () async {
-                  await Share.share(_copyText, subject: "Error");
+                  var pasteAndShareFuture = pasteAndShare();
+                  final overlay = LoadingOverlay.of(context);
+                  await overlay.during(pasteAndShareFuture);
                 },
                 child: Icon(Icons.share, size: 26.0, color: Colors.white),
               )),

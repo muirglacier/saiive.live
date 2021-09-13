@@ -24,6 +24,8 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 class LiquidityScreen extends StatefulWidget {
+  const LiquidityScreen({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _LiquidityScreen();

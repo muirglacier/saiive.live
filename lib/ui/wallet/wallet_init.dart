@@ -1,7 +1,6 @@
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
@@ -11,7 +10,8 @@ import 'package:uuid/uuid.dart';
 import 'package:wakelock/wakelock.dart';
 
 class WalletInitScreen extends StatefulWidget {
-  WalletInitScreen();
+  final PathDerivationType pathDerivationType;
+  WalletInitScreen(this.pathDerivationType);
 
   @override
   State<StatefulWidget> createState() {
@@ -27,11 +27,25 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
     try {
       final wallet = sl.get<IWalletService>();
       await wallet.init();
-
-      final defaultDfiWalletAccount =
-          WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "DFI0", selected: true);
-      final defaultBtcWalletAccount =
-          WalletAccount(Uuid().v4(), id: 0, chain: ChainType.Bitcoin, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "BTC0", selected: true);
+      var defaultAddressType = getDefaultAddressTypeForPathDerivation(widget.pathDerivationType);
+      final defaultDfiWalletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: widget.pathDerivationType,
+          defaultAddressType: defaultAddressType,
+          name: "DFI_" + pathDerivationTypeString(widget.pathDerivationType) + "_0",
+          selected: true);
+      final defaultBtcWalletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.Bitcoin,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: widget.pathDerivationType,
+          defaultAddressType: defaultAddressType,
+          name: "BTC_" + pathDerivationTypeString(widget.pathDerivationType) + "_0",
+          selected: true);
 
       await wallet.addAccount(defaultDfiWalletAccount);
       await wallet.addAccount(defaultBtcWalletAccount);
@@ -39,11 +53,11 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
 
       await wallet.init();
 
-      var walletAddress = await wallet.getNextWalletAddress(defaultDfiWalletAccount, false, AddressType.P2SHSegwit);
+      var walletAddress = await wallet.getNextWalletAddress(defaultDfiWalletAccount, false, defaultAddressType);
       walletAddress.name = ChainHelper.chainTypeString(ChainType.DeFiChain);
       await wallet.updateAddress(walletAddress);
 
-      var btcWalletAddress = await wallet.getNextWalletAddress(defaultBtcWalletAccount, false, AddressType.P2SHSegwit);
+      var btcWalletAddress = await wallet.getNextWalletAddress(defaultBtcWalletAccount, false, defaultAddressType);
       btcWalletAddress.name = ChainHelper.chainTypeString(ChainType.Bitcoin);
       await wallet.updateAddress(btcWalletAddress);
 

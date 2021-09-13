@@ -7,7 +7,12 @@ name: $(BuildID)
 
 variables:
 - group: saiive.live
-
+- name: AppVersion
+  value: 0.7
+- name: AppVersion_Minor
+  value: 7
+- name: AppVersion_Major
+  value: 0
 
 stages:
 - stage: Pre
@@ -102,9 +107,23 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, azure-blob-key-dev'
           RunAsPreJob: true
-          
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Debug
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -199,8 +218,25 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, azure-blob-key-staging'
           RunAsPreJob: true
+          
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -279,8 +315,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'android-upload-key-password, android-upload-key-base64'
+          SecretsFilter: 'android-upload-key-password, android-upload-key-base64, azure-blob-key-prod'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -353,8 +405,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password'
+          SecretsFilter: 'apple-adhoc-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -435,8 +503,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password'
+          SecretsFilter: 'apple-adhoc-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -522,8 +606,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-dev'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Dev
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -643,9 +743,23 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
-
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'DP3rdPartyMacDeveloper.p12'
@@ -763,8 +877,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -870,8 +1000,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password'
+          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: InstallAppleCertificate@2
         inputs:
@@ -995,9 +1141,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-dev'
           RunAsPreJob: true
 
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Dev
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1137,8 +1298,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-staging'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1246,8 +1423,24 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'windows-sign-key, windows-sign-key-password'
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-prod'
           RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1352,6 +1545,29 @@ stages:
       vmImage: 'windows-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'windows-sign-key, windows-sign-key-password, azure-blob-key-prod'
+          RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1436,6 +1652,30 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'azure-blob-key-dev'
+          RunAsPreJob: true
+
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Dev
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1542,6 +1782,28 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'azure-blob-key-staging'
+          RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Staging
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1612,6 +1874,29 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'azure-blob-key-prod'
+          RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1681,6 +1966,29 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+      - task: AzureKeyVault@1
+        inputs:
+          azureSubscription: $(KeyVaultConnection)
+          KeyVaultName: $(KeyVaultName)
+          SecretsFilter: 'azure-blob-key-prod'
+          RunAsPreJob: true
+
+      - task: replacetokens@4
+        inputs:
+          rootDirectory: '$(Build.SourcesDirectory)'
+          targetFiles: |
+            **/.env-Prod
+          encoding: 'auto'
+          tokenPattern: 'doublebraces'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'warn'
+          keepToken: false
+          actionOnNoFiles: 'continue'
+          enableTransforms: false
+          useLegacyPattern: false
+          enableTelemetry: false      
+          
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:

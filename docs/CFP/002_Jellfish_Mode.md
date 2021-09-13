@@ -6,7 +6,7 @@
 
 3. Receiving address: dResgN7szqZ6rysYbbj2tUmqjcGHD4LmKs
 
-4. Reddit discussion thread: [Reddit](TBD)
+4. Reddit discussion thread: [Reddit](https://www.reddit.com/r/defiblockchain/comments/pndifz/cfp_saiivelive_jellyfish_compatibility_5000_dfi/)
 
 5. Proposal fee (10 DFI) txid: 0296e703474490da228f330b60c32630f8aa1514ed7c5057df5516983ff1b9b1
 

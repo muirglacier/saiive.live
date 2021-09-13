@@ -82,12 +82,30 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
       final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
       if (inputContainsAuthTx.isEmpty) {
-        var vin = txb.addInput(tx.mintTxId, tx.mintIndex);
-        txb.addOutput(tx.address, tx.value);
-        final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;
-        final redeemScript = p2wpkh.output;
+        var vin = -1;
+        if (addressInfo.addressType == AddressType.Bech32) {
+          final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey), network: network).data;
 
-        txb.sign(vin: vin, keyPair: keyPair, witnessValue: tx.value, redeemScript: redeemScript);
+          vin = txb.addInput(tx.mintTxId, tx.mintIndex, null, p2wpkh.output);
+        } else {
+          vin = txb.addInput(tx.mintTxId, tx.mintIndex);
+        }
+
+        txb.addOutput(tx.address, tx.value);
+
+        final witnessValue = tx.valueRaw;
+        if (addressInfo.addressType == AddressType.P2SHSegwit) {
+          final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;
+          final redeemScript = p2wpkh.output;
+
+          txb.sign(vin: vin, keyPair: keyPair, witnessValue: witnessValue, redeemScript: redeemScript);
+        } else if (addressInfo.addressType == AddressType.Bech32) {
+          txb.sign(vin: vin, keyPair: keyPair, witnessValue: witnessValue);
+        } else if (addressInfo.addressType == AddressType.Legacy) {
+          txb.sign(vin: vin, keyPair: keyPair);
+        } else {
+          throw new ArgumentError("${addressInfo.addressType} not supported...");
+        }
       }
     });
 

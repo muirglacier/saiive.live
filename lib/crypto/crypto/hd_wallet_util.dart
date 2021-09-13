@@ -260,14 +260,14 @@ class HdWalletUtil {
 
     int index = 0;
     for (final key in keys) {
+      final witnessValue = inputTxs[index].valueRaw;
       if (key.item1.addressType == AddressType.P2SHSegwit) {
         final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.item2.publicKey)).data;
         final redeemScript = p2wpkh.output;
-        final witnessValue = inputTxs[index].valueRaw;
 
         txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue, redeemScript: redeemScript);
       } else if (key.item1.addressType == AddressType.Bech32) {
-        txb.sign(vin: index, keyPair: key.item2, witnessValue: inputTxs[index].valueRaw);
+        txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue);
       } else if (key.item1.addressType == AddressType.Legacy) {
         txb.sign(vin: index, keyPair: key.item2);
       } else {

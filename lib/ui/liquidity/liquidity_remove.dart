@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
+import 'package:tuple/tuple.dart';
 import 'package:wakelock/wakelock.dart';
 
 class LiquidityRemoveScreen extends StatefulWidget {
@@ -68,17 +69,43 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
 
   var _percentageTextController = TextEditingController(text: '100');
 
-  Future removeLiquidity() async {
+  Future doRemoveLiquidity() async {
+    var streamController = StreamController<String>();
+    try {
+      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+
+      final removeLiq = removeLiquidity(streamController);
+      var remove = await overlay.during(removeLiq);
+
+      if (remove.item2 != null) {
+        await Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: remove.item2),
+        ));
+      } else {
+        await Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, remove.item1.txId, S.of(context).liquidity_remove_successfull),
+        ));
+
+        Navigator.popUntil(context, ModalRoute.withName('/home'));
+      }
+    } catch (error) {
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: error),
+      ));
+    } finally {
+      streamController.close();
+    }
+  }
+
+  Future<Tuple2<TransactionData, dynamic>> removeLiquidity(StreamController<String> streamController) async {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
 
     var totalToRemove = amountToRemove;
-    var hasError = false;
 
     dynamic lastError;
     TransactionData lastTx;
-    var streamController = StreamController<String>();
     await wallet.ensureUtxoUnsafe(loadingStream: streamController);
 
     for (final poolShare in widget.liquidity.poolShares) {
@@ -88,15 +115,11 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         amount = totalToRemove;
       }
 
-      var createRemoveFuture = wallet.createAndSendRemovePoolLiquidity(int.parse(poolShare.poolID), (amount * 100000000).toInt(), poolShare.owner,
-          returnAddress: _returnAddress, loadingStream: streamController);
-      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
-
       try {
-        lastTx = await overlay.during(createRemoveFuture);
+        lastTx = await wallet.createAndSendRemovePoolLiquidity(int.parse(poolShare.poolID), (amount * 100000000).toInt(), poolShare.owner,
+            returnAddress: _returnAddress, loadingStream: streamController);
       } catch (error) {
         LogHelper.instance.e("removepool-tx error...($error)");
-        hasError = true;
         lastError = error;
       } finally {}
 
@@ -106,22 +129,11 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
         break;
       }
     }
-    streamController.close();
-
     EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
-    if (hasError || totalToRemove > 0) {
-      await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: lastError),
-      ));
-    } else {
-      await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTx.txId, S.of(context).liquidity_remove_successfull),
-      ));
-
-      Navigator.popUntil(context, ModalRoute.withName('/home'));
-    }
 
     Wakelock.disable();
+
+    return Tuple2(lastTx, lastError);
   }
 
   handleChangePercentage() {
@@ -246,7 +258,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
             child: Text(S.of(context).liquidity_remove),
             onPressed: () async {
               await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                await removeLiquidity();
+                await doRemoveLiquidity();
               });
             },
           )

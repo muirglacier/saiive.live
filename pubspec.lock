@@ -196,7 +196,7 @@ packages:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.0+1"
+    version: "3.5.0"
   device_info:
     dependency: "direct main"
     description:

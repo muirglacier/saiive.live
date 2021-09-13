@@ -17,7 +17,14 @@ void main() async {
     initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: "acc",
+          selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       await db.addTransaction(
@@ -95,7 +102,7 @@ void main() async {
       await wallet.createSendTransaction(1000000000, "\$DFI", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
-          "0200000000010127278e5cbc857433ffc08bdeaa7e5d563011b756715024cf20d978ec7fa05dd80000000017160014faf5b246f4ed8fe5b9e149a036404aa2c2ea451bffffffff029863b50d0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702483045022100bf7139caa147efe7174a0805ee357973948127719a43e80821b5b0625083238002201164a3d5fa140875805676773bdedc238cceb5b7ff8d7b3d0175dcbf42a5922001210241e3f9c894cd6d44c6a262d442f7aaf92e41c1dd6eb118334e7c5742335c8bcc00000000");
+          "0400000000010127278e5cbc857433ffc08bdeaa7e5d563011b756715024cf20d978ec7fa05dd80000000017160014faf5b246f4ed8fe5b9e149a036404aa2c2ea451bffffffff0200ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa87009863b50d0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f87000247304402202e606d6e9ed068eb23f3579f5b98d0fbe2ed1754b618c177c9ffb74926a9489f022042b1f1eb0e9f73d052eb22916204244630b65c0ed9ccc452a82886b24301bcbe01210241e3f9c894cd6d44c6a262d442f7aaf92e41c1dd6eb118334e7c5742335c8bcc00000000");
       await destroyTest();
     });
   });
@@ -103,7 +110,14 @@ void main() async {
   group("#2 create 2nd tx", () {
     initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: "acc",
+          selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       await db.addTransaction(
@@ -182,7 +196,7 @@ void main() async {
       await wallet.createSendTransaction(1000000000, "\$DFI", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
-          "020000000001010c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f90000000017160014f5baba69ac8107ca3f47bf3a0d7afef76c5d2d4bffffffff02b05fb50d0600000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8700ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870247304402206b2fccb1d70165f73a7c2499c25d5f2c2184cf91d9dc4ee1b0edf9c86b1e78ca0220563b0e5662ab08f341a3dfa73848154d874f4e760a357ef6b410d8da38df202c012103d9692afdab3120cb1b9d848de7d72c97cc2e21c00af07d0d5a98df1a4498359600000000");
+          "040000000001010c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f90000000017160014f5baba69ac8107ca3f47bf3a0d7afef76c5d2d4bffffffff0200ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8700b05fb50d0600000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b87000247304402201a34e6a33a62f80a40c6ec25dd09ff58822e39aa8873628e5c6f8fa33c2b43a802203e7acf6b537d353eca93d5c708be0b7436efb166b509ffd564a0a6165773e22a012103d9692afdab3120cb1b9d848de7d72c97cc2e21c00af07d0d5a98df1a4498359600000000");
       await destroyTest();
     });
   });

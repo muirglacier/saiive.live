@@ -15,7 +15,9 @@ class AccountSelectAddressWidget extends StatefulWidget {
   final Widget label;
   final ValueChanged<WalletAddress> onChanged;
 
-  const AccountSelectAddressWidget({Key key, @required this.label, this.onChanged}) : super(key: key);
+  final bool showLabel;
+
+  const AccountSelectAddressWidget({Key key, @required this.label, this.onChanged, this.showLabel = true}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AccountSelectAddressWidget();
@@ -120,7 +122,7 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
       return Center(child: LoadingWidget(text: S.of(context).loading));
     }
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      widget.label,
+      if (widget.showLabel) widget.label,
       Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [

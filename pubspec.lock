@@ -71,20 +71,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  bech32:
-    dependency: transitive
+  azblob:
+    dependency: "direct main"
     description:
-      name: bech32
+      name: azblob
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "2.0.0"
   bip32_defichain:
     dependency: transitive
     description:
       name: bip32_defichain
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
+  blur:
+    dependency: "direct main"
+    description:
+      name: blur
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -176,13 +183,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  defichain_bech32:
+    dependency: transitive
+    description:
+      name: defichain_bech32
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   defichaindart:
     dependency: "direct main"
     description:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0+1"
+    version: "3.4.0+1"
   device_info:
     dependency: "direct main"
     description:
@@ -385,6 +399,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  group_list_view:
+    dependency: "direct main"
+    description:
+      name: group_list_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   hex:
     dependency: transitive
     description:
@@ -476,13 +497,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0+2"
-  logger_flutter:
+  logger_flutter_console:
     dependency: "direct main"
     description:
-      name: logger_flutter
+      name: logger_flutter_console
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.1"
+    version: "0.7.1+2"
   logging:
     dependency: transitive
     description:
@@ -678,7 +699,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.1"
+    version: "3.3.1"
   pool:
     dependency: transitive
     description:
@@ -697,13 +718,6 @@ packages:
     dependency: transitive
     description:
       name: pub_semver
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  pull_to_refresh:
-    dependency: "direct main"
-    description:
-      name: pull_to_refresh
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"

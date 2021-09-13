@@ -195,6 +195,56 @@ class S {
     );
   }
 
+  /// `Details`
+  String get details {
+    return Intl.message(
+      'Details',
+      name: 'details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Display`
+  String get show {
+    return Intl.message(
+      'Display',
+      name: 'show',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy`
+  String get copy {
+    return Intl.message(
+      'Copy',
+      name: 'copy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open in explorer`
+  String get show_in_explorer {
+    return Intl.message(
+      'Open in explorer',
+      name: 'show_in_explorer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get save {
     return Intl.message(
@@ -625,6 +675,16 @@ class S {
     );
   }
 
+  /// `Path derviation type`
+  String get wallet_new_phrase_path_derivation_type {
+    return Intl.message(
+      'Path derviation type',
+      name: 'wallet_new_phrase_path_derivation_type',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `We are preparing your wallet, hang on a second.`
   String get wallet_new_creating {
     return Intl.message(
@@ -685,6 +745,16 @@ class S {
     );
   }
 
+  /// `No UTXO existing. To create a transaction your wallet needs to have some UTXO!`
+  String get wallet_operation_no_utxo {
+    return Intl.message(
+      'No UTXO existing. To create a transaction your wallet needs to have some UTXO!',
+      name: 'wallet_operation_no_utxo',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Wait for confirmation...`
   String get wallet_operation_wait_for_confirmation {
     return Intl.message(
@@ -715,10 +785,10 @@ class S {
     );
   }
 
-  /// `We did not found a used account, but we have created on for you!`
+  /// `We did not found a used account, but we have created one for you!`
   String get wallet_restore_noAccountFound {
     return Intl.message(
-      'We did not found a used account, but we have created on for you!',
+      'We did not found a used account, but we have created one for you!',
       name: 'wallet_restore_noAccountFound',
       desc: '',
       args: [],
@@ -1005,6 +1075,46 @@ class S {
     );
   }
 
+  /// `Account index`
+  String get wallet_account_index {
+    return Intl.message(
+      'Account index',
+      name: 'wallet_account_index',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Readonly`
+  String get wallet_accounts_readonly {
+    return Intl.message(
+      'Readonly',
+      name: 'wallet_accounts_readonly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spentable`
+  String get wallet_accounts_spentable {
+    return Intl.message(
+      'Spentable',
+      name: 'wallet_accounts_spentable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to delete this account?`
+  String get wallet_accounts_delete {
+    return Intl.message(
+      'Do you want to delete this account?',
+      name: 'wallet_accounts_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Account details`
   String get wallet_accounts_detail {
     return Intl.message(
@@ -1085,6 +1195,16 @@ class S {
     );
   }
 
+  /// `Private Keys must be WIF formatted. Public Keys as P2SH addresses!`
+  String get wallet_accounts_import_info {
+    return Intl.message(
+      'Private Keys must be WIF formatted. Public Keys as P2SH addresses!',
+      name: 'wallet_accounts_import_info',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Do you want to import the Private Key for the existing account? ({pubKey})`
   String wallet_accounts_import_priv_key_for_pub_key(Object pubKey) {
     return Intl.message(
@@ -1100,6 +1220,16 @@ class S {
     return Intl.message(
       'The public key is invalid!',
       name: 'wallet_accounts_import_invalid_pub_key',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The public key is not supported!`
+  String get wallet_accounts_import_unsupported_key {
+    return Intl.message(
+      'The public key is not supported!',
+      name: 'wallet_accounts_import_unsupported_key',
       desc: '',
       args: [],
     );
@@ -1125,6 +1255,16 @@ class S {
     );
   }
 
+  /// `The key is already imported!`
+  String get wallet_accounts_key_already_imported {
+    return Intl.message(
+      'The key is already imported!',
+      name: 'wallet_accounts_key_already_imported',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `The field cannot be empty!`
   String get wallet_accounts_cannot_be_empty {
     return Intl.message(
@@ -1145,11 +1285,41 @@ class S {
     );
   }
 
+  /// `Export private key`
+  String get wallet_account_export_private_key {
+    return Intl.message(
+      'Export private key',
+      name: 'wallet_account_export_private_key',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(
       'Send',
       name: 'wallet_send',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change address`
+  String get wallet_return_address {
+    return Intl.message(
+      'Change address',
+      name: 'wallet_return_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Use custom change address`
+  String get wallet_use_custom_return_address {
+    return Intl.message(
+      'Use custom change address',
+      name: 'wallet_use_custom_return_address',
       desc: '',
       args: [],
     );
@@ -1330,6 +1500,16 @@ class S {
     return Intl.message(
       'Show logs',
       name: 'settings_show_logs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logs copied...`
+  String get settings_logs_copied {
+    return Intl.message(
+      'Logs copied...',
+      name: 'settings_logs_copied',
       desc: '',
       args: [],
     );

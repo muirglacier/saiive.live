@@ -54,7 +54,7 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
         body: MnemonicSeedWidget(
           words: _phrase,
-          onNext: (seed) async {
+          onNext: (seed, pathType) async {
             await saveSeed(seed);
             Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
           },

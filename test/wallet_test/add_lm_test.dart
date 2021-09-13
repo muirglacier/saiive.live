@@ -15,7 +15,14 @@ void main() async {
   group("#1 create tx", () {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: "acc",
+          selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       final tx = Transaction(
@@ -96,7 +103,7 @@ void main() async {
       final txHex = tx;
 
       expect(txHex,
-          "02000000000102eb35805133257cf008acf107004ac4ed5fc5c444f1b1856b8786187ee5518bc9010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffffca14022e34d5b9fedf25f6aa5c68cc340f8b9a7fdf496b88462d59912be0b41b0100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff0200000000000000006b6a4c68446654786c0217a9141084ef98bacfecbc9f140496b26516ae55d79bfa87010000000000e1f5050000000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8701010000007a5265e60100000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa879d1df57b0f00000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870247304402204830816af53bff218314d24dea1ba6e9be64b15bfcea26281b65d4f032ffacf002207f1b4ea8f327a6f1d01dac91e8775afc17a374113a0c0c31f3cae141eea1e94a012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c024730440220602e843809968f6f45fd0cac03c41e24c5738c1a67b64539bf4bb591048428f502205f1a952066c52458ed2ced39b60f51a2f25dcb42a07c1dce7e20bbce2193d5e1012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
+          "04000000000101eb35805133257cf008acf107004ac4ed5fc5c444f1b1856b8786187ee5518bc9010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000526a4c4f446654786c0117a9141084ef98bacfecbc9f140496b26516ae55d79bfa87020000000000e1f50500000000010000007a5265e60100000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870060d1f5050000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870002483045022100e352c311ee1698981b4f702ef5ccc33a5ae485e00ced6ea0a1c905d9ec9c617b02206ec857a48493954054e0ca662c905b4e1e94433482557594f2142c742ab38e78012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
 
       await destoryTest();
     });

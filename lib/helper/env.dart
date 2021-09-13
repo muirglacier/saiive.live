@@ -20,6 +20,10 @@ class EnvHelper {
     return currentEnvironment;
   }
 
+  static String getAzBlobKey() {
+    return env["AZ_STORAGE_KEY"];
+  }
+
   static String environmentToString(EnvironmentType type) {
     switch (type) {
       case EnvironmentType.Development:

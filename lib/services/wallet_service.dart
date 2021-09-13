@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
@@ -25,12 +26,14 @@ abstract class IWalletService {
 
   Future<bool> hasAccounts();
   Future<List<WalletAccount>> getAccounts();
+  Future<List<WalletAccount>> getAccountsForChain(ChainType chainType);
 
+  Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account);
   Future<List<WalletAddress>> getPublicKeysFromAccount(WalletAccount account);
   Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, bool isChangeAddress, AddressType addressType);
 
   Future<String> getPublicKey(ChainType chainType, AddressType addressType);
-  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, String retAddress, {StreamController<String> loadingStream, bool sendMax = false});
   Future<List<String>> getPublicKeys(ChainType chainType);
 
   Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network);
@@ -43,6 +46,7 @@ abstract class IWalletService {
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards);
 
   Future<Map<String, bool>> getIsAlive();
+  Future<String> getWifPrivateKey(WalletAccount account, WalletAddress address);
 }
 
 class WalletService implements IWalletService {
@@ -87,11 +91,11 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false}) {
+  Future<String> createAndSend(ChainType chainType, int amount, String token, String to, String retAddress, {StreamController<String> loadingStream, bool sendMax = false}) {
     if (chainType == ChainType.DeFiChain) {
-      return _defiWallet.createAndSend(amount, token, to, loadingStream: loadingStream, sendMax: sendMax);
+      return _defiWallet.createAndSend(amount, token, to, returnAddress: retAddress, loadingStream: loadingStream, sendMax: sendMax);
     }
-    return _bitcoinWallet.createAndSend(amount, token, to, loadingStream: loadingStream, sendMax: sendMax);
+    return _bitcoinWallet.createAndSend(amount, token, to, returnAddress: retAddress, loadingStream: loadingStream, sendMax: sendMax);
   }
 
   @override
@@ -103,6 +107,14 @@ class WalletService implements IWalletService {
     ret.addAll(btcAccounts);
 
     return ret;
+  }
+
+  @override
+  Future<List<WalletAccount>> getAccountsForChain(ChainType chainType) {
+    if (chainType == ChainType.DeFiChain) {
+      return _defiWallet.getAccounts();
+    }
+    return _bitcoinWallet.getAccounts();
   }
 
   @override
@@ -135,6 +147,14 @@ class WalletService implements IWalletService {
       return _defiWallet.getPublicKeysFromAccounts(account);
     }
     return _bitcoinWallet.getPublicKeysFromAccounts(account);
+  }
+
+  @override
+  Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) {
+    if (account.chain == ChainType.DeFiChain) {
+      return _defiWallet.getAllPublicKeysFromAccount(account);
+    }
+    return _bitcoinWallet.getAllPublicKeysFromAccount(account);
   }
 
   @override
@@ -185,6 +205,16 @@ class WalletService implements IWalletService {
     return List<AccountHistory>.empty();
   }
 
+  Future<String> getWifPrivateKey(WalletAccount walletAccount, WalletAddress address) async {
+    ECPair privateKey;
+    if (walletAccount.chain == ChainType.DeFiChain) {
+      privateKey = await _defiWallet.getPrivateKey(address, walletAccount);
+    } else {
+      privateKey = await _bitcoinWallet.getPrivateKey(address, walletAccount);
+    }
+    return privateKey.toWIF();
+  }
+
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet) async {
     var dataMap = Map();
     dataMap["chain"] = chain;
@@ -205,13 +235,33 @@ class WalletService implements IWalletService {
     }
 
     if (result.item1.length == 0) {
-      final walletAccount =
-          WalletAccount(Uuid().v4(), id: 0, chain: chain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: ChainHelper.chainTypeString(chain), selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: chain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: ChainHelper.chainTypeString(chain),
+          selected: true);
+
       await db.addOrUpdateAccount(walletAccount);
+
+      await wallet.close();
+      await wallet.init();
+
+      var walletAddress = await wallet.getNextWalletAddress(walletAccount, AddressType.P2SHSegwit, false);
+      walletAddress.name = ChainHelper.chainTypeString(chain);
+      await db.addAddress(walletAddress);
+    } else {
+      var i = 0;
+      for (var address in result.item2) {
+        address.name = ChainHelper.chainTypeString(chain) + " " + i.toString();
+        await db.addAddress(address);
+        i++;
+      }
     }
 
-    await wallet.init();
-    await wallet.syncAll();
+    await wallet.close();
     return result;
   }
 

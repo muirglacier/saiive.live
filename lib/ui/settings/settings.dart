@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:clipboard_manager/clipboard_manager.dart';
+import 'package:flutter/services.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -7,6 +9,7 @@ import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
+import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/network/ihttp_service.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -24,10 +27,10 @@ import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger_flutter/logger_flutter.dart';
+import 'package:logger_flutter_console/logger_flutter_console.dart';
 
 class SettingsScreen extends StatefulWidget {
-  SettingsScreen();
+  const SettingsScreen({Key key}) : super(key: key);
 
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -70,10 +73,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await sl.get<IWalletService>().destroy();
 
     Navigator.of(context).pushNamedAndRemoveUntil("/", (route) => false);
-
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(S.of(context).settings_removed_seed),
-    ));
   }
 
   Future doChainNetSwitch(ChainNet net, ChainNet old) async {
@@ -221,7 +220,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             });
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                           CardItemWidget(S.of(context).settings_show_logs, () async {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LogConsole(showCloseButton: true, dark: _theme == 1)));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) => LogConsole(
+                                      showCloseButton: true,
+                                      dark: _theme == 1,
+                                      showCopyButton: true,
+                                      copyCallback: (e) {
+                                        ClipboardManager.copyToClipBoard(e).then((result) {
+                                          ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
+                                            content: Text(S.of(context).settings_logs_copied),
+                                          ));
+                                        });
+                                        Clipboard.setData(new ClipboardData(text: e));
+                                      },
+                                    )));
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                           CardItemWidget(S.of(context).settings_show_wallet_addresses, () async {
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletAddressesScreen()));

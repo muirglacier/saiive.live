@@ -18,7 +18,14 @@ void main() async {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
 
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: "acc",
+          selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       final tx = Transaction(
@@ -76,7 +83,7 @@ void main() async {
       await wallet.prepareUtxoToAccountTransaction(to, 243 * 100000000);
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
-          "02000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff020c984102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8701000000000c984102000000001dcb8e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f870247304402203b1f69baa507f118a3445d111d7b41ab83b6c38334803c29536a43b85978ce380220338b0477f647fc5a2ea54323bc9d3a6cec175a18e42f2e1aae5b969210fe7fad012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
+          "04000000000101c4cdc5a6246abcc4d638546ce1a12395540e69f2a77390cc4668cfc957e00b520100000017160014cba72e413b025786aaa742e44c6b28031c6aa348ffffffff020c984102000000002d6a2b44665478550117a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8701000000000c98410200000000001dcb8e910f00000017a9146015a95984366c654bbd6ab55edab391ff8d747f870002483045022100f486ef97cbc6afa28c6617cfabf5719424a3f4ac96db2fa366b097430919bf9c02201b22057ad459655ba438e9e754130c55da48573c1d36f021874996fd0140ddcc012102db81fb45bd3f1598e3d0bfaafc7fb96c2c693c88e03b14e26b9928abc780f33100000000");
       await destoryTest();
     });
   });

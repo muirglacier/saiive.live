@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 
 import '../chain.dart';
@@ -18,6 +20,8 @@ class WalletAddress {
   final String publicKey;
 
   String get uniqueId => accountId + "_" + chain.index.toString() + "_" + account.toString() + "_" + (isChangeAddress ? "1" : "0") + "_" + index.toString();
+
+  String path(WalletAccount account) => HdWalletUtil.derivePath(account.account, isChangeAddress, index, account.derivationPathType);
 
   WalletAddress(
       {@required this.accountId,

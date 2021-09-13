@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -10,17 +11,18 @@ import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TransactionSuccessScreen extends StatelessWidget {
+  final ChainType chain;
   final String txId;
   final String text;
 
   final String additional;
   final String showTxText;
 
-  TransactionSuccessScreen(this.txId, this.text, {this.additional, this.showTxText});
+  TransactionSuccessScreen(this.chain, this.txId, this.text, {this.additional, this.showTxText});
 
   openExplorerLink(BuildContext context) async {
     var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
-    var uri = DefiChainConstants.getExplorerUrl(_chainNet, txId);
+    var uri = DefiChainConstants.getExplorerUrl(this.chain, _chainNet, txId);
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (await canLaunch(uri)) {
         await launch(uri);

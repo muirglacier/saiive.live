@@ -16,7 +16,14 @@ void main() async {
   group("#1 create tx", () {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: "acc",
+          selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       final tx = Transaction(
@@ -75,7 +82,7 @@ void main() async {
       await wallet.init();
       await wallet.createSendTransaction(1 * 100000000, DeFiConstants.DefiTokenSymbol, "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
       expect(txController.lastTx,
-          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0270c92df60600000017a9146015a95984366c654bbd6ab55edab391ff8d747f8700e1f5050000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702483045022100dea8c2db5ed50a91f4d51903a8f9af25c7e07aeef330f9bae443af6b5b54cd430220727b1de2e7d10bcd8e8a46217a3a5dadefc5e0ed1307c9cd70756e1facdab37f012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+          "04000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0200e1f5050000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870070c92df60600000017a9146015a95984366c654bbd6ab55edab391ff8d747f870002483045022100ecfa04674739bb7501ea034dc2a193ccdf36dffbd5542d9b3644711d27f10e2d02201b252f1ec8933d20fd3bce2b7b4a9c6613e1afd6264bd36378bb8b37eb5a7a45012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
 
@@ -100,7 +107,7 @@ void main() async {
       final txController = sl.get<TransactionServiceMock>();
 
       expect(txController.lastTx,
-          "02000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a914739bfb5d214c04655148eb21d91cdae8bb903fa387010100000000e1f50500000000609c23fc0600000017a914739bfb5d214c04655148eb21d91cdae8bb903fa38702473044022018dd2f4f82ae3d5b2d86f8396d309734d7045f120b07b534d190bd08ff749553022005c5b4a9c7c389d9d814cc36f9c3c2f67a89e303d66971c3c9888f9c07b2237e012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+          "04000000000101bb5fee4f1d67b6be0523fd03ff62da8b912d0b73e6c9dcc83fdcf3f1c63a842d000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000456a43446654784217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870117a914739bfb5d214c04655148eb21d91cdae8bb903fa387010100000000e1f5050000000000609c23fc0600000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870002483045022100ce30176475b48bc8a919df58e4de4e77784c7b254f5fdd3c6142848ebc458206022013f93194ff901a3f71ddf9727533de796b03275b448ab32e1a3420fddbaeefd3012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
     test("#4 create dBTC accountToAccount to self tx", () async {

@@ -1,13 +1,15 @@
 import 'package:defichaindart/defichaindart.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/bip39/english.dart';
+import 'package:saiive.live/ui/widgets/derivation_path_type_selector_widget.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MnemonicSeedWidget extends StatefulWidget {
   final List<String> words;
-  final Function(String) onNext;
+  final Function(String, PathDerivationType pathDerivationType) onNext;
   final bool readOnly;
   final bool showNextButton;
 
@@ -24,6 +26,8 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
   Map<int, TextEditingController> _textControllers = new Map<int, TextEditingController>();
   final _formKey = GlobalKey<FormState>();
 
+  PathDerivationType _pathDerivationType = PathDerivationType.FullNodeWallet;
+
   String getPhrase() {
     return _textFields.values.map((e) => e.controller.text).join(" ");
   }
@@ -39,10 +43,9 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
         return;
       }
 
-      widget.onNext(phrase);
+      widget.onNext(phrase, _pathDerivationType);
     }
   }
-
 
   @override
   void initState() {
@@ -52,6 +55,14 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
       _textControllers[i] = TextEditingController();
       _textControllers[i].text = widget.words.length > i ? widget.words[i] : "";
     }
+  }
+
+  Widget buildDerivationPathType(BuildContext context) {
+    return DerivationPathTypeSelectorWidget(onChanged: (v) {
+      setState(() {
+        this._pathDerivationType = v;
+      });
+    });
   }
 
   @override
@@ -103,6 +114,8 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
                       child: Column(children: [
                         row,
                         Padding(padding: EdgeInsets.only(top: 30)),
+                        if (widget.readOnly) buildDerivationPathType(context),
+                        if (widget.readOnly) SizedBox(height: 10),
                         if (widget.showNextButton)
                           ElevatedButton(
                             child: Text(S.of(context).next),

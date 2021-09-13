@@ -31,13 +31,13 @@ class BalanceHelper {
     return null;
   }
 
-  Future<List<AccountBalance>> getDisplayAccountBalance({bool onlyDfi = false}) async {
+  Future<List<AccountBalance>> getDisplayAccountBalance({bool onlyDfi = false, bool spentable = true}) async {
     var walletService = sl.get<DeFiChainWallet>();
-    var accountBalance = await walletService.getDatabase().getTotalBalances();
+    var accountBalance = await walletService.getDatabase().getTotalBalances(spentable: spentable);
     var tokens = await sl.get<ITokenService>().getTokens(DeFiConstants.DefiAccountSymbol);
 
     var btcWalletService = sl.get<BitcoinWallet>();
-    var btcAccountBalance = await btcWalletService.getDatabase().getTotalBalances();
+    var btcAccountBalance = await btcWalletService.getDatabase().getTotalBalances(spentable: spentable);
 
     if (accountBalance.isNotEmpty) {
       var dollarDFI = accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiTokenSymbol,
@@ -77,9 +77,18 @@ class BalanceHelper {
         return 0;
       });
 
-      accountBalance.insert(0, dfiBalance);
+      if (!spentable && dfiBalance.totalBalance > 0) {
+        accountBalance.insert(0, dfiBalance);
+      } else if (spentable) {
+        accountBalance.insert(0, dfiBalance);
+      }
+
       if (!onlyDfi) {
-        accountBalance.insert(1, btcAccountBalance.first);
+        if (!spentable && btcAccountBalance.first.balance > 0) {
+          accountBalance.insert(1, btcAccountBalance.first);
+        } else if (spentable) {
+          accountBalance.insert(1, btcAccountBalance.first);
+        }
       }
     }
 

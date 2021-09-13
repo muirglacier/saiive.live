@@ -74,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
 
-      await sl.get<IHealthService>().checkHealth(context);
+      sl.get<IHealthService>().checkHealth(context);
 
       Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {

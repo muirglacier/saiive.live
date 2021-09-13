@@ -31,7 +31,7 @@ class SembastWalletDatabase extends IWalletDatabase {
   final StoreRef _accountStoreInstance = intMapStoreFactory.store(_accountStore);
   final StoreRef _accountV2StoreInstance = stringMapStoreFactory.store(_accountV2Store);
 
-  final StoreRef _transactionStoreInstance = stringMapStoreFactory.store(_transactionStore);
+  final StoreRef _transactionStoreInstance = StoreRef<String, dynamic>(_transactionStore);
   final StoreRef _unspentStoreInstance = stringMapStoreFactory.store(_unspentStore);
 
   final StoreRef _balancesStoreInstance = stringMapStoreFactory.store(_balanceStore);
@@ -43,6 +43,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   Stream<List<WalletAccount>> get accountStream => _accountStreamController.stream;
 
   List<String> _activeWalletAddresses = List<String>.empty(growable: true);
+  List<String> _activeReadonlyWalletAddresses = List<String>.empty(growable: true);
+  List<String> _activeSpentableWalletAddresses = List<String>.empty(growable: true);
 
   final String _path;
   final ChainType _chain;
@@ -71,7 +73,13 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   Future open() async {
+    await _initAddresses();
+  }
+
+  Future _initAddresses() async {
     _activeWalletAddresses = await _getActiveAddresses();
+    _activeSpentableWalletAddresses = await _getActiveAddresses(spentable: true);
+    _activeReadonlyWalletAddresses = await _getActiveAddresses(spentable: false, all: false);
   }
 
   Future close() async {
@@ -84,8 +92,13 @@ class SembastWalletDatabase extends IWalletDatabase {
     final db = await database;
     await _addressesStoreInstance.record(account.uniqueId).put(db, account.toJson());
 
-    _activeWalletAddresses = await _getActiveAddresses();
+    await _initAddresses();
     return account;
+  }
+
+  Future removeAddress(WalletAddress address) async {
+    final db = await database;
+    await _addressesStoreInstance.record(address.uniqueId).delete(db);
   }
 
   @override
@@ -208,7 +221,6 @@ class SembastWalletDatabase extends IWalletDatabase {
       accounts = await dbStore.find(await database, finder: finder);
     }
     final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
-
     return data.firstOrNull;
   }
 
@@ -226,7 +238,11 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future<WalletAccount> getAccount(String uniqueId) async {
     var db = await database;
 
-    var walletAccount = WalletAccount.fromJson(await _accountV2StoreInstance.record(uniqueId).get(db));
+    var account = await _accountV2StoreInstance.record(uniqueId).get(db);
+    if (account == null) {
+      return null;
+    }
+    var walletAccount = WalletAccount.fromJson(account);
 
     return walletAccount;
   }
@@ -263,22 +279,39 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     await _accountV2StoreInstance.record(walletAccount.uniqueId).put(db, walletAccount.toJson());
 
-    _activeWalletAddresses = await _getActiveAddresses();
+    await _initAddresses();
 
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(walletAccount.uniqueId).get(db));
   }
 
-  Future<WalletAccount> addAccount({@required String name, @required int account, @required ChainType chain, bool isSelected = false}) async {
+  @override
+  Future removeAccount(WalletAccount walletAccount) async {
+    final db = await database;
+
+    final walletAddresses = await getWalletAddressesById(walletAccount.uniqueId);
+    for (final wa in walletAddresses) {
+      await removeAddress(wa);
+    }
+
+    await _accountV2StoreInstance.record(walletAccount.uniqueId).delete(db);
+
+    await _initAddresses();
+  }
+
+  Future<WalletAccount> addAccount(
+      {@required String name, @required int account, @required ChainType chain, @required PathDerivationType derivationPathType, bool isSelected = false}) async {
     final db = await database;
 
     if (!await _accountV2StoreInstance.record(account).exists(db)) {
-      var newAccount = WalletAccount(Uuid().v4(), name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount);
+      var newAccount = WalletAccount(Uuid().v4(),
+          name: name, account: account, id: account, chain: chain, selected: isSelected, walletAccountType: WalletAccountType.HdAccount, derivationPathType: derivationPathType);
 
       await addOrUpdateAccount(newAccount);
 
       return newAccount;
     }
-    _activeWalletAddresses = await _getActiveAddresses();
+
+    await _initAddresses();
 
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(account).get(db));
   }
@@ -338,12 +371,17 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
-  Future<List<tx.Transaction>> getUnspentTransactions() async {
+  Future<List<tx.Transaction>> getUnspentTransactions({bool spentable = true}) async {
     var dbStore = _unspentStoreInstance;
 
     final db = await database;
     final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('spentTxId', null) | Filter.equals('spentTxId', ""), sortOrders: [SortOrder("value", false)]));
-    final activeAddresses = _activeWalletAddresses;
+    var activeAddresses = _activeSpentableWalletAddresses;
+
+    if (!spentable) {
+      activeAddresses = _activeReadonlyWalletAddresses;
+    }
+
     var data = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
     data = data.where((element) => activeAddresses.contains(element.address)).toList();
 
@@ -364,15 +402,19 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   Future clearUnspentTransactions(WalletAccount account) async {
-    var txs = await getUnspentTransactionsForWalletAccount(account);
-    final txIds = txs.map((e) => e.uniqueId);
-    if (txIds.isNotEmpty) {
-      await _unspentStoreInstance.records(txIds).delete(await database);
-    }
+    var dbStore = _unspentStoreInstance;
+
+    final db = await database;
+    final transactions = await dbStore.find(db, finder: Finder(filter: Filter.equals('accountId', account.uniqueId)));
+
+    var transactionData = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+    final transactionsIds = transactionData.map((e) => e.uniqueId).toList();
+
+    await _unspentStoreInstance.records(transactionsIds).delete(await database);
   }
 
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {
-    final txIds = txs.map((e) => e.uniqueId);
+    final txIds = txs.map((e) => e.uniqueId).toList();
     await _unspentStoreInstance.records(txIds).delete(await database);
   }
 
@@ -406,9 +448,9 @@ class SembastWalletDatabase extends IWalletDatabase {
     await _balancesStoreInstance.record(balance.key).put(db, balance.toJson());
   }
 
-  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses}) async {
+  Future<AccountBalance> getAccountBalance(String token, {List<String> excludeAddresses, bool spentable = true}) async {
     if (token == DeFiConstants.DefiTokenSymbol && _chain == ChainType.DeFiChain) {
-      final unspentTx = await getUnspentTransactions();
+      final unspentTx = await getUnspentTransactions(spentable: spentable);
       var amount = 0;
 
       for (final unspent in unspentTx) {
@@ -417,7 +459,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
       return new AccountBalance(balance: amount, token: token, chain: this._chain);
     } else if (_chain == ChainType.Bitcoin) {
-      final unspentTx = await getUnspentTransactions();
+      final unspentTx = await getUnspentTransactions(spentable: spentable);
       var amount = 0;
 
       for (final unspent in unspentTx) {
@@ -429,7 +471,8 @@ class SembastWalletDatabase extends IWalletDatabase {
     final db = await database;
     var finder = Finder(filter: Filter.equals('token', token));
 
-    final activeAddresses = _activeWalletAddresses;
+    final activeAddresses = spentable ? _activeSpentableWalletAddresses : _activeWalletAddresses;
+
     final accounts = await dbStore.find(db, finder: finder);
 
     var data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
@@ -476,7 +519,10 @@ class SembastWalletDatabase extends IWalletDatabase {
     var finder = Finder(filter: Filter.equals('token', token), sortOrders: [SortOrder("balance", false)]);
     final accounts = await dbStore.find(await database, finder: finder);
 
-    final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    final activeAddresses = _activeSpentableWalletAddresses;
+
+    var data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+    data = data.where((element) => activeAddresses.contains(element.address)).toList();
 
     return data;
   }
@@ -492,23 +538,32 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
-  Future<List<String>> _getActiveAddresses() async {
+  Future<List<String>> _getActiveAddresses({bool spentable = true, bool all = true}) async {
     var activeAccounts = await this.getAccounts();
     activeAccounts = activeAccounts.where((element) => element.selected).toList();
+
+    if (spentable) {
+      activeAccounts = activeAccounts.where((element) => element.walletAccountType != WalletAccountType.PublicKey).toList();
+    } else if (!all) {
+      activeAccounts = activeAccounts.where((element) => element.walletAccountType == WalletAccountType.PublicKey).toList();
+    }
 
     var activeAddresses = List<String>.empty(growable: true);
     for (final acc in activeAccounts) {
       final addresses = await this._getWalletAddressesByAccount(acc);
       activeAddresses.addAll(addresses.map((e) => e.publicKey));
     }
-    print("test");
     return activeAddresses;
   }
 
-  Future<List<AccountBalance>> getTotalBalances() async {
+  Future<List<AccountBalance>> getTotalBalances({bool spentable = true}) async {
     var dbStore = _balancesStoreInstance;
 
-    var activeAddresses = _activeWalletAddresses;
+    var activeAddresses = _activeSpentableWalletAddresses;
+
+    if (!spentable) {
+      activeAddresses = _activeReadonlyWalletAddresses;
+    }
 
     var finder = Finder(filter: Filter.notEquals('token', DeFiConstants.DefiTokenSymbol));
     final accounts = await dbStore.find(await database, finder: finder);
@@ -525,12 +580,12 @@ class SembastWalletDatabase extends IWalletDatabase {
     });
 
     List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value, chain: this._chain)).toList();
-    balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol));
+    balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol, spentable: spentable));
     return balances;
   }
 
   @override
   int getAddressCreationCount() {
-    return 50;
+    return 20;
   }
 }

@@ -1,6 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:logger/logger.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
 import 'package:saiive.live/ui/splash.dart';
@@ -17,7 +22,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:logger_flutter/logger_flutter.dart';
+import 'package:logger_flutter_console/logger_flutter_console.dart';
 import 'package:saiive.live/util/debug/SaiiveRouteObserver.dart';
 import 'package:window_size/window_size.dart';
 
@@ -36,7 +41,15 @@ void run() async {
 
   // Run app
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
-    runApp(new StateContainer(child: new SaiiveLiveApp()));
+    runZonedGuarded(() async {
+      runApp(new StateContainer(child: new SaiiveLiveApp())); // starting point of app
+    }, (error, stackTrace) {
+      LogHelper.instance.e("Unhandled Error!", error, stackTrace);
+      print("Error FROM OUT_SIDE FRAMEWORK ");
+      print("--------------------------------");
+      print("Error :  $error");
+      print("StackTrace :  $stackTrace");
+    });
   });
 }
 
@@ -47,7 +60,21 @@ class SaiiveLiveApp extends StatefulWidget {
 
 class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
   void init() {
-    LogConsole.init();
+    LogConsole.init(bufferSize: 200);
+
+    Logger.addLogListener((e) {
+      try {
+        if (e.level == Level.error) {
+          sl.get<AppCenterWrapper>().trackEvent("logger", <String, String>{
+            'message': e.message,
+            'error': e.error,
+            'stackTrace': e.stackTrace.toString(),
+          });
+        }
+      } catch (e) {
+        //ignore
+      }
+    });
   }
 
   @override
@@ -92,6 +119,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     ThemeData theme = ThemeData();
 
     return MaterialApp(
+        navigatorKey: NavigationHelper.navigatorKey,
         navigatorObservers: [SaiiveRouteObserver()],
         debugShowCheckedModeBanner: env["ENV"] == "dev",
         localizationsDelegates: [

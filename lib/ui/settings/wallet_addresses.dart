@@ -1,12 +1,14 @@
 import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:saiive.live/ui/widgets/loading.dart';
 
 class WalletAddressesScreen extends StatefulWidget {
   @override
@@ -16,26 +18,39 @@ class WalletAddressesScreen extends StatefulWidget {
 }
 
 class _WalletAddressesScreen extends State<WalletAddressesScreen> {
-  List<String> _dfiWalletAddresses = [];
-  List<String> _btcWalletAddresses = [];
-
   List<String> _walletAddresses = [];
 
   loadAddresses() async {
     final walletService = sl.get<IWalletService>();
-    _dfiWalletAddresses = await walletService.getPublicKeys(ChainType.DeFiChain);
-    _btcWalletAddresses = await walletService.getPublicKeys(ChainType.Bitcoin);
+
+    final accounts = await walletService.getAccounts();
 
     _walletAddresses.add("");
     _walletAddresses.add("DeFiChain");
     _walletAddresses.add("");
     _walletAddresses.add("");
-    _walletAddresses.addAll(_dfiWalletAddresses);
+
+    for (var acc in accounts.where((element) => element.chain == ChainType.DeFiChain)) {
+      var walletAddresses = await walletService.getAllPublicKeysFromAccount(acc);
+
+      for (var element in walletAddresses) {
+        var path = HdWalletUtil.derivePath(element.account, element.isChangeAddress, element.index, acc.derivationPathType);
+        _walletAddresses.add("${element.publicKey} ($path)");
+      }
+    }
+
     _walletAddresses.add("");
     _walletAddresses.add("");
     _walletAddresses.add("Bitcoin");
     _walletAddresses.add("");
-    _walletAddresses.addAll(_btcWalletAddresses);
+    for (var acc in accounts.where((element) => element.chain == ChainType.Bitcoin)) {
+      var walletAddresses = await walletService.getAllPublicKeysFromAccount(acc);
+
+      for (var element in walletAddresses) {
+        var path = HdWalletUtil.derivePath(element.account, element.isChangeAddress, element.index, acc.derivationPathType);
+        _walletAddresses.add("${element.publicKey} ($path)");
+      }
+    }
     _walletAddresses.add("");
 
     setState(() {});
@@ -54,7 +69,7 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
 
   _buildWalletAddressList(BuildContext context) {
     if (_walletAddresses == null || _walletAddresses.length == 0) {
-      return Padding(padding: EdgeInsets.all(30), child: Row(children: [Text("No address found...")]));
+      return Padding(padding: EdgeInsets.all(30), child: Row(children: [LoadingWidget(text: S.of(context).loading)]));
     }
 
     return Padding(
@@ -88,14 +103,11 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
 
                       Clipboard.setData(new ClipboardData(text: _walletAddresses?.join("\r\n")));
                     },
-                    child: Icon(
-                      Icons.copy,
-                      size: 26.0,
-                    ),
+                    child: Icon(Icons.copy, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   ))
             ],
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
             title: Text("Addresses")),
-        body: _buildWalletAddressList(context));
+        body: Center(child: _buildWalletAddressList(context)));
   }
 }

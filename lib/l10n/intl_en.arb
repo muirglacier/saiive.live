@@ -19,7 +19,13 @@
   "advanced": "Advanced",
   "visibility": "Visibility",
   "address": "Address",
-  
+  "details": "Details",
+  "delete": "Delete",
+  "show": "Display",
+  "copy": "Copy",
+
+  "show_in_explorer": "Open in explorer",
+
   "save": "Save",
   "add": "Add",
   
@@ -67,7 +73,8 @@
   "wallet_new_test_put2": " word here",
   "wallet_new_test_confirm": "Confirm recovery phrase",
   "wallet_new_test_confirm_info": "Just to make sure that you wrote down the correct words!",
-  "wallet_new_phrase_info": "This is your recovery phrase! Write it down, and do not lose it!",
+  "wallet_new_phrase_info": "This is your recovery phrase! Write it down, and do not lose it!", 
+  "wallet_new_phrase_path_derivation_type": "Path derviation type",
   "wallet_new_creating": "We are preparing your wallet, hang on a second.",
   "wallet_new_creating_title": "Wallet preparing",
 
@@ -76,10 +83,11 @@
 
   "wallet_operation_share": "Share...",
   "wallet_operation_failed": "Transaction failed :(",
+  "wallet_operation_no_utxo": "No UTXO existing. To create a transaction your wallet needs to have some UTXO!",
   "wallet_operation_wait_for_confirmation": "Wait for confirmation...",
   "wallet_operation_success": "Transaction was successful :)",
   "wallet_operation_show_tx": "Show transaction in the explorer...",
-  "wallet_restore_noAccountFound": "We did not found a used account, but we have created on for you!",
+  "wallet_restore_noAccountFound": "We did not found a used account, but we have created one for you!",
   "wallet_restore_accountsFound": "We have found the following accounts:",
   "wallet_restore_accountsAdded": "The accounts have been added to your local datastore! Your acounts will be synced in the background!",
   "wallet_restore_loading": "Restoring your wallet, this can take up some time!",
@@ -112,6 +120,10 @@
 
 
   "wallet_accounts": "Accounts",
+  "wallet_account_index": "Account index",
+  "wallet_accounts_readonly": "Readonly",
+  "wallet_accounts_spentable": "Spentable",
+  "wallet_accounts_delete": "Do you want to delete this account?",
   "wallet_accounts_detail": "Account details",
   "wallet_accounts_empty": "No address created yet...",
   "wallet_accounts_address_add": "Create new address",
@@ -120,14 +132,20 @@
   "wallet_accounts_add": "Add account",
   "wallet_accounts_edit": "Edit account",
   "wallet_accounts_import": "Import account",
+  "wallet_accounts_import_info": "Private Keys must be WIF formatted. Public Keys as P2SH addresses!",
   "wallet_accounts_import_priv_key_for_pub_key": "Do you want to import the Private Key for the existing account? ({pubKey})",
   "wallet_accounts_import_invalid_pub_key": "The public key is invalid!",
+  "wallet_accounts_import_unsupported_key": "The public key is not supported!",
   "wallet_accounts_import_invalid_priv_key": "The private key is invalid!",
   "wallet_accounts_import_invalid": "The content is invalid!",
+  "wallet_accounts_key_already_imported": "The key is already imported!",
   "wallet_accounts_cannot_be_empty": "The field cannot be empty!",
   "wallet_accounts_saved": "Account saved",
+  "wallet_account_export_private_key": "Export private key",
 
   "wallet_send": "Send",
+  "wallet_return_address": "Change address",
+  "wallet_use_custom_return_address": "Use custom change address",
   "wallet_send_address": "Address",
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Amount",
@@ -150,6 +168,7 @@
   "settings_network": "Network",
   "settings_remove_seed": "Remove Seed",
   "settings_show_logs": "Show logs",
+  "settings_logs_copied": "Logs copied...",
   "settings_show_wallet_addresses": "Wallet addresses",
   "settings_show_seed": "Show Seed",
   "settings_removed_seed": "Removed saved seed",

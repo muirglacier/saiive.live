@@ -36,18 +36,15 @@ class WalletRestore {
 
     do {
       if (!existingAccounts.contains(i)) {
-        final account = WalletAccount(Uuid().v4(),
-            name: ChainHelper.chainTypeString(chain) + (i + 1).toString(), id: i, account: i, chain: chain, walletAccountType: WalletAccountType.HdAccount, selected: true);
-        final p2sh = await _restore(account, key, api, chain, network, AddressType.P2SHSegwit);
-        final legacy = await _restore(account, key, api, chain, network, AddressType.Legacy);
-        final result = List<WalletAddress>.from(p2sh);
-        result.addAll(legacy);
+        var all = await _restoreAll(i, key, api, chain, network);
+
+        final result = List<WalletAddress>.from(all.item2);
 
         if (result.isEmpty) {
           max--;
         } else {
           walletAddresses.addAll(result);
-          ret..add(account);
+          ret.addAll(all.item1);
           max = IWallet.MaxUnusedAccountScan;
         }
       }
@@ -58,6 +55,53 @@ class WalletRestore {
     return Tuple2(ret, walletAddresses);
   }
 
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreAll(int account, List<int> key, ApiService api, ChainType chain, ChainNet network) async {
+    var walletAccounts = List<WalletAccount>.empty(growable: true);
+    var walletAddresses = List<WalletAddress>.empty(growable: true);
+
+    void checkIfExistingAndAddToList(Tuple2<WalletAccount, List<WalletAddress>> data) {
+      if (data.item2.isNotEmpty) {
+        walletAccounts.add(data.item1);
+        walletAddresses.addAll(data.item2);
+      }
+    }
+
+    var fullNode = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
+    checkIfExistingAndAddToList(fullNode);
+
+    var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
+    checkIfExistingAndAddToList(jellyFish);
+
+    var bip32 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
+    checkIfExistingAndAddToList(bip32);
+
+    var bip44 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
+    checkIfExistingAndAddToList(bip44);
+
+    return Tuple2(walletAccounts, walletAddresses);
+  }
+
+  static Future<Tuple2<WalletAccount, List<WalletAddress>>> _restoreDerivationPath(
+      int account, List<int> key, ApiService api, ChainType chain, ChainNet network, PathDerivationType pathDerivationType) async {
+    final walletAccount = WalletAccount(Uuid().v4(),
+        name: "${ChainHelper.chainTypeString(chain)}_${pathDerivationTypeString(pathDerivationType)}_${(account + 1)}",
+        id: account,
+        account: account,
+        chain: chain,
+        walletAccountType: WalletAccountType.HdAccount,
+        derivationPathType: pathDerivationType,
+        defaultAddressType: getDefaultAddressTypeForPathDerivation(pathDerivationType),
+        selected: true);
+
+    final addresses = await _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit);
+    final addressesBech32 = await _restore(walletAccount, key, api, chain, network, AddressType.Bech32);
+    final legacy = await _restore(walletAccount, key, api, chain, network, AddressType.Legacy);
+
+    addresses.addAll(legacy);
+    addresses.addAll(addressesBech32);
+    return Tuple2(walletAccount, addresses);
+  }
+
   static Future<List<WalletAddress>> _restore(WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType) async {
     int i = 0;
     int maxEmpty = IWallet.MaxUnusedIndexScan;
@@ -66,11 +110,12 @@ class WalletRestore {
 
     do {
       try {
-        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account.account, IWallet.KeysPerQuery * i, chain, net, addressType, IWallet.KeysPerQuery);
-        var path = HdWalletUtil.derivePathsWithChange(account.account, IWallet.KeysPerQuery * i, IWallet.KeysPerQuery);
+        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(
+            key, account.account, IWallet.KeysPerQuery * i, chain, net, addressType, account.derivationPathType, IWallet.KeysPerQuery);
+        var path = HdWalletUtil.derivePathsWithChange(account.account, IWallet.KeysPerQuery * i, account.derivationPathType, IWallet.KeysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
-        LogHelper.instance.d("($chain) found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
+        LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
         for (final tx in transactions) {
           final keyIndex = publicKeys.indexWhere((item) => item == tx.address);

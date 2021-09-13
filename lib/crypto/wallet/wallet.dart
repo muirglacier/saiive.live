@@ -9,9 +9,9 @@ import 'package:tuple/tuple.dart';
 import 'address_type.dart';
 
 abstract class IWallet {
-  static const int MaxUnusedAccountScan = 3;
-  static const int MaxUnusedIndexScan = 2;
-  static const int KeysPerQuery = 30;
+  static const int MaxUnusedAccountScan = 1;
+  static const int MaxUnusedIndexScan = 1;
+  static const int KeysPerQuery = 50;
 
   String get walletType;
 
@@ -37,6 +37,6 @@ abstract class IWallet {
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 
-  Future<String> createSendTransaction(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
-  Future<String> createAndSend(int amount, String token, String to, {StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createSendTransaction(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createAndSend(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false});
 }

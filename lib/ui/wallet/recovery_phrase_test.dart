@@ -1,4 +1,5 @@
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -10,8 +11,9 @@ import 'dart:math';
 
 class RecoveryPhraseTestScreen extends StatefulWidget {
   final List<String> mnemonic;
+  final PathDerivationType pathDerivationType;
 
-  RecoveryPhraseTestScreen(this.mnemonic);
+  RecoveryPhraseTestScreen(this.mnemonic, this.pathDerivationType);
 
   @override
   State<StatefulWidget> createState() {
@@ -80,7 +82,7 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
     await sl.get<SharedPrefsUtil>().setSeedBackedUp(seedIsBackedUp);
     await sl.get<IVault>().setSeed(widget.mnemonic.join(" "));
 
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => WalletInitScreen()), (route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => WalletInitScreen(widget.pathDerivationType)), (route) => false);
   }
 
   Widget buildScreen(BuildContext context) {

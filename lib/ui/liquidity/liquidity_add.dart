@@ -27,6 +27,7 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
 class LiquidityAddScreen extends StatefulWidget {
@@ -59,6 +60,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   var _amountTokenBController = TextEditingController(text: '');
 
   WalletAddress _toAddress;
+  String _returnAddress;
 
   @override
   void initState() {
@@ -114,51 +116,56 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   }
 
   _init() async {
-    var tokenMap = List<TokenBalance>.empty(growable: true);
-    var pairs = await sl.get<IPoolPairService>().getPoolPairs('DFI');
-    var uniqueTokenList = Map<String, String>();
+    try {
+      var tokenMap = List<TokenBalance>.empty(growable: true);
+      var pairs = await sl.get<IPoolPairService>().getPoolPairs('DFI');
+      var uniqueTokenList = Map<String, String>();
 
-    for (var i = 0; i < pairs.length; i++) {
-      var element = pairs[i];
+      for (var i = 0; i < pairs.length; i++) {
+        var element = pairs[i];
 
-      var symbol = element.symbol;
-      var symbolList = symbol.split('-');
+        var symbol = element.symbol;
+        var symbolList = symbol.split('-');
 
-      if (!uniqueTokenList.containsKey(element.idTokenA)) {
-        uniqueTokenList[element.idTokenA] = symbolList[0];
+        if (!uniqueTokenList.containsKey(element.idTokenA)) {
+          uniqueTokenList[element.idTokenA] = symbolList[0];
+        }
+
+        if (!uniqueTokenList.containsKey(element.idTokenB)) {
+          uniqueTokenList[element.idTokenB] = symbolList[1];
+        }
       }
 
-      if (!uniqueTokenList.containsKey(element.idTokenB)) {
-        uniqueTokenList[element.idTokenB] = symbolList[1];
+      var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
+      var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
+
+      if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
+        accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));
       }
+
+      uniqueTokenList.forEach((symbolKey, tokenId) {
+        var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
+        var finalBalance = account != null ? account.balance : 0;
+
+        if (account != null) {
+          tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
+        } else {
+          tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
+        }
+      });
+
+      _poolPairs = pairs;
+      _tokenMap = tokenMap;
+
+      setState(() {
+        _fromTokens = tokenMap;
+        _toTokens = tokenMap;
+        _isLoading = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).wallet_offline(e.toString()))));
+      sl.get<AppCenterWrapper>().trackEvent("addLiquidityInitError", <String, String>{'error': e.toString()});
     }
-
-    var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
-    var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
-
-    if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
-      accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));
-    }
-
-    uniqueTokenList.forEach((symbolKey, tokenId) {
-      var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
-      var finalBalance = account != null ? account.balance : 0;
-
-      if (account != null) {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
-      } else {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
-      }
-    });
-
-    _poolPairs = pairs;
-    _tokenMap = tokenMap;
-
-    setState(() {
-      _fromTokens = tokenMap;
-      _toTokens = tokenMap;
-      _isLoading = false;
-    });
   }
 
   findPoolPair(TokenBalance tokenA, TokenBalance tokenB) {
@@ -365,7 +372,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       "shareAddress": walletTo
     });
 
-    var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo, loadingStream: streamController);
+    var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo,
+        returnAddress: _returnAddress, loadingStream: streamController);
     final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
 
     try {
@@ -385,13 +393,13 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       EventTaxiImpl.singleton().fire(WalletSyncLiquidityData());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(tx.txId, S.of(context).liqudity_add_successfull),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx.txId, S.of(context).liqudity_add_successfull),
       ));
 
       Navigator.popUntil(context, ModalRoute.withName('/home'));
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, error: e),
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
 
       sl.get<AppCenterWrapper>().trackEvent("addLiquidityFailure", <String, String>{
@@ -576,6 +584,19 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                   ],
                 )),
           ]),
+          SizedBox(
+            height: 20,
+          ),
+          WalletReturnAddressWidget(
+            onChanged: (v) {
+              setState(() {
+                _returnAddress = v;
+              });
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
           ElevatedButton(
             child: Text(S.of(context).liquidity_add),
             onPressed: () async {
@@ -592,6 +613,6 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
   Widget build(Object context) {
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).liquidity_add)),
-        body: Padding(padding: EdgeInsets.all(30), child: SingleChildScrollView(child: Expanded(child: _buildAddLmPage(context)))));
+        body: Padding(padding: EdgeInsets.all(30), child: SingleChildScrollView(child: _buildAddLmPage(context))));
   }
 }

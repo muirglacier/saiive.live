@@ -15,7 +15,14 @@ void main() async {
   group("#1 create tx", () {
     Future initTest() async {
       final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
-      final walletAccount = WalletAccount(Uuid().v4(), id: 0, chain: ChainType.DeFiChain, account: 0, walletAccountType: WalletAccountType.HdAccount, name: "acc", selected: true);
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: "acc",
+          selected: true);
       await db.addOrUpdateAccount(walletAccount);
 
       final tx = Transaction(
@@ -56,7 +63,7 @@ void main() async {
       await wallet.init();
       final tx = await wallet.createAuthTx("tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", 20000);
       expect(tx.item1,
-          "0200000000010198ccd53ffbb967dd7a307b6d19337946659e2330110cb49e5b66362923a24678000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff030000000000000000076a0544665478411352afd40300000017a9146015a95984366c654bbd6ab55edab391ff8d747f87204e00000000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8702483045022100cae2e59b7a873e8e87e6510997d55b3a2141f0bbbb14cdafb93ebb33a857e671022064054a4f36a9d7db140d8410b849128f39c3755595cc3331dd0c40bea027311d012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
+          "0400000000010198ccd53ffbb967dd7a307b6d19337946659e2330110cb49e5b66362923a24678000000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000076a0544665478410033a0afd40300000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8700024730440220091a55096360fd3423a4182cf448d1b19a960a841bf043e06527919cd11eab8602206aa11ffdec6144d767cd1b328af5dc89863bcc2563a155f4681a2a1bd532c9d1012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });
   });

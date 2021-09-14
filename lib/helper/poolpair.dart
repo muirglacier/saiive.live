@@ -12,7 +12,6 @@ class PoolPairHelper {
   Future<List<PoolPairLiquidity>> getPoolPairs(String coin, String currency) async {
     var gov = await sl.get<IGovService>().getGov(coin);
     var lpDailyDfiReward = gov['LP_DAILY_DFI_REWARD'];
-    var poolShares = await sl.get<IPoolShareService>().getPoolShares(coin);
     var poolStatsTmp = await sl.get<IDefichainService>().getStatsYieldFarming(coin);
     var poolStats = new Map<String, YieldFarming>();
     var priceData = await sl.get<ICoingeckoService>().getCoins(coin, currency);
@@ -30,10 +29,6 @@ class PoolPairHelper {
       var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
       var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
 
-      var poolShare = poolShares.firstWhere((element) => poolPair.id == element.poolID, orElse: () => null);
-
-      if (poolShare == null) {}
-
       var dfiCoin = priceData.firstWhere((element) => element.idToken == '0', orElse: () => null);
       var priceA = priceData.firstWhere((element) => element.idToken == poolPair.idTokenA, orElse: () => null);
       var priceB = priceData.firstWhere((element) => element.idToken == poolPair.idTokenB, orElse: () => null);
@@ -49,7 +44,6 @@ class PoolPairHelper {
           tokenA: tokenA.symbol,
           tokenB: tokenB.symbol,
           poolPair: poolPair,
-          poolShare: poolShare,
           totalLiquidityInUSDT: totalLiquidity,
           yearlyPoolReward: yearlyPoolReward,
           apy: apy);

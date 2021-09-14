@@ -194,7 +194,8 @@ class HdWallet extends IHdWallet {
     if (account != null && account.selected) {
       await _syncWallet(database, (addresses, pos, max) async {
         loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
-        final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
+        var utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
+        utxo = utxo.where((element) => element.spentTxId != null && element.spentTxId.isNotEmpty).toList();
         utxo.forEach((element) {
           LogHelper.instance.d("UTXO tx ${element.mintTxId} for ${element.address} with value ${element.value} (${element.valueRaw})(${element.correctValueRounded})");
         });

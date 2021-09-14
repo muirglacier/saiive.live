@@ -55,7 +55,7 @@ class HttpService extends IHttpService {
       headers: {'Content-type': 'application/json'},
     );
 
-    LogHelper.instance.d("Response (${response.statusCode}) for $url\n${response.body}");
+    LogHelper.instance.d("Response (${response.statusCode}) for $finalUrl ($coin)\n${response.body}");
 
     if (response.statusCode != 200) {
       var error = ErrorResponse(response: response, error: response.body);
@@ -106,6 +106,8 @@ class HttpService extends IHttpService {
   Future<dynamic> makeHttpPostRequest(String url, String coin, BaseRequest request) async {
     final finalUrl = this.serverAddress + baseUri + network + "/" + coin + url;
     final body = json.encode(request.toJson());
+
+    LogHelper.instance.d("Request for $finalUrl\n$body");
 
     http.Response response = await http.post(Uri.parse(finalUrl), headers: {'Content-type': 'application/json', 'Accept': 'application/json'}, body: body);
 

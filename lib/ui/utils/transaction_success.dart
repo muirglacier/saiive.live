@@ -77,10 +77,12 @@ class TransactionSuccessScreen extends StatelessWidget {
               onTap: () async {
                 await this.openExplorerLink(context);
               },
-              child: Text(
-                txId,
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-              ))
+              child: Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                  txId,
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              )))
         ])));
   }
 }

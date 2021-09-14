@@ -373,7 +373,6 @@ class _DexScreen extends State<DexScreen> {
     if (null == amount) {
       _amountFromController.text = '-';
     } else {
-      // var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
       var amount = _selectedPoolPair.reserveB / _selectedPoolPair.reserveA;
 
       setState(() {

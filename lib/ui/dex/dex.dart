@@ -50,10 +50,9 @@ class _DexScreen extends State<DexScreen> {
   double _amountFrom;
   double _amountTo;
   double _conversionRate;
+  double _estimatedSwapAmount;
+  double _aToBPrice;
 
-  bool _testSwapFrom = false;
-  bool _testSwapTo = false;
-  bool _testSwapLoading = false;
   bool _insufficientFunds = false;
 
   bool _isLoading = true;
@@ -80,6 +79,8 @@ class _DexScreen extends State<DexScreen> {
       _amountFrom = 0;
       _amountTo = 0;
       _conversionRate = 0;
+      _estimatedSwapAmount = 0;
+      _aToBPrice = 0;
 
       _amountFromController.clear();
       _amountToController.clear();
@@ -206,7 +207,11 @@ class _DexScreen extends State<DexScreen> {
     _selectedPoolPair = _poolPairs.firstWhere(
         (element) => (element.idTokenA == tokenA.idToken && element.idTokenB == tokenB.idToken) || (element.idTokenA == tokenB.idToken && element.idTokenB == tokenA.idToken),
         orElse: () => null);
-    if (null != _selectedPoolPair) {}
+    if (null != _selectedPoolPair) {
+      _aToBPrice = _selectedValueTo.idToken == _selectedPoolPair.idTokenA ?
+        _selectedPoolPair.reserveA / _selectedPoolPair.reserveB :
+        _selectedPoolPair.reserveB / _selectedPoolPair.reserveA;
+    }
   }
 
   getConversionRatio() {
@@ -310,10 +315,6 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    if (_testSwapTo || _testSwapLoading) {
-      return;
-    }
-
     double amount = double.tryParse(_amountFromController.text);
 
     if (amount == 0) {
@@ -326,9 +327,6 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _testSwapFrom = true;
-    _testSwapTo = false;
-
     setState(() {
       _amountFrom = amount;
     });
@@ -336,45 +334,22 @@ class _DexScreen extends State<DexScreen> {
     if (null == amount) {
       _amountToController.text = '-';
     } else {
-      _testSwapLoading = true;
+      var amount = _selectedPoolPair.reserveA / _selectedPoolPair.reserveB;
 
-      var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
+      setState(() {
+        _amountTo = amount;
+        _estimatedSwapAmount = calculateEstimatedAmount(_amountFrom, _selectedPoolPair.reserveA, _aToBPrice);
+      });
+      _amountToController.text = amount.toString();
 
-      try {
-        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueFrom.hash, amount, pubKey, _selectedValueTo.hash);
-
-        setState(() {
-          _amountTo = double.tryParse(swapResult.result.split('@')[0]);
-        });
-        _amountToController.text = swapResult.result.split('@')[0];
-
-        getConversionRatio();
-      } on HttpException catch (e) {
-        final errorMsg = e.error.error;
-        LogHelper.instance.e("Error ($errorMsg)");
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error ($errorMsg)'),
-        ));
-
-        _amountToController.text = '-';
-      }
-
-      _testSwapLoading = false;
+      getConversionRatio();
     }
 
     checkSufficientFunds();
-
-    _testSwapFrom = false;
   }
 
   handleChangeTo() async {
     if (null == _selectedValueTo || null == _selectedValueFrom) {
-      return;
-    }
-
-    if (_testSwapFrom || _testSwapLoading) {
       return;
     }
 
@@ -391,9 +366,6 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    _testSwapFrom = false;
-    _testSwapTo = true;
-
     setState(() {
       _amountTo = amount;
     });
@@ -401,40 +373,24 @@ class _DexScreen extends State<DexScreen> {
     if (null == amount) {
       _amountFromController.text = '-';
     } else {
-      _testSwapLoading = true;
+      var amount = _selectedPoolPair.reserveB / _selectedPoolPair.reserveA;
 
-      var wallet = sl.get<DeFiChainWallet>();
-      var pubKey = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
+      setState(() {
+        _amountFrom = amount;
+        _estimatedSwapAmount = calculateEstimatedAmount(_amountFrom, _selectedPoolPair.reserveA, _selectedPoolPair.reserveB / _selectedPoolPair.reserveA);
+      });
 
-      try {
-        var swapResult = await sl.get<IDexService>().testPoolSwap('DFI', pubKey, _selectedValueTo.hash, amount, pubKey, _selectedValueFrom.hash);
+      _amountFromController.text = amount.toString();
 
-        setState(() {
-          _amountFrom = double.tryParse(swapResult.result.split('@')[0]);
-        });
-
-        _amountFromController.text = swapResult.result.split('@')[0];
-
-        getConversionRatio();
-      } on HttpException catch (e) {
-        final errorMsg = e.error.error;
-        LogHelper.instance.e("Error ($errorMsg)");
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error ($errorMsg)'),
-        ));
-
-        _amountFromController.text = '-';
-
-        sl.get<AppCenterWrapper>().trackEvent(
-            "swapTestError", <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": amount.toString(), "walletTo": pubKey});
-      }
-
-      _testSwapLoading = false;
+      getConversionRatio();
     }
     checkSufficientFunds();
+  }
 
-    _testSwapTo = false;
+  calculateEstimatedAmount(double tokenAAmount, double reserveA, double price)
+  {
+    var slippage = 1 - (tokenAAmount / reserveA);
+    return tokenAAmount * price * slippage;
   }
 
   Future doSwap() async {
@@ -635,7 +591,7 @@ class _DexScreen extends State<DexScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(_amountTo.toString()),
+                              Text(_estimatedSwapAmount.toString()),
                             ],
                           )),
                     ]),

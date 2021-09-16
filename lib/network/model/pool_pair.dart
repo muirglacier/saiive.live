@@ -69,6 +69,25 @@ class PoolPair {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        //TOOD
-      };
+    'id': id,
+    'symbol': symbol,
+    'name': name,
+    'status': status,
+    'idTokenA': idTokenA,
+    'idTokenB': idTokenB,
+    'reserveA': reserveA,
+    'reserveB': reserveB,
+    'commission': commission,
+    'totalLiquidity': totalLiquidity,
+    'reserveADivReserveB': reserveADivReserveB,
+    'reserveBDivReserveA': reserveBDivReserveA,
+    'tradeEnabled': tradeEnabled,
+    'ownerAddress': ownerAddress,
+    'blockCommissionA': blockCommissionA,
+    'blockCommissionB': blockCommissionB,
+    'rewardPct': rewardPct,
+    'customRewards': customRewards,
+    'creationTx': creationTx,
+    'creationHeight': creationHeight,
+  };
 }

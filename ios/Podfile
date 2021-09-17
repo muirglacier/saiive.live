@@ -1,6 +1,11 @@
 # Uncomment this line to define a global platform for your project
 # platform :ios, '9.0'
 
+target 'watch Extension' do
+    platform :watchos, '7.2'
+    pod 'Alamofire', '~> 5.4'
+end
+
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 

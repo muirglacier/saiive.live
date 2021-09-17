@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		1B52067AB6E1F47DE8A3EB36 /* libPods-watch Extension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 600E122566772BCAB0CE40A8 /* libPods-watch Extension.a */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -20,6 +21,9 @@
 		B422F2BF26F386800045C668 /* PoolShareRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B422F2BE26F386800045C668 /* PoolShareRow.swift */; };
 		B422F2C326F3869E0045C668 /* PoolPairRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B422F2C226F3869E0045C668 /* PoolPairRow.swift */; };
 		B422F2C726F38B6B0045C668 /* FormattableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B422F2C626F38B6B0045C668 /* FormattableView.swift */; };
+		B422F2D326F465560045C668 /* JellyfishAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B422F2D226F465560045C668 /* JellyfishAPI.swift */; };
+		B422F2E826F46AE90045C668 /* JellyfishToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = B422F2E726F46AE90045C668 /* JellyfishToken.swift */; };
+		B422F2EC26F46B140045C668 /* JellyfishPoolPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = B422F2EB26F46B140045C668 /* JellyfishPoolPair.swift */; };
 		B47DEEB326F25E8F00A717F9 /* WatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47DEEB226F25E8F00A717F9 /* WatchViewModel.swift */; };
 		B4B8E7642689BB070000E078 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B4B8E7662689BB070000E078 /* InfoPlist.strings */; };
 		B4CA86F026F25C1A00B04499 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B4CA86EF26F25C1A00B04499 /* Assets.xcassets */; };
@@ -88,16 +92,22 @@
 /* Begin PBXFileReference section */
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		1C80AE5D0C0ED84D94D4CF76 /* Pods-watch Extension.profile-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.profile-staging.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.profile-staging.xcconfig"; sourceTree = "<group>"; };
 		2B4E35B350208ADB2669A2B2 /* Pods-Runner.profile-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-production.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-production.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		450218D0108B79BBD78CA77B /* Pods-Runner.release-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-production.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-production.xcconfig"; sourceTree = "<group>"; };
+		550C5CFFC176961EE5BD0080 /* Pods-watch Extension.debug-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.debug-staging.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.debug-staging.xcconfig"; sourceTree = "<group>"; };
+		600E122566772BCAB0CE40A8 /* libPods-watch Extension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-watch Extension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7021B2B072F657AC8097B5F6 /* Pods-watch Extension.debug-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.debug-production.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.debug-production.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7B2B74B7FB24331E5D30424C /* Pods-Runner.release-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-staging.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-staging.xcconfig"; sourceTree = "<group>"; };
+		7C18129CFB3751E9CA003D95 /* Pods-watch Extension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.release.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.release.xcconfig"; sourceTree = "<group>"; };
 		7EB1E22748B247217057FF03 /* Pods-Runner.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.staging.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.staging.xcconfig"; sourceTree = "<group>"; };
 		7F702B52577ABC1B0501B47C /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		8E28A8F8CB6E73086D96B601 /* Pods-Runner.debug-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-production.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-production.xcconfig"; sourceTree = "<group>"; };
+		9038B6BBC49E92D089AD8A70 /* Pods-watch Extension.release-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.release-staging.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.release-staging.xcconfig"; sourceTree = "<group>"; };
 		926978D5675674E2338E1835 /* Pods-Runner.debug-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-staging.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-staging.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -107,6 +117,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A6DDA95D610BC88F67C0C517 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		AF248F68C92250584B42880C /* Pods-watch Extension.profile-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.profile-production.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.profile-production.xcconfig"; sourceTree = "<group>"; };
 		B415513225D689C400D6C255 /* RunnerProfile-production.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RunnerProfile-production.entitlements"; sourceTree = "<group>"; };
 		B415513325D68A8200D6C255 /* RunnerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunnerDebug.entitlements; sourceTree = "<group>"; };
 		B415513425D68A8600D6C255 /* RunnerDebug-staging.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RunnerDebug-staging.entitlements"; sourceTree = "<group>"; };
@@ -123,6 +134,9 @@
 		B422F2BE26F386800045C668 /* PoolShareRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolShareRow.swift; sourceTree = "<group>"; };
 		B422F2C226F3869E0045C668 /* PoolPairRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolPairRow.swift; sourceTree = "<group>"; };
 		B422F2C626F38B6B0045C668 /* FormattableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattableView.swift; sourceTree = "<group>"; };
+		B422F2D226F465560045C668 /* JellyfishAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JellyfishAPI.swift; sourceTree = "<group>"; };
+		B422F2E726F46AE90045C668 /* JellyfishToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JellyfishToken.swift; sourceTree = "<group>"; };
+		B422F2EB26F46B140045C668 /* JellyfishPoolPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JellyfishPoolPair.swift; sourceTree = "<group>"; };
 		B47DEEB226F25E8F00A717F9 /* WatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchViewModel.swift; sourceTree = "<group>"; };
 		B4B8E7652689BB070000E078 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B4B8E7672689BB100000E078 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -137,7 +151,10 @@
 		B4CA870426F25C1B00B04499 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B4CA870626F25C1B00B04499 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB3411C864011820A73BC8C6 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		C953F1B66139E9716C2E310C /* Pods-watch Extension.release-production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.release-production.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.release-production.xcconfig"; sourceTree = "<group>"; };
+		D65ACFCEE9ACD0F27BB0E181 /* Pods-watch Extension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.debug.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.debug.xcconfig"; sourceTree = "<group>"; };
 		D8BC7890FB6EE29ED8BCC5B5 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB973F36580A955F067B995D /* Pods-watch Extension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-watch Extension.profile.xcconfig"; path = "Target Support Files/Pods-watch Extension/Pods-watch Extension.profile.xcconfig"; sourceTree = "<group>"; };
 		EE3E82F1B9DC3BF49E16FB42 /* Pods-Runner.profile-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-staging.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-staging.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,6 +178,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B52067AB6E1F47DE8A3EB36 /* libPods-watch Extension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				D8BC7890FB6EE29ED8BCC5B5 /* Pods_Runner.framework */,
+				600E122566772BCAB0CE40A8 /* libPods-watch Extension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -188,6 +207,15 @@
 				8E28A8F8CB6E73086D96B601 /* Pods-Runner.debug-production.xcconfig */,
 				450218D0108B79BBD78CA77B /* Pods-Runner.release-production.xcconfig */,
 				2B4E35B350208ADB2669A2B2 /* Pods-Runner.profile-production.xcconfig */,
+				D65ACFCEE9ACD0F27BB0E181 /* Pods-watch Extension.debug.xcconfig */,
+				550C5CFFC176961EE5BD0080 /* Pods-watch Extension.debug-staging.xcconfig */,
+				7021B2B072F657AC8097B5F6 /* Pods-watch Extension.debug-production.xcconfig */,
+				7C18129CFB3751E9CA003D95 /* Pods-watch Extension.release.xcconfig */,
+				9038B6BBC49E92D089AD8A70 /* Pods-watch Extension.release-staging.xcconfig */,
+				C953F1B66139E9716C2E310C /* Pods-watch Extension.release-production.xcconfig */,
+				DB973F36580A955F067B995D /* Pods-watch Extension.profile.xcconfig */,
+				1C80AE5D0C0ED84D94D4CF76 /* Pods-watch Extension.profile-staging.xcconfig */,
+				AF248F68C92250584B42880C /* Pods-watch Extension.profile-production.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -251,6 +279,16 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
+		B422F2E626F46ADA0045C668 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				B422F2D226F465560045C668 /* JellyfishAPI.swift */,
+				B422F2E726F46AE90045C668 /* JellyfishToken.swift */,
+				B422F2EB26F46B140045C668 /* JellyfishPoolPair.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		B47DEEB126F25E7C00A717F9 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -271,6 +309,7 @@
 		B4CA86FA26F25C1B00B04499 /* watch Extension */ = {
 			isa = PBXGroup;
 			children = (
+				B422F2E626F46ADA0045C668 /* Network */,
 				B47DEEB126F25E7C00A717F9 /* ViewModel */,
 				B4CA86FB26F25C1B00B04499 /* ContentView.swift */,
 				B4CA86FD26F25C1B00B04499 /* RunnerApp.swift */,
@@ -347,6 +386,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B4CA871E26F25C1B00B04499 /* Build configuration list for PBXNativeTarget "watch Extension" */;
 			buildPhases = (
+				DE2E624D8D97AA0BB420CD85 /* [CP] Check Pods Manifest.lock */,
 				B4CA86F226F25C1B00B04499 /* Sources */,
 				B4CA86F326F25C1B00B04499 /* Frameworks */,
 				B4CA86F426F25C1B00B04499 /* Resources */,
@@ -520,6 +560,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		DE2E624D8D97AA0BB420CD85 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-watch Extension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -540,12 +602,15 @@
 				B422F2BB26F386430045C668 /* BalanceRow.swift in Sources */,
 				B422F29F26F353A00045C668 /* Extensions.swift in Sources */,
 				B4CA86FC26F25C1B00B04499 /* ContentView.swift in Sources */,
+				B422F2EC26F46B140045C668 /* JellyfishPoolPair.swift in Sources */,
+				B422F2E826F46AE90045C668 /* JellyfishToken.swift in Sources */,
 				B422F2C326F3869E0045C668 /* PoolPairRow.swift in Sources */,
 				B4CA86FE26F25C1B00B04499 /* RunnerApp.swift in Sources */,
 				B47DEEB326F25E8F00A717F9 /* WatchViewModel.swift in Sources */,
 				B422F2BF26F386800045C668 /* PoolShareRow.swift in Sources */,
 				B4CA870026F25C1B00B04499 /* ComplicationController.swift in Sources */,
 				B422F2C726F38B6B0045C668 /* FormattableView.swift in Sources */,
+				B422F2D326F465560045C668 /* JellyfishAPI.swift in Sources */,
 				B422F2B726F385F20045C668 /* IconPairView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1583,6 +1648,7 @@
 		};
 		B4CA871526F25C1B00B04499 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D65ACFCEE9ACD0F27BB0E181 /* Pods-watch Extension.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1618,6 +1684,7 @@
 		};
 		B4CA871626F25C1B00B04499 /* Debug-staging */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 550C5CFFC176961EE5BD0080 /* Pods-watch Extension.debug-staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1653,6 +1720,7 @@
 		};
 		B4CA871726F25C1B00B04499 /* Debug-production */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7021B2B072F657AC8097B5F6 /* Pods-watch Extension.debug-production.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1688,6 +1756,7 @@
 		};
 		B4CA871826F25C1B00B04499 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C18129CFB3751E9CA003D95 /* Pods-watch Extension.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1720,6 +1789,7 @@
 		};
 		B4CA871926F25C1B00B04499 /* Release-staging */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9038B6BBC49E92D089AD8A70 /* Pods-watch Extension.release-staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1752,6 +1822,7 @@
 		};
 		B4CA871A26F25C1B00B04499 /* Release-production */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C953F1B66139E9716C2E310C /* Pods-watch Extension.release-production.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1784,6 +1855,7 @@
 		};
 		B4CA871B26F25C1B00B04499 /* Profile */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DB973F36580A955F067B995D /* Pods-watch Extension.profile.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1816,6 +1888,7 @@
 		};
 		B4CA871C26F25C1B00B04499 /* Profile-staging */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C80AE5D0C0ED84D94D4CF76 /* Pods-watch Extension.profile-staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1848,6 +1921,7 @@
 		};
 		B4CA871D26F25C1B00B04499 /* Profile-production */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF248F68C92250584B42880C /* Pods-watch Extension.profile-production.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

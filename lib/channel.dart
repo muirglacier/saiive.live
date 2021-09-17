@@ -15,11 +15,7 @@ class ChannelConnection {
       // Receive data from Native
       switch (call.method) {
         case "loadLiquidity":
-          var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
-          var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
 
-          sendLiquidity(liquidity);
-          sendPoolPairs(poolPairLiquidity);
           break;
         default:
           break;
@@ -27,24 +23,12 @@ class ChannelConnection {
     });
   }
 
-  void sendBalance(List<AccountBalance> balance) async {
-    sendData({"method": "receiveBalance", "data": jsonEncode(balance)});
-  }
-
-  void sendLiquidity(List<PoolShareLiquidity> poolShares) {
-    sendData({"method": "receivePoolShares", "data": jsonEncode(poolShares)});
-  }
-
-  void sendPoolPairs(List<PoolPairLiquidity> poolPairs) {
-    sendData({"method": "receivePoolPairs", "data": jsonEncode(poolPairs)});
-  }
-
   void sendPublicKeysDFI(List<String> addresses) {
-    sendMessage({"method": "receivePublicKeysDFI", "data": jsonEncode(addresses)});
+    sendData({"method": "receivePublicKeysDFI", "data": jsonEncode(addresses)});
   }
 
   void sendPublicKeysBTC(List<String> addresses) {
-    sendMessage({"method": "receivePublicKeysBTC", "data": jsonEncode(addresses)});
+    sendData({"method": "receivePublicKeysBTC", "data": jsonEncode(addresses)});
   }
 
   void sendMessage(var data) {

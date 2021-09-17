@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
-import 'package:saiive.live/channel.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/helper/poolpair.dart';
@@ -92,8 +91,6 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       });
 
       sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadEnd", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
-      sl.get<ChannelConnection>().sendPoolPairs(_poolPairLiquidity);
-      sl.get<ChannelConnection>().sendLiquidity(_liquidity);
     } catch (e) {
       if (e is HttpException) {
         LogHelper.instance.e("Error loading data", e.message);

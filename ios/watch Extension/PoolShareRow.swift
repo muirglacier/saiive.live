@@ -8,34 +8,33 @@
 import SwiftUI
 
 struct PoolShareRow: View {
-    var pair: PoolShareLiquidity
+    var token: JellyfishToken
+    var pairs: [JellyfishPoolPair]
     
     var body: some View {
         VStack (alignment: .leading) {
-            IconPairView(tokenA: pair.tokenA, tokenB: pair.tokenB)
-                .frame(maxWidth: .infinity, alignment: .center)
-            
-            HStack(alignment: .top) {
-                Text("Share").font(.headline)
-                Text("\(pair.poolSharePercentage) %")
-                    .lineLimit(1)
-                    .allowsTightening(true)
+            let pair = pairs.first { (pair: JellyfishPoolPair) -> Bool in
+                return pair.symbol == token.symbol
             }
             
-            HStack(alignment: .top) {
-                Text(pair.tokenA).font(.headline)
-                Text(Formattable.formatNumber(number: pair.poolSharePercentage / 100 * pair.poolPair.reserveA, style: NumberFormatter.Style.decimal))
-                    .lineLimit(1)
-                    .allowsTightening(true)
-            }
-            
-            HStack(alignment: .top) {
-                Text(pair.tokenB).font(.headline)
-                Text(Formattable.formatNumber(number: pair.poolSharePercentage / 100 * pair.poolPair.reserveB, style: NumberFormatter.Style.decimal))
-                    .lineLimit(1)
-                    .allowsTightening(true)
+            if (pair != nil) {
+                IconPairView(tokenA: pair!.tokenA.symbol, tokenB: pair!.tokenB.symbol)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                
+                HStack(alignment: .top) {
+                    Text("Share").font(.headline)
+                    Text("\((token.amountTotal * 100) / (Double(pair!.totalLiquidity.token) ?? 1)) %")
+                        .lineLimit(1)
+                        .allowsTightening(true)
+                }
+                
+                HStack(alignment: .top) {
+                    Text(token.displaySymbol).font(.headline)
+                    Text(Formattable.formatNumber(number: token.amountTotal, style: NumberFormatter.Style.decimal))
+                        .lineLimit(1)
+                        .allowsTightening(true)
+                }
             }
         }
-
     }
 }

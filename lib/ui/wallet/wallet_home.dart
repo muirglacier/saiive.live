@@ -133,7 +133,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
         var pubKeyListDFI = await sl.get<DeFiChainWallet>().getPublicKeys();
         var pubKeyListBTC = await sl.get<BitcoinWallet>().getPublicKeys();
 
-        sl.get<ChannelConnection>().sendBalance(_accountBalance);
         sl.get<ChannelConnection>().sendPublicKeysDFI(pubKeyListDFI);
         sl.get<ChannelConnection>().sendPublicKeysBTC(pubKeyListBTC);
 

@@ -137,6 +137,8 @@
 		B422F2D226F465560045C668 /* JellyfishAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JellyfishAPI.swift; sourceTree = "<group>"; };
 		B422F2E726F46AE90045C668 /* JellyfishToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JellyfishToken.swift; sourceTree = "<group>"; };
 		B422F2EB26F46B140045C668 /* JellyfishPoolPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JellyfishPoolPair.swift; sourceTree = "<group>"; };
+		B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Debug-watch.xcconfig"; path = "Flutter/Debug-watch.xcconfig"; sourceTree = "<group>"; };
+		B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Release-watch.xcconfig"; path = "Flutter/Release-watch.xcconfig"; sourceTree = "<group>"; };
 		B47DEEB226F25E8F00A717F9 /* WatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchViewModel.swift; sourceTree = "<group>"; };
 		B4B8E7652689BB070000E078 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B4B8E7672689BB100000E078 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -223,6 +225,8 @@
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
+				B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */,
+				B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */,
 				3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
@@ -1378,6 +1382,7 @@
 		};
 		B4CA870B26F25C1B00B04499 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1411,6 +1416,7 @@
 		};
 		B4CA870C26F25C1B00B04499 /* Debug-staging */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1444,6 +1450,7 @@
 		};
 		B4CA870D26F25C1B00B04499 /* Debug-production */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1477,6 +1484,7 @@
 		};
 		B4CA870E26F25C1B00B04499 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1508,6 +1516,7 @@
 		};
 		B4CA870F26F25C1B00B04499 /* Release-staging */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1539,6 +1548,7 @@
 		};
 		B4CA871026F25C1B00B04499 /* Release-production */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1570,6 +1580,7 @@
 		};
 		B4CA871126F25C1B00B04499 /* Profile */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1601,6 +1612,7 @@
 		};
 		B4CA871226F25C1B00B04499 /* Profile-staging */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1632,6 +1644,7 @@
 		};
 		B4CA871326F25C1B00B04499 /* Profile-production */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1663,7 +1676,7 @@
 		};
 		B4CA871526F25C1B00B04499 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D65ACFCEE9ACD0F27BB0E181 /* Pods-watch Extension.debug.xcconfig */;
+			baseConfigurationReference = B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1701,7 +1714,7 @@
 		};
 		B4CA871626F25C1B00B04499 /* Debug-staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 550C5CFFC176961EE5BD0080 /* Pods-watch Extension.debug-staging.xcconfig */;
+			baseConfigurationReference = B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1739,7 +1752,7 @@
 		};
 		B4CA871726F25C1B00B04499 /* Debug-production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7021B2B072F657AC8097B5F6 /* Pods-watch Extension.debug-production.xcconfig */;
+			baseConfigurationReference = B46FA05326F4C9F100B2EE3B /* Debug-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1777,7 +1790,7 @@
 		};
 		B4CA871826F25C1B00B04499 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C18129CFB3751E9CA003D95 /* Pods-watch Extension.release.xcconfig */;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1813,7 +1826,7 @@
 		};
 		B4CA871926F25C1B00B04499 /* Release-staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9038B6BBC49E92D089AD8A70 /* Pods-watch Extension.release-staging.xcconfig */;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1849,7 +1862,7 @@
 		};
 		B4CA871A26F25C1B00B04499 /* Release-production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C953F1B66139E9716C2E310C /* Pods-watch Extension.release-production.xcconfig */;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1885,7 +1898,7 @@
 		};
 		B4CA871B26F25C1B00B04499 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DB973F36580A955F067B995D /* Pods-watch Extension.profile.xcconfig */;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1921,7 +1934,7 @@
 		};
 		B4CA871C26F25C1B00B04499 /* Profile-staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C80AE5D0C0ED84D94D4CF76 /* Pods-watch Extension.profile-staging.xcconfig */;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1957,7 +1970,7 @@
 		};
 		B4CA871D26F25C1B00B04499 /* Profile-production */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF248F68C92250584B42880C /* Pods-watch Extension.profile-production.xcconfig */;
+			baseConfigurationReference = B46FA05426F4C9F100B2EE3B /* Release-watch.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

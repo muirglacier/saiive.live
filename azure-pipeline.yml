@@ -477,12 +477,12 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            flutter build ipa --target=lib/main_staging.dart --flavor=staging --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --export-options-plist=.devops/AdHocExportOptions.plist --verbose
+            $(FlutterToolPath)/flutter build ipa --target=lib/main_staging.dart --flavor=staging --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --export-options-plist=.devops/AdHocExportOptions.plist --verbose
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
         inputs:
-          contents: 'build/ios/*.ipa'
+          contents: 'build/ios/ipa/*.ipa'
           targetFolder: '$(build.artifactStagingDirectory)/ios/staging'
 
       - task: PublishBuildArtifacts@1
@@ -584,7 +584,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            flutter build ipa --target=lib/main_prod.dart --flavor=production --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --export-options-plist=.devops/AppStoreExportOptions.plist
+            $(FlutterToolPath)/flutter build ipa --target=lib/main_prod.dart --flavor=production --build-name=$(AppVersion) --build-number $(Build.BuildNumber) --export-options-plist=.devops/AppStoreExportOptions.plist
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"

@@ -9,4 +9,11 @@ class Coin {
   factory Coin.fromJson(Map<String, dynamic> json) {
     return Coin(coin: json['coin'], idToken: json['idToken'], fiat: double.parse(json['fiat'].toString()), currency: json['currency']);
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'coin': coin,
+    'idToken': idToken,
+    'fiat': fiat,
+    'currency': currency
+  };
 }

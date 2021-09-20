@@ -509,7 +509,7 @@ abstract class Wallet extends IWallet {
   @protected
   Future syncAllInternal({StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
-    await syncTransactions(loadingStream: loadingStream);
+    // await syncTransactions(loadingStream: loadingStream);
   }
 
   Future syncAll({StreamController<String> loadingStream}) async {

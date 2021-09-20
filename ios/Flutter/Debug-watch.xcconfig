@@ -1,0 +1,3 @@
+#include? "Pods/Target Support Files/Pods-watch Extension/Pods-watch Extension.debug.xcconfig"
+#include "Generated.xcconfig"
+#include? "tmp.xcconfig"

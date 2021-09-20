@@ -47,6 +47,16 @@ class AccountBalance {
   }
 
   AccountBalance({@required this.token, @required this.balance, @required this.chain});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'token': token,
+    'balance': balance,
+    'balanceDisplay': balanceDisplay,
+    'isLPS': isLPS,
+    'isDAT': isDAT,
+    'additionalDisplay': additionalDisplay,
+    'tokenDisplay': tokenDisplay
+  };
 }
 
 class MixedAccountBalance extends AccountBalance {
@@ -59,4 +69,19 @@ class MixedAccountBalance extends AccountBalance {
   double get tokenBalanceDisplay => tokenBalance / DefiChainConstants.COIN;
 
   MixedAccountBalance({String token, int balance, ChainType chain, this.utxoBalance, this.tokenBalance}) : super(token: token, balance: balance, chain: chain);
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'mixedAccount': true,
+    'token': token,
+    'balance': totalBalance,
+    'balanceDisplay': balanceDisplay,
+    'isLPS': isLPS,
+    'isDAT': isDAT,
+    'additionalDisplay': additionalDisplay,
+    'tokenDisplay': tokenDisplay,
+    'utxoBalance': utxoBalance,
+    'tokenBalance': tokenBalance,
+    'utxoBalanceDisplay': utxoBalanceDisplay,
+    'tokenBalanceDisplay': tokenBalanceDisplay
+  };
 }

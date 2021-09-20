@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/channel.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
@@ -59,6 +60,8 @@ class SaiiveLiveApp extends StatefulWidget {
 }
 
 class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
+  final ChannelConnection connection = new ChannelConnection();
+
   void init() {
     LogConsole.init(bufferSize: 200);
 
@@ -87,6 +90,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
       StateContainer.of(context).logger.d("Event " + eventType + " called...");
     });
 
+    sl.get<ChannelConnection>().init();
     init();
   }
 

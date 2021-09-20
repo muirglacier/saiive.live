@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
+import 'package:saiive.live/channel.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
@@ -81,6 +82,7 @@ void setupServiceLocator() {
   sl.registerLazySingleton<IWalletService>(() => WalletService());
   sl.registerLazySingleton<DeFiChainWallet>(() => DeFiChainWallet(true));
   sl.registerLazySingleton<BitcoinWallet>(() => BitcoinWallet(true));
+  sl.registerLazySingleton<ChannelConnection>(() => ChannelConnection());
 
   sl.registerLazySingleton<IEnvironmentService>(() => EnvironmentService());
 

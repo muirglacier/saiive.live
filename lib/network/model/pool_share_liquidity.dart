@@ -2,7 +2,7 @@ import 'package:saiive.live/network/model/coin.dart';
 import 'package:saiive.live/network/model/pool_pair.dart';
 import 'package:saiive.live/network/model/pool_share.dart';
 
-class PoolShareLiquidity extends PoolPair {
+class PoolShareLiquidity {
   final String tokenA;
   final String tokenB;
   final PoolPair poolPair;
@@ -49,4 +49,25 @@ class PoolShareLiquidity extends PoolPair {
       this.yearlyRewardFiat,
       this.poolShares
     });
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'tokenA': tokenA,
+    'tokenB': tokenB,
+    'poolPair': poolPair.toJson(),
+    'totalLiquidityInUSDT': totalLiquidityInUSDT,
+    'yearlyPoolReward': yearlyPoolReward,
+    'poolSharePercentage': poolSharePercentage,
+    'apy': apy,
+    'coin': coin.toJson(),
+    'blockReward': blockReward,
+    'minuteReward': minuteReward,
+    'hourlyReword': hourlyReword,
+    'dailyReward': dailyReward,
+    'yearlyReward': yearlyReward,
+    'blockRewardFiat': blockRewardFiat,
+    'minuteRewardFiat': minuteRewardFiat,
+    'hourlyRewordFiat': hourlyRewordFiat,
+    'dailyRewardFiat': dailyRewardFiat,
+    'yearlyRewardFiat': yearlyRewardFiat
+  };
 }

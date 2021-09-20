@@ -6,6 +6,9 @@ import 'package:flutter/rendering.dart';
 import 'package:group_list_view/group_list_view.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/channel.dart';
+import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/events.dart';
@@ -126,6 +129,12 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
           _syncText = S.of(context).home_welcome_account_synced;
         });
+
+        var pubKeyListDFI = await sl.get<DeFiChainWallet>().getPublicKeys();
+        var pubKeyListBTC = await sl.get<BitcoinWallet>().getPublicKeys();
+
+        sl.get<ChannelConnection>().sendPublicKeysDFI(pubKeyListDFI);
+        sl.get<ChannelConnection>().sendPublicKeysBTC(pubKeyListBTC);
 
         print("---------------------- wallet sync done event is called....");
       });

@@ -243,7 +243,10 @@ class HdWalletUtil {
 
     if (amount > 0) {
       if (to == returnAddress) {
-        txb.addOutput(to, totalInputValue - fee);
+        var val = totalInputValue - fee;
+        if (val > 0) {
+          txb.addOutput(to, val);
+        }
         changeAmount = 0;
       } else {
         txb.addOutput(to, amount);

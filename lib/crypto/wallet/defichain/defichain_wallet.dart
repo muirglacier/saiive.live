@@ -91,7 +91,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
           vin = txb.addInput(tx.mintTxId, tx.mintIndex);
         }
 
-        txb.addOutput(tx.address, tx.value);
+        if (tx.value > 0) {
+          txb.addOutput(tx.address, tx.value);
+        }
 
         final witnessValue = tx.valueRaw;
         if (addressInfo.addressType == AddressType.P2SHSegwit) {
@@ -248,7 +250,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         var keyPair = await getPrivateKey(addressInfo, walletAccount);
 
         var vin = txb.addInput(tx.mintTxId, tx.mintIndex);
-        txb.addOutput(tx.address, tx.value);
+        if (tx.value > 0) {
+          txb.addOutput(tx.address, tx.value);
+        }
         final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;
         final redeemScript = p2wpkh.output;
 
@@ -542,7 +546,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var txHex = await HdWalletUtil.buildTransaction(useInputs, keys, pubKey, 0, fees, pubKey, (txb, inputTxs, network) async {
       final mintingStartsAt = txb.tx.ins.length + 1;
 
-      txb.addOutput(pubKey, account.balance);
+      if (account.balance > 0) {
+        txb.addOutput(pubKey, account.balance);
+      }
       txb.addAccountToUtxoOutput(tokenType.id, account.address, account.balance, mintingStartsAt);
     }, chain, network);
 

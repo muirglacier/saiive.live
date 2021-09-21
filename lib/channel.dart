@@ -1,21 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:saiive.live/helper/poolpair.dart';
-import 'package:saiive.live/helper/poolshare.dart';
-import 'package:saiive.live/network/model/account_balance.dart';
-import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
-import 'package:saiive.live/network/model/pool_share_liquidity.dart';
 
 class ChannelConnection {
   final channel = MethodChannel('at.saiive.live');
 
-  Future<void> init() async {
-    await channel.setMethodCallHandler((call) async {
+  void init() async {
+    channel.setMethodCallHandler((call) async {
       // Receive data from Native
       switch (call.method) {
         case "loadLiquidity":
-
           break;
         default:
           break;
@@ -42,6 +37,8 @@ class ChannelConnection {
     print("----- sending to watch");
     print(data);
 
-    channel.invokeMethod("applicationContext", data);
+    if (Platform.isIOS) {
+      channel.invokeMethod("applicationContext", data);
+    }
   }
 }

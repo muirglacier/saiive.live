@@ -12,4 +12,9 @@ class BitcoinWallet extends Wallet {
     final changeAddress = returnAddress ?? await this.getPublicKey(true, AddressType.P2SHSegwit);
     return await createUtxoTransaction(amount, to, changeAddress);
   }
+
+  @override
+  Future<bool> refreshBefore() {
+    return Future.value(false);
+  }
 }

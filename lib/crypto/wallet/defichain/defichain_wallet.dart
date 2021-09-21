@@ -663,4 +663,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<int> prepareAccount(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {
     return await prepareUtxoToAccountTransaction(toAddress, amount, loadingStream: loadingStream, force: force);
   }
+
+  @override
+  Future<bool> refreshBefore() {
+    return Future.value(true);
+  }
 }

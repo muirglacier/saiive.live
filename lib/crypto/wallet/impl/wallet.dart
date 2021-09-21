@@ -415,7 +415,7 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future<TransactionData> createTxAndWaitInternal(String txHex, {StreamController<String> loadingStream}) async {
-    final r = RetryOptions(maxAttempts: 20, maxDelay: Duration(seconds: 5));
+    final r = RetryOptions(maxAttempts: 50, maxDelay: Duration(seconds: 5));
     // bool ensureUtxoCalled = false;
 
     LogHelper.instance.d("commiting tx $txHex");
@@ -437,6 +437,8 @@ abstract class Wallet extends IWallet {
       });
 
       LogHelper.instance.i("commited tx with id " + txId);
+
+      loadingStream.add(S.current.wallet_operation_wait_for_confirmation);
 
       final response = await r.retry(() async {
         return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId);
@@ -474,6 +476,10 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future ensureUtxo({StreamController<String> loadingStream}) async {
+    if (!await refreshBefore()) {
+      return;
+    }
+
     await walletMutex.acquire();
 
     try {

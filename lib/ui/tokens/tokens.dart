@@ -1,4 +1,5 @@
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/token.dart';
 import 'package:saiive.live/network/token_service.dart';
@@ -27,7 +28,7 @@ class _TokensScreen extends State<TokensScreen> {
   }
 
   _initTokens() async {
-    var tokens = await sl.get<ITokenService>().getTokens('DFI');
+    var tokens = await sl.get<ITokenService>().getTokens(DeFiConstants.DefiAccountSymbol);
 
     setState(() {
       _tokens = tokens;

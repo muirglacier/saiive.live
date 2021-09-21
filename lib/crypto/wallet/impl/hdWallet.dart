@@ -69,8 +69,9 @@ class HdWallet extends IHdWallet {
       final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType, derivationPathType);
       final walletType = ChainHelper.chainTypeString(_chain);
       LogHelper.instance.d("Create address for $walletType: $pubKey");
-      await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
+      return await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
+    return alreadyExists;
   }
 
   WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
@@ -114,19 +115,6 @@ class HdWallet extends IHdWallet {
   }
 
   Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
-    if (!await database.addressExists(_account.account, isChangeAddress, startIndex, addressType)) {
-      //overflow indexes....start again with 0
-      await sharedPrefs.setAddressIndex(0, isChangeAddress);
-      startIndex = 0;
-
-      var address = await database.getWalletAddressById(_account.account, isChangeAddress, 0, addressType);
-
-      if (address == null) {
-        address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
-      }
-      return address;
-    }
-
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
 
     if (address == null) {
@@ -138,7 +126,7 @@ class HdWallet extends IHdWallet {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
     }
 
-    await sharedPrefs.setAddressIndex(startIndex++, isChangeAddress);
+    await sharedPrefs.setAddressIndex(startIndex + 1, isChangeAddress);
     return address;
   }
 

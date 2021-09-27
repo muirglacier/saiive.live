@@ -241,5 +241,8 @@
   "update_cancel": "Abbrechen",
 
   "expert_title": "Experten Modus",
-  "expert": "Experte"
+  "expert": "Experte",
+
+  "dfx_buy_title": "DFI Kaufen/Verkaufen",
+  "dfx_buy_address": "Kaufadresse"
 }

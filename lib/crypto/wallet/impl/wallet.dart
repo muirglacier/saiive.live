@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 import 'dart:typed_data';
 
@@ -525,5 +526,22 @@ abstract class Wallet extends IWallet {
   @override
   IWalletDatabase getDatabase() {
     return _walletDatabase;
+  }
+
+  Future<String> signMessage(String address, String message) async {
+    final walletAddress = await walletDatabase.getWalletAddress(address);
+    final walletAccount = await walletDatabase.getAccount(walletAddress.accountId);
+
+    if (walletAccount == null) {
+      throw ArgumentError("wallet not found...");
+    }
+
+    var privateKey = await getPrivateKey(walletAddress, walletAccount);
+    var wif = privateKey.toWIF();
+    var magicHashRes = magicHash(message, HdWalletUtil.getNetworkType(chain, network));
+
+    var signed = privateKey.sign(magicHashRes);
+
+    return base64.encode(signed).toUpperCase();
   }
 }

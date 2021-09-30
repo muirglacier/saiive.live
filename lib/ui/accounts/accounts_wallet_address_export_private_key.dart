@@ -73,6 +73,12 @@ class _AccountsWalletAddressExportPrivateKeyWidgetState extends State<AccountsWa
     _init();
   }
 
+  @override
+  void deactivate() {
+    super.deactivate();
+    if (_timer != null) _timer.cancel();
+  }
+
   Widget buildPrivateKeyPart(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.start, children: [
       ConstrainedBox(

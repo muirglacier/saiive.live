@@ -7,7 +7,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
-import 'package:saiive.live/network/model/account_history.dart';
 import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';

@@ -285,4 +285,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future removeAccount(WalletAccount walletAccount) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<Transaction>> getAllTransactions() async {
+    return _transactions;
+  }
 }

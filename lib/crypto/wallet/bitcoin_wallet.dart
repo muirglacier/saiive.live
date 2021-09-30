@@ -14,6 +14,12 @@ class BitcoinWallet extends Wallet {
   }
 
   @override
+  Future<int> getTxFee(int inputs, int outputs) async {
+    if (inputs == 0 && outputs == 0) return 4000; //default fee is always the same for now
+    return (inputs * 400) + (outputs * 100) + 200;
+  }
+
+  @override
   Future<bool> refreshBefore() {
     return Future.value(false);
   }

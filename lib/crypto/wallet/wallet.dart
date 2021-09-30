@@ -42,4 +42,5 @@ abstract class IWallet {
   Future<String> createAndSend(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false});
 
   Future<bool> refreshBefore();
+  Future<int> getTxFee(int inputs, int outputs);
 }

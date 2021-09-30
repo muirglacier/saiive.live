@@ -511,12 +511,17 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future syncAllInternal({StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream, force: true);
-    // await syncTransactions(loadingStream: loadingStream);
+    var ensureFuture = ensureUtxo(loadingStream: loadingStream, force: true);
+    var syncTransactionsFuture = syncTransactions(loadingStream: loadingStream);
+    await Future.wait([ensureFuture, syncTransactionsFuture]);
   }
 
   Future syncAll({StreamController<String> loadingStream}) async {
     await syncAllInternal(loadingStream: loadingStream);
+  }
+
+  Future syncAllTransactions({StreamController<String> loadingStream}) async {
+    await syncTransactions(loadingStream: loadingStream);
   }
 
   @override

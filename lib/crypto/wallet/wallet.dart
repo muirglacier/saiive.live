@@ -22,6 +22,7 @@ abstract class IWallet {
   Future<bool> hasAccounts();
 
   Future syncAll({StreamController<String> loadingStream});
+  Future syncAllTransactions({StreamController<String> loadingStream});
 
   IWalletDatabase getDatabase();
 

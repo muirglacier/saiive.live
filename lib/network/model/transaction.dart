@@ -27,7 +27,7 @@ class Transaction {
   String accountId;
 
   int get valueRaw => (value).round();
-  String get uniqueId => mintTxId + "_" + mintIndex.toString();
+  String get uniqueId => (mintTxId == null ? id : mintTxId) + "_" + mintIndex.toString();
 
   int get correctValue => (spentHeight <= 0) ? value : (value * -1);
   String get correctValueRounded => (correctValue / DefiChainConstants.COIN).toStringAsFixed(8);

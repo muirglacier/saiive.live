@@ -20,6 +20,8 @@ abstract class IWalletDatabase {
   Future removeAccount(WalletAccount walletAccount);
 
   Future clearTransactions(WalletAccount account);
+
+  Future<List<Transaction>> getAllTransactions();
   Future<List<Transaction>> getTransactions(WalletAccount account);
   Future<Transaction> getTransaction(String id);
   Future addTransaction(Transaction transaction, WalletAccount account);

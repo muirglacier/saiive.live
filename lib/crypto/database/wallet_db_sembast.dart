@@ -316,6 +316,19 @@ class SembastWalletDatabase extends IWalletDatabase {
     return WalletAccount.fromJson(await _accountV2StoreInstance.record(account).get(db));
   }
 
+  @override
+  Future<List<tx.Transaction>> getAllTransactions() async {
+    var dbStore = _transactionStoreInstance;
+
+    final db = await database;
+    var finder = Finder(sortOrders: [SortOrder('spentHeight', true)]);
+    final transactions = await dbStore.find(db, finder: finder);
+
+    final data = transactions.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+
+    return data;
+  }
+
   Future<List<tx.Transaction>> getTransactions(WalletAccount account) async {
     var dbStore = _transactionStoreInstance;
 

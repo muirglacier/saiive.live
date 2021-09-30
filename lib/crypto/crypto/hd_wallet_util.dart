@@ -216,7 +216,8 @@ class HdWalletUtil {
   }
 
   static Future<String> buildTransaction(List<tx.Transaction> inputTxs, List<Tuple2<WalletAddress, ECPair>> keys, String to, int amount, int fee, String returnAddress,
-      Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional, ChainType chain, ChainNet net) async {
+      Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional, ChainType chain, ChainNet net,
+      {int version = 4}) async {
     var network = getNetworkType(chain, net);
 
     if (inputTxs.length == 0) {
@@ -230,7 +231,7 @@ class HdWalletUtil {
     }
 
     final txb = TransactionBuilder(network: network);
-    txb.setVersion(4);
+    txb.setVersion(version);
     txb.setLockTime(0);
 
     int totalInputValue = 0;

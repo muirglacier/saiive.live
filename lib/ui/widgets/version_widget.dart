@@ -18,7 +18,7 @@ class _VersionWidget extends State<VersionWidget> {
 
   void init() async {
     _environmentType = EnvHelper.getEnvironment();
-    _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    _currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     _version = await VersionHelper().getVersion();
     setState(() {});
   }

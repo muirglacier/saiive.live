@@ -87,7 +87,7 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<String> nextFreePublicKey(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     if (_account.walletAccountType != WalletAccountType.HdAccount) {
       var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
       return walletAddresses.first.publicKey;
@@ -101,7 +101,7 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     if (_account.walletAccountType != WalletAccountType.HdAccount) {
       var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
       var walletAddress = walletAddresses.first;
@@ -114,7 +114,7 @@ class HdWallet extends IHdWallet {
     return address;
   }
 
-  Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
 
     if (startIndex > database.getAddressCreationCount()) {

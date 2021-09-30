@@ -87,8 +87,8 @@ class DesktopUnlockHandler extends BaseUnlockHandler {
     );
 
     if (inputController.confirmedInput.isNotEmpty) {
-      await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
-      await sl.get<SharedPrefsUtil>().setUseAuthentiaction(AuthMethod.PIN);
+      await sl.get<ISharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
+      await sl.get<ISharedPrefsUtil>().setUseAuthentiaction(AuthMethod.PIN);
 
       _validPin = inputController.confirmedInput;
       return inputController.confirmedInput;

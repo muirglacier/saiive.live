@@ -20,7 +20,7 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
   List<String> _phrase = [];
 
   Future saveSeed(String seed) async {
-    await sl.get<SharedPrefsUtil>().setSeedBackedUp(true);
+    await sl.get<ISharedPrefsUtil>().setSeedBackedUp(true);
     await sl.get<IVault>().setSeed(seed);
   }
 

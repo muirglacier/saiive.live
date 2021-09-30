@@ -112,7 +112,7 @@ class StateContainerState extends State<StateContainer> {
       try {
         Block blockTip = await sl.get<BlockService>().getBlockTip('DFI');
 
-        sl.get<SharedPrefsUtil>().setLastSyncedBlock(blockTip);
+        sl.get<ISharedPrefsUtil>().setLastSyncedBlock(blockTip);
 
         EventTaxiImpl.singleton().fire(BlockTipUpdatedEvent(block: blockTip));
       } catch (e) {
@@ -141,7 +141,7 @@ class StateContainerState extends State<StateContainer> {
 
     _registerBus();
     // Get theme default
-    sl.get<SharedPrefsUtil>().getTheme().then((theme) {
+    sl.get<ISharedPrefsUtil>().getTheme().then((theme) {
       updateTheme(theme);
     });
 

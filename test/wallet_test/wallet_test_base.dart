@@ -20,6 +20,7 @@ import 'mock/environment_service_mock.dart';
 import 'mock/health_service_mock.dart';
 import 'mock/http_service_mock.dart';
 import 'mock/memory_database_factory_mock.dart';
+import 'mock/sharedprefs_mock.dart';
 import 'mock/token_service_mock.dart';
 import 'mock/transaction_service_mock.dart';
 import 'mock/vault_mock.dart';
@@ -33,7 +34,7 @@ Future testSetup(String seed) async {
 }
 
 void setupTestServiceLocator(String seed) {
-  sl.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
+  sl.registerLazySingleton<ISharedPrefsUtil>(() => SharedPrefsMock());
   sl.registerLazySingleton<IVault>(() => VaultMock(seed));
 
   sl.registerSingletonAsync<IHttpService>(() async {

@@ -26,7 +26,7 @@ class _LoadingWidget extends State<LoadingWidget> {
   void initAsync() async {
     _text = widget.text;
 
-    var theme = await sl.get<SharedPrefsUtil>().getTheme();
+    var theme = await sl.get<ISharedPrefsUtil>().getTheme();
 
     setState(() {
       _theme = theme.getIndex();

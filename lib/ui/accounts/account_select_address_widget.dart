@@ -41,7 +41,7 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
 
   _init() async {
     _reset();
-    final currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     final database = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, currentNet);
 
     final accounts = await database.getAccounts();

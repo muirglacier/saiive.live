@@ -13,7 +13,7 @@ class TestInfoService implements ITestInfoService {
 
   @override
   Future showTestInfoPage(BuildContext context) async {
-    var showTestModePage = await sl.get<SharedPrefsUtil>().getShowTestModePage();
+    var showTestModePage = await sl.get<ISharedPrefsUtil>().getShowTestModePage();
 
     if (showTestModePage && !_helpPageDisplayed) {
       await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => TestRunInfoScreen()));

@@ -13,7 +13,45 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/model/available_themes.dart';
 
-class SharedPrefsUtil {
+abstract class ISharedPrefsUtil {
+  Future<void> setSeedBackedUp(bool value);
+  Future<bool> getSeedBackedUp();
+
+  Future<void> setPasswordHash(String hash);
+  Future<String> getPasswordHash();
+
+  Future setUseAuthentiaction(AuthMethod method);
+  Future<AuthenticationMethod> getAuthMethod();
+
+  Future<void> setFirstLaunch();
+  Future<bool> getFirstLaunch();
+
+  Future<void> setAddressIndex(int index, bool isChangeAddress);
+  Future<int> getAddressIndex(bool isChangeAddress);
+
+  Future<void> resetInstanceId();
+  Future<String> getInstanceId();
+
+  String getRandString(int len);
+  Future<bool> getShowTestModePage();
+
+  Future<void> setLastSyncedBlock(Block block);
+  Future<bool> hasLastSyncedBlock();
+  Future<Block> getLastSyncedBlock();
+
+  Future<void> setLanguage(LanguageSetting language);
+  Future<LanguageSetting> getLanguage();
+
+  Future<void> setTheme(ThemeSetting theme);
+  Future<ThemeSetting> getTheme();
+
+  Future<void> setNetwork(ChainNet network);
+  Future<ChainNet> getChainNetwork();
+
+  Future<void> deleteAll();
+}
+
+class SharedPrefsUtil extends ISharedPrefsUtil {
   // Keys
   static const String first_launch_key = 'saiive_first_launch';
   static const String seed_backed_up_key = 'saiive_seed_backup';

@@ -15,8 +15,8 @@ abstract class IHdWallet {
 
   Future<List<WalletAddress>> getPublicKeys(IWalletDatabase walletDatabase);
   @deprecated
-  Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType);
-  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType);
+  Future<String> nextFreePublicKey(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType);
+  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType);
 
   Future<Tuple3<int, bool, int>> nextFreePublicKeyRaw(IWalletDatabase database, bool isChangeAddress, AddressType addressType);
 

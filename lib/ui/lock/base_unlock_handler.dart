@@ -17,7 +17,7 @@ abstract class BaseUnlockHandler implements IUnlockHandler {
 
   @override
   Future<bool> hasUnlockScreenEnabled() async {
-    final hash = await sl.get<SharedPrefsUtil>().getPasswordHash();
+    final hash = await sl.get<ISharedPrefsUtil>().getPasswordHash();
     final lockEnabled = hash != null && hash.isNotEmpty;
 
     return lockEnabled;
@@ -25,7 +25,7 @@ abstract class BaseUnlockHandler implements IUnlockHandler {
 
   Future<bool> isValid(String input) async {
     final digest = hashPassword(input);
-    final savedHash = await sl.get<SharedPrefsUtil>().getPasswordHash();
+    final savedHash = await sl.get<ISharedPrefsUtil>().getPasswordHash();
     return digest == savedHash;
   }
 }

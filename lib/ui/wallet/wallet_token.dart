@@ -80,7 +80,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   void loadChainNetwork() async {
-    _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    _chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
   }
 
   @override

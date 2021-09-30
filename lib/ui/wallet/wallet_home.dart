@@ -151,10 +151,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   _initLastSyncedBlock() async {
-    var hasLastBlock = await sl.get<SharedPrefsUtil>().hasLastSyncedBlock();
+    var hasLastBlock = await sl.get<ISharedPrefsUtil>().hasLastSyncedBlock();
 
     if (hasLastBlock) {
-      var block = await sl.get<SharedPrefsUtil>().getLastSyncedBlock();
+      var block = await sl.get<ISharedPrefsUtil>().getLastSyncedBlock();
 
       setState(() {
         _lastSyncBlockTip = block;

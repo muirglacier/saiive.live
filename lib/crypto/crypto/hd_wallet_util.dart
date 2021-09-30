@@ -191,6 +191,30 @@ class HdWalletUtil {
     return 9;
   }
 
+  static int addInput(TransactionBuilder txb, ECPair keyPair, tx.Transaction tx, WalletAddress addressInfo, NetworkType network) {
+    if (addressInfo.addressType == AddressType.Bech32) {
+      final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey), network: network).data;
+
+      return txb.addInput(tx.mintTxId, tx.mintIndex, null, p2wpkh.output);
+    }
+    return txb.addInput(tx.mintTxId, tx.mintIndex);
+  }
+
+  static void signInput(TransactionBuilder txb, ECPair keyPair, WalletAddress addressInfo, int vin, int witnessValue) {
+    if (addressInfo.addressType == AddressType.P2SHSegwit) {
+      final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;
+      final redeemScript = p2wpkh.output;
+
+      txb.sign(vin: vin, keyPair: keyPair, witnessValue: witnessValue, redeemScript: redeemScript);
+    } else if (addressInfo.addressType == AddressType.Bech32) {
+      txb.sign(vin: vin, keyPair: keyPair, witnessValue: witnessValue);
+    } else if (addressInfo.addressType == AddressType.Legacy) {
+      txb.sign(vin: vin, keyPair: keyPair);
+    } else {
+      throw new ArgumentError("${addressInfo.addressType} not supported...");
+    }
+  }
+
   static Future<String> buildTransaction(List<tx.Transaction> inputTxs, List<Tuple2<WalletAddress, ECPair>> keys, String to, int amount, int fee, String returnAddress,
       Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional, ChainType chain, ChainNet net) async {
     var network = getNetworkType(chain, net);
@@ -214,13 +238,7 @@ class HdWalletUtil {
     for (final tx in inputTxs) {
       var key = keys[pos];
 
-      if (key.item1.addressType == AddressType.Bech32) {
-        final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.item2.publicKey), network: network).data;
-
-        txb.addInput(tx.mintTxId, tx.mintIndex, null, p2wpkh.output);
-      } else {
-        txb.addInput(tx.mintTxId, tx.mintIndex);
-      }
+      addInput(txb, key.item2, tx, key.item1, network);
 
       final mintTxId = tx.mintTxId;
       final mintIndex = tx.mintIndex;
@@ -262,20 +280,11 @@ class HdWalletUtil {
     await additional(txb, inputTxs, network);
 
     int index = 0;
+
     for (final key in keys) {
       final witnessValue = inputTxs[index].valueRaw;
-      if (key.item1.addressType == AddressType.P2SHSegwit) {
-        final p2wpkh = P2WPKH(data: PaymentData(pubkey: key.item2.publicKey)).data;
-        final redeemScript = p2wpkh.output;
 
-        txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue, redeemScript: redeemScript);
-      } else if (key.item1.addressType == AddressType.Bech32) {
-        txb.sign(vin: index, keyPair: key.item2, witnessValue: witnessValue);
-      } else if (key.item1.addressType == AddressType.Legacy) {
-        txb.sign(vin: index, keyPair: key.item2);
-      } else {
-        throw new ArgumentError("${key.item1.addressType} not supported...");
-      }
+      HdWalletUtil.signInput(txb, key.item2, key.item1, index, witnessValue);
       index++;
     }
 

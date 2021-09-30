@@ -144,6 +144,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       _blockTipUpdatedEvent = EventTaxiImpl.singleton().registerTo<BlockTipUpdatedEvent>().listen((event) async {
         setState(() {
           _lastSyncBlockTip = event.block;
+          _isSyncing = false;
         });
       });
     }

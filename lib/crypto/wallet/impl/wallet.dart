@@ -415,7 +415,7 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future<TransactionData> createTxAndWaitInternal(String txHex, {StreamController<String> loadingStream}) async {
-    final r = RetryOptions(maxAttempts: 50, maxDelay: Duration(seconds: 5));
+    final r = RetryOptions(maxAttempts: 50, maxDelay: Duration(seconds: 10));
     // bool ensureUtxoCalled = false;
 
     LogHelper.instance.d("commiting tx $txHex");
@@ -424,11 +424,6 @@ abstract class Wallet extends IWallet {
         return await _apiService.transactionService.sendRawTransaction(ChainHelper.chainTypeString(_chain), txHex);
       }, retryIf: (e) async {
         if (e is HttpException) {
-          if (e.error.error.contains("txn-mempool-conflict")) {
-            LogHelper.instance.e("mempool-conflict", e);
-            loadingStream?.add(S.current.wallet_operation_mempool_conflict_retry);
-            return true;
-          }
           return false;
         }
         return false;

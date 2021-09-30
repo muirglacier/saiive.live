@@ -71,7 +71,7 @@ class HdWallet extends IHdWallet {
       LogHelper.instance.d("Create address for $walletType: $pubKey");
       return await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
-    return alreadyExists;
+    return await walletDatabase.getWalletAddressById(_account.account, isChangeAddress, index, addressType);
   }
 
   WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
@@ -116,6 +116,10 @@ class HdWallet extends IHdWallet {
 
   Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
+
+    if (startIndex > database.getAddressCreationCount()) {
+      startIndex = 0;
+    }
 
     if (address == null) {
       address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);

@@ -117,7 +117,7 @@ class HdWallet extends IHdWallet {
   Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
 
-    if (isChangeAddress && startIndex > database.getAddressCreationCount()) {
+    if (isChangeAddress && startIndex > database.getReturnAddressCreationCount()) {
       startIndex = 0;
     }
 
@@ -126,7 +126,7 @@ class HdWallet extends IHdWallet {
     }
     var addressUsed = await database.addressAlreadyUsed(address.publicKey);
 
-    if (addressUsed || address.createdAt != null) {
+    if ((addressUsed || address.createdAt != null) && !isChangeAddress) {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
     }
 

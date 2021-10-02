@@ -290,4 +290,9 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future<List<Transaction>> getAllTransactions() async {
     return _transactions;
   }
+
+  @override
+  int getReturnAddressCreationCount() {
+    return 10;
+  }
 }

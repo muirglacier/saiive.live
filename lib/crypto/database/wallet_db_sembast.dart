@@ -601,4 +601,9 @@ class SembastWalletDatabase extends IWalletDatabase {
   int getAddressCreationCount() {
     return 2;
   }
+
+  @override
+  int getReturnAddressCreationCount() {
+    return 20;
+  }
 }

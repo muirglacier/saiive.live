@@ -613,7 +613,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-dev'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-dev'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -635,25 +635,25 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.developer-id.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi.mac.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.installer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
@@ -750,7 +750,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-staging'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
       - task: replacetokens@4
         inputs:
@@ -770,25 +770,25 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.developer-id.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi.mac.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.installer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
@@ -884,7 +884,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -906,25 +906,25 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.developer-id.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi.mac.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.installer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
@@ -1007,7 +1007,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -1029,25 +1029,25 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.developer-id.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.defi.mac.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.installer.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1

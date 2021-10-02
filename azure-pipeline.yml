@@ -405,7 +405,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'saiive.live.cert.password, azure-blob-key-staging'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -427,7 +427,7 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.distribution.p12'
-          certPwd: '$(saiive.live.cert.password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
@@ -501,7 +501,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'saiive.live.cert.password, azure-blob-key-prod'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -523,7 +523,7 @@ stages:
       - task: InstallAppleCertificate@2
         inputs:
           certSecureFile: 'at.saiive.live.dist.distribution.p12'
-          certPwd: '$(saiive.live.cert.password)'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1

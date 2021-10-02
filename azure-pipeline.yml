@@ -426,7 +426,7 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'at.saiive.live.distribution.p12'
+          certSecureFile: 'at.saiive.live.defiribution.p12'
           certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
@@ -522,24 +522,24 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'at.saiive.live.distribution.p12'
+          certSecureFile: 'at.saiive.live.defi.distribution.p12'
           certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.dist.appstore.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.appstore.mobileprovision'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.dist.watchkitapp.appstore.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.watchkitapp.appstore.mobileprovision'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.dist.watchkitapp.extension.appstore.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.watchkitapp.extension.appstore.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"

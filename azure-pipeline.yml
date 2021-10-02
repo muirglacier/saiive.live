@@ -426,7 +426,7 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'at.saiive.live.defiribution.p12'
+          certSecureFile: 'at.saiive.live.defi.appstore.p12'
           certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 

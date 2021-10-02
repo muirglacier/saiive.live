@@ -42,7 +42,7 @@ import 'network/model/ivault.dart';
 GetIt sl = GetIt.instance;
 
 void setupServiceLocator() {
-  sl.registerLazySingleton<SharedPrefsUtil>(() => SharedPrefsUtil());
+  sl.registerLazySingleton<ISharedPrefsUtil>(() => SharedPrefsUtil());
   sl.registerLazySingleton<IVault>(() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       return DesktopVault();

@@ -21,7 +21,7 @@ class TransactionSuccessScreen extends StatelessWidget {
   TransactionSuccessScreen(this.chain, this.txId, this.text, {this.additional, this.showTxText});
 
   openExplorerLink(BuildContext context) async {
-    var _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    var _chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     var uri = DefiChainConstants.getExplorerUrl(this.chain, _chainNet, txId);
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       if (await canLaunch(uri)) {
@@ -78,11 +78,11 @@ class TransactionSuccessScreen extends StatelessWidget {
                 await this.openExplorerLink(context);
               },
               child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Text(
-                  txId,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-              )))
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                    txId,
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                  )))
         ])));
   }
 }

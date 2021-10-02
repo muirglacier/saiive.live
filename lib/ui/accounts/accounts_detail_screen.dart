@@ -122,7 +122,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
                   child: Text(S.of(context).ok),
                   onPressed: () async {
                     final walletDbFactory = sl.get<IWalletDatabaseFactory>();
-                    final currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+                    final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
                     final walletDb = await walletDbFactory.getDatabase(widget.walletAccount.chain, currentNet);
 
                     await walletDb.removeAccount(widget.walletAccount);

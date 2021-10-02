@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +51,19 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
     _init();
 
     _addressType = widget.walletAccount.defaultAddressType;
+  }
+
+  copyPubKey() async {
+    await ClipboardManager.copyToClipBoard(
+      widget.walletAddress.publicKey,
+    );
+    ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
+      content: Text(S.of(context).receive_address_copied_to_clipboard),
+    ));
+
+    await Clipboard.setData(new ClipboardData(
+      text: widget.walletAddress.publicKey,
+    ));
   }
 
   _buildAccountAddressAddScreen(BuildContext context) {
@@ -165,7 +180,16 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                           body: Column(children: <Widget>[
                             ListTile(
                               leading: Text(S.of(context).address + ": "),
-                              title: Text(widget.walletAddress.publicKey),
+                              title: Row(children: [
+                                SelectableText(widget.walletAddress.publicKey),
+                                SizedBox(width: 10),
+                                if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+                                  IconButton(
+                                      onPressed: () async {
+                                        await copyPubKey();
+                                      },
+                                      icon: Icon(Icons.copy))
+                              ]),
                             ),
                             if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount)
                               ListTile(
@@ -210,22 +234,12 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                           },
                           body: Column(children: <Widget>[
                             WalletReceiveWidget(pubKey: widget.walletAddress.publicKey, chain: widget.walletAccount.chain, showOnlyQr: true),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                                    await ClipboardManager.copyToClipBoard(
-                                      widget.walletAddress.publicKey,
-                                    );
-                                    ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
-                                      content: Text(S.of(context).receive_address_copied_to_clipboard),
-                                    ));
-
-                                    await Clipboard.setData(new ClipboardData(
-                                      text: widget.walletAddress.publicKey,
-                                    ));
-                                  });
-                                },
-                                child: Text(S.of(context).copy)),
+                            if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    await copyPubKey();
+                                  },
+                                  child: Text(S.of(context).copy)),
                           ]))
                     ])),
           if (!widget.isNewAddress)

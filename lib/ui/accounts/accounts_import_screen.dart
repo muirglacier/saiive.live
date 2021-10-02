@@ -87,7 +87,7 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
     data = data.trimLeft();
     data = data.trimRight();
 
-    final currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     final walletDbFactory = sl.get<IWalletDatabaseFactory>();
     final walletDb = await walletDbFactory.getDatabase(widget.chainType, currentNet);
 

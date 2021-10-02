@@ -56,9 +56,9 @@ class MobileUnlockHandler extends BaseUnlockHandler {
     );
 
     if (inputController.confirmedInput.isNotEmpty) {
-      await sl.get<SharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
+      await sl.get<ISharedPrefsUtil>().setPasswordHash(hashPassword(inputController.confirmedInput));
       authMethod = AuthMethod.PIN;
-      await sl.get<SharedPrefsUtil>().setUseAuthentiaction(authMethod);
+      await sl.get<ISharedPrefsUtil>().setUseAuthentiaction(authMethod);
 
       return inputController.confirmedInput;
     }

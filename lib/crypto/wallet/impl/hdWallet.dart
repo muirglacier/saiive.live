@@ -71,7 +71,7 @@ class HdWallet extends IHdWallet {
       LogHelper.instance.d("Create address for $walletType: $pubKey");
       return await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
-    return alreadyExists;
+    return await walletDatabase.getWalletAddressById(_account.account, isChangeAddress, index, addressType);
   }
 
   WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
@@ -87,7 +87,7 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<String> nextFreePublicKey(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     if (_account.walletAccountType != WalletAccountType.HdAccount) {
       var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
       return walletAddresses.first.publicKey;
@@ -101,7 +101,7 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     if (_account.walletAccountType != WalletAccountType.HdAccount) {
       var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
       var walletAddress = walletAddresses.first;
@@ -114,15 +114,19 @@ class HdWallet extends IHdWallet {
     return address;
   }
 
-  Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
+
+    if (isChangeAddress && startIndex > database.getReturnAddressCreationCount()) {
+      startIndex = 0;
+    }
 
     if (address == null) {
       address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
     }
     var addressUsed = await database.addressAlreadyUsed(address.publicKey);
 
-    if (addressUsed || address.createdAt != null) {
+    if ((addressUsed || address.createdAt != null) && !isChangeAddress) {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
     }
 

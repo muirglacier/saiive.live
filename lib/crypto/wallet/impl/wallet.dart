@@ -43,7 +43,7 @@ abstract class Wallet extends IWallet {
   final ChainType _chain;
   ChainNet _network;
 
-  SharedPrefsUtil _sharedPrefsUtil;
+  ISharedPrefsUtil _sharedPrefsUtil;
 
   String _password;
   String _seed;
@@ -92,7 +92,7 @@ abstract class Wallet extends IWallet {
       return;
     }
     _apiService = sl.get<ApiService>();
-    _sharedPrefsUtil = sl.get<SharedPrefsUtil>();
+    _sharedPrefsUtil = sl.get<ISharedPrefsUtil>();
 
     _network = await _sharedPrefsUtil.getChainNetwork();
     _walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(_chain, _network);
@@ -292,8 +292,8 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax);
+  Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false, int version = 4}) async {
+    final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax, version: version);
 
     var tx = await createTxAndWait(txb, loadingStream: loadingStream);
 
@@ -325,7 +325,7 @@ abstract class Wallet extends IWallet {
   @protected
   Future<Tuple3<String, List<tx.Transaction>, String>> createBaseTransaction(
       int amount, String to, String changeAddress, int additionalFees, Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional,
-      {bool sendMax = false}) async {
+      {bool sendMax = false, int version = 4}) async {
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (amount > tokenBalance?.balance) {
@@ -381,7 +381,7 @@ abstract class Wallet extends IWallet {
       throw new ArgumentError("Insufficent funds");
     }
 
-    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, to, amount, fees, changeAddress, additional, chain, network);
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, to, amount, fees, changeAddress, additional, chain, network, version: version);
     return Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, changeAddress);
   }
 
@@ -416,7 +416,7 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future<TransactionData> createTxAndWaitInternal(String txHex, {StreamController<String> loadingStream}) async {
-    final r = RetryOptions(maxAttempts: 50, maxDelay: Duration(seconds: 5));
+    final r = RetryOptions(maxAttempts: 50, maxDelay: Duration(seconds: 10));
     // bool ensureUtxoCalled = false;
 
     LogHelper.instance.d("commiting tx $txHex");
@@ -425,11 +425,6 @@ abstract class Wallet extends IWallet {
         return await _apiService.transactionService.sendRawTransaction(ChainHelper.chainTypeString(_chain), txHex);
       }, retryIf: (e) async {
         if (e is HttpException) {
-          if (e.error.error.contains("txn-mempool-conflict")) {
-            LogHelper.instance.e("mempool-conflict", e);
-            loadingStream?.add(S.current.wallet_operation_mempool_conflict_retry);
-            return true;
-          }
           return false;
         }
         return false;
@@ -439,7 +434,9 @@ abstract class Wallet extends IWallet {
 
       LogHelper.instance.i("commited tx with id " + txId);
 
-      loadingStream.add(S.current.wallet_operation_wait_for_confirmation);
+      if (S.current != null) {
+        loadingStream.add(S.current.wallet_operation_wait_for_confirmation);
+      }
 
       final response = await r.retry(() async {
         return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId);
@@ -476,8 +473,8 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future ensureUtxo({StreamController<String> loadingStream}) async {
-    if (!await refreshBefore()) {
+  Future ensureUtxo({StreamController<String> loadingStream, bool force = false}) async {
+    if (!await refreshBefore() && !force) {
       return;
     }
 
@@ -515,12 +512,17 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future syncAllInternal({StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
-    // await syncTransactions(loadingStream: loadingStream);
+    var ensureFuture = ensureUtxo(loadingStream: loadingStream, force: true);
+    var syncTransactionsFuture = syncTransactions(loadingStream: loadingStream);
+    await Future.wait([ensureFuture, syncTransactionsFuture]);
   }
 
   Future syncAll({StreamController<String> loadingStream}) async {
     await syncAllInternal(loadingStream: loadingStream);
+  }
+
+  Future syncAllTransactions({StreamController<String> loadingStream}) async {
+    await syncTransactions(loadingStream: loadingStream);
   }
 
   @override

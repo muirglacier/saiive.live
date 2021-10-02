@@ -82,32 +82,16 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
       final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
       if (inputContainsAuthTx.isEmpty) {
-        var vin = -1;
-        if (addressInfo.addressType == AddressType.Bech32) {
-          final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey), network: network).data;
+        var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
 
-          vin = txb.addInput(tx.mintTxId, tx.mintIndex, null, p2wpkh.output);
-        } else {
-          vin = txb.addInput(tx.mintTxId, tx.mintIndex);
-        }
+        var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
         if (tx.value > 0) {
           txb.addOutput(tx.address, tx.value);
         }
 
         final witnessValue = tx.valueRaw;
-        if (addressInfo.addressType == AddressType.P2SHSegwit) {
-          final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;
-          final redeemScript = p2wpkh.output;
-
-          txb.sign(vin: vin, keyPair: keyPair, witnessValue: witnessValue, redeemScript: redeemScript);
-        } else if (addressInfo.addressType == AddressType.Bech32) {
-          txb.sign(vin: vin, keyPair: keyPair, witnessValue: witnessValue);
-        } else if (addressInfo.addressType == AddressType.Legacy) {
-          txb.sign(vin: vin, keyPair: keyPair);
-        } else {
-          throw new ArgumentError("${addressInfo.addressType} not supported...");
-        }
+        HdWalletUtil.signInput(txb, keyPair, addressInfo, vin, witnessValue);
       }
     });
 
@@ -248,15 +232,16 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
           throw new ReadOnlyAccountError();
         }
         var keyPair = await getPrivateKey(addressInfo, walletAccount);
+        var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
 
-        var vin = txb.addInput(tx.mintTxId, tx.mintIndex);
+        var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
+
         if (tx.value > 0) {
           txb.addOutput(tx.address, tx.value);
         }
-        final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;
-        final redeemScript = p2wpkh.output;
 
-        txb.sign(vin: vin, keyPair: keyPair, witnessValue: tx.value, redeemScript: redeemScript);
+        final witnessValue = tx.valueRaw;
+        HdWalletUtil.signInput(txb, keyPair, addressInfo, vin, witnessValue);
       }
     });
     return txb;
@@ -471,24 +456,20 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         checkAmount -= needAmount;
       });
 
-      var txData = await createTxAndWait(txs, loadingStream: loadingStream);
+      await createTxAndWait(txs, loadingStream: loadingStream);
 
-      for (var input in txData.details.inputs) {
-        if (await walletDatabase.isOwnAddress(input.address)) {
-          var existingBalance = await walletDatabase.getAccountBalanceForPubKey(input.address, DeFiConstants.DefiAccountSymbol);
-          print("test");
-          final uaccBalance = new Account(
-              address: input.address,
-              balance: needAmount + (existingBalance == null ? 0 : existingBalance.balance),
-              token: DeFiConstants.DefiAccountSymbol,
-              chain: ChainHelper.chainTypeString(chain),
-              network: ChainHelper.chainNetworkString(network));
-          final addressInfo = await walletDatabase.getWalletAddress(input.address);
-          final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+      var existingBalance = await walletDatabase.getAccountBalanceForPubKey(input.address, DeFiConstants.DefiAccountSymbol);
 
-          await walletDatabase.setAccountBalance(uaccBalance, walletAccount);
-        }
-      }
+      final uaccBalance = new Account(
+          address: input.address,
+          balance: needAmount + (existingBalance == null ? 0 : existingBalance.balance),
+          token: DeFiConstants.DefiAccountSymbol,
+          chain: ChainHelper.chainTypeString(chain),
+          network: ChainHelper.chainNetworkString(network));
+      final addressInfo = await walletDatabase.getWalletAddress(input.address);
+      final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+      await walletDatabase.setAccountBalance(uaccBalance, walletAccount);
       if (checkAmount <= 0) {
         break;
       }

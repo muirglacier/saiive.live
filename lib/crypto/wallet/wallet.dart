@@ -22,6 +22,7 @@ abstract class IWallet {
   Future<bool> hasAccounts();
 
   Future syncAll({StreamController<String> loadingStream});
+  Future syncAllTransactions({StreamController<String> loadingStream});
 
   IWalletDatabase getDatabase();
 
@@ -43,4 +44,5 @@ abstract class IWallet {
   Future<bool> refreshBefore();
 
   Future<String> signMessage(String address, String message);
+  Future<int> getTxFee(int inputs, int outputs);
 }

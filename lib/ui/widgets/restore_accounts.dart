@@ -24,7 +24,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
     Wakelock.enable();
 
     try {
-      final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+      final network = await sl.get<ISharedPrefsUtil>().getChainNetwork();
 
       final walletService = sl.get<IWalletService>();
 

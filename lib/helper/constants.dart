@@ -7,6 +7,7 @@ class DefiChainConstants {
   static const String ThemeBrightness = "theme_brightness";
 
   static const int COIN = 100000000;
+  static const double COIND = 100000000.0;
 
   static getExplorerUrlForNet(ChainType chainType, ChainNet net) {
     switch (net) {

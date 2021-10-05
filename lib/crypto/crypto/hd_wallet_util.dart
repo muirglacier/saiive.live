@@ -200,6 +200,13 @@ class HdWalletUtil {
     return txb.addInput(tx.mintTxId, tx.mintIndex);
   }
 
+  static String signString(ECPair privateKey, String message, ChainType chain, ChainNet net) {
+    var network = getNetworkType(chain, net);
+    var signed = privateKey.signMessage(message, network);
+
+    return signed;
+  }
+
   static void signInput(TransactionBuilder txb, ECPair keyPair, WalletAddress addressInfo, int vin, int witnessValue) {
     if (addressInfo.addressType == AddressType.P2SHSegwit) {
       final p2wpkh = P2WPKH(data: PaymentData(pubkey: keyPair.publicKey)).data;

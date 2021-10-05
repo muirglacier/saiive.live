@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
@@ -5,6 +7,8 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
+import 'package:saiive.live/ui/utils/webview.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DfxBuyWidget extends StatefulWidget {
   DfxBuyWidget();
@@ -37,7 +41,6 @@ class _DfxBuyWidget extends State<DfxBuyWidget> {
   Future<String> signMessage(String address) async {
     final wallet = sl.get<DeFiChainWallet>();
     var message = "By_signing_this_message,_you_confirm_that_you_are_the_sole_owner_of_the_provided_DeFiChain_address_and_are_in_possession_of_its_private_key._Your_ID:_$address";
-    print(message);
     return await wallet.signMessage(address, message);
   }
 
@@ -62,7 +65,13 @@ class _DfxBuyWidget extends State<DfxBuyWidget> {
                 ? null
                 : () async {
                     var url = await buildUrl(_buyAddress.publicKey);
-                    print(url);
+                    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      }
+                    } else {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WebViewScreen(url, "DFX.swiss", canOpenInBrowser: true)));
+                    }
                   },
             child: Text("Buy"))
       ],

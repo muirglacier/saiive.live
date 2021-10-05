@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:core';
 import 'dart:typed_data';
 
@@ -14,7 +13,7 @@ import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/impl/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
@@ -137,7 +136,7 @@ abstract class Wallet extends IWallet {
   String get walletType => ChainHelper.chainTypeString(_chain);
 
   @override
-  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress) async {
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, adressType.AddressType addressType, bool isChangeAddress) async {
     isInitialzed();
 
     assert(_wallets.containsKey(walletAccount.uniqueId));
@@ -171,7 +170,7 @@ abstract class Wallet extends IWallet {
     return keys;
   }
 
-  Future<String> getPublicKey(bool isChangeAddress, AddressType addressType) async {
+  Future<String> getPublicKey(bool isChangeAddress, adressType.AddressType addressType) async {
     var accounts = await _walletDatabase.getAccounts();
     accounts = accounts.where((element) => element.chain == _chain).toList();
     accounts = accounts.where((element) => element.selected).toList();
@@ -539,11 +538,7 @@ abstract class Wallet extends IWallet {
     }
 
     var privateKey = await getPrivateKey(walletAddress, walletAccount);
-    var wif = privateKey.toWIF();
-    var magicHashRes = magicHash(message, HdWalletUtil.getNetworkType(chain, network));
 
-    var signed = privateKey.sign(magicHashRes);
-
-    return base64.encode(signed).toUpperCase();
+    return HdWalletUtil.signString(privateKey, message, _chain, _network);
   }
 }

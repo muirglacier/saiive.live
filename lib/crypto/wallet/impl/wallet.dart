@@ -13,7 +13,7 @@ import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/impl/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
@@ -136,7 +136,7 @@ abstract class Wallet extends IWallet {
   String get walletType => ChainHelper.chainTypeString(_chain);
 
   @override
-  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress) async {
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, adressType.AddressType addressType, bool isChangeAddress) async {
     isInitialzed();
 
     assert(_wallets.containsKey(walletAccount.uniqueId));
@@ -170,7 +170,7 @@ abstract class Wallet extends IWallet {
     return keys;
   }
 
-  Future<String> getPublicKey(bool isChangeAddress, AddressType addressType) async {
+  Future<String> getPublicKey(bool isChangeAddress, adressType.AddressType addressType) async {
     var accounts = await _walletDatabase.getAccounts();
     accounts = accounts.where((element) => element.chain == _chain).toList();
     accounts = accounts.where((element) => element.selected).toList();
@@ -527,5 +527,18 @@ abstract class Wallet extends IWallet {
   @override
   IWalletDatabase getDatabase() {
     return _walletDatabase;
+  }
+
+  Future<String> signMessage(String address, String message) async {
+    final walletAddress = await walletDatabase.getWalletAddress(address);
+    final walletAccount = await walletDatabase.getAccount(walletAddress.accountId);
+
+    if (walletAccount == null) {
+      throw ArgumentError("wallet not found...");
+    }
+
+    var privateKey = await getPrivateKey(walletAddress, walletAccount);
+
+    return HdWalletUtil.signString(privateKey, message, _chain, _network);
   }
 }

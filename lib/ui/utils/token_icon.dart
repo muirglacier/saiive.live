@@ -46,7 +46,9 @@ class _TokenIconState extends State<TokenIcon> {
                     width: 32,
                     height: 32,
                     child: CircleAvatar(
-                        backgroundColor: _colorList[widget._token], radius: 16, child: Text(widget._token.substring(0, 1).toUpperCase(), style: TextStyle(fontSize: 18, color: Colors.black))));
+                        backgroundColor: _colorList[widget._token],
+                        radius: 16,
+                        child: Text(widget._token.substring(0, 1).toUpperCase(), style: TextStyle(fontSize: 18, color: Colors.black))));
               }
 
               return SizedBox(

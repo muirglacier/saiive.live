@@ -2194,6 +2194,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Buy/Sell DFI`
+  String get dfx_buy_title {
+    return Intl.message(
+      'Buy/Sell DFI',
+      name: 'dfx_buy_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buy address`
+  String get dfx_buy_address {
+    return Intl.message(
+      'Buy address',
+      name: 'dfx_buy_address',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

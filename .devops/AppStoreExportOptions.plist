@@ -13,7 +13,7 @@
         <key>at.saiive.live.defi.watchkitapp</key>
         <string>at.saiive.live.defi WatchKitApp AppStore</string>
         <key>at.saiive.live.defi.watchkitapp.watchkitextension</key>
-        <string>at.saiive.live WatchKitApp Extension AppStore</string>
+        <string>at.saiive.live.defi WatchKitApp Extension AppStore</string>
     </dict>
     <key>signingCertificate</key>
     <string>Apple Distribution</string>

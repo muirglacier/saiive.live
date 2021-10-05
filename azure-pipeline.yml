@@ -984,7 +984,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/productbuild --component build/macos/Build/Products/Release/saiive.live.app /Applications --sign E220D8D5B09C6C7C345DE6EF780C0FBB9CA0EA08 saiive.live.pkg
+            /usr/bin/productbuild --component build/macos/Build/Products/Release/saiive.live.app /Applications --sign B4E2B2EC168B783521C7F2B84902727375ED08F2 saiive.live.pkg
 
       - task: CopyFiles@2
         displayName: "Copy artifacts pkg"

@@ -276,7 +276,7 @@ class _DexScreen extends State<DexScreen> {
 
     _amountToController.text = '-';
 
-    handleChangeTo();
+    handleChangeFrom();
   }
 
   handleChangeFromToken() {
@@ -285,7 +285,7 @@ class _DexScreen extends State<DexScreen> {
 
     _amountToController.text = '-';
 
-    handleChangeFrom();
+    handleChangeTo();
   }
 
   interchangeSymbols() {
@@ -295,8 +295,6 @@ class _DexScreen extends State<DexScreen> {
     _amountTo = null;
     _amountFrom = null;
 
-    handleChangeFrom();
-
     setState(() {
       _selectedValueTo = _selectedValueFrom;
       _toTokens = _fromTokens;
@@ -304,6 +302,8 @@ class _DexScreen extends State<DexScreen> {
       _selectedValueFrom = backupTo;
       _fromTokens = backupToTokens;
     });
+
+    handleChangeFrom();
   }
 
   handleChangeFrom() async {
@@ -328,15 +328,15 @@ class _DexScreen extends State<DexScreen> {
     });
 
     if (null == amount) {
-      _amountToController.text = '-';
+      _amountToController.text = '';
     } else {
-      var amount = (_selectedPoolPair.reserveA / _selectedPoolPair.reserveB);
+      amount = _aToBPrice * _amountFrom;
 
       setState(() {
         _amountTo = amount;
         _estimatedSwapAmount = calculateEstimatedAmount(_amountFrom, _selectedPoolPair.reserveA, _aToBPrice);
+        _amountToController.text = amount.toString();
       });
-      _amountToController.text = amount.toString();
 
       getConversionRatio();
     }
@@ -367,9 +367,9 @@ class _DexScreen extends State<DexScreen> {
     });
 
     if (null == amount) {
-      _amountFromController.text = '-';
+      _amountFromController.text = '';
     } else {
-      var amount = _selectedPoolPair.reserveB / _selectedPoolPair.reserveA;
+      amount = _aToBPrice * _amountTo;
 
       setState(() {
         _amountFrom = amount;
@@ -382,6 +382,7 @@ class _DexScreen extends State<DexScreen> {
     }
     checkSufficientFunds();
   }
+
 
   calculateEstimatedAmount(double tokenAAmount, double reserveA, double price) {
     var slippage = 1 - (tokenAAmount / reserveA);

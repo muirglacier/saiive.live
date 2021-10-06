@@ -176,61 +176,69 @@ class HdWallet extends IHdWallet {
 
   @override
   Future syncWallet(IWalletDatabase database, {StreamController<String> loadingStream}) async {
-    loadingStream?.add(S.current.wallet_operation_refresh_utxo);
+    try {
+      loadingStream?.add(S.current.wallet_operation_refresh_utxo);
 
-    var newUtxos = List<Transaction>.empty(growable: true);
-    var newBalance = List<KeyAccountWrapper>.empty(growable: true);
+      var newUtxos = List<Transaction>.empty(growable: true);
+      var newBalance = List<KeyAccountWrapper>.empty(growable: true);
 
-    final account = await database.getAccount(this._account.uniqueId);
+      final account = await database.getAccount(this._account.uniqueId);
 
-    if (account != null && account.selected) {
-      await _syncWallet(database, (addresses, pos, max) async {
-        loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
-        final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
-        utxo.forEach((element) {
-          LogHelper.instance.d("UTXO tx ${element.mintTxId} for ${element.address} with value ${element.value} (${element.valueRaw})(${element.correctValueRounded})");
-        });
-        newUtxos.addAll(utxo);
+      if (account != null && account.selected) {
+        await _syncWallet(database, (addresses, pos, max) async {
+          loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
+          final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
+          utxo.forEach((element) {
+            LogHelper.instance.d("UTXO tx ${element.mintTxId} for ${element.address} with value ${element.value} (${element.valueRaw})(${element.correctValueRounded})");
+          });
+          newUtxos.addAll(utxo);
 
-        if (_chain == ChainType.DeFiChain) {
-          final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
-          newBalance.addAll(balances);
-        }
-      }, loadingStream: loadingStream);
-    }
-    await database.clearUnspentTransactions(account);
-    newUtxos.forEach((element) async {
-      await database.addUnspentTransaction(element, account);
-    });
+          if (_chain == ChainType.DeFiChain) {
+            final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
+            newBalance.addAll(balances);
+          }
+        }, loadingStream: loadingStream);
+      }
+      await database.clearUnspentTransactions(account);
+      newUtxos.forEach((element) async {
+        await database.addUnspentTransaction(element, account);
+      });
 
-    if (account != null) {
-      await database.clearAccountBalances(account);
-      for (final acc in newBalance) {
-        for (final element in acc.accounts) {
-          await database.setAccountBalance(element, account);
+      if (account != null) {
+        await database.clearAccountBalances(account);
+        for (final acc in newBalance) {
+          for (final element in acc.accounts) {
+            await database.setAccountBalance(element, account);
+          }
         }
       }
-    }
 
-    loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+      loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+    } catch (e) {
+      LogHelper.instance.e(e);
+    }
   }
 
   @override
   Future syncWalletTransactions(IWalletDatabase database, {StreamController<String> loadingStream}) async {
-    final account = await database.getAccount(this._account.uniqueId);
-    if (account != null) {
-      await database.clearTransactions(account);
+    try {
+      final account = await database.getAccount(this._account.uniqueId);
+      if (account != null) {
+        await database.clearTransactions(account);
 
-      loadingStream?.add(S.current.wallet_operation_refresh_utxo);
-      await _syncWallet(database, (addresses, pos, max) async {
-        loadingStream?.add(S.current.wallet_operation_refresh_tx(pos, max));
-        final txs = await _apiService.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(_chain), addresses);
+        loadingStream?.add(S.current.wallet_operation_refresh_utxo);
+        await _syncWallet(database, (addresses, pos, max) async {
+          loadingStream?.add(S.current.wallet_operation_refresh_tx(pos, max));
+          final txs = await _apiService.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(_chain), addresses);
 
-        txs.forEach((element) async {
-          await database.addTransaction(element, account);
-        });
-      }, loadingStream: loadingStream);
-      loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+          txs.forEach((element) async {
+            await database.addTransaction(element, account);
+          });
+        }, loadingStream: loadingStream);
+        loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+      }
+    } catch (e) {
+      LogHelper.instance.e(e);
     }
   }
 }

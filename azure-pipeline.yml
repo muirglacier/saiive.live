@@ -8,9 +8,9 @@ name: $(BuildID)
 variables:
 - group: saiive.live
 - name: AppVersion
-  value: 0.7
+  value: 0.8
 - name: AppVersion_Minor
-  value: 7
+  value: 8
 - name: AppVersion_Major
   value: 0
 

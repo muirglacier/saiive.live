@@ -3,8 +3,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 abstract class IHealthService {
   Future checkHealth(BuildContext context);
@@ -37,16 +35,9 @@ class HealthService implements IHealthService {
       try {
         // var message = S.of(context).wallet_offline
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(S.of(context).wallet_offline(deadChainsString)),
-            // duration: Duration(days: 1),
-            action: SnackBarAction(
-              label: S.of(context).wallet_uptime_stats,
-              onPressed: () async {
-                final url = env["STATS_URL"];
-
-                await launch(url);
-              },
-            )));
+          content: Text(S.of(context).wallet_offline(deadChainsString)),
+          // duration: Duration(days: 1),
+        ));
       } catch (e) {}
     }
   }

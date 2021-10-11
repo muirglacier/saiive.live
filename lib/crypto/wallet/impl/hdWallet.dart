@@ -69,8 +69,9 @@ class HdWallet extends IHdWallet {
       final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType, derivationPathType);
       final walletType = ChainHelper.chainTypeString(_chain);
       LogHelper.instance.d("Create address for $walletType: $pubKey");
-      await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
+      return await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
     }
+    return await walletDatabase.getWalletAddressById(_account.account, isChangeAddress, index, addressType);
   }
 
   WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
@@ -86,7 +87,7 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<String> nextFreePublicKey(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<String> nextFreePublicKey(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     if (_account.walletAccountType != WalletAccountType.HdAccount) {
       var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
       return walletAddresses.first.publicKey;
@@ -100,7 +101,7 @@ class HdWallet extends IHdWallet {
   }
 
   @override
-  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
+  Future<WalletAddress> nextFreePublicKeyAccount(IWalletDatabase database, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     if (_account.walletAccountType != WalletAccountType.HdAccount) {
       var walletAddresses = await database.getWalletAddressesById(_account.uniqueId);
       var walletAddress = walletAddresses.first;
@@ -113,32 +114,24 @@ class HdWallet extends IHdWallet {
     return address;
   }
 
-  Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, SharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
-    if (!await database.addressExists(_account.account, isChangeAddress, startIndex, addressType)) {
-      //overflow indexes....start again with 0
-      await sharedPrefs.setAddressIndex(0, isChangeAddress);
-      startIndex = 0;
-
-      var address = await database.getWalletAddressById(_account.account, isChangeAddress, 0, addressType);
-
-      if (address == null) {
-        address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
-      }
-      return address;
-    }
-
+  Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var address = await database.getWalletAddressById(_account.account, isChangeAddress, startIndex, addressType);
+
+    if (isChangeAddress && startIndex > database.getReturnAddressCreationCount()) {
+      startIndex = 0;
+    }
 
     if (address == null) {
       address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
     }
     var addressUsed = await database.addressAlreadyUsed(address.publicKey);
 
-    if (addressUsed || address.createdAt != null) {
+    if ((addressUsed || address.createdAt != null) && !isChangeAddress) {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
     }
 
-    await sharedPrefs.setAddressIndex(startIndex++, isChangeAddress);
+    await sharedPrefs.setAddressIndex(startIndex + 1, isChangeAddress);
+
     return address;
   }
 
@@ -184,61 +177,69 @@ class HdWallet extends IHdWallet {
 
   @override
   Future syncWallet(IWalletDatabase database, {StreamController<String> loadingStream}) async {
-    loadingStream?.add(S.current.wallet_operation_refresh_utxo);
+    try {
+      loadingStream?.add(S.current.wallet_operation_refresh_utxo);
 
-    var newUtxos = List<Transaction>.empty(growable: true);
-    var newBalance = List<KeyAccountWrapper>.empty(growable: true);
+      var newUtxos = List<Transaction>.empty(growable: true);
+      var newBalance = List<KeyAccountWrapper>.empty(growable: true);
 
-    final account = await database.getAccount(this._account.uniqueId);
+      final account = await database.getAccount(this._account.uniqueId);
 
-    if (account != null && account.selected) {
-      await _syncWallet(database, (addresses, pos, max) async {
-        loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
-        final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
-        utxo.forEach((element) {
-          LogHelper.instance.d("UTXO tx ${element.mintTxId} for ${element.address} with value ${element.value} (${element.valueRaw})(${element.correctValueRounded})");
-        });
-        newUtxos.addAll(utxo);
+      if (account != null && account.selected) {
+        await _syncWallet(database, (addresses, pos, max) async {
+          loadingStream?.add(S.current.wallet_operation_refresh_addresses(pos, max));
+          final utxo = await _apiService.transactionService.getUnspentTransactionOutputs(ChainHelper.chainTypeString(_chain), addresses);
+          utxo.forEach((element) {
+            LogHelper.instance.d("UTXO tx ${element.mintTxId} for ${element.address} with value ${element.value} (${element.valueRaw})(${element.correctValueRounded})");
+          });
+          newUtxos.addAll(utxo);
 
-        if (_chain == ChainType.DeFiChain) {
-          final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
-          newBalance.addAll(balances);
-        }
-      }, loadingStream: loadingStream);
-    }
-    await database.clearUnspentTransactions(account);
-    newUtxos.forEach((element) async {
-      await database.addUnspentTransaction(element, account);
-    });
+          if (_chain == ChainType.DeFiChain) {
+            final balances = await _apiService.accountService.getAccounts(ChainHelper.chainTypeString(_chain), addresses);
+            newBalance.addAll(balances);
+          }
+        }, loadingStream: loadingStream);
+      }
+      await database.clearUnspentTransactions(account);
+      newUtxos.forEach((element) async {
+        await database.addUnspentTransaction(element, account);
+      });
 
-    if (account != null) {
-      await database.clearAccountBalances(account);
-      for (final acc in newBalance) {
-        for (final element in acc.accounts) {
-          await database.setAccountBalance(element, account);
+      if (account != null) {
+        await database.clearAccountBalances(account);
+        for (final acc in newBalance) {
+          for (final element in acc.accounts) {
+            await database.setAccountBalance(element, account);
+          }
         }
       }
-    }
 
-    loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+      loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+    } catch (e) {
+      LogHelper.instance.e(e);
+    }
   }
 
   @override
   Future syncWalletTransactions(IWalletDatabase database, {StreamController<String> loadingStream}) async {
-    final account = await database.getAccount(this._account.uniqueId);
-    if (account != null) {
-      await database.clearTransactions(account);
+    try {
+      final account = await database.getAccount(this._account.uniqueId);
+      if (account != null) {
+        await database.clearTransactions(account);
 
-      loadingStream?.add(S.current.wallet_operation_refresh_utxo);
-      await _syncWallet(database, (addresses, pos, max) async {
-        loadingStream?.add(S.current.wallet_operation_refresh_tx(pos, max));
-        final txs = await _apiService.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(_chain), addresses);
+        loadingStream?.add(S.current.wallet_operation_refresh_utxo);
+        await _syncWallet(database, (addresses, pos, max) async {
+          loadingStream?.add(S.current.wallet_operation_refresh_tx(pos, max));
+          final txs = await _apiService.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(_chain), addresses);
 
-        txs.forEach((element) async {
-          await database.addTransaction(element, account);
-        });
-      }, loadingStream: loadingStream);
-      loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+          txs.forEach((element) async {
+            await database.addTransaction(element, account);
+          });
+        }, loadingStream: loadingStream);
+        loadingStream?.add(S.current.wallet_operation_refresh_utxo_done);
+      }
+    } catch (e) {
+      LogHelper.instance.e(e);
     }
   }
 }

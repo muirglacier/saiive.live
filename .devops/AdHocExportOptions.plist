@@ -5,15 +5,15 @@
     <key>method</key>
     <string>ad-hoc</string>
     <key>teamID</key>
-    <string>5QAM4Z73EV</string>
+    <string>TZDF3BUA54</string>
     <key>provisioningProfiles</key>
     <dict>
-    	<key>at.saiive.live</key>
-        <string>at.saiive.live AdHoc v2</string>
-        <key>at.saiive.live.watchkitapp</key>
-        <string>at.saiive.live WatchKitApp AdHoc v2</string>
-        <key>at.saiive.live.watchkitapp.watchkitextension</key>
-        <string>at.saiive.live WatchKitApp Extension AdHoc v2</string>
+    	<key>at.saiive.live.defi</key>
+        <string>at.saiive.live.defi AdHoc</string>
+        <key>at.saiive.live.defi.watchkitapp</key>
+        <string>at.saiive.live.defi WatchKitApp AdHoc</string>
+        <key>at.saiive.live.defi.watchkitapp.watchkitextension</key>
+        <string>at.saiive.live.defi WatchKitApp Extension AdHoc</string>
     </dict>
     <key>signingCertificate</key>
     <string>Apple Distribution</string>

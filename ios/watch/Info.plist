@@ -26,7 +26,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>at.saiive.live</string>
+	<string>at.saiive.live.defi</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 </dict>

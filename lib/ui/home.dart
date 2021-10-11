@@ -10,6 +10,7 @@ import 'package:saiive.live/ui/liquidity/liquidity.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
 import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
+import 'package:saiive.live/ui/wallet/wallet_buy.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
 import 'package:saiive.live/ui/widgets/version_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
             page: AccountsScreen(key: PageStorageKey('Accounts')),
             visibleForBottomNav: true,
             routeSettingName: "/accounts"),
+        // NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
         NavigationEntry(
             icon: Icon(Icons.radio_button_unchecked),
             label: S.of(context).home_tokens,

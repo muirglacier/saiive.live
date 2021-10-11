@@ -436,15 +436,15 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Profile;
@@ -566,7 +566,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -574,8 +574,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc MacOS";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -591,7 +591,7 @@
 				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -599,8 +599,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Mac Distribution v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AppStore Mac Distribution";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -684,7 +684,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -692,8 +692,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc MacOS";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -770,7 +770,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -778,8 +778,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc MacOS";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -849,7 +849,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -857,8 +857,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Release-staging";
@@ -927,15 +927,15 @@
 				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore Mac Distribution v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AppStore Mac Distribution";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Release-production";
@@ -1004,15 +1004,15 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Profile-staging";
@@ -1081,15 +1081,15 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc MacOS v2";
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc MacOS";
 				SWIFT_VERSION = 5.0;
 			};
 			name = "Profile-production";

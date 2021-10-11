@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:saiive.live/bus/pool_pair_loaded_event.dart';
 import 'package:saiive.live/network/model/pool_pair.dart';

@@ -7,7 +7,7 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
-import 'package:saiive.live/network/model/account_history.dart';
+import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -44,7 +44,8 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   AnimationController _controller;
 
   bool _transactionsLoading = false;
-  List<AccountHistory> _history = [];
+  // List<AccountHistory> _history = [];
+  List<Transaction> _txs = [];
 
   ChainNet _chainNet;
 
@@ -53,10 +54,12 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
       _transactionsLoading = true;
     });
 
-    var history = await sl.get<IWalletService>().getAccountHistory(widget.chainType, widget.token, includingRewards);
+    // var history = await sl.get<IWalletService>().getAccountHistory(widget.chainType, widget.token, includingRewards);
+    var txs = await sl.get<IWalletService>().getTransactions(widget.chainType);
 
     setState(() {
-      _history = history;
+      // _history = history;
+      _txs = txs;
       _transactionsLoading = false;
     });
   }
@@ -80,7 +83,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
   }
 
   void loadChainNetwork() async {
-    _chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    _chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
   }
 
   @override
@@ -144,7 +147,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
     ));
   }
 
-  buildAccountHistory(BuildContext context, AccountHistory history) {
+  buildAccountHistory(BuildContext context, Transaction history) {
     return Padding(
         padding: EdgeInsets.only(left: 30, right: 30),
         child: _transactionsLoading
@@ -154,14 +157,13 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text(history.type), flex: 1),
-                    Expanded(child: Text(FundFormatter.format(history.getBalance(widget.token) / DefiChainConstants.COIN), textAlign: TextAlign.right), flex: 2),
-                    if (history.txid != null)
+                    Expanded(child: AutoSizeText(FundFormatter.format(history.value / DefiChainConstants.COIND), textAlign: TextAlign.right), flex: 2),
+                    if (history.id != null)
                       Expanded(
                           child: InkWell(
                               child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor), textAlign: TextAlign.right),
                               onTap: () async {
-                                var uri = DefiChainConstants.getExplorerUrl(widget.chainType, _chainNet, history.txid);
+                                var uri = DefiChainConstants.getExplorerUrl(widget.chainType, _chainNet, history.id);
                                 if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
                                   if (await canLaunch(uri)) {
                                     await launch(uri);
@@ -174,13 +176,13 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                   ],
                 ),
                 SizedBox(height: 5),
-                Text(history.blockHash, style: TextStyle(fontSize: 8)),
+                AutoSizeText(history.id, style: TextStyle(fontSize: 10)),
                 Divider()
               ]));
   }
 
   buildAccountHistoryList(BuildContext context) {
-    if (_history.length == 0) {
+    if (_txs.length == 0) {
       return LoadingWidget(text: S.of(context).loading);
     }
 
@@ -196,9 +198,9 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                   scrollDirection: Axis.vertical,
                   padding: EdgeInsets.only(bottom: 100),
                   shrinkWrap: true,
-                  itemCount: _history.length,
+                  itemCount: _txs.length,
                   itemBuilder: (context, index) {
-                    final history = _history[index];
+                    final history = _txs[index];
                     return buildAccountHistory(context, history);
                   })))
     ]));
@@ -288,25 +290,10 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.start, children: [
-      buildActions(context),
-      buildBalanceCard(context),
-      CheckboxListTile(
-        title: Text("Incl. Rewards"),
-        value: _transactionIncludingRewards,
-        activeColor: StateContainer.of(context).curTheme.primary,
-        onChanged: (newValue) {
-          setState(() {
-            _history = [];
-            _transactionIncludingRewards = newValue;
-          });
-
-          loadAccountHistory(includingRewards: newValue);
-        },
-        controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
-      ),
-      Expanded(child: buildAccountHistoryList(context))
-    ]);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [buildActions(context), buildBalanceCard(context), Expanded(child: buildAccountHistoryList(context))]);
   }
 
   @override

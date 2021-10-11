@@ -79,7 +79,7 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
     setState(() {
       _isLoading = true;
     });
-    await sl.get<SharedPrefsUtil>().setSeedBackedUp(seedIsBackedUp);
+    await sl.get<ISharedPrefsUtil>().setSeedBackedUp(seedIsBackedUp);
     await sl.get<IVault>().setSeed(widget.mnemonic.join(" "));
 
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => WalletInitScreen(widget.pathDerivationType)), (route) => false);

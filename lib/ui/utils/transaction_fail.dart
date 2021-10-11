@@ -52,7 +52,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
       stackTrace = (widget.error as Error).stackTrace.toString();
     }
 
-    final sharedPrefsUtil = sl.get<SharedPrefsUtil>();
+    final sharedPrefsUtil = sl.get<ISharedPrefsUtil>();
     final network = await sharedPrefsUtil.getChainNetwork();
     final walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(this.widget.chain, network);
 

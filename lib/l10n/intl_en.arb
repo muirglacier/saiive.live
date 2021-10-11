@@ -249,5 +249,8 @@
 
   
   "expert_title": "Expert mode",
-  "expert": "Expert"
+  "expert": "Expert",
+
+  "dfx_buy_title": "Buy/Sell DFI",
+  "dfx_buy_address": "Buy address"
 }

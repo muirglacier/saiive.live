@@ -53,8 +53,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _init() async {
     var currentEnvironment = EnvHelper.getEnvironment();
     var version = await new VersionHelper().getVersion();
-    var theme = await sl.get<SharedPrefsUtil>().getTheme();
-    var chainNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    var theme = await sl.get<ISharedPrefsUtil>().getTheme();
+    var chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
@@ -68,7 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     sl.get<AppCenterWrapper>().trackEvent("settingsDeleteSeed", {});
 
     await sl.get<IVault>().setSeed(null);
-    await sl.get<SharedPrefsUtil>().setPasswordHash(null);
+    await sl.get<ISharedPrefsUtil>().setPasswordHash(null);
     await sl.get<IWalletService>().close();
     await sl.get<IWalletService>().destroy();
 
@@ -76,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future doChainNetSwitch(ChainNet net, ChainNet old) async {
-    sl.get<SharedPrefsUtil>().setNetwork(net);
+    sl.get<ISharedPrefsUtil>().setNetwork(net);
 
     setState(() {
       _curNet = net;
@@ -181,7 +181,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   final theme = ThemeSetting(ThemeOptions.values[val]);
                                   sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
 
-                                  sl.get<SharedPrefsUtil>().setTheme(theme).then((result) {
+                                  sl.get<ISharedPrefsUtil>().setTheme(theme).then((result) {
                                     setState(() {
                                       StateContainer.of(context).updateTheme(theme);
                                     });

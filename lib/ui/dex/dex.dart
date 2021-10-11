@@ -5,18 +5,14 @@ import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
-import 'package:saiive.live/helper/logger/LogHelper.dart';
-import 'package:saiive.live/network/dex_service.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/pool_pair.dart';
 import 'package:saiive.live/network/model/token_balance.dart';
-import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
@@ -208,9 +204,9 @@ class _DexScreen extends State<DexScreen> {
         (element) => (element.idTokenA == tokenA.idToken && element.idTokenB == tokenB.idToken) || (element.idTokenA == tokenB.idToken && element.idTokenB == tokenA.idToken),
         orElse: () => null);
     if (null != _selectedPoolPair) {
-      _aToBPrice = _selectedValueTo.idToken == _selectedPoolPair.idTokenA ?
-        _selectedPoolPair.reserveA / _selectedPoolPair.reserveB :
-        _selectedPoolPair.reserveB / _selectedPoolPair.reserveA;
+      _aToBPrice = _selectedValueTo.idToken == _selectedPoolPair.idTokenA
+          ? _selectedPoolPair.reserveA / _selectedPoolPair.reserveB
+          : _selectedPoolPair.reserveB / _selectedPoolPair.reserveA;
     }
   }
 
@@ -280,7 +276,7 @@ class _DexScreen extends State<DexScreen> {
 
     _amountToController.text = '-';
 
-    handleChangeTo();
+    handleChangeFrom();
   }
 
   handleChangeFromToken() {
@@ -289,7 +285,7 @@ class _DexScreen extends State<DexScreen> {
 
     _amountToController.text = '-';
 
-    handleChangeFrom();
+    handleChangeTo();
   }
 
   interchangeSymbols() {
@@ -299,8 +295,6 @@ class _DexScreen extends State<DexScreen> {
     _amountTo = null;
     _amountFrom = null;
 
-    handleChangeFrom();
-
     setState(() {
       _selectedValueTo = _selectedValueFrom;
       _toTokens = _fromTokens;
@@ -308,6 +302,8 @@ class _DexScreen extends State<DexScreen> {
       _selectedValueFrom = backupTo;
       _fromTokens = backupToTokens;
     });
+
+    handleChangeFrom();
   }
 
   handleChangeFrom() async {
@@ -332,15 +328,15 @@ class _DexScreen extends State<DexScreen> {
     });
 
     if (null == amount) {
-      _amountToController.text = '-';
+      _amountToController.text = '';
     } else {
-      var amount = _selectedPoolPair.reserveA / _selectedPoolPair.reserveB;
+      amount = _aToBPrice * _amountFrom;
 
       setState(() {
         _amountTo = amount;
         _estimatedSwapAmount = calculateEstimatedAmount(_amountFrom, _selectedPoolPair.reserveA, _aToBPrice);
+        _amountToController.text = amount.toString();
       });
-      _amountToController.text = amount.toString();
 
       getConversionRatio();
     }
@@ -371,9 +367,9 @@ class _DexScreen extends State<DexScreen> {
     });
 
     if (null == amount) {
-      _amountFromController.text = '-';
+      _amountFromController.text = '';
     } else {
-      var amount = _selectedPoolPair.reserveB / _selectedPoolPair.reserveA;
+      amount = _aToBPrice * _amountTo;
 
       setState(() {
         _amountFrom = amount;
@@ -387,8 +383,8 @@ class _DexScreen extends State<DexScreen> {
     checkSufficientFunds();
   }
 
-  calculateEstimatedAmount(double tokenAAmount, double reserveA, double price)
-  {
+
+  calculateEstimatedAmount(double tokenAAmount, double reserveA, double price) {
     var slippage = 1 - (tokenAAmount / reserveA);
     return tokenAAmount * price * slippage;
   }

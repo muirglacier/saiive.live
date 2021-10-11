@@ -17,6 +17,7 @@ import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
+import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:uuid/uuid.dart';
 
 abstract class IWalletService {
@@ -44,6 +45,7 @@ abstract class IWalletService {
   Future<WalletAccount> addAccount(WalletAccount account);
   Future<WalletAddress> updateAddress(WalletAddress account);
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards);
+  Future<List<tx.Transaction>> getTransactions(ChainType chain);
 
   Future<Map<String, bool>> getIsAlive();
   Future<String> getWifPrivateKey(WalletAccount account, WalletAddress address);
@@ -203,6 +205,15 @@ class WalletService implements IWalletService {
       return await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, token, !includeRewards);
     }
     return List<AccountHistory>.empty();
+  }
+
+  Future<List<tx.Transaction>> getTransactions(ChainType chain) async {
+    if (chain == ChainType.DeFiChain) {
+      var db = _defiWallet.getDatabase();
+      return await db.getAllTransactions();
+    }
+    var db = _bitcoinWallet.getDatabase();
+    return await db.getAllTransactions();
   }
 
   Future<String> getWifPrivateKey(WalletAccount walletAccount, WalletAddress address) async {

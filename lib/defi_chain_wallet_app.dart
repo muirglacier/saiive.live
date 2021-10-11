@@ -74,9 +74,8 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
             'stackTrace': e.stackTrace.toString(),
           });
         }
-      } catch (e) {
-        //ignore
-      }
+      } catch (e) {}
+      //ignore
     });
   }
 

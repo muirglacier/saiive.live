@@ -92,17 +92,17 @@ class _RecoveryPhraseInfoWidget extends State<RecoveryPhraseInfoWidget> {
             }).toList(),
           )
         ]),
-        if (_current == carouselItems.length - 1)
-          Container(
-              child: SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    child: Text(S.of(context).wallet_new_reveal),
-                    style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseDisplayScreen(widget.mnemonic)));
-                    },
-                  ))),
+        // if (_current == carouselItems.length - 1)
+        Container(
+            child: SizedBox(
+                width: 300,
+                child: ElevatedButton(
+                  child: Text(S.of(context).wallet_new_reveal),
+                  style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseDisplayScreen(widget.mnemonic)));
+                  },
+                ))),
         if (_current != 4) Container(child: SizedBox(width: 300, height: 40))
       ])),
     );

@@ -46,7 +46,7 @@ class DesktopVault extends IVault {
       await sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_" + key);
       await sharedPreferences.remove(EnvHelper.environmentToString(currentEnvironment) + "_enc_" + key);
     } else {
-      final hash = await sl.get<SharedPrefsUtil>().getPasswordHash();
+      final hash = await sl.get<ISharedPrefsUtil>().getPasswordHash();
       final lockEnabled = hash != null && hash.isNotEmpty;
 
       if (lockEnabled) {
@@ -66,7 +66,7 @@ class DesktopVault extends IVault {
     var sharedPreferences = await SharedPreferences.getInstance();
     var currentEnvironment = EnvHelper.getEnvironment();
 
-    final hash = await sl.get<SharedPrefsUtil>().getPasswordHash();
+    final hash = await sl.get<ISharedPrefsUtil>().getPasswordHash();
     final lockEnabled = hash != null && hash.isNotEmpty;
 
     if (lockEnabled) {

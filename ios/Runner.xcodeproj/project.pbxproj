@@ -724,16 +724,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live Development v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -859,16 +859,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live Development v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -886,16 +886,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -968,16 +968,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1048,16 +1048,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1125,16 +1125,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1204,16 +1204,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1286,16 +1286,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1364,16 +1364,16 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi AdHoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1395,15 +1395,15 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchApp Development v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchApp Development";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1429,15 +1429,15 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1463,15 +1463,15 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp AppStore";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1497,14 +1497,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1529,14 +1529,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1561,14 +1561,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp AppStore";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1593,14 +1593,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchApp Development v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchApp Development";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1625,14 +1625,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1657,14 +1657,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = watch_Extension;
 				INFOPLIST_FILE = watch/Info.plist;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp AppStore";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1688,7 +1688,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1699,9 +1699,9 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchApp Extension Development v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchApp Extension Development";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1726,7 +1726,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1737,9 +1737,9 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp Extension AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp Extension AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1764,7 +1764,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1775,9 +1775,9 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp Extension AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp Extension AppStore";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1802,7 +1802,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1812,9 +1812,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp Extension AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp Extension AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1838,7 +1838,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1848,9 +1848,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp Extension AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp Extension AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1874,7 +1874,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1884,9 +1884,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp Extension AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp Extension AppStore";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1910,7 +1910,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1920,9 +1920,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchApp Extension Development v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchApp Extension Development";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1946,7 +1946,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1956,9 +1956,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp Extension AdHoc v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp Extension AdHoc";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";
@@ -1982,7 +1982,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"watch Extension/Preview Content\"";
-				DEVELOPMENT_TEAM = 5QAM4Z73EV;
+				DEVELOPMENT_TEAM = TZDF3BUA54;
 				ENABLE_PREVIEWS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "watch Extension/Info.plist";
@@ -1992,9 +1992,9 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = at.saiive.live.defi.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live WatchKitApp Extension AppStore v2";
+				PROVISIONING_PROFILE_SPECIFIER = "at.saiive.live.defi WatchKitApp Extension AppStore";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos";

@@ -28,7 +28,7 @@ class _SaiiveDrawer extends State<SaiiveDrawer> {
 
   void _init() async {
     _environmentType = EnvHelper.getEnvironment();
-    _currentNet = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    _currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     _version = await VersionHelper().getVersion();
 
     setState(() {});

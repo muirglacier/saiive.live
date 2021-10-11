@@ -405,7 +405,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password, azure-blob-key-staging'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -426,24 +426,24 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDist.p12'
-          certPwd: '$(apple-adhoc-cert-password)'
+          certSecureFile: 'at.saiive.live.distribution.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.adhoc.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.adhoc.mobileprovision'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.watchkitapp.adhoc.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.watchkitapp.adhoc.mobileprovision'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.watchkitapp.extension.adhoc.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.watchkitapp.extension.adhoc.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -501,7 +501,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-adhoc-cert-password, azure-blob-key-prod'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -522,24 +522,24 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDist.p12'
-          certPwd: '$(apple-adhoc-cert-password)'
+          certSecureFile: 'at.saiive.live.distribution.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.appstore.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.appstore.mobileprovision'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.watchkitapp.appstore.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.watchkitapp.appstore.mobileprovision'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.watchkitapp.extension.appstore.mobileprovision'
+          provProfileSecureFile: 'at.saiive.live.defi.watchkitapp.extension.appstore.mobileprovision'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -613,7 +613,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-dev'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-dev'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -634,37 +634,37 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDeveloperID.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.developer-id.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi.mac.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPMacOSInstaller.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.installer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.adhoc-macos.provisionprofile'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.appstore-mac.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -750,7 +750,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-staging'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-staging'
           RunAsPreJob: true
       - task: replacetokens@4
         inputs:
@@ -769,37 +769,37 @@ stages:
           enableTelemetry: false
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDeveloperID.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.developer-id.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi.mac.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPMacOSInstaller.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.installer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.adhoc-macos.provisionprofile'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.appstore-mac.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -884,7 +884,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -905,37 +905,37 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDeveloperID.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.developer-id.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi.mac.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPMacOSInstaller.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.installer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.adhoc-macos.provisionprofile'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.appstore-mac.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -984,7 +984,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            /usr/bin/productbuild --component build/macos/Build/Products/Release/saiive.live.app /Applications --sign E220D8D5B09C6C7C345DE6EF780C0FBB9CA0EA08 saiive.live.pkg
+            /usr/bin/productbuild --component build/macos/Build/Products/Release/saiive.live.app /Applications --sign B4E2B2EC168B783521C7F2B84902727375ED08F2 saiive.live.pkg
 
       - task: CopyFiles@2
         displayName: "Copy artifacts pkg"
@@ -1007,7 +1007,7 @@ stages:
         inputs:
           azureSubscription: $(KeyVaultConnection)
           KeyVaultName: $(KeyVaultName)
-          SecretsFilter: 'apple-macos-developerid-cert-password, azure-blob-key-prod'
+          SecretsFilter: 'saiive-live-cert-password, azure-blob-key-prod'
           RunAsPreJob: true
 
       - task: replacetokens@4
@@ -1028,37 +1028,37 @@ stages:
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DP3rdPartyMacDeveloper.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi-3rd-party-mac-developer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDeveloperID.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.developer-id.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPDistMacOS.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.defi.mac.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleCertificate@2
         inputs:
-          certSecureFile: 'DPMacOSInstaller.p12'
-          certPwd: '$(apple-macos-developerid-cert-password)'
+          certSecureFile: 'at.saiive.live.installer.p12'
+          certPwd: '$(saiive-live-cert-password)'
           keychain: 'temp'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.adhoc-macos.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.adhoc-macos.provisionprofile'
 
       - task: InstallAppleProvisioningProfile@1
         inputs:
           provisioningProfileLocation: 'secureFiles'
-          provProfileSecureFile: 'at.saiive.live.appstore-macos.distribution.provisionprofile'
+          provProfileSecureFile: 'at.saiive.live.defi.appstore-mac.distribution.provisionprofile'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"

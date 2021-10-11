@@ -1,5 +1,4 @@
 import 'package:saiive.live/network/model/pool_pair.dart';
-import 'package:saiive.live/network/model/pool_share.dart';
 
 class PoolPairLiquidity {
   final String tokenA;
@@ -21,12 +20,12 @@ class PoolPairLiquidity {
   });
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-    'tokenA': tokenA,
-    'tokenB': tokenB,
-    'poolPair': poolPair.toJson(),
-    'totalLiquidityInUSDT': totalLiquidityInUSDT,
-    'yearlyPoolReward': yearlyPoolReward,
-    'poolSharePercentage': poolSharePercentage,
-    'apy': apy
-  };
+        'tokenA': tokenA,
+        'tokenB': tokenB,
+        'poolPair': poolPair.toJson(),
+        'totalLiquidityInUSDT': totalLiquidityInUSDT,
+        'yearlyPoolReward': yearlyPoolReward,
+        'poolSharePercentage': poolSharePercentage,
+        'apy': apy
+      };
 }

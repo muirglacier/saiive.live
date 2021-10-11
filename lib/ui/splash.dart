@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     try {
       // iOS key store is persistent, so if this is first launch then we will clear the keystore
-      bool firstLaunch = await sl.get<SharedPrefsUtil>().getFirstLaunch();
+      bool firstLaunch = await sl.get<ISharedPrefsUtil>().getFirstLaunch();
       if (firstLaunch) {
         await sl.get<IVault>().deleteAll();
       } else {
@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
           _alreadyUnlocked = await sl.get<IUnlockHandler>().unlockScreen(context, canCancel: false);
         }
       }
-      await sl.get<SharedPrefsUtil>().setFirstLaunch();
+      await sl.get<ISharedPrefsUtil>().setFirstLaunch();
       // See if have already a seed generated
       bool hasSeedGenerated = true;
       var seed = await sl.get<IVault>().getSeed();
@@ -79,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {
       await sl.get<IVault>().deleteAll();
-      await sl.get<SharedPrefsUtil>().deleteAll();
+      await sl.get<ISharedPrefsUtil>().deleteAll();
       if (!_retried) {
         _retried = true;
         _hasCheckedLoggedIn = false;
@@ -92,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
     _currentEnvironment = EnvHelper.getEnvironment();
     _version = await VersionHelper().getVersion();
 
-    final network = await sl.get<SharedPrefsUtil>().getChainNetwork();
+    final network = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     _curNet = ChainHelper.chainNetworkString(network);
 
     setState(() {

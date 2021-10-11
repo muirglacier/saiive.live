@@ -1,3 +1,4 @@
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/network/coingecko_service.dart';
 import 'package:saiive.live/network/defichain_service.dart';
@@ -46,14 +47,15 @@ class PoolShareHelper {
     }
 
     List<PoolShareLiquidity> waitResult = [];
+    var tokens = await sl.get<ITokenService>().getTokens(DeFiConstants.DefiAccountSymbol);
     Iterable<Future<PoolShareLiquidity>> result = combinedPoolShares.values.map((poolShare) async {
       var poolPair = await sl.get<IPoolPairService>().getPoolPair(coin, poolShare.poolID);
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;
       var allPoolShares = poolShares.where((element) => element.poolID == poolShare.poolID).toList();
 
-      var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
-      var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
+      var tokenA = tokens.singleWhere((element) => element.id.toString() == idTokenA);
+      var tokenB = tokens.singleWhere((element) => element.id.toString() == idTokenB);
 
       var poolSharePercentage = (poolShare.displayAmount / poolShare.totalLiquidity) * 100;
 

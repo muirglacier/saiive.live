@@ -20,7 +20,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
   ThemeSetting _curTheme;
 
   Future _init() async {
-    final curTheme = await sl.get<SharedPrefsUtil>().getTheme();
+    final curTheme = await sl.get<ISharedPrefsUtil>().getTheme();
 
     setState(() {
       _curTheme = curTheme;
@@ -31,7 +31,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
     final theme = ThemeSetting(themeOption);
     sl.get<AppCenterWrapper>().trackEvent("settingsSetTheme", <String, String>{"theme": theme.getDisplayName(context)});
 
-    await sl.get<SharedPrefsUtil>().setTheme(theme);
+    await sl.get<ISharedPrefsUtil>().setTheme(theme);
     setState(() {
       StateContainer.of(context).updateTheme(theme);
       _curTheme = theme;

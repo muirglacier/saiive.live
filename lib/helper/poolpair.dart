@@ -1,10 +1,10 @@
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/network/coingecko_service.dart';
 import 'package:saiive.live/network/defichain_service.dart';
 import 'package:saiive.live/network/gov_service.dart';
 import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
 import 'package:saiive.live/network/model/yield_farming.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
-import 'package:saiive.live/network/pool_share_service.dart';
 import 'package:saiive.live/network/token_service.dart';
 import 'package:saiive.live/service_locator.dart';
 
@@ -21,13 +21,15 @@ class PoolPairHelper {
       poolStats[value.idTokenA + '_' + value.idTokenB] = value;
     });
 
+    var tokens = await sl.get<ITokenService>().getTokens(DeFiConstants.DefiAccountSymbol);
+
     List<PoolPairLiquidity> waitResult = [];
     Iterable<Future<PoolPairLiquidity>> result = poolPairs.map((poolPair) async {
       var idTokenA = poolPair.idTokenA;
       var idTokenB = poolPair.idTokenB;
 
-      var tokenA = await sl.get<ITokenService>().getToken(coin, idTokenA);
-      var tokenB = await sl.get<ITokenService>().getToken(coin, idTokenB);
+      var tokenA = tokens.singleWhere((element) => element.id.toString() == idTokenA);
+      var tokenB = tokens.singleWhere((element) => element.id.toString() == idTokenB);
 
       var dfiCoin = priceData.firstWhere((element) => element.idToken == '0', orElse: () => null);
       var priceA = priceData.firstWhere((element) => element.idToken == poolPair.idTokenA, orElse: () => null);
@@ -41,12 +43,7 @@ class PoolPairHelper {
       var apy = poolStats.containsKey(idTokenA + '_' + idTokenB) ? poolStats[idTokenA + '_' + idTokenB].apy : 0;
 
       return new PoolPairLiquidity(
-          tokenA: tokenA.symbol,
-          tokenB: tokenB.symbol,
-          poolPair: poolPair,
-          totalLiquidityInUSDT: totalLiquidity,
-          yearlyPoolReward: yearlyPoolReward,
-          apy: apy);
+          tokenA: tokenA.symbol, tokenB: tokenB.symbol, poolPair: poolPair, totalLiquidityInUSDT: totalLiquidity, yearlyPoolReward: yearlyPoolReward, apy: apy);
     });
 
     for (Future<PoolPairLiquidity> f in result) {

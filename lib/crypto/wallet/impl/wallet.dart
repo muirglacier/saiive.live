@@ -13,7 +13,7 @@ import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/impl/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
@@ -42,7 +42,7 @@ abstract class Wallet extends IWallet {
   final ChainType _chain;
   ChainNet _network;
 
-  SharedPrefsUtil _sharedPrefsUtil;
+  ISharedPrefsUtil _sharedPrefsUtil;
 
   String _password;
   String _seed;
@@ -91,7 +91,7 @@ abstract class Wallet extends IWallet {
       return;
     }
     _apiService = sl.get<ApiService>();
-    _sharedPrefsUtil = sl.get<SharedPrefsUtil>();
+    _sharedPrefsUtil = sl.get<ISharedPrefsUtil>();
 
     _network = await _sharedPrefsUtil.getChainNetwork();
     _walletDatabase = await sl.get<IWalletDatabaseFactory>().getDatabase(_chain, _network);
@@ -136,7 +136,7 @@ abstract class Wallet extends IWallet {
   String get walletType => ChainHelper.chainTypeString(_chain);
 
   @override
-  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress) async {
+  Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, adressType.AddressType addressType, bool isChangeAddress) async {
     isInitialzed();
 
     assert(_wallets.containsKey(walletAccount.uniqueId));
@@ -170,7 +170,7 @@ abstract class Wallet extends IWallet {
     return keys;
   }
 
-  Future<String> getPublicKey(bool isChangeAddress, AddressType addressType) async {
+  Future<String> getPublicKey(bool isChangeAddress, adressType.AddressType addressType) async {
     var accounts = await _walletDatabase.getAccounts();
     accounts = accounts.where((element) => element.chain == _chain).toList();
     accounts = accounts.where((element) => element.selected).toList();
@@ -291,8 +291,8 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false}) async {
-    final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax);
+  Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false, int version = 4}) async {
+    final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax, version: version);
 
     var tx = await createTxAndWait(txb, loadingStream: loadingStream);
 
@@ -324,7 +324,7 @@ abstract class Wallet extends IWallet {
   @protected
   Future<Tuple3<String, List<tx.Transaction>, String>> createBaseTransaction(
       int amount, String to, String changeAddress, int additionalFees, Function(TransactionBuilder, List<tx.Transaction>, NetworkType) additional,
-      {bool sendMax = false}) async {
+      {bool sendMax = false, int version = 4}) async {
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (amount > tokenBalance?.balance) {
@@ -380,7 +380,7 @@ abstract class Wallet extends IWallet {
       throw new ArgumentError("Insufficent funds");
     }
 
-    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, to, amount, fees, changeAddress, additional, chain, network);
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, to, amount, fees, changeAddress, additional, chain, network, version: version);
     return Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, changeAddress);
   }
 
@@ -415,7 +415,7 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future<TransactionData> createTxAndWaitInternal(String txHex, {StreamController<String> loadingStream}) async {
-    final r = RetryOptions(maxAttempts: 20, maxDelay: Duration(seconds: 5));
+    final r = RetryOptions(maxAttempts: 50, maxDelay: Duration(seconds: 10));
     // bool ensureUtxoCalled = false;
 
     LogHelper.instance.d("commiting tx $txHex");
@@ -424,11 +424,6 @@ abstract class Wallet extends IWallet {
         return await _apiService.transactionService.sendRawTransaction(ChainHelper.chainTypeString(_chain), txHex);
       }, retryIf: (e) async {
         if (e is HttpException) {
-          if (e.error.error.contains("txn-mempool-conflict")) {
-            LogHelper.instance.e("mempool-conflict", e);
-            loadingStream?.add(S.current.wallet_operation_mempool_conflict_retry);
-            return true;
-          }
           return false;
         }
         return false;
@@ -437,6 +432,10 @@ abstract class Wallet extends IWallet {
       });
 
       LogHelper.instance.i("commited tx with id " + txId);
+
+      if (S.current != null) {
+        loadingStream.add(S.current.wallet_operation_wait_for_confirmation);
+      }
 
       final response = await r.retry(() async {
         return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId);
@@ -473,7 +472,11 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future ensureUtxo({StreamController<String> loadingStream}) async {
+  Future ensureUtxo({StreamController<String> loadingStream, bool force = false}) async {
+    if (!await refreshBefore() && !force) {
+      return;
+    }
+
     await walletMutex.acquire();
 
     try {
@@ -508,16 +511,34 @@ abstract class Wallet extends IWallet {
 
   @protected
   Future syncAllInternal({StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
-    // await syncTransactions(loadingStream: loadingStream);
+    var ensureFuture = ensureUtxo(loadingStream: loadingStream, force: true);
+    var syncTransactionsFuture = syncTransactions(loadingStream: loadingStream);
+    await Future.wait([ensureFuture, syncTransactionsFuture]);
   }
 
   Future syncAll({StreamController<String> loadingStream}) async {
     await syncAllInternal(loadingStream: loadingStream);
   }
 
+  Future syncAllTransactions({StreamController<String> loadingStream}) async {
+    await syncTransactions(loadingStream: loadingStream);
+  }
+
   @override
   IWalletDatabase getDatabase() {
     return _walletDatabase;
+  }
+
+  Future<String> signMessage(String address, String message) async {
+    final walletAddress = await walletDatabase.getWalletAddress(address);
+    final walletAccount = await walletDatabase.getAccount(walletAddress.accountId);
+
+    if (walletAccount == null) {
+      throw ArgumentError("wallet not found...");
+    }
+
+    var privateKey = await getPrivateKey(walletAddress, walletAccount);
+
+    return HdWalletUtil.signString(privateKey, message, _chain, _network);
   }
 }

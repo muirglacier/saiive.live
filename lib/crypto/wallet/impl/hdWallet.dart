@@ -131,6 +131,7 @@ class HdWallet extends IHdWallet {
     }
 
     await sharedPrefs.setAddressIndex(startIndex + 1, isChangeAddress);
+
     return address;
   }
 

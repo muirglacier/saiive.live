@@ -220,7 +220,11 @@ class SembastWalletDatabase extends IWalletDatabase {
 
       accounts = await dbStore.find(await database, finder: finder);
     }
-    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+    var data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+
+    final activeAddresses = _activeSpentableWalletAddresses;
+    data = data.where((element) => activeAddresses.contains(element.publicKey)).toList();
+
     return data.firstOrNull;
   }
 

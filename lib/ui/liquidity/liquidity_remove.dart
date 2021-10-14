@@ -168,7 +168,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
           SizedBox(
             width: 80,
             child: TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
                 maxLength: 3,
                 inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
                 textAlign: TextAlign.right,

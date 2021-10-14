@@ -499,7 +499,11 @@ class _DexScreen extends State<DexScreen> {
                             handleSetMaxFrom();
                           }))
                 ]),
-                TextField(controller: _amountFromController, decoration: InputDecoration(hintText: S.of(context).dex_from_amount), keyboardType: TextInputType.number),
+                TextField(
+                    controller: _amountFromController,
+                    decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true)
+                ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -548,7 +552,11 @@ class _DexScreen extends State<DexScreen> {
                             handleSetMaxTo();
                           }))
                 ]),
-                TextField(controller: _amountToController, decoration: InputDecoration(hintText: S.of(context).dex_to_amount), keyboardType: TextInputType.number),
+                TextField(
+                    controller: _amountToController,
+                    decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true)
+                ),
                 SizedBox(height: 20),
                 AccountSelectAddressWidget(
                     label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),

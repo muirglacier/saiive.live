@@ -200,7 +200,7 @@ class _ExpertScreen extends State<ExpertScreen> {
                     child: Container(
                         child: TextField(
                       controller: _amountController,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
                     ))),
                 SizedBox(width: 20),

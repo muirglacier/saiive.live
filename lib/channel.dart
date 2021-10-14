@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 
 class ChannelConnection {
-  final channel = MethodChannel('at.saiive.live');
+  final channel = MethodChannel('at.saiive.live.defi');
 
   void init() async {
     channel.setMethodCallHandler((call) async {
@@ -19,11 +20,13 @@ class ChannelConnection {
   }
 
   void sendPublicKeysDFI(List<String> addresses) {
-    sendData({"method": "receivePublicKeysDFI", "data": jsonEncode(addresses)});
+    //sendData({"method": "receivePublicKeysDFI", "data": jsonEncode(addresses)});
+    sendMessage({"method": "receivePublicKeysDFI", "data": jsonEncode(addresses)});
   }
 
   void sendPublicKeysBTC(List<String> addresses) {
-    sendData({"method": "receivePublicKeysBTC", "data": jsonEncode(addresses)});
+    //sendData({"method": "receivePublicKeysBTC", "data": jsonEncode(addresses)});
+    sendMessage({"method": "receivePublicKeysBTC", "data": jsonEncode(addresses)});
   }
 
   void sendMessage(var data) {

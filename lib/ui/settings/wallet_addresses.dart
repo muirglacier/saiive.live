@@ -5,7 +5,6 @@ import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';

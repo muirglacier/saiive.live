@@ -8,7 +8,6 @@ import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/ui/widgets/mnemonic_seed.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class IntroRestoreScreen extends StatefulWidget {

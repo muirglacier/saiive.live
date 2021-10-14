@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_taxi/event_taxi.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
@@ -12,6 +11,7 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
@@ -68,19 +68,25 @@ class _ExpertScreen extends State<ExpertScreen> {
       final wallet = sl.get<DeFiChainWallet>();
       await wallet.ensureUtxoUnsafe(loadingStream: stream);
 
+      TransactionData lastTxId;
+
       if (_action == ExpertScreenAction.UtxoToAccount) {
-        await wallet.prepareAccount(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
+        var prep = await wallet.prepareAccount(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
+        if (prep.item2.isNotEmpty) {
+          lastTxId = prep.item2.first;
+        }
       } else {
         final tx = await wallet.prepareAccountToUtxosTransactions(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
+
         for (final txHex in tx.item1) {
-          await wallet.createRawTxAndWait(txHex);
+          lastTxId = await wallet.createRawTxAndWait(txHex, loadingStream: stream);
         }
       }
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, "", S.of(context).wallet_operation_success),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTxId?.txId, S.of(context).wallet_operation_success),
       ));
 
       Navigator.of(context).pop();

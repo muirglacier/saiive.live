@@ -107,9 +107,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final useAmount = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
 
     if (DeFiConstants.isDfiToken(tokenA)) {
-      amountA = useAmount;
+      amountA = useAmount.item1;
     } else {
-      amountB = useAmount;
+      amountB = useAmount.item1;
     }
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     final tokenABalance = await walletDatabase.getAccountBalance(tokenA);
@@ -190,7 +190,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<Tuple3<String, List<tx.Transaction>, String>> createSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
       {String returnAddress, StreamController<String> loadingStream}) async {
     if (DeFiConstants.isDfiToken(fromToken)) {
-      fromAmount = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
+      var prep = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
+      fromAmount = prep.item1;
     }
 
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
@@ -385,7 +386,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return retOut;
   }
 
-  Future<int> prepareUtxoToAccountTransaction(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {
+  Future<Tuple2<int, List<TransactionData>>> prepareUtxoToAccountTransaction(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {
     final tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
     final accBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiAccountSymbol);
 
@@ -394,7 +395,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     if (accountBalance > amount && !force) {
       // we already have enough acc balance
-      return amount;
+      return Tuple2(amount, List<TransactionData>.empty(growable: false));
     }
 
     if (totalBalance == amount) {
@@ -440,7 +441,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
 
     final tokenType = await apiService.tokenService.getToken("DFI", DeFiConstants.DefiAccountSymbol);
-
+    var txData = List<TransactionData>.empty(growable: true);
     for (final input in useTxs) {
       var needAmount = min(checkAmount, input.value);
       var burnFees = needAmount + fee;
@@ -456,7 +457,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         checkAmount -= needAmount;
       });
 
-      await createTxAndWait(txs, loadingStream: loadingStream);
+      var tx = await createTxAndWait(txs, loadingStream: loadingStream);
+
+      txData.add(tx);
 
       var existingBalance = await walletDatabase.getAccountBalanceForPubKey(input.address, DeFiConstants.DefiAccountSymbol);
 
@@ -474,7 +477,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         break;
       }
     }
-    return amount;
+    return Tuple2(amount, txData);
   }
 
   Future moveAllTokensToUtxo(String pubKey) async {
@@ -641,7 +644,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return Tuple3(txs, usedInputs, fees * txs.length);
   }
 
-  Future<int> prepareAccount(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {
+  Future<Tuple2<int, List<TransactionData>>> prepareAccount(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {
     return await prepareUtxoToAccountTransaction(toAddress, amount, loadingStream: loadingStream, force: force);
   }
 

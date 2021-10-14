@@ -4,7 +4,6 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/ui/widgets/wallet_receive.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

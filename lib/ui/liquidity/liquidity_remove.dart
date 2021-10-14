@@ -19,7 +19,6 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:tuple/tuple.dart';
 import 'package:wakelock/wakelock.dart';

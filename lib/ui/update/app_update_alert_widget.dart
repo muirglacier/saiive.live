@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:event_taxi/event_taxi.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:mutex/mutex.dart';

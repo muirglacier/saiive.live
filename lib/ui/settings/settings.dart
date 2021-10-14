@@ -25,7 +25,6 @@ import 'package:saiive.live/ui/utils/legal_entities.dart';
 import 'package:saiive.live/ui/wallet/wallet_send.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger_flutter_console/logger_flutter_console.dart';
 

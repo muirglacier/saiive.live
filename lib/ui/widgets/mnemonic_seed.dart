@@ -4,7 +4,6 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/bip39/english.dart';
 import 'package:saiive.live/ui/widgets/derivation_path_type_selector_widget.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MnemonicSeedWidget extends StatefulWidget {

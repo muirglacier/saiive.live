@@ -434,7 +434,7 @@ abstract class Wallet extends IWallet {
       LogHelper.instance.i("commited tx with id " + txId);
 
       if (S.current != null) {
-        loadingStream.add(S.current.wallet_operation_wait_for_confirmation);
+        loadingStream?.add(S.current.wallet_operation_wait_for_confirmation);
       }
 
       final response = await r.retry(() async {

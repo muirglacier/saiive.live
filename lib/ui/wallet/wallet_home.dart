@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/rendering.dart';
 import 'package:group_list_view/group_list_view.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
@@ -26,7 +25,6 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class WalletHomeScreen extends StatefulWidget {
   const WalletHomeScreen({Key key}) : super(key: key);

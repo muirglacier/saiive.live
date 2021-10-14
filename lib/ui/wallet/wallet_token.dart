@@ -20,7 +20,6 @@ import 'package:saiive.live/ui/widgets/buttons.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WalletTokenScreen extends StatefulWidget {

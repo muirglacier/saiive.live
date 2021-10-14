@@ -7,7 +7,6 @@ import 'package:saiive.live/ui/utils/legal_entities.dart';
 import 'package:saiive.live/ui/utils/webview.dart';
 import 'package:saiive.live/ui/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 

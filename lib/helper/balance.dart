@@ -84,10 +84,12 @@ class BalanceHelper {
       }
 
       if (!onlyDfi) {
-        if (!spentable && btcAccountBalance.first.balance > 0) {
-          accountBalance.insert(1, btcAccountBalance.first);
-        } else if (spentable) {
-          accountBalance.insert(1, btcAccountBalance.first);
+        if (btcAccountBalance.isNotEmpty) {
+          if (!spentable && btcAccountBalance.first.balance > 0) {
+            accountBalance.insert(1, btcAccountBalance.first);
+          } else if (spentable) {
+            accountBalance.insert(1, btcAccountBalance.first);
+          }
         }
       }
     }

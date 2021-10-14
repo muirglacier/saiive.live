@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:saiive.live/appstate_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 class PasswordOverlay {
   BuildContext _context;

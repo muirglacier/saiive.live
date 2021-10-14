@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/rendering.dart';
 import 'package:group_list_view/group_list_view.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
@@ -26,7 +25,6 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class WalletHomeScreen extends StatefulWidget {
   const WalletHomeScreen({Key key}) : super(key: key);
@@ -356,10 +354,16 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 return _buildAccountEntry(items.values.toList()[index.section][index.index]);
               },
               groupHeaderBuilder: (BuildContext context, int section) {
+                var text = items.keys.toList()[section];
+                if (items.values.toList()[section].isEmpty) {
+                  var noAccSelected = S.of(context).wallet_account_nothing_selected;
+                  text += " ($noAccSelected)";
+                }
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                   child: Text(
-                    items.keys.toList()[section],
+                    text,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 );

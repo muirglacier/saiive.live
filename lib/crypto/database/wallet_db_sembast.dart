@@ -419,6 +419,9 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   Future clearUnspentTransactions(WalletAccount account) async {
+    if (account == null) {
+      return;
+    }
     var dbStore = _unspentStoreInstance;
 
     final db = await database;
@@ -580,6 +583,9 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     if (!spentable) {
       activeAddresses = _activeReadonlyWalletAddresses;
+    }
+    if (activeAddresses.isEmpty) {
+      return List<AccountBalance>.empty(growable: false);
     }
 
     var finder = Finder(filter: Filter.notEquals('token', DeFiConstants.DefiTokenSymbol));

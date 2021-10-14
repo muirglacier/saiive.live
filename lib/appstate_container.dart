@@ -5,7 +5,6 @@ import 'package:saiive.live/network/block_service.dart';
 import 'package:saiive.live/network/model/block.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:event_taxi/event_taxi.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:saiive.live/themes.dart';

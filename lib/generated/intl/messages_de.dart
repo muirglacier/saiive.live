@@ -148,6 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "visibility" : MessageLookupByLibrary.simpleMessage("Sichtbarkeit"),
     "wallet_account_export_private_key" : MessageLookupByLibrary.simpleMessage("Private Key exportieren"),
     "wallet_account_index" : MessageLookupByLibrary.simpleMessage("Konto Index"),
+    "wallet_account_nothing_selected" : MessageLookupByLibrary.simpleMessage("Kein Konto ausgewählt"),
     "wallet_accounts" : MessageLookupByLibrary.simpleMessage("Konten"),
     "wallet_accounts_add" : MessageLookupByLibrary.simpleMessage("Konto anlegen"),
     "wallet_accounts_address_add" : MessageLookupByLibrary.simpleMessage("Neue Adresse anlegen"),

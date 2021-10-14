@@ -142,6 +142,7 @@
   "wallet_accounts_cannot_be_empty": "Das Feld darf nicht leer sein!",
   "wallet_accounts_saved": "Konto wurde gespeichert",
   "wallet_account_export_private_key": "Private Key exportieren",
+  "wallet_account_nothing_selected": "Kein Konto ausgewählt",
 
   "settings": "Einstellungen",
   "settings_wallet": "Wallet",

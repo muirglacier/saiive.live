@@ -145,7 +145,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                     child: Container(
                         child: TextField(
                       controller: _amountController,
-                      keyboardType: TextInputType.number,
+                      keyboardType: keyboardType: TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(hintText: S.of(context).wallet_send_amount),
                     ))),
                 SizedBox(height: 20),

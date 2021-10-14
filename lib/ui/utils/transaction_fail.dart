@@ -10,7 +10,6 @@ import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/network/network_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';

@@ -10,10 +10,10 @@ import 'package:saiive.live/ui/liquidity/liquidity.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
 import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
+// ignore: unused_import
 import 'package:saiive.live/ui/wallet/wallet_buy.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
 import 'package:saiive.live/ui/widgets/version_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NavigationEntry {

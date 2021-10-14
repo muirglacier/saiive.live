@@ -19,7 +19,6 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:tuple/tuple.dart';
 import 'package:wakelock/wakelock.dart';
@@ -169,7 +168,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
           SizedBox(
             width: 80,
             child: TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
                 maxLength: 3,
                 inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
                 textAlign: TextAlign.right,

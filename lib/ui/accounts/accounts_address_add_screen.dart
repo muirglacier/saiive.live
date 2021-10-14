@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:clipboard_manager/clipboard_manager.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';

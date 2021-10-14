@@ -26,7 +26,6 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -467,7 +466,8 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       TextField(
           controller: _amountTokenAController,
           decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-          keyboardType: TextInputType.number),
+          keyboardType: TextInputType.numberWithOptions(decimal: true)
+      ),
       Row(children: [
         Expanded(
             flex: 1,
@@ -504,7 +504,11 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                   handleSetMaxTokenB();
                 }))
       ]),
-      TextField(controller: _amountTokenBController, decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b), keyboardType: TextInputType.number),
+      TextField(
+          controller: _amountTokenBController,
+          decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b),
+          keyboardType: TextInputType.numberWithOptions(decimal: true)
+      ),
       SizedBox(height: 20),
       AccountSelectAddressWidget(
           label: Text(S.of(context).liquidity_add_shares_addr, style: Theme.of(context).inputDecorationTheme.hintStyle),

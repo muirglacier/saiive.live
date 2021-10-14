@@ -4,7 +4,7 @@ import Alamofire
 
 class JellyfishAPI
 {
-    func requestDataForToken(address: String, completion: @escaping ([JellyfishToken]) -> Void) {
+    func requestDataForToken(address: String, completion: @escaping ([JellyfishToken]?) -> Void) {
         AF.request("https://ocean.defichain.com/v0/mainnet/address/\(address)/tokens")
           .validate()
           .responseDecodable(of: JellyfishTokenResponse.self) { (response) in
@@ -15,12 +15,12 @@ class JellyfishAPI
                 case .success(let result):
                     completion(result.data)
                 case .failure(let error):
-                    print(error)
+                    completion(nil)
                 }
           }
     }
     
-    func requestBalanceForAddress(address: String, completion: @escaping (JellyfishBalance) -> Void) {
+    func requestBalanceForAddress(address: String, completion: @escaping (JellyfishBalance?) -> Void) {
         AF.request("https://ocean.defichain.com/v0/mainnet/address/\(address)/balance")
           .validate()
           .responseDecodable(of: JellyfishBalance.self) { (response) in
@@ -31,7 +31,7 @@ class JellyfishAPI
                 case .success(let result):
                     completion(result)
                 case .failure(let error):
-                    print(error)
+                    completion(nil)
                 }
           }
     }
@@ -46,18 +46,26 @@ class JellyfishAPI
             tokenDispatchGroup.enter()
             tokenDispatchGroup.enter()
             
-            self.requestDataForToken(address: address) { (tokens: [JellyfishToken]) in
-                results[address] = tokens;
-                
+            self.requestDataForToken(address: address) { (tokens: [JellyfishToken]?) in
                 tokenDispatchGroup.leave()
-            }
-            
-            self.requestBalanceForAddress(address: address) { (balance: JellyfishBalance) in
-                if (Double(balance.data) ?? 0 > 0) {
-                    balanceResults[address] = balance;
+                
+                if (nil == tokens) {
+                    return
                 }
                 
+                results[address] = tokens;
+            }
+            
+            self.requestBalanceForAddress(address: address) { (balance: JellyfishBalance?) in
                 tokenDispatchGroup.leave()
+                
+                if (nil == balance) {
+                    return
+                }
+                
+                if (Double(balance!.data) ?? 0 > 0) {
+                    balanceResults[address] = balance;
+                }
             }
         }
         

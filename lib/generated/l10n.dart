@@ -1295,6 +1295,16 @@ class S {
     );
   }
 
+  /// `No account selected`
+  String get wallet_account_nothing_selected {
+    return Intl.message(
+      'No account selected',
+      name: 'wallet_account_nothing_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Send`
   String get wallet_send {
     return Intl.message(

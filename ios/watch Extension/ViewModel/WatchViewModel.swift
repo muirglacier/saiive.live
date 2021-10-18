@@ -5,6 +5,9 @@ class WatchViewModel: NSObject, ObservableObject {
     var session: WCSession
     var api: JellyfishAPI = JellyfishAPI()
     
+    @Published var lmLoaded = false
+    @Published var balanceLoaded = false
+    
     @Published var balance = [JellyfishToken]()
     @Published var lps = [JellyfishToken]()
     @Published var poolPairs = [JellyfishPoolPair]()
@@ -58,6 +61,9 @@ class WatchViewModel: NSObject, ObservableObject {
             self.api.requestDataForTokens(addresses: self.publicKeysDFI, completion: { (tokens: [JellyfishToken], lps: [JellyfishToken]) in
                 self.balance = tokens
                 self.lps = lps
+                
+                self.balanceLoaded = true
+                self.lmLoaded = true
             })
         }
     }
@@ -66,13 +72,39 @@ class WatchViewModel: NSObject, ObservableObject {
 extension WatchViewModel: WCSessionDelegate {
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
+        debugPrint("activationDidCompleteWith activationState:\(activationState.rawValue), error: \(String(describing: error))")
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             guard let method = message["method"] as? String, let enumMethod = WatchReceiveMethod(rawValue: method) else {
                 return
+            }
+            switch enumMethod {
+            case .receivePublicKeysDFI:
+                let data = (message["data"] as? String) ?? ""
+                let jsonData = data.data(using: .utf8)
+
+                if (jsonData == nil) {
+                    return
+                }
+
+                let jsonDecoder = JSONDecoder()
+                let publicKeysDFI = try? jsonDecoder.decode([String].self, from: jsonData!)
+
+                if (publicKeysDFI == nil) {
+                    return
+                }
+
+                self.publicKeysDFI = publicKeysDFI!
+
+                UserDefaults.standard.set(jsonData, forKey: "publicKeysDFI")
+                UserDefaults.standard.synchronize()
+                
+                self.refreshPairsAndBalance();
+                break;
+            case .receivePublicKeysBTC:
+                break;
             }
             //
             //            switch enumMethod {
@@ -97,6 +129,8 @@ extension WatchViewModel: WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext message: [String : Any]) {
+        debugPrint("didReceiveApplicationContext: \(message)")
+
         DispatchQueue.main.async {
             for (method, applicationData) in message {
                 guard let enumMethod = WatchReceiveMethod(rawValue: method) else {

@@ -68,7 +68,7 @@ void main() async {
       final txController = sl.get<TransactionServiceMock>();
       final to = await wallet.getPublicKey(true, AddressType.P2SHSegwit);
       final tx = await wallet.prepareUtxoToAccountTransaction(to, 240 * 100000000);
-      expect(tx, 240 * 100000000);
+      expect(tx.item1, 240 * 100000000);
       expect(txController.lastTx, null);
       await destoryTest();
     });

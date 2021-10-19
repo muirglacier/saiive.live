@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.import_contacts),
             label: S.of(context).addressbook,
             page: AddressBookScreen(key: PageStorageKey('AddressBook')),
-            visibleForBottomNav: true,
+            visibleForBottomNav: false,
             routeSettingName: "/addressbook"),
         // NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
         NavigationEntry(

@@ -75,7 +75,7 @@ class _AddressBookEntryEditScreen extends State<AddressBookEntryEditScreen> {
 
                     await widget.database.updateAddressBookEntry(address);
                   }
-                  Navigator.popUntil(context, ModalRoute.withName('/home'));
+                  Navigator.pop(context);
                 }
               },
               child: Text(widget.isNewEntry ? S.of(context).add : S.of(context).save),

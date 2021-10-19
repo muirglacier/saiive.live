@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/addressbook/address_book_db.dart';
@@ -53,8 +54,8 @@ class _AddressBookScreen extends State<AddressBookScreen> {
   Widget _buildAdressEntry(BuildContext context, AddressBookEntry address) {
     return Card(
         child: ListTile(
-      leading: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [TokenIcon(ChainHelper.chainTypeString(address.chain))]),
-      title: Row(children: [SizedBox(width: 10), Text(address.name)]),
+      leading: TokenIcon(ChainHelper.chainTypeString(address.chain)),
+      title: AutoSizeText(address.name, maxLines: 1),
       onTap: () async {
         if (widget.selectOnlyMode) {
           widget.onAddressSelected(address);
@@ -67,10 +68,7 @@ class _AddressBookScreen extends State<AddressBookScreen> {
           await _init();
         }
       },
-      trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text(address.publicKey, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))]),
+      subtitle: AutoSizeText(address.publicKey, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
     ));
   }
 
@@ -103,19 +101,7 @@ class _AddressBookScreen extends State<AddressBookScreen> {
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-          title: Row(children: [
-            if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
-              Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    onTap: () {
-                      var key = StateContainer.of(context).scaffoldKey;
-                      key.currentState.openDrawer();
-                    },
-                    child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                  )),
-            Text(S.of(context).addressbook)
-          ]),
+          title: Text(S.of(context).addressbook),
           actions: [
             if (!widget.selectOnlyMode)
               Padding(

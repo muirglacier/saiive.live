@@ -13,6 +13,7 @@ import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/accounts/accounts_add_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_detail_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_select_action_screen.dart';
+import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 
 import 'accounts_import_screen.dart';
@@ -111,41 +112,48 @@ class _AccountScreen extends State<AccountsScreen> {
   }
 
   Widget _buildSelectIcon(bool isSelected, WalletAccount account) {
-    final width = MediaQuery.of(context).size.width;
-
     if (isSelectionMode) {
-      return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-        Icon(
-          isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-          color: Theme.of(context).primaryColor,
-        ),
-        SizedBox(width: 10),
-        SizedBox(width: width / 3, child: AutoSizeText(account.name, maxLines: 1, style: Theme.of(context).textTheme.headline3))
-      ]);
+      return Stack(
+        children: <Widget>[
+          TokenIcon(ChainHelper.chainTypeString(account.chain), opacity: 0.2),
+          Positioned(
+            bottom: 0, right: 0, //give the values according to your requirement
+            child: Icon(
+              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
+      );
     } else {
-      return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-        Icon(
-          isSelected ? Icons.visibility : Icons.visibility_off,
-          color: Theme.of(context).primaryColor,
-        ),
-        SizedBox(width: 10),
-        SizedBox(width: width / 3, child: AutoSizeText(account.name, maxLines: 1, style: Theme.of(context).textTheme.headline3))
-      ]);
+      return Stack(
+        children: <Widget>[
+          if (!account.selected)
+            ColorFiltered(colorFilter: ColorFilter.mode(Colors.grey, BlendMode.color), child: TokenIcon(ChainHelper.chainTypeString(account.chain), opacity: 1.0)),
+          if (account.selected) TokenIcon(ChainHelper.chainTypeString(account.chain), opacity: 1.0),
+          if (!account.selected)
+            Positioned(
+              bottom: -5,
+              right: -5,
+              child: Container(
+                  child: Icon(
+                account.selected ? Icons.visibility : Icons.visibility_off,
+                color: account.selected ? Colors.green : Colors.red,
+              )),
+            ),
+        ],
+      );
     }
   }
 
   Widget _buildAccountEntry(BuildContext context, WalletAccount account) {
     return Card(
         child: ListTile(
-      title: Row(children: [
-        _buildSelectIcon(account.selected, account),
-        SizedBox(width: 10),
+      title: Text(account.name),
+      subtitle: Row(children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Row(children: _buildPublicKeyAddress(context, account))])
       ]),
-      trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text(ChainHelper.chainTypeString(account.chain), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))]),
+      leading: _buildSelectIcon(account.selected, account),
       onTap: () async {
         await onTap(account.selected, account);
       },

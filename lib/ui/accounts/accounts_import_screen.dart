@@ -13,6 +13,7 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/accounts/account_import_private_key_select_address_type_dialog.dart';
 import 'package:saiive.live/ui/accounts/accounts_address_add_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_edit_screen.dart';
 import 'package:saiive.live/ui/utils/qr_code_scan.dart';
@@ -38,6 +39,23 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
 
   popToAccountsPage() {
     Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  Future<AddressType> selectPublicKeyTypeForPrivateKey() async {
+    AddressType addressType = AddressType.P2SHSegwit;
+
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AccountImportPrivateKeySelectAddressTypeDialog(
+            initialValue: addressType,
+            onValueChange: (a) {
+              addressType = a;
+            });
+      },
+    );
+    return addressType;
   }
 
   Future shouldImportPrivateKeyForPublicKey(String pubKey, String privKey, IWalletDatabase database) async {
@@ -141,21 +159,26 @@ class _AccountsImportScreen extends State<AccountsImportScreen> {
             id: -1,
             chain: widget.chainType,
             account: -1,
+            selected: true,
             derivationPathType: PathDerivationType.SingleKey,
             walletAccountType: WalletAccountType.PrivateKey,
             name: ChainHelper.chainTypeString(widget.chainType) + "_" + data[data.length - 1]);
 
-        var p2sh = HdWalletUtil.getPublicAddressFromWif(data, widget.chainType, currentNet, AddressType.P2SHSegwit);
+        var useAddressType = await selectPublicKeyTypeForPrivateKey();
+        if (useAddressType == null) {
+          return;
+        }
+        var address = HdWalletUtil.getPublicAddressFromWif(data, widget.chainType, currentNet, useAddressType);
 
-        final isOwnAddress = await walletDb.isOwnAddress(p2sh);
+        final isOwnAddress = await walletDb.isOwnAddress(address);
 
         if (isOwnAddress) {
-          await shouldImportPrivateKeyForPublicKey(p2sh, data, walletDb);
+          await shouldImportPrivateKeyForPublicKey(address, data, walletDb);
           popToAccountsPage();
         } else {
           Navigator.of(context).push(MaterialPageRoute(
               settings: RouteSettings(name: "/accountsEditScreen"),
-              builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, p2sh, AddressType.P2SHSegwit, privateKey: data)));
+              builder: (BuildContext context) => AccountsEditScreen(walletAccount, currentNet, true, address, AddressType.P2SHSegwit, privateKey: data)));
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

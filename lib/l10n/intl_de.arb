@@ -119,6 +119,11 @@
   "wallet_operation_mempool_conflict": "Bitte warte bis deine Transaktion dem nächsten Block hinzugefügt wurde, bevor du mit einer neuen Transaktion fortfährst.",
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
 
+
+  "addressbook": "Addressbuch",
+  "addressbook_add": "Addresse hinzufügen",
+  "addressbook_edit": "Addresse bearbeiten",
+
   "wallet_accounts": "Konten",
   "wallet_account_index": "Konto Index",
   "wallet_accounts_readonly": "Nur Lesen",

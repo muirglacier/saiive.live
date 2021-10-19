@@ -109,6 +109,8 @@ class HdWalletUtil {
         break;
       case AddressType.P2SHSegwit:
         return _getPayToScriptHashPublicKey(pair.publicKey, chainType, network);
+      case AddressType.Bech32:
+        return _getBech32PublicKey(pair.publicKey, chainType, network);
       default:
         throw new ArgumentError("not supported...");
     }

@@ -8,7 +8,8 @@ typedef void AccountSelectionItemSelected(ChainType chainType);
 
 class AccountsSelectActionScreen extends StatefulWidget {
   final AccountSelectionItemSelected onAction;
-  AccountsSelectActionScreen(this.onAction);
+  final bool defichainOnly;
+  AccountsSelectActionScreen(this.onAction, {this.defichainOnly = true});
 
   @override
   State<StatefulWidget> createState() => _AccountsSelectActionScreen();
@@ -30,7 +31,11 @@ class _AccountsSelectActionScreen extends State<AccountsSelectActionScreen> {
 
   _buildAccountSelectActionScreen(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(10), child: Scrollbar(child: Padding(padding: EdgeInsets.only(right: 10), child: ListView(children: [_buildEntry(context, ChainType.DeFiChain)]))));
+        padding: EdgeInsets.all(10),
+        child: Scrollbar(
+            child: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: ListView(children: [_buildEntry(context, ChainType.DeFiChain), if (!widget.defichainOnly) _buildEntry(context, ChainType.Bitcoin)]))));
   }
 
   @override

@@ -1065,6 +1065,36 @@ class S {
     );
   }
 
+  /// `Addressbook`
+  String get addressbook {
+    return Intl.message(
+      'Addressbook',
+      name: 'addressbook',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add address`
+  String get addressbook_add {
+    return Intl.message(
+      'Add address',
+      name: 'addressbook_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit address`
+  String get addressbook_edit {
+    return Intl.message(
+      'Edit address',
+      name: 'addressbook_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Accounts`
   String get wallet_accounts {
     return Intl.message(

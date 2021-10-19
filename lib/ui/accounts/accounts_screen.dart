@@ -98,12 +98,10 @@ class _AccountScreen extends State<AccountsScreen> {
   }
 
   List<Widget> _buildPublicKeyAddress(BuildContext context, WalletAccount account) {
-    final width = MediaQuery.of(context).size.width;
-
     if (account.walletAccountType == WalletAccountType.HdAccount) {
       var text = "${WalletAccount.getStringForWalletAccountType(account.walletAccountType)}(${pathDerivationTypeString(account.derivationPathType)})";
       return [
-        SizedBox(width: width / 5, child: AutoSizeText(text, maxLines: 1, overflow: TextOverflow.ellipsis)),
+        AutoSizeText(text, maxLines: 1, overflow: TextOverflow.ellipsis),
       ];
     }
 

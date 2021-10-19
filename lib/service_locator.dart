@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/channel.dart';
+import 'package:saiive.live/crypto/addressbook/address_book_db.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
+import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/account_history_service.dart';
 import 'package:saiive.live/network/account_service.dart';
 import 'package:saiive.live/network/balance_service.dart';
@@ -38,6 +41,7 @@ import 'package:saiive.live/services/mobile_vault.dart';
 import 'network/api_service.dart';
 import 'network/ihttp_service.dart';
 import 'network/model/ivault.dart';
+import 'package:path/path.dart';
 
 GetIt sl = GetIt.instance;
 
@@ -91,5 +95,16 @@ void setupServiceLocator() {
       return DesktopUnlockHandler();
     }
     return MobileUnlockHandler();
+  });
+
+  sl.registerSingletonAsync<IAddressBookDatabase>(() async {
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+
+    var currentEnvironment = EnvHelper.getEnvironment();
+
+    var path = join(documentsDirectory.path, "saiive.live", EnvHelper.environmentToString(currentEnvironment));
+    var service = AddressBookDatabase(path);
+
+    return service;
   });
 }

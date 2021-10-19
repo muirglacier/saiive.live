@@ -24,7 +24,7 @@ import WatchConnectivity
     private func initFlutterChannel() {
         if let controller = window?.rootViewController as? FlutterViewController {
             let channel = FlutterMethodChannel(
-                name: "at.saiive.live",
+                name: "at.saiive.live.defi",
                 binaryMessenger: controller.binaryMessenger)
             
             channel.setMethodCallHandler({ [weak self] (
@@ -49,7 +49,7 @@ import WatchConnectivity
                     ctx[method as! String] = data
                     
                     do {
-                        try WCSession.default.updateApplicationContext(ctx)
+                        try watchSession.updateApplicationContext(["test": "test"])
                     } catch {
                         debugPrint(error)
                     }
@@ -82,7 +82,7 @@ extension AppDelegate: WCSessionDelegate {
         DispatchQueue.main.async {
             if let method = message["method"] as? String, let controller = self.window?.rootViewController as? FlutterViewController {
                 let channel = FlutterMethodChannel(
-                    name: "at.saiive.live",
+                    name: "at.saiive.live.defi",
                     binaryMessenger: controller.binaryMessenger)
                 channel.invokeMethod(method, arguments: message)
             }
@@ -93,7 +93,7 @@ extension AppDelegate: WCSessionDelegate {
         DispatchQueue.main.async {
             if let method = applicationContext["method"] as? String, let controller = self.window?.rootViewController as? FlutterViewController {
                 let channel = FlutterMethodChannel(
-                    name: "at.saiive.live",
+                    name: "at.saiive.live.defi",
                     binaryMessenger: controller.binaryMessenger)
                 channel.invokeMethod(method, arguments: applicationContext)
             }

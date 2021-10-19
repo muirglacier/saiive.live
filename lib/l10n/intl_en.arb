@@ -118,6 +118,9 @@
   "wallet_operation_mempool_conflict": "Please wait for your transaction to be reflected in the next block before proceeding with a new transaction.",
   "wallet_operation_missing_inputs": "Wallet is not synced. Please retry your transaction.",
 
+  "addressbook": "Addressbook",
+  "addressbook_add": "Add address",
+  "addressbook_edit": "Edit address",
 
   "wallet_accounts": "Accounts",
   "wallet_account_index": "Account index",

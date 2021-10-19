@@ -5,6 +5,7 @@ import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/model/address_book_model.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
@@ -14,6 +15,7 @@ import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/addressbook/addressbook_screen.dart';
 import 'package:saiive.live/ui/utils/qr_code_scan.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
@@ -122,22 +124,47 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                                 ? InputDecoration(hintText: S.of(context).wallet_send_address)
                                 : InputDecoration(
                                     hintText: S.of(context).wallet_send_address,
-                                    suffixIcon: IconButton(
-                                      onPressed: () async {
-                                        var status = await Permission.camera.status;
-                                        if (!status.isGranted) {
-                                          final permission = await Permission.camera.request();
+                                    suffixIcon: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (Platform.isAndroid || Platform.isIOS)
+                                            IconButton(
+                                              onPressed: () async {
+                                                var status = await Permission.camera.status;
+                                                if (!status.isGranted) {
+                                                  final permission = await Permission.camera.request();
 
-                                          if (!permission.isGranted) {
-                                            return;
-                                          }
-                                        }
-                                        final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
-                                        _addressController.text = address;
-                                      },
-                                      icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
-                                    ),
-                                  ))))
+                                                  if (!permission.isGranted) {
+                                                    return;
+                                                  }
+                                                }
+                                                final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
+                                                _addressController.text = address;
+                                              },
+                                              icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
+                                            ),
+                                          SizedBox(width: 10),
+                                          IconButton(
+                                            onPressed: () async {
+                                              AddressBookEntry usedAddress;
+                                              await Navigator.of(context).push(MaterialPageRoute(
+                                                  builder: (BuildContext context) => AddressBookScreen(
+                                                      selectOnlyMode: true,
+                                                      chainFilter: widget.chainType,
+                                                      onAddressSelected: (a) {
+                                                        usedAddress = a;
+                                                      })));
+
+                                              if (usedAddress != null) {
+                                                setState(() {
+                                                  _addressController.text = usedAddress.publicKey;
+                                                });
+                                              }
+                                            },
+                                            icon: Icon(Icons.import_contacts, color: StateContainer.of(context).curTheme.primary),
+                                          ),
+                                        ])))))
               ]),
               Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 Expanded(

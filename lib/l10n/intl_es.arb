@@ -144,6 +144,10 @@
   "wallet_account_export_private_key": "Export private key",
   "wallet_account_nothing_selected": "No account selected",
 
+  "addressbook": "Directorio",
+  "addressbook_add": "Añadir dirección",
+  "addressbook_edit": "Editar dirección",
+
   "wallet_send": "Enviar",
   "wallet_return_address": "Change address",
   "wallet_use_custom_return_address": "Use custom change address",

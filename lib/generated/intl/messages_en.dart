@@ -35,6 +35,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "add" : MessageLookupByLibrary.simpleMessage("Add"),
     "address" : MessageLookupByLibrary.simpleMessage("Address"),
+    "addressbook" : MessageLookupByLibrary.simpleMessage("Addressbook"),
+    "addressbook_add" : MessageLookupByLibrary.simpleMessage("Add address"),
+    "addressbook_edit" : MessageLookupByLibrary.simpleMessage("Edit address"),
     "advanced" : MessageLookupByLibrary.simpleMessage("Advanced"),
     "authenticate" : MessageLookupByLibrary.simpleMessage("Please authenticate"),
     "biometric_auth_error" : MessageLookupByLibrary.simpleMessage("Biometric Authentification Error"),

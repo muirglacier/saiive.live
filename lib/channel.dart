@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/services.dart';
 
@@ -30,17 +29,19 @@ class ChannelConnection {
   }
 
   void sendMessage(var data) {
-    print("----- sending to watch");
-    print(data);
+    if (Platform.isIOS) {
+      print("----- sending to watch");
+      print(data);
 
-    channel.invokeMethod("message", data);
+      channel.invokeMethod("message", data);
+    }
   }
 
   void sendData(var data) {
-    print("----- sending to watch");
-    print(data);
-
     if (Platform.isIOS) {
+      print("----- sending to watch");
+      print(data);
+
       channel.invokeMethod("applicationContext", data);
     }
   }

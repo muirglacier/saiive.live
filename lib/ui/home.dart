@@ -16,6 +16,8 @@ import 'package:saiive.live/ui/wallet/wallet_home.dart';
 import 'package:saiive.live/ui/widgets/version_widget.dart';
 import 'package:flutter/material.dart';
 
+import 'addressbook/addressbook_screen.dart';
+
 class NavigationEntry {
   final Icon icon;
   final String label;
@@ -51,6 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
             page: AccountsScreen(key: PageStorageKey('Accounts')),
             visibleForBottomNav: true,
             routeSettingName: "/accounts"),
+        NavigationEntry(
+            icon: Icon(Icons.import_contacts),
+            label: S.of(context).addressbook,
+            page: AddressBookScreen(key: PageStorageKey('AddressBook')),
+            visibleForBottomNav: true,
+            routeSettingName: "/addressbook"),
         // NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
         NavigationEntry(
             icon: Icon(Icons.radio_button_unchecked),

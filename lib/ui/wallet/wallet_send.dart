@@ -50,7 +50,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     try {
       Wakelock.enable();
 
-      final amount = double.parse(_amountController.text);
+      final amount = double.parse(_amountController.text.replaceAll(',','.'));
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
 
       var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);

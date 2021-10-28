@@ -115,7 +115,8 @@ class _AccountScreen extends State<AccountsScreen> {
         children: <Widget>[
           TokenIcon(ChainHelper.chainTypeString(account.chain), opacity: 0.2),
           Positioned(
-            bottom: 0, right: 0, //give the values according to your requirement
+            bottom: 0,
+            right: 0,
             child: Icon(
               isSelected ? Icons.check_box : Icons.check_box_outline_blank,
               color: Theme.of(context).primaryColor,

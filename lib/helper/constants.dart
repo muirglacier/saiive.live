@@ -13,17 +13,16 @@ class DefiChainConstants {
     switch (net) {
       case ChainNet.Mainnet:
         if (chainType == ChainType.DeFiChain)
-          return "https://mainnet-supernode.saiive.live/explorer/#/DFI/mainnet";
-        else
-          return "https://blockstream.info";
+          return "https://explorer.saiive.live/explorer/#/DFI/mainnet";
+        else if (chainType == ChainType.Bitcoin) return "https://explorer.saiive.live/explorer/#/BTC/mainnet";
         break;
       case ChainNet.Testnet:
         if (chainType == ChainType.DeFiChain)
-          return "https://testnet-supernode.saiive.live/testnet/#/DFI/testnet";
-        else
-          return "https://blockstream.info/testnet";
+          return "https://explorer.saiive.live/testnet/#/DFI/testnet";
+        else if (chainType == ChainType.Bitcoin) return "https://explorer.saiive.live/explorer/#/BTC/testnet";
         break;
     }
+    return "https://explorer.saiive.live";
   }
 
   static getExplorerUrl(ChainType chain, ChainNet net, String txId) {

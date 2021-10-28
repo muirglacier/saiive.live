@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -221,7 +222,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountFromController.text);
+    double amount = double.tryParse(_amountFromController.text.replaceAll(',','.'));
 
     if (null == amount) {
       return;
@@ -311,7 +312,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountFromController.text);
+    double amount = double.tryParse(_amountFromController.text.replaceAll(',','.'));
 
     if (amount == 0) {
       setState(() {
@@ -349,7 +350,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountToController.text);
+    double amount = double.tryParse(_amountToController.text.replaceAll(',','.'));
 
     if (amount == 0) {
       setState(() {

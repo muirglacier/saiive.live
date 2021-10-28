@@ -235,7 +235,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountTokenAController.text);
+    double amount = double.tryParse(_amountTokenAController.text.replaceAll(',','.'));
 
     if (amount == 0) {
       setState(() {
@@ -272,7 +272,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountTokenBController.text);
+    double amount = double.tryParse(_amountTokenBController.text.replaceAll(',','.'));
 
     if (amount == 0) {
       setState(() {

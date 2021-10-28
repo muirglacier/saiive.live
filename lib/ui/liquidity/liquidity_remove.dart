@@ -136,7 +136,7 @@ class _LiquidityRemoveScreen extends State<LiquidityRemoveScreen> {
   }
 
   handleChangePercentage() {
-    double amount = double.tryParse(_percentageTextController.text);
+    double amount = double.tryParse(_percentageTextController.text.replaceAll(',','.'));
 
     if (amount == null) {
       return;

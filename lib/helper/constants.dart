@@ -13,13 +13,13 @@ class DefiChainConstants {
     switch (net) {
       case ChainNet.Mainnet:
         if (chainType == ChainType.DeFiChain)
-          return "https://explorer.saiive.live/explorer/#/DFI/mainnet";
-        else if (chainType == ChainType.Bitcoin) return "https://explorer.saiive.live/explorer/#/BTC/mainnet";
+          return "https://explorer.saiive.live/#/DFI/mainnet";
+        else if (chainType == ChainType.Bitcoin) return "https://explorer.saiive.live/#/BTC/mainnet";
         break;
       case ChainNet.Testnet:
         if (chainType == ChainType.DeFiChain)
-          return "https://explorer.saiive.live/testnet/#/DFI/testnet";
-        else if (chainType == ChainType.Bitcoin) return "https://explorer.saiive.live/explorer/#/BTC/testnet";
+          return "https://explorer.saiive.live/#/DFI/testnet";
+        else if (chainType == ChainType.Bitcoin) return "https://explorer.saiive.live/#/BTC/testnet";
         break;
     }
     return "https://explorer.saiive.live";

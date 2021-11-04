@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/addressbook/address_book_db.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -6,6 +9,7 @@ import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/model/address_book_model.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/qr_code_scan.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:uuid/uuid.dart';
 
@@ -46,9 +50,32 @@ class _AddressBookEntryEditScreen extends State<AddressBookEntryEditScreen> {
             decoration: InputDecoration(hintText: S.of(context).label),
           ),
           TextField(
-            controller: _pubKeyController,
-            decoration: InputDecoration(hintText: S.of(context).address),
-          ),
+              controller: _pubKeyController,
+              decoration: (Platform.isMacOS || Platform.isWindows)
+                  ? InputDecoration(hintText: S.of(context).wallet_send_address)
+                  : InputDecoration(
+                      hintText: S.of(context).wallet_send_address,
+                      suffixIcon: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (Platform.isAndroid || Platform.isIOS)
+                              IconButton(
+                                onPressed: () async {
+                                  var status = await Permission.camera.status;
+                                  if (!status.isGranted) {
+                                    final permission = await Permission.camera.request();
+
+                                    if (!permission.isGranted) {
+                                      return;
+                                    }
+                                  }
+                                  final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
+                                  _pubKeyController.text = address;
+                                },
+                                icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
+                              )
+                          ]))),
           SizedBox(height: 20),
           Center(
             child: ElevatedButton(

@@ -58,6 +58,8 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
           }
         }
       }
+
+      _walletAddresses.sort((a, b) => a.uniqueId.compareTo(b.uniqueId));
     }
 
     setState(() {

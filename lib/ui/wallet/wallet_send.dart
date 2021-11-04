@@ -50,7 +50,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     try {
       Wakelock.enable();
 
-      final amount = double.parse(_amountController.text.replaceAll(',','.'));
+      final amount = double.parse(_amountController.text.replaceAll(',', '.'));
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
 
       var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
@@ -120,7 +120,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         child: TextField(
                             controller: _addressController,
                             keyboardType: TextInputType.text,
-                            decoration: Platform.isMacOS
+                            decoration: (Platform.isMacOS || Platform.isWindows)
                                 ? InputDecoration(hintText: S.of(context).wallet_send_address)
                                 : InputDecoration(
                                     hintText: S.of(context).wallet_send_address,

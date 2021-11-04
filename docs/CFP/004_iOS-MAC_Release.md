@@ -16,6 +16,8 @@ We also topped the requirements including an Apple Watch application.
 
 You can download the app here [LINK](https://apps.apple.com/app/saiive-live-defi-wallet/id1588945201)!
 
+![MacAppStore](./mac-app-store.jpg)
+![iOSAppStore](./ios-app-store.png)
 
 # How will the fund be spent?
 Used for development expenses and infrastructure.

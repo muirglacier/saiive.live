@@ -250,5 +250,7 @@
   "expert": "Experte",
 
   "dfx_buy_title": "DFI Kaufen/Verkaufen",
-  "dfx_buy_address": "Kaufadresse"
+  "dfx_buy_address": "Kaufadresse",
+
+  "loan_vaults": "Darlehen"
 }

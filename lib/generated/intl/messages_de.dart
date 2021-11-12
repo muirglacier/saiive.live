@@ -99,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "liquidity_remove_price" : MessageLookupByLibrary.simpleMessage("Preis"),
     "liquidity_remove_successfull" : MessageLookupByLibrary.simpleMessage("Entfernen war erfolgreich"),
     "loading" : MessageLookupByLibrary.simpleMessage("Laden..."),
+    "loan_vaults" : MessageLookupByLibrary.simpleMessage("Darlehen"),
     "next" : MessageLookupByLibrary.simpleMessage("Weiter"),
     "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
     "pin_confirm" : MessageLookupByLibrary.simpleMessage("PIN bestätigen"),

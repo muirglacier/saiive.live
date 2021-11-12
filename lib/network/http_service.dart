@@ -62,7 +62,7 @@ class HttpService extends IHttpService {
       throw error;
     }
     final decoded = await compute(HttpService._parseJson, response.body);
-    if (decoded.containsKey("error")) {
+    if (decoded is Map && decoded.containsKey("error")) {
       throw Error.fromJson(decoded);
     }
 

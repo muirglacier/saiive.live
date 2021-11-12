@@ -7,9 +7,11 @@ import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/drawer.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
+import 'package:saiive.live/ui/loan/vaults.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
 import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
+
 // ignore: unused_import
 import 'package:saiive.live/ui/wallet/wallet_buy.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
@@ -25,7 +27,12 @@ class NavigationEntry {
   final bool visibleForBottomNav;
   final String routeSettingName;
 
-  NavigationEntry({this.icon, this.label, this.page, this.visibleForBottomNav = true, this.routeSettingName});
+  NavigationEntry(
+      {this.icon,
+      this.label,
+      this.page,
+      this.visibleForBottomNav = true,
+      this.routeSettingName});
 }
 
 class HomeScreen extends StatefulWidget {
@@ -44,9 +51,20 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_navigationEntries.isEmpty) {
       _navigationEntries = [
         NavigationEntry(
-            icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen(key: PageStorageKey('WalletHome')), routeSettingName: "/home"),
-        NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(key: PageStorageKey('Liquidity')), routeSettingName: "/liqudity"),
-        NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(key: PageStorageKey('DEX')), routeSettingName: "/dex"),
+            icon: Icon(Icons.account_balance_wallet),
+            label: S.of(context).home_wallet,
+            page: WalletHomeScreen(key: PageStorageKey('WalletHome')),
+            routeSettingName: "/home"),
+        NavigationEntry(
+            icon: Icon(Icons.pie_chart),
+            label: S.of(context).home_liquidity,
+            page: LiquidityScreen(key: PageStorageKey('Liquidity')),
+            routeSettingName: "/liqudity"),
+        NavigationEntry(
+            icon: Icon(Icons.compare_arrows),
+            label: S.of(context).home_dex,
+            page: DexScreen(key: PageStorageKey('DEX')),
+            routeSettingName: "/dex"),
         NavigationEntry(
             icon: Icon(Icons.account_box),
             label: S.of(context).wallet_accounts,
@@ -60,6 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
             visibleForBottomNav: false,
             routeSettingName: "/addressbook"),
         // NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
+        NavigationEntry(
+            icon: Icon(Icons.credit_card),
+            label: S.of(context).loan_vaults,
+            page: VaultsScreen(key: PageStorageKey('Vaults')),
+            visibleForBottomNav: false,
+            routeSettingName: "/vaults"),
         NavigationEntry(
             icon: Icon(Icons.radio_button_unchecked),
             label: S.of(context).home_tokens,
@@ -92,7 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
       )));
     }
 
-    final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();
+    final List<NavigationRailDestination> navBar = _navigationEntries
+        .map((e) =>
+            NavigationRailDestination(icon: e.icon, label: Text(e.label)))
+        .toList();
     var currentEnvironment = EnvHelper.getEnvironment();
 
     return Row(
@@ -108,8 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
             labelType: NavigationRailLabelType.all,
-            selectedIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.primary),
-            selectedLabelTextStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),
+            selectedIconTheme: IconThemeData(
+                color: StateContainer.of(context).curTheme.primary),
+            selectedLabelTextStyle:
+                TextStyle(color: StateContainer.of(context).curTheme.primary),
             leading: Container(
                 child: Column(children: [
               SizedBox(
@@ -117,14 +146,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(children: [
                     Padding(
                       padding: EdgeInsets.only(left: 20, top: 20, right: 20),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-                        Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5),
-                        VersionWidget(),
-                        if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
-                      ]),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(S.of(context).wallet_home_network,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 5),
+                            VersionWidget(),
+                            if (currentEnvironment !=
+                                EnvironmentType.Production)
+                              Text(EnvHelper.environmentToString(
+                                  currentEnvironment))
+                          ]),
                     ),
-                    Divider(color: StateContainer.of(context).curTheme.backgroundColor)
+                    Divider(
+                        color:
+                            StateContainer.of(context).curTheme.backgroundColor)
                   ]))
             ])),
             destinations: navBar),
@@ -144,8 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
       return null;
     }
 
-    final List<BottomNavigationBarItem> bottomNavBar =
-        _navigationEntries.where((a) => a.visibleForBottomNav).map((e) => BottomNavigationBarItem(icon: e.icon, label: e.label)).toList();
+    final List<BottomNavigationBarItem> bottomNavBar = _navigationEntries
+        .where((a) => a.visibleForBottomNav)
+        .map((e) => BottomNavigationBarItem(icon: e.icon, label: e.label))
+        .toList();
 
     return BottomNavigationBar(
       items: bottomNavBar,
@@ -165,7 +205,9 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       Navigator.pop(context);
     } else {
-      Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: nav.routeSettingName), builder: (BuildContext context) => nav.page));
+      Navigator.of(context).push(MaterialPageRoute(
+          settings: RouteSettings(name: nav.routeSettingName),
+          builder: (BuildContext context) => nav.page));
     }
   }
 

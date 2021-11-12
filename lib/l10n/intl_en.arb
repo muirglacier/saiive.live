@@ -256,5 +256,7 @@
   "expert": "Expert",
 
   "dfx_buy_title": "Buy/Sell DFI",
-  "dfx_buy_address": "Buy address"
+  "dfx_buy_address": "Buy address",
+
+  "loan_vaults": "Darlehen"
 }

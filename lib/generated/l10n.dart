@@ -2254,6 +2254,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Darlehen`
+  String get loan_vaults {
+    return Intl.message(
+      'Darlehen',
+      name: 'loan_vaults',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

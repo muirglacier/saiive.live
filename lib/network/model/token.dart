@@ -76,4 +76,8 @@ class Token {
       collateralAddress: json['collateralAddress'],
     );
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'id': id
+  };
 }

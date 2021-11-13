@@ -32,7 +32,7 @@ class LoanVault {
   factory LoanVault.fromJson(Map<String, dynamic> json) {
     return LoanVault(
         vaultId: json['vaultId'],
-        schema: json['schema'],
+        schema: LoanSchema.fromJson(json['loanScheme']),
         ownerAddress: json['ownerAddress'],
         state: json['state'],
         informativeRatio: json['informativeRatio'],

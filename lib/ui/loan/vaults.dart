@@ -89,17 +89,9 @@ class _VaultsScreen extends State<VaultsScreen> {
     );
   }
 
-  Widget _buildVaultEntry(LoanVault vault) {
-    return Card(
-        child:
-            Text(vault.vaultId, style: Theme.of(context).textTheme.headline3));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: Text(S.of(context).loan_vaults)),
         body: LayoutBuilder(builder: (_, builder) {
           return buildVaultScreen(context);
         }));

@@ -1,11 +1,5 @@
-import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
-import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
-import 'package:saiive.live/network/model/pool_share_liquidity.dart';
-import 'package:saiive.live/ui/liquidity/pool_share.dart';
 import 'package:saiive.live/ui/loan/vault_detail.dart';
-import 'package:saiive.live/ui/utils/fund_formatter.dart';
-import 'package:saiive.live/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/utils/token_set_icon.dart';
 

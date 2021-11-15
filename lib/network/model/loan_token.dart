@@ -1,10 +1,12 @@
 import 'package:saiive.live/crypto/crypto/from_account.dart';
 import 'package:saiive.live/helper/constants.dart';
+import 'package:saiive.live/network/model/loan_token_token.dart';
+import 'package:saiive.live/network/model/token.dart';
 
 class LoanToken {
   final String tokenId;
-  final LoanToken token;
-  final int interest;
+  final LoanTokenToken token;
+  final String interest;
   final String fixedIntervalPriceId;
 
   LoanToken(
@@ -13,7 +15,7 @@ class LoanToken {
   factory LoanToken.fromJson(Map<String, dynamic> json) {
     return LoanToken(
         tokenId: json['tokenId'],
-        token: LoanToken.fromJson(json['token']),
+        token: LoanTokenToken.fromJson(json['token']),
         interest: json['interest'],
         fixedIntervalPriceId: json['fixedIntervalPriceId']);
   }

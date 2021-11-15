@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:saiive.live/bus/loan_collateral_loaded_event.dart';
 import 'package:saiive.live/bus/loan_collaterals_loaded_event.dart';
@@ -92,15 +93,13 @@ class LoansService extends NetworkService implements ILoansService {
 
   Future<List<LoanToken>> getLoanTokens(String coin) async {
     dynamic response =
-    await this.httpService.makeHttpGetRequest('/loans/tokens', coin);
+    await this.httpService.makeDynamicHttpGetRequest('/loans/tokens', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    List<LoanToken> tokens = response.entries
-        .map<LoanToken>((data) => LoanToken.fromJson(data.value))
-        .toList();
+    List<LoanToken> tokens = json.decode(response.body).map<LoanToken>((data) => LoanToken.fromJson(data)).toList();
 
     this.fireEvent(new LoanTokensLoadedEvent(loanTokens: tokens));
 

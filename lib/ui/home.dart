@@ -7,7 +7,7 @@ import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/drawer.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
-import 'package:saiive.live/ui/loan/vaults.dart';
+import 'package:saiive.live/ui/loan/vaults_home.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
 import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
         NavigationEntry(
             icon: Icon(Icons.credit_card),
             label: S.of(context).loan_vaults,
-            page: VaultsScreen(key: PageStorageKey('Vaults')),
+            page: VaultsHomeScreen(key: PageStorageKey('Vaults')),
             visibleForBottomNav: false,
             routeSettingName: "/vaults"),
         NavigationEntry(

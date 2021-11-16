@@ -315,7 +315,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     final txb = await HdWalletUtil.buildTransaction(useTxs, keys, owner, (minAmount - fees) * -1, fees, owner, (txb, inputTxs, nw) {
-      txb.addCreateVault(owner, schemeId);
+      txb.addCreateVault(owner, schemeId, minAmount - fees);
     }, chain, network);
 
     var txi = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, ownerAddress), loadingStream: loadingStream);
@@ -324,6 +324,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     return txi.txId;
   }
+
+  Future<String> depositToVault() {}
 
   Future<String> createAccountTransaction(String token, int amount, String to,
       {bool sendMax = false, List<String> excludeAddresses, StreamController<String> loadingStream}) async {

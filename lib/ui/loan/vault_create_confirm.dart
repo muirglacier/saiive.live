@@ -29,6 +29,7 @@ class VaultCreateConfirmScreen extends StatefulWidget {
 
 class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
   String _toAddress;
+
   @override
   void initState() {
     super.initState();
@@ -51,10 +52,11 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
-      //TODO navigate back to vault page
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Create vault successfull!"),
       ));
+
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
@@ -67,9 +69,9 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
   _buildView() {
     List<List<String>> items = [
       ['Transaction Type', 'Create vault'],
-      ['Vault fee', FundFormatter.format(2)],
+      ['Vault fee', FundFormatter.format(1)],
       ['Estimated Fee', FundFormatter.format(0.0002)],
-      ['Total transaction cost', FundFormatter.format(2.0002)],
+      ['Total transaction cost', FundFormatter.format(1.0002)],
     ];
 
     List<List<String>> itemsSchema = [

@@ -9,13 +9,20 @@ import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
+import 'package:saiive.live/util/refresh_able_widget.dart';
 
-class VaultsScreen extends StatefulWidget {
-  const VaultsScreen({Key key}) : super(key: key);
+class VaultsScreen extends RefreshableWidget {
+  final _state = _VaultsScreen();
+  VaultsScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _VaultsScreen();
+    return _state;
+  }
+
+  @override
+  void refresh() {
+    _state._initVaults();
   }
 }
 
@@ -35,11 +42,15 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
   }
 
   _initVaults() async {
+    setState(() {
+      _vaults = null;
+    });
+
     var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
     var vaults = await sl.get<IVaultsService>().getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
 
     setState(() {
-      _vaults = [vaults[0], vaults[1]];
+      _vaults = vaults;
     });
   }
 

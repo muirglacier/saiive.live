@@ -161,7 +161,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   coverage:
     dependency: transitive
     description:
@@ -196,7 +196,7 @@ packages:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.6.0+1"
+    version: "3.8.0-prerelease.2"
   device_info:
     dependency: "direct main"
     description:

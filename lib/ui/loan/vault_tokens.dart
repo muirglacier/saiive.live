@@ -14,13 +14,21 @@ import 'package:saiive.live/ui/loan/vault_token_box.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
+import 'package:saiive.live/util/refresh_able_widget.dart';
 
-class VaultTokensScreen extends StatefulWidget {
-  const VaultTokensScreen({Key key}) : super(key: key);
+class VaultTokensScreen extends RefreshableWidget {
+  final _VaultTokensScreen _state = _VaultTokensScreen();
+
+  VaultTokensScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _VaultTokensScreen();
+    return _state;
+  }
+
+  @override
+  void refresh() {
+    _state?._initTokens();
   }
 }
 
@@ -39,6 +47,10 @@ class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliv
   }
 
   _initTokens() async {
+    setState(() {
+      _tokens = null;
+    });
+
     var tokens = await sl.get<ILoansService>().getLoanTokens(DeFiConstants.DefiAccountSymbol);
 
     setState(() {

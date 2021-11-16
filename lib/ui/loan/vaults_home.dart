@@ -13,9 +13,20 @@ class VaultsHomeScreen extends StatefulWidget {
   }
 }
 
-class _VaultsHomeScreen extends State<VaultsHomeScreen> {
+class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  int _selectedIndex = 0;
+
+  var _tabs = [VaultTokensScreen(), VaultsScreen()];
+
   @override
   void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+
+    _tabController.addListener(() {
+      _selectedIndex = _tabController.index;
+    });
+
     super.initState();
   }
 
@@ -25,7 +36,8 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            bottom: const TabBar(
+            bottom: TabBar(
+              controller: _tabController,
               tabs: [
                 Tab(
                   text: 'Browse Loans',
@@ -43,10 +55,19 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> {
                     },
                     child: Icon(Icons.add, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   )),
+              Padding(
+                  padding: EdgeInsets.only(right: 40.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      _tabs[_selectedIndex].refresh();
+                    },
+                    child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
             ],
           ),
-          body: const TabBarView(
-            children: [VaultTokensScreen(), VaultsScreen()],
+          body: TabBarView(
+            children: _tabs,
+            controller: _tabController,
           ),
         ));
   }

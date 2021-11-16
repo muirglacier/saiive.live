@@ -42,7 +42,7 @@ packages:
       name: archive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.5"
+    version: "3.1.6"
   args:
     dependency: transitive
     description:
@@ -196,7 +196,7 @@ packages:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.8.0-prerelease.4"
+    version: "3.8.0-prerelease.5"
   device_info:
     dependency: "direct main"
     description:
@@ -720,7 +720,7 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.3"
+    version: "4.2.4"
   pub_semver:
     dependency: transitive
     description:
@@ -984,21 +984,21 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.17.12"
+    version: "1.19.3"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.4.7"
   test_core:
     dependency: transitive
     description:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2"
+    version: "0.4.8"
   tuple:
     dependency: "direct main"
     description:

@@ -564,7 +564,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
                 )),
           ]),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + _selectedTokenA.hash)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + (_poolPairCondition ? _selectedTokenA.hash : _selectedTokenB.hash))),
             Expanded(
                 flex: 6,
                 child: Column(
@@ -578,7 +578,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
             thickness: 2,
           ),
           Row(children: [
-            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + _selectedTokenB.hash)),
+            Expanded(flex: 4, child: Text(S.of(context).liquidity_add_total_pooled + ' ' + (_poolPairCondition ? _selectedTokenB.hash : _selectedTokenA.hash))),
             Expanded(
                 flex: 6,
                 child: Column(

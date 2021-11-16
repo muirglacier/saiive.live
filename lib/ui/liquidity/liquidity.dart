@@ -13,6 +13,7 @@ import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
 import 'package:saiive.live/ui/liquidity/liquidity_add.dart';
 import 'package:saiive.live/ui/liquidity/liquidity_box.dart';
@@ -130,8 +131,20 @@ class _LiquidityScreen extends State<LiquidityScreen> {
               ),
               Container(
                 child: Row(children: [
-                  Expanded(flex: 4, child: Text(liquidity.tokenA)),
+                  Expanded(flex: 4, child: Text('USD \$')),
                   Expanded(flex: 6, child: Text(formatCurrency.format(liquidity.totalLiquidityInUSDT), textAlign: TextAlign.right))
+                ]),
+              ),
+              Container(
+                child: Row(children: [
+                  Expanded(flex: 4, child: Text(liquidity.tokenA)),
+                  Expanded(flex: 6, child: Text(FundFormatter.format(liquidity.poolPair.reserveA), textAlign: TextAlign.right))
+                ]),
+              ),
+              Container(
+                child: Row(children: [
+                  Expanded(flex: 4, child: Text(liquidity.tokenB)),
+                  Expanded(flex: 6, child: Text(FundFormatter.format(liquidity.poolPair.reserveB), textAlign: TextAlign.right))
                 ]),
               ),
             ])));

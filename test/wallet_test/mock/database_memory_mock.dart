@@ -159,8 +159,13 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<List<Transaction>> getUnspentTransactions({bool spentable = true}) {
-    _transactions.sort((a, b) => b.valueRaw.compareTo(a.valueRaw));
-    return Future.value(_transactions);
+    _unspentTransactions.sort((a, b) => b.valueRaw.compareTo(a.valueRaw));
+    return Future.value(_unspentTransactions);
+  }
+
+  @override
+  Future<Transaction> getUnspentTransactionById(String txId) {
+    return Future.value(_unspentTransactions.firstWhere((element) => element.mintTxId == txId));
   }
 
   @override

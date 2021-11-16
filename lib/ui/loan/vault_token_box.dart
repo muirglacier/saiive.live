@@ -1,15 +1,6 @@
-import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
-import 'package:saiive.live/network/model/loan_vault.dart';
-import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
-import 'package:saiive.live/network/model/pool_share_liquidity.dart';
-import 'package:saiive.live/ui/liquidity/pool_share.dart';
-import 'package:saiive.live/ui/loan/vault_detail.dart';
-import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
-import 'package:saiive.live/ui/utils/token_pair_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:saiive.live/ui/utils/token_set_icon.dart';
 
 class VaultTokenBoxWidget extends StatefulWidget {
   final LoanToken token;
@@ -36,29 +27,20 @@ class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
                 padding: EdgeInsets.all(30),
                 child: Column(children: [
                   Row(children: <Widget>[
-                    Container(
-                        decoration: BoxDecoration(color: Colors.transparent),
-                        child: TokenIcon(widget.token.token.symbolKey)),
+                    Container(decoration: BoxDecoration(color: Colors.transparent), child: TokenIcon(widget.token.token.symbolKey)),
                     Container(width: 10),
                     Expanded(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                          Text(
-                            widget.token.token.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.headline6,
-                          )
-                        ])),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(
+                        widget.token.token.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headline6,
+                      )
+                    ])),
                   ]),
                   Container(height: 10),
                   Table(border: TableBorder(), children: [
-                    TableRow(children: [
-                      Text('Interest',
-                          style: Theme.of(context).textTheme.caption),
-                      Text('Price (USD)',
-                          style: Theme.of(context).textTheme.caption)
-                    ]),
+                    TableRow(children: [Text('Interest', style: Theme.of(context).textTheme.caption), Text('Price (USD)', style: Theme.of(context).textTheme.caption)]),
                     TableRow(children: [
                       Text(widget.token.interest),
                       Text('?'),

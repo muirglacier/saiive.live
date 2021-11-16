@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:saiive.live/defi_chain_wallet_app.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -14,7 +14,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() async {
-  await DotEnv.load(fileName: "assets/env/.env-Debug");
+  await dotenv.load(fileName: "assets/env/.env-Debug");
   HttpOverrides.global = new MyHttpOverrides();
   run();
 }

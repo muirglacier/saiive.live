@@ -196,7 +196,7 @@ packages:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.8.0-prerelease.2"
+    version: "3.8.0-prerelease.4"
   device_info:
     dependency: "direct main"
     description:
@@ -278,7 +278,7 @@ packages:
       name: flutter_dotenv
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "5.0.2"
   flutter_driver:
     dependency: "direct dev"
     description: flutter

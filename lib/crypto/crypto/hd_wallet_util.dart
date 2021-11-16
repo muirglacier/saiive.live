@@ -281,9 +281,16 @@ class HdWalletUtil {
       }
     }
 
-    if (totalInputValue > (amount)) {
+    if (amount < 0) {
+      changeAmount = totalInputValue + amount - fee;
       if (changeAmount > 0) {
         txb.addOutput(returnAddress, changeAmount);
+      }
+    } else {
+      if (totalInputValue > (amount)) {
+        if (changeAmount > 0) {
+          txb.addOutput(returnAddress, changeAmount);
+        }
       }
     }
 

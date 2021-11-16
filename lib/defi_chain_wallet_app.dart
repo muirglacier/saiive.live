@@ -124,7 +124,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     return MaterialApp(
         navigatorKey: NavigationHelper.navigatorKey,
         navigatorObservers: [SaiiveRouteObserver()],
-        debugShowCheckedModeBanner: env["ENV"] == "dev",
+        debugShowCheckedModeBanner: dotenv.env["ENV"] == "dev",
         localizationsDelegates: [
           S.delegate,
           GlobalMaterialLocalizations.delegate,

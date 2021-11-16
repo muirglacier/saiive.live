@@ -30,8 +30,8 @@ class HttpService extends IHttpService {
   Future init() async {
     final chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     this.network = ChainHelper.chainNetworkString(chainNet);
-    if (env.containsKey("API_URL")) {
-      this.serverAddress = env['API_URL'];
+    if (dotenv.env.containsKey("API_URL")) {
+      this.serverAddress = dotenv.env['API_URL'];
     }
   }
 

@@ -406,6 +406,22 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
+  Future<tx.Transaction> getUnspentTransactionById(String id) async {
+    var dbStore = _unspentStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('id', id));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts.map((e) => e == null ? null : tx.Transaction.fromJson(e.value))?.toList();
+
+    if (data.isEmpty) {
+      return null;
+    }
+
+    return data.first;
+  }
+
+  @override
   Future<List<tx.Transaction>> getUnspentTransactionsForPubKey(String pubKey, int minAmount) async {
     var dbStore = _unspentStoreInstance;
 

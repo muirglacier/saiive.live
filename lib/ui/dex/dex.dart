@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -222,7 +221,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountFromController.text.replaceAll(',','.'));
+    double amount = double.tryParse(_amountFromController.text.replaceAll(',', '.'));
 
     if (null == amount) {
       return;
@@ -312,7 +311,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountFromController.text.replaceAll(',','.'));
+    double amount = double.tryParse(_amountFromController.text.replaceAll(',', '.'));
 
     if (amount == 0) {
       setState(() {
@@ -350,7 +349,7 @@ class _DexScreen extends State<DexScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountToController.text.replaceAll(',','.'));
+    double amount = double.tryParse(_amountToController.text.replaceAll(',', '.'));
 
     if (amount == 0) {
       setState(() {
@@ -383,7 +382,6 @@ class _DexScreen extends State<DexScreen> {
     }
     checkSufficientFunds();
   }
-
 
   calculateEstimatedAmount(double tokenAAmount, double reserveA, double price) {
     var slippage = 1 - (tokenAAmount / reserveA);
@@ -503,8 +501,7 @@ class _DexScreen extends State<DexScreen> {
                 TextField(
                     controller: _amountFromController,
                     decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true)
-                ),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true)),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.backgroundColor),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -556,8 +553,7 @@ class _DexScreen extends State<DexScreen> {
                 TextField(
                     controller: _amountToController,
                     decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true)
-                ),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true)),
                 SizedBox(height: 20),
                 AccountSelectAddressWidget(
                     label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),

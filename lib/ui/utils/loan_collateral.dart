@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 class LoanCollateral extends StatefulWidget {
   final LoanVaultAmount token;

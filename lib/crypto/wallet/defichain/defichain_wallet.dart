@@ -289,6 +289,46 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return await createAccountTransaction(token, amount, to, loadingStream: loadingStream);
   }
 
+  Future<String> createVault(String schemeId, {String ownerAddress, StreamController<String> loadingStream}) async {
+    var owner = ownerAddress;
+
+    if (owner == null || owner == "") {
+      owner = await getPublicKey(false, AddressType.P2SHSegwit);
+    }
+
+    var fees = await getTxFee(1, 2);
+    final unspentTxs = await walletDatabase.getUnspentTransactions();
+    final useTxs = List<tx.Transaction>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
+
+    final address = await walletDatabase.getWalletAddress(owner);
+    final walletAccount = await walletDatabase.getAccount(address.accountId);
+
+    var keyPair = await getPrivateKey(address, walletAccount);
+    keys.add(Tuple2(address, keyPair));
+
+    final minAmount = 100000000 + fees;
+
+    if (!unspentTxs.any((element) => element.address == owner && element.value >= minAmount)) {
+      var inputTx = await createUtxoTransaction(minAmount - fees, owner, owner);
+      var tx = await walletDatabase.getUnspentTransactionById(inputTx);
+      useTxs.add(tx);
+    } else {
+      var inputTx = unspentTxs.where((element) => element.address == owner && element.value >= minAmount);
+      useTxs.add(inputTx.first);
+    }
+
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, owner, (minAmount - fees) * -1, fees, owner, (txb, inputTxs, nw) {
+      txb.addCreateVault(owner, schemeId);
+    }, chain, network);
+
+    var txi = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, ownerAddress), loadingStream: loadingStream);
+
+    loadingStream?.add(S.current.wallet_operation_send_tx);
+
+    return txi.txId;
+  }
+
   Future<String> createAccountTransaction(String token, int amount, String to,
       {bool sendMax = false, List<String> excludeAddresses, StreamController<String> loadingStream}) async {
     if (token == DeFiConstants.DefiTokenSymbol) {

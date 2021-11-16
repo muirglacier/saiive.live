@@ -1,4 +1,3 @@
-import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -36,9 +35,7 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
 
   _initVaults() async {
     var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
-    var vaults = await sl
-        .get<IVaultsService>()
-        .getVaults(DeFiConstants.DefiAccountSymbol);
+    var vaults = await sl.get<IVaultsService>().getVaults(DeFiConstants.DefiAccountSymbol);
 
     setState(() {
       _vaults = [vaults[0], vaults[1]];
@@ -51,41 +48,32 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
     }
 
     if (_vaults.length == 0) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-                child: Container(
-                    padding: new EdgeInsets.all(20),
-                    child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.shield, size: 64),
-                Container(
-                    child: Text('No vault crated',
-                        style: Theme.of(context).textTheme.headline3),
-                    padding: new EdgeInsets.only(top: 5)),
-                Container(
-                    child: Text(
-                        'To get started, create a vault add add DFI and other tokens as collateral',
-                        textAlign: TextAlign.center),
-                    padding: new EdgeInsets.only(top: 5)),
-                Container(
-                    child: ElevatedButton(
-                      child: Text('Create Vault'),
-                      onPressed: () {
-                        //TODO
-                      },
-                    ),
-                    padding: new EdgeInsets.only(top: 5))
-              ],
-            )))
-          ]);
+      return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Expanded(
+            child: Container(
+                padding: new EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.shield, size: 64),
+                    Container(child: Text('No vault crated', style: Theme.of(context).textTheme.headline3), padding: new EdgeInsets.only(top: 5)),
+                    Container(
+                        child: Text('To get started, create a vault add add DFI and other tokens as collateral', textAlign: TextAlign.center),
+                        padding: new EdgeInsets.only(top: 5)),
+                    Container(
+                        child: ElevatedButton(
+                          child: Text('Create Vault'),
+                          onPressed: () {
+                            //TODO
+                          },
+                        ),
+                        padding: new EdgeInsets.only(top: 5))
+                  ],
+                )))
+      ]);
     }
 
-    var row = Responsive.buildResponsive<LoanVault>(
-        context, _vaults, 500, (el) => new VaultBoxWidget(el));
+    var row = Responsive.buildResponsive<LoanVault>(context, _vaults, 500, (el) => new VaultBoxWidget(el));
 
     return CustomScrollView(
       slivers: <Widget>[
@@ -96,9 +84,8 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: LayoutBuilder(builder: (_, builder) {
-          return buildVaultScreen(context);
-        }));
+    return Scaffold(body: LayoutBuilder(builder: (_, builder) {
+      return buildVaultScreen(context);
+    }));
   }
 }

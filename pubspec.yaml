@@ -31,14 +31,14 @@ dependencies:
   path_provider: ^2.0.1
   url_launcher: ^6.0.3
 
-  flutter_dotenv: ^3.1.0
+  flutter_dotenv: ^5.0.2
   flutter_config: ^2.0.0
   shared_preferences: ^2.0.5
   package_info_plus  : ^1.0.0
   permission_handler: ^7.1.0
 
   #cryto libs
-  defichaindart: ^3.8.0-prerelease.2
+  defichaindart: ^3.8.0-prerelease.4
   encrypt : ^5.0.0
   pointycastle: ^3.3.4
   aes_crypt: ^0.1.1

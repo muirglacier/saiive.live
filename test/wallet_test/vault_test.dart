@@ -4,7 +4,6 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saiive.live/network/model/transaction.dart';
-import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:uuid/uuid.dart';
 import 'mock/transaction_service_mock.dart';

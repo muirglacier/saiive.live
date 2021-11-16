@@ -310,7 +310,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final minAmount = 100000000 + fees;
 
     if (!unspentTxs.any((element) => element.address == owner && element.value >= minAmount)) {
-      var inputTx = await createUtxoTransaction(minAmount - fees, owner, owner);
+      var inputTx = await createUtxoTransaction(minAmount - fees, owner, owner, loadingStream: loadingStream);
       var tx = await walletDatabase.getUnspentTransactionById(inputTx);
       useTxs.add(tx);
     } else {

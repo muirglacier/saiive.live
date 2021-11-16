@@ -56,7 +56,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                     child: Icon(Icons.add, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   )),
               Padding(
-                  padding: EdgeInsets.only(right: 40.0),
+                  padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () {
                       _tabs[_selectedIndex].refresh();

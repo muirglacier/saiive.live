@@ -6,6 +6,7 @@ import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/vaults_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_box.dart';
+import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
@@ -38,7 +39,7 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
     var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
     var vaults = await sl
         .get<IVaultsService>()
-        .getVaults(DeFiConstants.DefiAccountSymbol);
+        .getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
 
     setState(() {
       _vaults = [vaults[0], vaults[1]];
@@ -75,7 +76,9 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
                     child: ElevatedButton(
                       child: Text('Create Vault'),
                       onPressed: () {
-                        //TODO
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                VaultCreateScreen()));
                       },
                     ),
                     padding: new EdgeInsets.only(top: 5))

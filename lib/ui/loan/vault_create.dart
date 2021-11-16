@@ -92,7 +92,7 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    return Padding(
+    return SingleChildScrollView(child: Padding(
         padding: EdgeInsets.all(20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Choose loan scheme for your vault',
@@ -155,7 +155,7 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
                     builder: (BuildContext context) =>
                         VaultCreateConfirmScreen(_selectedSchema)));
               }))
-        ]));
+        ])));
   }
 
   @override
@@ -164,6 +164,6 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
         appBar: AppBar(
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
             title: Text('Create Vault')),
-        body: SingleChildScrollView(child: buildCreateVaultScreen(context)));
+        body: buildCreateVaultScreen(context));
   }
 }

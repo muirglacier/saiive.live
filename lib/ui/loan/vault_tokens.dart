@@ -10,6 +10,7 @@ import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/vaults_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_box.dart';
+import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/loan/vault_token_box.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliv
                         child: ElevatedButton(
                           child: Text('Create Vault'),
                           onPressed: () {
-                            //TODO
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultCreateScreen()));
                           },
                         ),
                         padding: new EdgeInsets.only(top: 5))

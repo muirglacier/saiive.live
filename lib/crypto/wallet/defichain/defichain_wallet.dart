@@ -325,6 +325,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txi.txId;
   }
 
+  Future<String> depositToVault() {}
+
   Future<String> createAccountTransaction(String token, int amount, String to,
       {bool sendMax = false, List<String> excludeAddresses, StreamController<String> loadingStream}) async {
     if (token == DeFiConstants.DefiTokenSymbol) {

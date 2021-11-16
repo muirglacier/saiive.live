@@ -29,6 +29,7 @@ class VaultCreateConfirmScreen extends StatefulWidget {
 
 class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
   String _toAddress;
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +52,6 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
-      //TODO navigate back to vault page
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Create vault successfull!"),
       ));

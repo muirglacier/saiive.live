@@ -3,7 +3,7 @@ import 'package:saiive.live/helper/constants.dart';
 
 class LoanVaultAmount {
   final String id;
-  final String amount;
+  String amount;
   final String symbol;
   final String symbolKey;
   final String name;

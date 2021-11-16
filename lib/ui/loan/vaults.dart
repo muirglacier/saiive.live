@@ -19,7 +19,7 @@ class VaultsScreen extends StatefulWidget {
   }
 }
 
-class _VaultsScreen extends State<VaultsScreen> {
+class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMixin<VaultsScreen> {
   List<LoanVault> _vaults;
 
   @override
@@ -29,6 +29,11 @@ class _VaultsScreen extends State<VaultsScreen> {
     _initVaults();
   }
 
+  @override
+  bool get wantKeepAlive {
+    return true;
+  }
+
   _initVaults() async {
     var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
     var vaults = await sl
@@ -36,7 +41,7 @@ class _VaultsScreen extends State<VaultsScreen> {
         .getVaults(DeFiConstants.DefiAccountSymbol);
 
     setState(() {
-      _vaults = vaults;
+      _vaults = [vaults[0], vaults[1]];
     });
   }
 

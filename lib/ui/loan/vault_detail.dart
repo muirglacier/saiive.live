@@ -148,7 +148,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
             (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount))
                 .toString())
       ],
-      ['Collateral Value', widget.vault.collateralValue]
+      ['Collateral Value', widget.vault.collateralValue],
+      ['Vault health', widget.vault.healthStatus.toString()],
     ];
 
     return CustomScrollView(slivers: [
@@ -292,12 +293,19 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.vault.vaultId,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.headline6,
-                                )
-                              ])),
+                            Text(
+                              widget.vault.vaultId,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.headline6,
+                            )
+                          ])),
+                      Container(
+                          decoration: BoxDecoration(color: Colors.transparent),
+                          child: InputChip(
+                            label:
+                                Text(widget.vault.healthStatus.toShortString()),
+                            onSelected: (bool value) {},
+                          ))
                     ]),
                     Container(height: 10),
                     Row(children: [

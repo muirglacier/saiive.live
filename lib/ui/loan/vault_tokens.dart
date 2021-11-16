@@ -22,14 +22,19 @@ class VaultTokensScreen extends StatefulWidget {
   }
 }
 
-class _VaultTokensScreen extends State<VaultTokensScreen> {
+class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliveClientMixin<VaultTokensScreen> {
   List<LoanToken> _tokens;
 
   @override
   void initState() {
     super.initState();
-
     _initTokens();
+  }
+
+
+  @override
+  bool get wantKeepAlive {
+    return true;
   }
 
   _initTokens() async {

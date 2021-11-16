@@ -46,6 +46,13 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                             TokenSetIcons(widget.vault.collateralAmounts, 3)
                           ])
                         ])),
+                    Container(width: 10),
+                    Container(
+                        decoration: BoxDecoration(color: Colors.transparent),
+                        child: InputChip(
+                          label: Text(widget.vault.healthStatus.toShortString()),
+                          onSelected: (bool value) {},
+                        ))
                   ]),
                   Container(height: 10),
                   Table(border: TableBorder(), children: [
@@ -80,7 +87,7 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                           (sum, next) => (double.tryParse(sum) +
                                   double.tryParse(next.amount))
                               .toString())),
-                      Text(widget.vault.collateralRatio)
+                      Text(widget.vault.collateralRatio ?? '')
                     ]),
                   ]),
                 ]))));

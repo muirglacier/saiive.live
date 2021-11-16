@@ -2,6 +2,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
+import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
 import 'package:saiive.live/ui/utils/loan_collaterals.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/token_set_icon.dart';
@@ -354,7 +355,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                       ElevatedButton(
                         child: Text('+ Add Collateral'),
                         onPressed: () {
-                          //TODO
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  VaultAddCollateral(widget.vault)));
                         },
                       ),
                       Container(width: 10),

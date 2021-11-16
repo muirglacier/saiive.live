@@ -27,15 +27,13 @@ abstract class ILoansService {
 class LoansService extends NetworkService implements ILoansService {
   Future<List<LoanSchema>> getLoanSchemas(String coin) async {
     dynamic response =
-        await this.httpService.makeHttpGetRequest('/loans/schemes', coin);
+        await this.httpService.makeDynamicHttpGetRequest('/loans/schemes', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    List<LoanSchema> schemas = response.entries
-        .map<LoanSchema>((data) => LoanSchema.fromJson(data.value))
-        .toList();
+    List<LoanSchema> schemas = json.decode(response.body).map<LoanSchema>((data) => LoanSchema.fromJson(data)).toList();
 
     this.fireEvent(new LoanSchemasLoadedEvent(loanSchemas: schemas));
 

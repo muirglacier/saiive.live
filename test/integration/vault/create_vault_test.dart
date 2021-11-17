@@ -27,7 +27,7 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      await wallet.createVault("C1000", ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+      await wallet.createVault("C1000", 100000000, ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
 
       await destoryTest();
     }, timeout: Timeout(Duration(minutes: 10)));
@@ -38,7 +38,7 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      await wallet.createVault("C1000");
+      await wallet.createVault("C1000", 100000000);
 
       await destoryTest();
     }, timeout: Timeout(Duration(minutes: 10)));

@@ -15,7 +15,6 @@ import 'package:saiive.live/ui/loan/collateral/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_edit_collateral.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
-import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/Navigated.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';

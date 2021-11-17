@@ -54,7 +54,7 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      await wallet.createVault("C1000", ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+      await wallet.createVault("C1000", 100000000, ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
           "0400000000010162ed76c00628d0a386125398130c1becf331b4d6a3a17dc1c5d38a16c7c82183010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0200e1f50500000000256a23446654785617a9141084ef98bacfecbc9f140496b26516ae55d79bfa870543313030300070dff5050000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870002483045022100df1ef480c7181c75a6f279790af61f3cd00dc220531e8ccbde0ff097d5afe3c0022046302e31a92879dfa686296836ce8ec3467cd69fe0d72e36048ba1cfd6a3ec78012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");

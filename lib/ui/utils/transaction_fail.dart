@@ -174,7 +174,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
             ),
           if (widget.error != null) SizedBox(height: 30),
           if (widget.error != null)
-            Text(
+            SelectableText(
               _errorText,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),

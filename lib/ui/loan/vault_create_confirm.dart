@@ -9,6 +9,7 @@ import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/loan_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
@@ -188,7 +189,9 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
                     child: ElevatedButton(
                         child: Text('Continue'),
                         onPressed: () async {
-                          await doCreateVault();
+                          await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                            await doCreateVault();
+                          });
                         })),
                 SizedBox(
                     width: double.infinity,

@@ -6,6 +6,8 @@ class LoanVaultAmount {
   final String name;
   final String displaySymbol;
 
+  int amountInt;
+
   LoanVaultAmount({this.id, this.amount, this.symbol, this.symbolKey, this.name, this.displaySymbol});
 
   factory LoanVaultAmount.fromJson(Map<String, dynamic> json) {

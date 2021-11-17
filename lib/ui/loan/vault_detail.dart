@@ -6,7 +6,6 @@ import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
 import 'package:saiive.live/ui/utils/loan_collaterals.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/token_set_icon.dart';
-import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 
 class VaultDetailScreen extends StatefulWidget {
   final LoanVault vault;
@@ -19,8 +18,7 @@ class VaultDetailScreen extends StatefulWidget {
   }
 }
 
-class _VaultDetailScreen extends State<VaultDetailScreen>
-    with SingleTickerProviderStateMixin {
+class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProviderStateMixin {
   final bodyGlobalKey = GlobalKey();
   TabController _tabController;
   ScrollController _scrollController;
@@ -83,36 +81,18 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
         child: Padding(
             padding: EdgeInsets.all(30),
             child: Column(children: [
-              Row(children: <Widget>[
-                TokenIcon(amount.symbol),
-                Container(width: 5),
-                Text(amount.displaySymbol)
-              ]),
+              Row(children: <Widget>[TokenIcon(amount.symbol), Container(width: 5), Text(amount.displaySymbol)]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
                 TableRow(children: [
-                  Text('Borrowed Tokens',
-                      style: Theme.of(context).textTheme.caption),
-                  Text(
-                      'Interest amount (${widget.vault.schema.interestRate} %)',
-                      style: Theme.of(context).textTheme.caption)
+                  Text('Borrowed Tokens', style: Theme.of(context).textTheme.caption),
+                  Text('Interest amount (${widget.vault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
                 ]),
-                TableRow(children: [
-                  Text(amount.amount),
-                  Text((double.tryParse(amount.amount) *
-                          double.tryParse(widget.vault.schema.interestRate) /
-                          100)
-                      .toString())
-                ]),
+                TableRow(children: [Text(amount.amount), Text((double.tryParse(amount.amount) * double.tryParse(widget.vault.schema.interestRate) / 100).toString())]),
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [
-                  Text('Amount Payable',
-                      style: Theme.of(context).textTheme.caption),
-                  Text('Price per Token',
-                      style: Theme.of(context).textTheme.caption)
-                ]),
+                TableRow(children: [Text('Amount Payable', style: Theme.of(context).textTheme.caption), Text('Price per Token', style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [Text('?'), Text('?')]),
               ]),
               Container(height: 10),
@@ -143,23 +123,13 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
     List<List<String>> itemsVault = [
       ['Collateral ratio', widget.vault.collateralRatio],
       ['Active loans', widget.vault.loanAmounts.length.toString()],
-      [
-        'Total Value of Loans',
-        widget.vault.loanAmounts.fold(
-            "0",
-            (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount))
-                .toString())
-      ],
+      ['Total Value of Loans', widget.vault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
       ['Collateral Value', widget.vault.collateralValue],
       ['Vault health', widget.vault.healthStatus.toString()],
     ];
 
     return CustomScrollView(slivers: [
-      SliverToBoxAdapter(
-          child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text('Loan Scheme',
-                  style: Theme.of(context).textTheme.caption))),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Loan Scheme', style: Theme.of(context).textTheme.caption))),
       SliverList(
           delegate: SliverChildListDelegate([
         SingleChildScrollView(
@@ -187,11 +157,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
           ),
         )
       ])),
-      SliverToBoxAdapter(
-          child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text('Vault Details',
-                  style: Theme.of(context).textTheme.caption))),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Vault Details', style: Theme.of(context).textTheme.caption))),
       SliverList(
           delegate: SliverChildListDelegate([
         SingleChildScrollView(
@@ -231,8 +197,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
       SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return _buildCollateralEntry(
-                widget.vault.collateralAmounts.elementAt(index));
+            return _buildCollateralEntry(widget.vault.collateralAmounts.elementAt(index));
           },
           childCount: widget.vault.collateralAmounts.length,
         ),
@@ -245,18 +210,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
         child: Padding(
             padding: EdgeInsets.all(30),
             child: Column(children: [
-              Row(children: <Widget>[
-                TokenIcon(amount.symbol),
-                Container(width: 5),
-                Text(amount.displaySymbol)
-              ]),
+              Row(children: <Widget>[TokenIcon(amount.symbol), Container(width: 5), Text(amount.displaySymbol)]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [
-                  Text('Collateral Amount',
-                      style: Theme.of(context).textTheme.caption),
-                  Text('Vault %', style: Theme.of(context).textTheme.caption)
-                ]),
+                TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [Text(amount.amount), Text('?')]),
               ])
             ])));
@@ -283,94 +240,66 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                   padding: EdgeInsets.all(30),
                   child: Column(children: [
                     Row(children: <Widget>[
-                      Container(
-                          decoration: BoxDecoration(color: Colors.transparent),
-                          child: Icon(Icons.shield, size: 40)),
+                      Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                       Container(width: 10),
                       Expanded(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                            SelectableText(
-                              widget.vault.vaultId,
-                              maxLines: 1, scrollPhysics: NeverScrollableScrollPhysics(),
-                              style: Theme.of(context).textTheme.headline6,
-                            )
-                          ])),
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        SelectableText(
+                          widget.vault.vaultId,
+                          maxLines: 1,
+                          scrollPhysics: NeverScrollableScrollPhysics(),
+                          style: Theme.of(context).textTheme.headline6,
+                        )
+                      ])),
                       Container(
                           decoration: BoxDecoration(color: Colors.transparent),
                           child: InputChip(
-                            label:
-                                Text(widget.vault.healthStatus.toShortString()),
+                            label: Text(widget.vault.healthStatus.toShortString()),
                             onSelected: (bool value) {},
                           ))
                     ]),
                     Container(height: 10),
-                    Row(children: [
-                      Expanded(
-                          child:
-                              LoanCollaterals(widget.vault.collateralAmounts))
-                    ]),
+                    Row(children: [Expanded(child: LoanCollaterals(widget.vault.collateralAmounts))]),
                     Container(height: 10),
                     Table(border: TableBorder(), children: [
+                      TableRow(children: [Text('Active Loans', style: Theme.of(context).textTheme.caption), Text('Total Loan Amount', style: Theme.of(context).textTheme.caption)]),
                       TableRow(children: [
-                        Text('Active Loans',
-                            style: Theme.of(context).textTheme.caption),
-                        Text('Total Loan Amount',
-                            style: Theme.of(context).textTheme.caption)
-                      ]),
-                      TableRow(children: [
-                        Container(
-                            padding: new EdgeInsets.only(left: 5),
-                            child: TokenSetIcons(widget.vault.loanAmounts, 3)),
-                        Text(widget.vault.loanAmounts.fold(
-                            "0",
-                            (sum, next) => (double.tryParse(sum) +
-                                    double.tryParse(next.amount))
-                                .toString()))
+                        Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(widget.vault.loanAmounts, 3)),
+                        Text(widget.vault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString()))
                       ]),
                     ]),
                     Container(height: 10),
                     Table(border: TableBorder(), children: [
+                      TableRow(
+                          children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Collateral Ratio', style: Theme.of(context).textTheme.caption)]),
                       TableRow(children: [
-                        Text('Collateral Amount',
-                            style: Theme.of(context).textTheme.caption),
-                        Text('Collateral Ratio',
-                            style: Theme.of(context).textTheme.caption)
-                      ]),
-                      TableRow(children: [
-                        Text(widget.vault.collateralAmounts.fold(
-                            "0",
-                            (sum, next) => (double.tryParse(sum) +
-                                    double.tryParse(next.amount))
-                                .toString())),
+                        Text(widget.vault.collateralAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())),
                         Text(widget.vault.collateralRatio)
                       ]),
                     ]),
                     Container(height: 10),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                child: Text('+ Add Collateral'),
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          VaultAddCollateral(widget.vault)));
-                                },
-                              )),
-                          Container(width: 10),
-                          SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                child: Text('- Take Collateral'),
-                                onPressed: () {
-                                  //TODO
-                                },
-                              ))
-                        ])
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            child: Text('+ Add Collateral'),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(widget.vault)));
+                            },
+                          )),
+                      Container(
+                        width: 10,
+                        height: 10,
+                      ),
+                      SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            child: Text('- Take Collateral'),
+                            onPressed: () {
+                              //TODO
+                            },
+                          ))
+                    ])
                   ])))
         ]));
   }
@@ -380,8 +309,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
     return Scaffold(
         appBar: AppBar(
           title: Text('Vault Detail'),
-          actionsIconTheme: IconThemeData(
-              color: StateContainer.of(context).curTheme.appBarText),
+          actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
         ),
         body: NestedScrollView(
           controller: _scrollController,
@@ -407,12 +335,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                 padding: EdgeInsets.all(10),
                 child: TabBarView(
                   controller: _tabController,
-                  children: [
-                    _buildTabActiveLoans(),
-                    _buildTabDetails(),
-                    _buildTabCollaterals(),
-                    _buildTabAuctions()
-                  ],
+                  children: [_buildTabActiveLoans(), _buildTabDetails(), _buildTabCollaterals(), _buildTabAuctions()],
                 )),
           ),
         ));

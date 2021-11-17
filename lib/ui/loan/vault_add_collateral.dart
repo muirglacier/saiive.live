@@ -13,12 +13,15 @@ import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_edit_collateral.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/Navigated.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -157,6 +160,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       });
     } else {
       var collateral = new LoanVaultAmount(id: "0", amount: amount.toString(), symbol: balance.token, symbolKey: balance.token, displaySymbol: balance.token, name: balance.token);
+      collateral.amountInt = (amount * 100000000).round();
 
       setState(() {
         _collateralAmounts.add(collateral);
@@ -170,34 +174,45 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     this._panelController.close();
   }
 
-  Future doCreateVault() async {
+  Future doAddCollaterals() async {
+    var streamController = StreamController<String>();
     Wakelock.enable();
+    try {
+      var lastTxId;
+      for (var collateral in _collateralAmounts) {
+        lastTxId = await doAddCollateral(collateral.symbol, collateral.amountInt, loadingStream: streamController);
 
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+      if (lastTxId != null) {
+        await Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTxId, "Add collateral successfull!"),
+        ));
+      }
+    } catch (e) {
+      // ignore
+    } finally {
+      Wakelock.disable();
+      streamController.close();
+    }
+  }
+
+  Future<String> doAddCollateral(String token, int amount, {StreamController<String> loadingStream}) async {
     final wallet = sl.get<DeFiChainWallet>();
 
-    // final walletTo = _toAddress;
     try {
-      var streamController = StreamController<String>();
-      // var createVault = wallet.addDepositToVault(widget.schema.id, ownerAddress: walletTo, loadingStream: streamController);
+      var depositToVault = wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, loadingStream: loadingStream);
 
-      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
-      // var tx = await overlay.during(createVault);
-
-      streamController.close();
+      final overlay = LoadingOverlay.of(context, loadingText: loadingStream.stream);
+      var tx = await overlay.during(depositToVault);
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-
-      // await Navigator.of(context).push(MaterialPageRoute(
-      //   builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Add collateral successfull!"),
-      // ));
-
-      Navigator.of(context).pop();
+      return tx;
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
-    } finally {
-      Wakelock.disable();
+      throw e;
     }
   }
 
@@ -303,8 +318,15 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                       child: Column(children: [
                         SizedBox(
                             width: double.infinity,
-                            child: TextButton(
-                                child: Text('Add Token as Collateral'),
+                            child: ElevatedButton(
+                                child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                  Icon(Icons.add, color: StateContainer.of(context).curTheme.text),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "Add token as collateral",
+                                    style: TextStyle(color: StateContainer.of(context).curTheme.text),
+                                  ),
+                                ]),
                                 onPressed: () {
                                   setState(() {
                                     _panel = this._buildAddCollateralPanel();
@@ -318,8 +340,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             width: double.infinity,
                             child: ElevatedButton(
                                 child: Text('Continue'),
-                                onPressed: () {
-                                  //TODO
+                                onPressed: () async {
+                                  await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                    await doAddCollaterals();
+                                  });
                                 }))
                       ])))
             ],

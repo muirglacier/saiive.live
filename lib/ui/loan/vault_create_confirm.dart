@@ -14,6 +14,7 @@ import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VaultCreateConfirmScreen extends StatefulWidget {
@@ -30,9 +31,22 @@ class VaultCreateConfirmScreen extends StatefulWidget {
 class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
   String _toAddress;
 
+  int _vaultFees = 200000000;
+
+  void getVaultCreateFees() async {
+    var chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
+
+    if (chainNet == ChainNet.Testnet) {
+      setState(() {
+        _vaultFees = 100000000;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getVaultCreateFees();
   }
 
   Future doCreateVault() async {
@@ -43,7 +57,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
     final walletTo = _toAddress;
     try {
       var streamController = StreamController<String>();
-      var createVault = wallet.createVault(widget.schema.id, ownerAddress: walletTo, loadingStream: streamController);
+      var createVault = wallet.createVault(widget.schema.id, _vaultFees, ownerAddress: walletTo, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createVault);
@@ -69,9 +83,9 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
   _buildView() {
     List<List<String>> items = [
       ['Transaction Type', 'Create vault'],
-      ['Vault fee', FundFormatter.format(2)],
+      ['Vault fee', FundFormatter.format(_vaultFees / 100000000)],
       ['Estimated Fee', FundFormatter.format(0.0002)],
-      ['Total transaction cost', FundFormatter.format(1.0002)],
+      ['Total transaction cost', FundFormatter.format(_vaultFees / 100000000 + 0.0002)],
     ];
 
     List<List<String>> itemsSchema = [

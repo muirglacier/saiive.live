@@ -285,7 +285,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return await createAccountTransaction(token, amount, to, loadingStream: loadingStream);
   }
 
-  Future<String> createVault(String schemeId, {String ownerAddress, StreamController<String> loadingStream}) async {
+  Future<String> createVault(String schemeId, int vaultCreateFees, {String ownerAddress, StreamController<String> loadingStream}) async {
     var owner = ownerAddress;
 
     if (owner == null || owner == "") {
@@ -303,7 +303,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var keyPair = await getPrivateKey(address, walletAccount);
     keys.add(Tuple2(address, keyPair));
 
-    final minAmount = 200000000 + fees;
+    final minAmount = vaultCreateFees + fees;
 
     if (!unspentTxs.any((element) => element.address == owner && element.value >= minAmount)) {
       var inputTx = await createUtxoTransaction(minAmount - fees, owner, owner, loadingStream: loadingStream);
@@ -315,7 +315,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     final txb = await HdWalletUtil.buildTransaction(useTxs, keys, owner, (minAmount - fees) * -1, fees, owner, (txb, inputTxs, nw) {
-      txb.addCreateVault(owner, schemeId, minAmount - fees);
+      txb.addCreateVault(owner, schemeId, vaultCreateFees);
     }, chain, network);
 
     var txi = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, ownerAddress), loadingStream: loadingStream);

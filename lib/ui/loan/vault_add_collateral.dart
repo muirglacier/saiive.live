@@ -21,7 +21,6 @@ import 'package:saiive.live/ui/widgets/Navigated.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
-import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -160,7 +159,6 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       });
     } else {
       var collateral = new LoanVaultAmount(id: "0", amount: amount.toString(), symbol: balance.token, symbolKey: balance.token, displaySymbol: balance.token, name: balance.token);
-      collateral.amountInt = (amount * 100000000).round();
 
       setState(() {
         _collateralAmounts.add(collateral);
@@ -179,8 +177,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     Wakelock.enable();
     try {
       var lastTxId;
-      for (var collateral in _collateralAmounts) {
-        lastTxId = await doAddCollateral(collateral.symbol, collateral.amountInt, loadingStream: streamController);
+      for (var collateral in changes.keys) {
+        lastTxId = await doAddCollateral(collateral, (changes[collateral] * 100000000).round(), loadingStream: streamController);
 
         Navigator.of(context).popUntil((route) => route.isFirst);
       }

@@ -33,6 +33,8 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
 
     var accounts = await _walletService.getPublicKeysFromAccount(this.widget.walletAccount);
 
+    accounts.sort((a, b) => a.index.compareTo(b.index));
+
     setState(() {
       _walletAddresses = accounts;
       _isLoading = false;
@@ -58,6 +60,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
               if (address.name != null) Text(address.name, style: Theme.of(context).textTheme.headline3),
               SizedBox(width: 10),
               AutoSizeText(address.publicKey, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3, maxLines: 1),
+              AutoSizeText(address.path(widget.walletAccount), overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.caption, maxLines: 1),
             ]),
             onTap: () async {
               await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddressAddScreen(widget.walletAccount, false, walletAddress: address)));

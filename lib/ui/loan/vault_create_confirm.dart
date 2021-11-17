@@ -69,7 +69,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
   _buildView() {
     List<List<String>> items = [
       ['Transaction Type', 'Create vault'],
-      ['Vault fee', FundFormatter.format(1)],
+      ['Vault fee', FundFormatter.format(2)],
       ['Estimated Fee', FundFormatter.format(0.0002)],
       ['Total transaction cost', FundFormatter.format(1.0002)],
     ];

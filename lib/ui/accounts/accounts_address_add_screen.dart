@@ -178,9 +178,9 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                           },
                           body: Column(children: <Widget>[
                             ListTile(
-                              leading: Text(S.of(context).address + ": "),
+                              leading: Text(S.of(context).address + ": ", overflow: TextOverflow.clip,),
                               title: Row(children: [
-                                SelectableText(widget.walletAddress.publicKey),
+                                Flexible(child: SelectableText(widget.walletAddress.publicKey, maxLines: 1, scrollPhysics: NeverScrollableScrollPhysics())),
                                 SizedBox(width: 10),
                                 if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
                                   IconButton(

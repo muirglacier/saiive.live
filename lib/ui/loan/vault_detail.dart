@@ -6,6 +6,7 @@ import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
 import 'package:saiive.live/ui/utils/loan_collaterals.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/token_set_icon.dart';
+import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 
 class VaultDetailScreen extends StatefulWidget {
   final LoanVault vault;
@@ -229,8 +230,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
     return CustomScrollView(slivers: [
       SliverList(
         delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-            return _buildCollateralEntry(widget.vault.collateralAmounts.elementAt(index));
+          (BuildContext context, int index) {
+            return _buildCollateralEntry(
+                widget.vault.collateralAmounts.elementAt(index));
           },
           childCount: widget.vault.collateralAmounts.length,
         ),
@@ -253,14 +255,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                 TableRow(children: [
                   Text('Collateral Amount',
                       style: Theme.of(context).textTheme.caption),
-                  Text(
-                      'Vault %',
-                      style: Theme.of(context).textTheme.caption)
+                  Text('Vault %', style: Theme.of(context).textTheme.caption)
                 ]),
-                TableRow(children: [
-                  Text(amount.amount),
-                  Text('?')
-                ]),
+                TableRow(children: [Text(amount.amount), Text('?')]),
               ])
             ])));
   }
@@ -294,9 +291,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                            Text(
+                            SelectableText(
                               widget.vault.vaultId,
-                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1, scrollPhysics: NeverScrollableScrollPhysics(),
                               style: Theme.of(context).textTheme.headline6,
                             )
                           ])),
@@ -312,7 +309,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                     Row(children: [
                       Expanded(
                           child:
-                          LoanCollaterals(widget.vault.collateralAmounts))
+                              LoanCollaterals(widget.vault.collateralAmounts))
                     ]),
                     Container(height: 10),
                     Table(border: TableBorder(), children: [
@@ -328,8 +325,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                             child: TokenSetIcons(widget.vault.loanAmounts, 3)),
                         Text(widget.vault.loanAmounts.fold(
                             "0",
-                                (sum, next) => (double.tryParse(sum) +
-                                double.tryParse(next.amount))
+                            (sum, next) => (double.tryParse(sum) +
+                                    double.tryParse(next.amount))
                                 .toString()))
                       ]),
                     ]),
@@ -344,30 +341,36 @@ class _VaultDetailScreen extends State<VaultDetailScreen>
                       TableRow(children: [
                         Text(widget.vault.collateralAmounts.fold(
                             "0",
-                                (sum, next) => (double.tryParse(sum) +
-                                double.tryParse(next.amount))
+                            (sum, next) => (double.tryParse(sum) +
+                                    double.tryParse(next.amount))
                                 .toString())),
                         Text(widget.vault.collateralRatio)
                       ]),
                     ]),
                     Container(height: 10),
-                    Row(children: [
-                      ElevatedButton(
-                        child: Text('+ Add Collateral'),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  VaultAddCollateral(widget.vault)));
-                        },
-                      ),
-                      Container(width: 10),
-                      ElevatedButton(
-                        child: Text('- Take Collateral'),
-                        onPressed: () {
-                          //TODO
-                        },
-                      )
-                    ])
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                child: Text('+ Add Collateral'),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          VaultAddCollateral(widget.vault)));
+                                },
+                              )),
+                          Container(width: 10),
+                          SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                child: Text('- Take Collateral'),
+                                onPressed: () {
+                                  //TODO
+                                },
+                              ))
+                        ])
                   ])))
         ]));
   }

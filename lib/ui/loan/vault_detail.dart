@@ -285,21 +285,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            child: Text('+ Add Collateral'),
+                            child: Text('Change Collateral'),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(widget.vault)));
-                            },
-                          )),
-                      Container(
-                        width: 10,
-                        height: 10,
-                      ),
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            child: Text('- Take Collateral'),
-                            onPressed: () {
-                              //TODO
                             },
                           ))
                     ])

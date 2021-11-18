@@ -1,12 +1,7 @@
-import 'dart:async';
-
-import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
-import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
@@ -15,22 +10,33 @@ import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_edit_collateral.dart';
-import 'package:saiive.live/ui/utils/authentication_helper.dart';
+import 'package:saiive.live/ui/loan/vault_add_collateral_confirm.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
-import 'package:saiive.live/ui/utils/transaction_fail.dart';
-import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/Navigated.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:wakelock/wakelock.dart';
 
 class VaultAddCollateral extends StatefulWidget {
   final LoanVault vault;
   final key = GlobalKey();
 
-  VaultAddCollateral(this.vault);
+  List<LoanVaultAmount> _collateralAmounts;
+
+  VaultAddCollateral(this.vault) {
+    this._collateralAmounts = vault.collateralAmounts
+        .map((e) =>
+        LoanVaultAmount(
+            id: e.id,
+            amount: e.amount,
+            symbol: e.symbol,
+            symbolKey: e.symbolKey,
+            name: e.name,
+            displaySymbol: e.displaySymbol,
+            activePrice: e.activePrice)
+    )
+        .toList();
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -41,7 +47,6 @@ class VaultAddCollateral extends StatefulWidget {
 class _VaultAddCollateral extends State<VaultAddCollateral> {
   PanelController _panelController = PanelController();
   Map<String, double> changes = Map();
-  List<LoanVaultAmount> _collateralAmounts;
   List<LoanCollateral> _collateralTokens;
   Widget _panel = Container();
   List<AccountBalance> _accountBalance;
@@ -52,10 +57,6 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
     _loadBalance();
     _loadCollateralTokens();
-
-    setState(() {
-      _collateralAmounts = List.from(widget.vault.collateralAmounts);
-    });
   }
 
   _loadBalance() async {
@@ -114,15 +115,18 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
   handleRemoveCollateral(LoanVaultAmount loanAmount) {
     var existing = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
-    var existingCollateral = _collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
+    var existingCollateral = widget._collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
 
     if (existing != null) {
       this.changes.remove(loanAmount.symbolKey);
     }
+    else {
+      this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
+    }
 
     if (existingCollateral != null) {
       setState(() {
-        this._collateralAmounts.remove(loanAmount);
+        widget._collateralAmounts.remove(loanAmount);
       });
     }
   }
@@ -161,7 +165,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       this.changes[collateralToken.token.symbol] = amount;
     }
 
-    var existingCollateral = _collateralAmounts.firstWhere((element) => element.symbolKey == collateralToken.token.symbol, orElse: () => null);
+    var existingCollateral = widget._collateralAmounts.firstWhere((element) => element.symbolKey == collateralToken.token.symbol, orElse: () => null);
 
     if (existingCollateral != null) {
       var existingAmount = double.tryParse(existingCollateral.amount);
@@ -180,7 +184,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
           name: collateralToken.token.symbol);
 
       setState(() {
-        _collateralAmounts.add(collateral);
+        widget._collateralAmounts.add(collateral);
       });
     }
 
@@ -191,59 +195,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     this._panelController.close();
   }
 
-  Future doAddCollaterals() async {
-    var streamController = StreamController<String>();
-    Wakelock.enable();
-    try {
-      var lastTxId;
-      for (var collateral in changes.keys) {
-        lastTxId = await doUpdateCollateral(collateral, (changes[collateral] * 100000000).round(), loadingStream: streamController);
-      }
-      if (lastTxId != null) {
-        await Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTxId, "Add collateral successfull!"),
-        ));
-      }
-      Navigator.of(context).pop();
-    } catch (e) {
-      // ignore
-    } finally {
-      Wakelock.disable();
-      streamController.close();
-    }
-  }
-
-  Future<String> doUpdateCollateral(String token, int amount, {StreamController<String> loadingStream}) async {
-    final wallet = sl.get<DeFiChainWallet>();
-
-    try {
-      Future<String> doBlockchainMagic;
-      if (amount > 0) {
-        doBlockchainMagic = wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, loadingStream: loadingStream);
-      } else {
-        doBlockchainMagic = wallet.withdrawFromVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount * -1, loadingStream: loadingStream);
-      }
-
-      final overlay = LoadingOverlay.of(context, loadingText: loadingStream.stream);
-      var tx = await overlay.during(doBlockchainMagic);
-
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
-      return tx;
-    } catch (e) {
-      await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
-      ));
-      throw e;
-    }
-  }
-
   _buildTabCollaterals() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return _buildCollateralEntry(_collateralAmounts.elementAt(index));
+          return _buildCollateralEntry(widget._collateralAmounts.elementAt(index));
         },
-        childCount: _collateralAmounts.length,
+        childCount: widget._collateralAmounts.length,
       ),
     );
   }
@@ -331,7 +289,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
           body: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: _buildTopPart()),
-              _collateralAmounts.length > 0
+              widget._collateralAmounts.length > 0
                   ? SliverPadding(padding: EdgeInsets.only(left: 10, right: 10), sliver: _buildTabCollaterals())
                   : SliverToBoxAdapter(child: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Text('No Collateral added so far'))),
               SliverToBoxAdapter(
@@ -362,10 +320,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             width: double.infinity,
                             child: ElevatedButton(
                                 child: Text('Continue'),
-                                onPressed: () async {
-                                  await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                                    await doAddCollaterals();
-                                  });
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          VaultAddCollateralConfirmScreen(widget.vault, widget.vault.collateralAmounts, widget._collateralAmounts, changes)));
                                 }))
                       ])))
             ],

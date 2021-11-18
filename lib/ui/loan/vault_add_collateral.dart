@@ -78,7 +78,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   }
 
   Widget _buildAddCollateralPanel() {
-    return Navigated(child: VaultAddCollateralTokenScreen(this._accountBalance, this._collateralTokens, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
+    return Navigated(
+        child: VaultAddCollateralTokenScreen(this._accountBalance, this._collateralTokens, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
   }
 
   Widget _buildChangeCollateralPanel(LoanVaultAmount amount) {
@@ -170,7 +171,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
         existingCollateral.amount = existingAmount.toString();
       });
     } else {
-      var collateral = new LoanVaultAmount(id: collateralToken.tokenId, amount: amount.toString(), symbol: collateralToken.token.symbol, symbolKey: collateralToken.token.symbol, displaySymbol: collateralToken.token.symbol, name: collateralToken.token.symbol);
+      var collateral = new LoanVaultAmount(
+          id: collateralToken.tokenId,
+          amount: amount.toString(),
+          symbol: collateralToken.token.symbol,
+          symbolKey: collateralToken.token.symbol,
+          displaySymbol: collateralToken.token.symbol,
+          name: collateralToken.token.symbol);
 
       setState(() {
         _collateralAmounts.add(collateral);
@@ -190,15 +197,14 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     try {
       var lastTxId;
       for (var collateral in changes.keys) {
-        lastTxId = await doAddCollateral(collateral, (changes[collateral] * 100000000).round(), loadingStream: streamController);
-
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        lastTxId = await doUpdateCollateral(collateral, (changes[collateral] * 100000000).round(), loadingStream: streamController);
       }
       if (lastTxId != null) {
         await Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTxId, "Add collateral successfull!"),
         ));
       }
+      Navigator.of(context).pop();
     } catch (e) {
       // ignore
     } finally {
@@ -207,14 +213,19 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     }
   }
 
-  Future<String> doAddCollateral(String token, int amount, {StreamController<String> loadingStream}) async {
+  Future<String> doUpdateCollateral(String token, int amount, {StreamController<String> loadingStream}) async {
     final wallet = sl.get<DeFiChainWallet>();
 
     try {
-      var depositToVault = wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, loadingStream: loadingStream);
+      Future<String> doBlockchainMagic;
+      if (amount > 0) {
+        doBlockchainMagic = wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, loadingStream: loadingStream);
+      } else {
+        doBlockchainMagic = wallet.withdrawFromVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount * -1, loadingStream: loadingStream);
+      }
 
       final overlay = LoadingOverlay.of(context, loadingText: loadingStream.stream);
-      var tx = await overlay.during(depositToVault);
+      var tx = await overlay.during(doBlockchainMagic);
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
       return tx;
@@ -276,9 +287,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   Widget build(BuildContext context) {
     if (_accountBalance == null || _collateralTokens == null) {
       return Scaffold(
-          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral')),
-          body: LoadingWidget(text: S.of(context).loading)
-      );
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral')), body: LoadingWidget(text: S.of(context).loading));
     }
 
     GlobalKey<NavigatorState> key = GlobalKey();

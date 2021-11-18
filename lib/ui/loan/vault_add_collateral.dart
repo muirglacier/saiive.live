@@ -229,7 +229,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   _buildCollateralEntry(LoanVaultAmount amount) {
     var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
     double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
-    int factor = token != null ? int.tryParse(token.factor) : 0;
+    double factor = token != null ? double.tryParse(token.factor) : 0;
 
     return Card(
         child: Padding(

@@ -2,15 +2,15 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
-import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
-import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_edit_collateral.dart';
 import 'package:saiive.live/ui/loan/vault_add_collateral_confirm.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/Navigated.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
@@ -19,11 +19,14 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class VaultAddCollateral extends StatefulWidget {
   final LoanVault vault;
+  final List<LoanCollateral> collateralTokens;
   final key = GlobalKey();
+  double collateralValue;
 
   List<LoanVaultAmount> _collateralAmounts;
 
-  VaultAddCollateral(this.vault) {
+  VaultAddCollateral(this.vault, this.collateralTokens) {
+    this.collateralValue = double.tryParse(this.vault.collateralValue);
     this._collateralAmounts = vault.collateralAmounts
         .map((e) =>
         LoanVaultAmount(
@@ -47,7 +50,6 @@ class VaultAddCollateral extends StatefulWidget {
 class _VaultAddCollateral extends State<VaultAddCollateral> {
   PanelController _panelController = PanelController();
   Map<String, double> changes = Map();
-  List<LoanCollateral> _collateralTokens;
   Widget _panel = Container();
   List<AccountBalance> _accountBalance;
 
@@ -56,7 +58,6 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     super.initState();
 
     _loadBalance();
-    _loadCollateralTokens();
   }
 
   _loadBalance() async {
@@ -70,17 +71,9 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     });
   }
 
-  _loadCollateralTokens() async {
-    var collateralTokens = await sl.get<ILoansService>().getLoanCollaterals(DeFiConstants.DefiAccountSymbol);
-
-    setState(() {
-      _collateralTokens = collateralTokens;
-    });
-  }
-
   Widget _buildAddCollateralPanel() {
     return Navigated(
-        child: VaultAddCollateralTokenScreen(this._accountBalance, this._collateralTokens, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
+        child: VaultAddCollateralTokenScreen(this._accountBalance, widget.collateralTokens, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
   }
 
   Widget _buildChangeCollateralPanel(LoanVaultAmount amount) {
@@ -96,7 +89,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
           Card(
               child: Padding(
                   padding: EdgeInsets.all(30),
-                  child: Column(children: [
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(children: <Widget>[
                       Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                       Container(width: 10),
@@ -106,9 +99,11 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                           widget.vault.vaultId,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.headline6,
-                        )
+                        ),
+                        Text('Collateral Value'),
+                        Text(FundFormatter.format(widget.collateralValue, fractions: 2) + ' \$')
                       ])),
-                    ]),
+                    ],),
                   ])))
         ]));
   }
@@ -116,8 +111,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   handleRemoveCollateral(LoanVaultAmount loanAmount) {
     var existing = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
     var existingCollateral = widget._collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
+    var diff = 0.0;
 
     if (existing != null) {
+      diff = this.changes[loanAmount.symbolKey];
       this.changes.remove(loanAmount.symbolKey);
     }
     else {
@@ -128,7 +125,11 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       setState(() {
         widget._collateralAmounts.remove(loanAmount);
       });
+
+      diff = double.tryParse(loanAmount.amount);
     }
+
+    _recalculateValue();
   }
 
   handleChangeEditCollateral(LoanVaultAmount loanAmount, double newAmount) {
@@ -152,6 +153,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       loanAmount.amount = newAmount.toString();
       _panel = Container();
     });
+    _recalculateValue();
 
     this._panelController.close();
   }
@@ -181,18 +183,36 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
           symbol: collateralToken.token.symbol,
           symbolKey: collateralToken.token.symbol,
           displaySymbol: collateralToken.token.symbol,
-          name: collateralToken.token.symbol);
+          name: collateralToken.token.symbol,
+          activePrice: collateralToken.activePrice);
 
       setState(() {
         widget._collateralAmounts.add(collateral);
       });
     }
 
+    _recalculateValue();
+
     setState(() {
       _panel = Container();
     });
 
     this._panelController.close();
+  }
+
+  _recalculateValue()
+  {
+    var val = 0.0;
+
+    widget._collateralAmounts.forEach((e) {
+      var priceValue = e.activePrice != null ? e.activePrice.active.amount : 0;
+
+      val += priceValue * double.tryParse(e.amount);
+    });
+
+    setState(() {
+      widget.collateralValue = val;
+    });
   }
 
   _buildTabCollaterals() {
@@ -207,6 +227,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   }
 
   _buildCollateralEntry(LoanVaultAmount amount) {
+    var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
+    double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
+    int factor = token != null ? int.tryParse(token.factor) : 0;
+
     return Card(
         child: Padding(
             padding: EdgeInsets.all(20),
@@ -215,6 +239,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                 TokenIcon(amount.symbol),
                 Container(width: 5),
                 Text(amount.displaySymbol),
+                Container(width: 10),
+                InputChip(label: Text((factor * 100.00).toString() + '%')),
                 Spacer(),
                 TextButton(
                     child: Icon(Icons.remove_circle_outline_outlined),
@@ -236,14 +262,15 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
               Container(height: 10),
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
-                TableRow(children: [Text(amount.amount), Text('?')]),
+                TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(widget.collateralValue, amount, token).toStringAsFixed(2) + '%')]),
+                TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2)+ ' \$'), Text('')]),
               ])
             ])));
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_accountBalance == null || _collateralTokens == null) {
+    if (_accountBalance == null) {
       return Scaffold(
           appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral')), body: LoadingWidget(text: S.of(context).loading));
     }

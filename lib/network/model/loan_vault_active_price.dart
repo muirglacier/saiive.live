@@ -30,4 +30,8 @@ class LoanVaultActivePrice {
       block: LoanVaultPriceBlock.fromJson(json['block']),
     );
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'id': id,
+  };
 }

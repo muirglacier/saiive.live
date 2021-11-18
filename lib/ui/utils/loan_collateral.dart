@@ -1,22 +1,30 @@
+import 'package:saiive.live/network/model/loan_collateral.dart';
+import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:flutter/material.dart';
 
-class LoanCollateral extends StatefulWidget {
-  final LoanVaultAmount token;
+class LoanCollateralWidget extends StatefulWidget {
+  final LoanVault vault;
+  final LoanVaultAmount amount;
+  final LoanCollateral token;
 
-  LoanCollateral(this.token);
+  LoanCollateralWidget(this.vault, this.token, this.amount);
 
   @override
-  _LoanCollateral createState() => new _LoanCollateral();
+  _LoanCollateralWidget createState() => new _LoanCollateralWidget();
 }
 
-class _LoanCollateral extends State<LoanCollateral> {
+class _LoanCollateralWidget extends State<LoanCollateralWidget> {
   @override
   Widget build(BuildContext context) {
+    var percentage = LoanHelper.calculateCollateralShare(double.tryParse(widget.vault.collateralValue), widget.amount, widget.token).toStringAsFixed(2) + '%';
+
     return InputChip(
-      avatar: TokenIcon(widget.token.symbolKey),
-      label: Text(widget.token.symbol + ': ' + double.tryParse(widget.token.amount).toStringAsPrecision(2) + '%'),
+      avatar: TokenIcon(widget.amount.symbolKey),
+      label: Text(widget.amount.symbol + ': ' + percentage),
       onSelected: (bool value) {},
     );
   }

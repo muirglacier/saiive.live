@@ -130,7 +130,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                                 return Card(
                                       child: ListTile(
                                         title: Text(item.displaySymbol),
-                                        subtitle: Text(item.amount),
+                                        subtitle: Text(FundFormatter.format(double.tryParse(item.amount))),
                                       ),
                                 );
                               }),

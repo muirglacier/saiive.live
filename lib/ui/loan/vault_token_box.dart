@@ -1,5 +1,6 @@
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +45,7 @@ class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
                     TableRow(children: [Text('Interest', style: Theme.of(context).textTheme.caption), Text('Price (USD)', style: Theme.of(context).textTheme.caption)]),
                     TableRow(children: [
                       Text(widget.token.interest),
-                      Text('?'),
+                      Text(widget.token.activePrice != null ? FundFormatter.format(widget.token.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
                     ]),
                   ]),
                 ]))));

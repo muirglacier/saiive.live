@@ -1,6 +1,7 @@
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/ui/loan/vault_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_set_icon.dart';
 
 class VaultBoxWidget extends StatefulWidget {
@@ -82,11 +83,7 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                           style: Theme.of(context).textTheme.caption)
                     ]),
                     TableRow(children: [
-                      Text(widget.vault.collateralAmounts.fold(
-                          "0",
-                          (sum, next) => (double.tryParse(sum) +
-                                  double.tryParse(next.amount))
-                              .toString())),
+                      Text(FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + '\$'),
                       Text(widget.vault.collateralRatio ?? '')
                     ]),
                   ]),

@@ -7,7 +7,9 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -40,6 +42,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   PanelController _panelController = PanelController();
   Map<String, double> changes = Map();
   List<LoanVaultAmount> _collateralAmounts;
+  List<LoanCollateral> _collateralTokens;
   Widget _panel = Container();
   List<AccountBalance> _accountBalance;
 
@@ -48,6 +51,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     super.initState();
 
     _loadBalance();
+    _loadCollateralTokens();
 
     setState(() {
       _collateralAmounts = List.from(widget.vault.collateralAmounts);
@@ -58,15 +62,23 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var balanceHelper = BalanceHelper();
     var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
 
-    var filteredBalance = accountBalance.where((element) => element.isDAT && !element.isLPS).toList();
+    var filteredBalance = accountBalance.where((element) => element.chain == ChainType.DeFiChain).toList();
 
     setState(() {
       _accountBalance = filteredBalance;
     });
   }
 
+  _loadCollateralTokens() async {
+    var collateralTokens = await sl.get<ILoansService>().getLoanCollaterals(DeFiConstants.DefiAccountSymbol);
+
+    setState(() {
+      _collateralTokens = collateralTokens;
+    });
+  }
+
   Widget _buildAddCollateralPanel() {
-    return Navigated(child: VaultAddCollateralTokenScreen(this._accountBalance, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
+    return Navigated(child: VaultAddCollateralTokenScreen(this._accountBalance, this._collateralTokens, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
   }
 
   Widget _buildChangeCollateralPanel(LoanVaultAmount amount) {
@@ -139,16 +151,16 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     this._panelController.close();
   }
 
-  handleChangeAddCollateral(AccountBalance balance, double amount) {
-    var existing = this.changes.keys.firstWhere((element) => element == balance.token, orElse: () => null);
+  handleChangeAddCollateral(LoanCollateral collateralToken, double amount) {
+    var existing = this.changes.keys.firstWhere((element) => element == collateralToken.token.symbol, orElse: () => null);
 
     if (existing != null) {
-      this.changes[balance.token] += amount;
+      this.changes[collateralToken.token.symbol] += amount;
     } else {
-      this.changes[balance.token] = amount;
+      this.changes[collateralToken.token.symbol] = amount;
     }
 
-    var existingCollateral = _collateralAmounts.firstWhere((element) => element.symbolKey == balance.token, orElse: () => null);
+    var existingCollateral = _collateralAmounts.firstWhere((element) => element.symbolKey == collateralToken.token.symbol, orElse: () => null);
 
     if (existingCollateral != null) {
       var existingAmount = double.tryParse(existingCollateral.amount);
@@ -158,7 +170,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
         existingCollateral.amount = existingAmount.toString();
       });
     } else {
-      var collateral = new LoanVaultAmount(id: "0", amount: amount.toString(), symbol: balance.token, symbolKey: balance.token, displaySymbol: balance.token, name: balance.token);
+      var collateral = new LoanVaultAmount(id: collateralToken.tokenId, amount: amount.toString(), symbol: collateralToken.token.symbol, symbolKey: collateralToken.token.symbol, displaySymbol: collateralToken.token.symbol, name: collateralToken.token.symbol);
 
       setState(() {
         _collateralAmounts.add(collateral);
@@ -262,8 +274,11 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
   @override
   Widget build(BuildContext context) {
-    if (_accountBalance == null) {
-      return LoadingWidget(text: S.of(context).loading);
+    if (_accountBalance == null || _collateralTokens == null) {
+      return Scaffold(
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral')),
+          body: LoadingWidget(text: S.of(context).loading)
+      );
     }
 
     GlobalKey<NavigatorState> key = GlobalKey();

@@ -189,7 +189,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   }
 
   _buildTabCollaterals() {
-    if (widget.vault.loanAmounts.length == 0) {
+    if (widget.vault.collateralAmounts.length == 0) {
       return Container(child: Text('no collateral amounts'));
     }
 
@@ -206,6 +206,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   }
 
   _buildCollateralEntry(LoanVaultAmount amount) {
+    double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
+    double collateralValue = price * double.tryParse(amount.amount);
+
     return Card(
         child: Padding(
             padding: EdgeInsets.all(30),
@@ -214,7 +217,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               Container(height: 10),
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
-                TableRow(children: [Text(amount.amount), Text('?')]),
+                TableRow(children: [Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(amount.amount), Text(price.toString() + " \$", style: Theme.of(context).textTheme.caption)]), Text('?')]),
               ])
             ])));
   }

@@ -39,7 +39,7 @@ class Token {
     return Token(
       symbol: json['symbol'],
       symbolKey: json['symbolKey'],
-      id: json['id'],
+      id: json['id'] is String ? int.tryParse(json['id']) : json['id'],
       name: json['name'],
       decimal: json['decimal'],
       mintable: json['mintable'],

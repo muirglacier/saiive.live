@@ -58,15 +58,13 @@ class LoansService extends NetworkService implements ILoansService {
 
   Future<List<LoanCollateral>> getLoanCollaterals(String coin) async {
     dynamic response =
-    await this.httpService.makeHttpGetRequest('/loans/collaterals', coin);
+    await this.httpService.makeDynamicHttpGetRequest('/loans/collaterals', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);
     }
 
-    List<LoanCollateral> collaterals = response.entries
-        .map<LoanSchema>((data) => LoanCollateral.fromJson(data.value))
-        .toList();
+    List<LoanCollateral> collaterals = json.decode(response.body).map<LoanCollateral>((data) => LoanCollateral.fromJson(data)).toList();
 
     this.fireEvent(new LoanCollateralsLoadedEvent(loanCollaterals: collaterals));
 

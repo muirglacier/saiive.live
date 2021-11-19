@@ -55,8 +55,8 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen>
     _totalTokenWithInterest = widget.amount + _totalInterestAmount;
 
     _loanTokenPriceUSD = widget.loanToken.activePrice != null ? widget.loanToken.activePrice.active.amount : 0;
-
-    _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD;
+    
+    _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD + double.tryParse(widget.loanVault.loanValue);
     _collateralizationRatio = (100/_totalUSDValue) * double.tryParse(widget.loanVault.collateralValue);
 
   }

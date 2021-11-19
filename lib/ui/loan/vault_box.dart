@@ -65,11 +65,7 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                       Container(
                           padding: new EdgeInsets.only(left: 5),
                           child: TokenSetIcons(widget.vault.loanAmounts, 3)),
-                      Text(widget.vault.loanAmounts.fold(
-                          "0",
-                          (sum, next) => (double.tryParse(sum) +
-                                  double.tryParse(next.amount))
-                              .toString()))
+                      Text(FundFormatter.format(double.tryParse(widget.vault.loanValue), fractions: 2) + ' \$')
                     ]),
                   ]),
                   Container(height: 10),

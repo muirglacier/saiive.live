@@ -33,7 +33,8 @@ class _LoanCollateralsWidget extends State<LoanCollateralsWidget> {
     }
 
     return Wrap(
-      spacing: 1,
+      spacing: 5,
+      runSpacing: 5,
       children: collaterals,
     );
   }

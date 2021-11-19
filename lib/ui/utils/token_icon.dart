@@ -6,8 +6,9 @@ import 'package:flutter/services.dart';
 class TokenIcon extends StatefulWidget {
   final String _token;
   final double opacity;
+  final double height;
 
-  TokenIcon(this._token, {this.opacity = 1.0});
+  TokenIcon(this._token, {this.opacity = 1.0, this.height = 32});
 
   @override
   _TokenIconState createState() => new _TokenIconState();
@@ -32,8 +33,8 @@ class _TokenIconState extends State<TokenIcon> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: 32,
-        height: 32,
+        width: widget.height,
+        height: widget.height,
         child: FutureBuilder(
             future: _init(),
             builder: (_, snapshot) {

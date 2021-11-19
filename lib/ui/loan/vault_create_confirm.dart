@@ -14,6 +14,7 @@ import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
+import 'package:saiive.live/ui/widgets/table_widget.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:wakelock/wakelock.dart';
@@ -121,22 +122,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
           child: Column(
             children: [
               Container(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: items.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final item = items[index];
-
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                        child: Card(
-                            child: ListTile(
-                          title: Text(item.elementAt(0)),
-                          subtitle: Text(item.elementAt(1)),
-                        )),
-                      );
-                    }),
+                child: CustomTableWidget(items),
               ),
             ],
           ),
@@ -149,22 +135,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
           child: Column(
             children: [
               Container(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: itemsSchema.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final item = itemsSchema[index];
-
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                        child: Card(
-                            child: ListTile(
-                          title: Text(item.elementAt(0)),
-                          subtitle: Text(item.elementAt(1)),
-                        )),
-                      );
-                    }),
+                child: CustomTableWidget(itemsSchema),
               ),
               Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10),

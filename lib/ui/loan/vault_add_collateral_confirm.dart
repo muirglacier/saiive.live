@@ -201,7 +201,8 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                               await sl.get<AuthenticationHelper>().forceAuth(context, () async {
                                 await doAddCollaterals();
                               });
-                            })))
+                            }))),
+            SliverToBoxAdapter(child: Container(height: 40)),
       ]))
     );
   }

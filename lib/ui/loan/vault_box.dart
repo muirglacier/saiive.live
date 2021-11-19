@@ -3,6 +3,7 @@ import 'package:saiive.live/ui/loan/vault_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_set_icon.dart';
+import 'package:saiive.live/ui/widgets/vault_status.dart';
 
 class VaultBoxWidget extends StatefulWidget {
   final LoanVault vault;
@@ -50,10 +51,7 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                     Container(width: 10),
                     Container(
                         decoration: BoxDecoration(color: Colors.transparent),
-                        child: InputChip(
-                          label: Text(widget.vault.healthStatus.toShortString()),
-                          onSelected: (bool value) {},
-                        ))
+                        child: VaultStatusWidget(widget.vault.healthStatus))
                   ]),
                   Container(height: 10),
                   Table(border: TableBorder(), children: [

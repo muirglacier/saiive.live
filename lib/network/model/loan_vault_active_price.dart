@@ -26,7 +26,7 @@ class LoanVaultActivePrice {
       isLive: json['isLive'],
       sort: json['sort'],
       active: LoanVaultPrice.fromJson(json['active']),
-      next: LoanVaultPrice.fromJson(json['next']),
+      next: json['next'] != null ? LoanVaultPrice.fromJson(json['next']) : json['next'],
       block: LoanVaultPriceBlock.fromJson(json['block']),
     );
   }

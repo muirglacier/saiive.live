@@ -240,7 +240,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                 Container(width: 5),
                 Text(amount.displaySymbol),
                 Container(width: 10),
-                InputChip(label: Text((factor * 100.00).toString() + '%')),
+                Chip(label: Text((factor * 100.00).toString() + '%')),
                 Spacer(),
                 TextButton(
                     child: Icon(Icons.remove_circle_outline_outlined),
@@ -347,11 +347,11 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             width: double.infinity,
                             child: ElevatedButton(
                                 child: Text('Continue'),
-                                onPressed: () {
+                                onPressed: changes.length > 0 ? () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           VaultAddCollateralConfirmScreen(widget.vault, widget.vault.collateralAmounts, widget._collateralAmounts, changes)));
-                                }))
+                                } : null))
                       ])))
             ],
           )),

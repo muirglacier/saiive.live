@@ -23,8 +23,10 @@ class _LoanCollateralWidget extends State<LoanCollateralWidget> {
     var percentage = LoanHelper.calculateCollateralShare(double.tryParse(widget.vault.collateralValue), widget.amount, widget.token).toStringAsFixed(2) + '%';
 
     return InputChip(
-      avatar: TokenIcon(widget.amount.symbolKey),
+      avatar: TokenIcon(widget.amount.symbolKey, height: 20),
       label: Text(widget.amount.symbol + ': ' + percentage),
+      padding: EdgeInsets.all(0),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       onSelected: (bool value) {},
     );
   }

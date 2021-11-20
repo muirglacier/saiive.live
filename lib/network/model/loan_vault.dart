@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/loan_schema.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 
@@ -17,14 +16,7 @@ extension ParseToStringLoanVaultStatus on LoanVaultStatus {
   }
 }
 
-enum LoanVaultHealthStatus {
-  active,
-  healthy,
-  at_risk,
-  halted,
-  liquidated,
-  unknown
-}
+enum LoanVaultHealthStatus { active, healthy, at_risk, halted, liquidated, unknown }
 
 extension ParseToStringLoanVaultHealthStatus on LoanVaultHealthStatus {
   String toShortString() {
@@ -33,28 +25,32 @@ extension ParseToStringLoanVaultHealthStatus on LoanVaultHealthStatus {
 
   String toText() {
     switch (this) {
-      case LoanVaultHealthStatus.active: {
-        return 'ACTIVE';
-      }
+      case LoanVaultHealthStatus.active:
+        {
+          return 'ACTIVE';
+        }
 
-      case LoanVaultHealthStatus.healthy: {
-        return 'HEALTHY';
-      }
+      case LoanVaultHealthStatus.healthy:
+        {
+          return 'HEALTHY';
+        }
 
-      case LoanVaultHealthStatus.at_risk: {
-        return 'AT RISK';
-      }
+      case LoanVaultHealthStatus.at_risk:
+        {
+          return 'AT RISK';
+        }
 
-      case LoanVaultHealthStatus.halted: {
-        return 'HALTED';
-      }
+      case LoanVaultHealthStatus.halted:
+        {
+          return 'HALTED';
+        }
 
-      case LoanVaultHealthStatus.liquidated: {
-        return 'LIQUIDATED';
-      }
+      case LoanVaultHealthStatus.liquidated:
+        {
+          return 'LIQUIDATED';
+        }
 
       case LoanVaultHealthStatus.unknown:
-
         break;
     }
 
@@ -63,28 +59,32 @@ extension ParseToStringLoanVaultHealthStatus on LoanVaultHealthStatus {
 
   Color toColor() {
     switch (this) {
-      case LoanVaultHealthStatus.active: {
-        return Colors.grey;
-      }
+      case LoanVaultHealthStatus.active:
+        {
+          return Colors.grey;
+        }
 
-      case LoanVaultHealthStatus.healthy: {
-        return Colors.green;
-      }
+      case LoanVaultHealthStatus.healthy:
+        {
+          return Colors.green;
+        }
 
-      case LoanVaultHealthStatus.at_risk: {
-        return Colors.red;
-      }
+      case LoanVaultHealthStatus.at_risk:
+        {
+          return Colors.red;
+        }
 
-      case LoanVaultHealthStatus.halted: {
-        return Colors.deepOrange;
-      }
+      case LoanVaultHealthStatus.halted:
+        {
+          return Colors.deepOrange;
+        }
 
-      case LoanVaultHealthStatus.liquidated: {
-        return Colors.blue;
-      }
+      case LoanVaultHealthStatus.liquidated:
+        {
+          return Colors.blue;
+        }
 
       case LoanVaultHealthStatus.unknown:
-
         break;
     }
 
@@ -122,38 +122,43 @@ class LoanVault {
 
   LoanVaultHealthStatus get healthStatus {
     switch (this.state) {
-      case LoanVaultStatus.active: {
-        if (this.loanAmounts.length == 0) {
-          return LoanVaultHealthStatus.active;
+      case LoanVaultStatus.active:
+        {
+          if (this.loanAmounts.length == 0) {
+            return LoanVaultHealthStatus.active;
+          }
+
+          double minColRatio = double.tryParse(this.schema.minColRatio);
+          double collateralRatio = double.tryParse(this.collateralRatio);
+          double currentPercentage = collateralRatio / minColRatio;
+
+          if (currentPercentage > 1.5) {
+            return LoanVaultHealthStatus.healthy;
+          } else {
+            return LoanVaultHealthStatus.at_risk;
+          }
+        }
+        break;
+
+      case LoanVaultStatus.frozen:
+        {
+          return LoanVaultHealthStatus.halted;
         }
 
-        double minColRatio = double.tryParse(this.schema.minColRatio);
-        double collateralRatio = double.tryParse(this.collateralRatio);
-        double currentPercentage = collateralRatio / minColRatio;
-
-        if (currentPercentage > 1.5) {
-          return LoanVaultHealthStatus.healthy;
-        } else {
+      case LoanVaultStatus.mayLiquidate:
+        {
           return LoanVaultHealthStatus.at_risk;
         }
-      }
-      break;
 
-      case LoanVaultStatus.frozen: {
-        return LoanVaultHealthStatus.halted;
-      }
+      case LoanVaultStatus.inLiquidation:
+        {
+          return LoanVaultHealthStatus.liquidated;
+        }
 
-      case LoanVaultStatus.mayLiquidate: {
-        return LoanVaultHealthStatus.at_risk;
-      }
-
-      case LoanVaultStatus.inLiquidation: {
-        return LoanVaultHealthStatus.liquidated;
-      }
-
-      case LoanVaultStatus.unknown: {
-        return LoanVaultHealthStatus.unknown;
-      }
+      case LoanVaultStatus.unknown:
+        {
+          return LoanVaultHealthStatus.unknown;
+        }
     }
 
     return LoanVaultHealthStatus.unknown;
@@ -170,14 +175,8 @@ class LoanVault {
         collateralValue: json['collateralValue'],
         loanValue: json['loanValue'],
         interestValue: json['interestValue'],
-        collateralAmounts: json['collateralAmounts'] != null ? json['collateralAmounts']
-            .map<LoanVaultAmount>((data) => LoanVaultAmount.fromJson(data))
-            .toList() : [],
-        loanAmounts: json['loanAmounts'] != null ? json['loanAmounts']
-            .map<LoanVaultAmount>((data) => LoanVaultAmount.fromJson(data))
-            .toList() : [],
-        interestAmounts: json['interestAmounts'] != null ? json['interestAmounts']
-            .map<LoanVaultAmount>((data) => LoanVaultAmount.fromJson(data))
-            .toList() : []);
+        collateralAmounts: json['collateralAmounts'] != null ? json['collateralAmounts'].map<LoanVaultAmount>((data) => LoanVaultAmount.fromJson(data)).toList() : [],
+        loanAmounts: json['loanAmounts'] != null ? json['loanAmounts'].map<LoanVaultAmount>((data) => LoanVaultAmount.fromJson(data)).toList() : [],
+        interestAmounts: json['interestAmounts'] != null ? json['interestAmounts'].map<LoanVaultAmount>((data) => LoanVaultAmount.fromJson(data)).toList() : []);
   }
 }

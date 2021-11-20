@@ -17,6 +17,7 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+// ignore: must_be_immutable
 class VaultAddCollateral extends StatefulWidget {
   final LoanVault vault;
   final List<LoanCollateral> collateralTokens;
@@ -28,16 +29,7 @@ class VaultAddCollateral extends StatefulWidget {
   VaultAddCollateral(this.vault, this.collateralTokens) {
     this.collateralValue = double.tryParse(this.vault.collateralValue);
     this._collateralAmounts = vault.collateralAmounts
-        .map((e) =>
-        LoanVaultAmount(
-            id: e.id,
-            amount: e.amount,
-            symbol: e.symbol,
-            symbolKey: e.symbolKey,
-            name: e.name,
-            displaySymbol: e.displaySymbol,
-            activePrice: e.activePrice)
-    )
+        .map((e) => LoanVaultAmount(id: e.id, amount: e.amount, symbol: e.symbol, symbolKey: e.symbolKey, name: e.name, displaySymbol: e.displaySymbol, activePrice: e.activePrice))
         .toList();
   }
 
@@ -90,20 +82,22 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
               child: Padding(
                   padding: EdgeInsets.all(30),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Row(children: <Widget>[
-                      Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
-                      Container(width: 10),
-                      Expanded(
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(
-                          widget.vault.vaultId,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        Text('Collateral Value'),
-                        Text(FundFormatter.format(widget.collateralValue, fractions: 2) + ' \$')
-                      ])),
-                    ],),
+                    Row(
+                      children: <Widget>[
+                        Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
+                        Container(width: 10),
+                        Expanded(
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(
+                            widget.vault.vaultId,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          Text('Collateral Value'),
+                          Text(FundFormatter.format(widget.collateralValue, fractions: 2) + ' \$')
+                        ])),
+                      ],
+                    ),
                   ])))
         ]));
   }
@@ -111,13 +105,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   handleRemoveCollateral(LoanVaultAmount loanAmount) {
     var existing = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
     var existingCollateral = widget._collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
-    var diff = 0.0;
 
     if (existing != null) {
-      diff = this.changes[loanAmount.symbolKey];
       this.changes.remove(loanAmount.symbolKey);
-    }
-    else {
+    } else {
       this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
     }
 
@@ -125,8 +116,6 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       setState(() {
         widget._collateralAmounts.remove(loanAmount);
       });
-
-      diff = double.tryParse(loanAmount.amount);
     }
 
     _recalculateValue();
@@ -200,8 +189,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     this._panelController.close();
   }
 
-  _recalculateValue()
-  {
+  _recalculateValue() {
     var val = 0.0;
 
     widget._collateralAmounts.forEach((e) {
@@ -263,7 +251,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(widget.collateralValue, amount, token).toStringAsFixed(2) + '%')]),
-                TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2)+ ' \$'), Text('')]),
+                TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
               ])
             ])));
   }
@@ -347,11 +335,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             width: double.infinity,
                             child: ElevatedButton(
                                 child: Text('Continue'),
-                                onPressed: changes.length > 0 ? () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          VaultAddCollateralConfirmScreen(widget.vault, widget.vault.collateralAmounts, widget._collateralAmounts, changes)));
-                                } : null))
+                                onPressed: changes.length > 0
+                                    ? () {
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                VaultAddCollateralConfirmScreen(widget.vault, widget.vault.collateralAmounts, widget._collateralAmounts, changes)));
+                                      }
+                                    : null))
                       ])))
             ],
           )),

@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomTableWidget extends StatefulWidget {
-  List<List<String>> items;
+  final List<List<String>> items;
 
   CustomTableWidget(this.items);
 
@@ -20,13 +19,9 @@ class _CustomTableWidget extends State<CustomTableWidget> {
         itemBuilder: (BuildContext context, int index) {
           final item = widget.items[index];
 
-          return
-            Card(
-              child: ListTile(
-                  title: Text(item.elementAt(0)),
-                  subtitle: Text(item.elementAt(1))
-              ),
-            );
+          return Card(
+            child: ListTile(title: Text(item.elementAt(0)), subtitle: Text(item.elementAt(1))),
+          );
         });
   }
 }

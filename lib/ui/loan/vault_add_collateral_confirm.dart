@@ -18,10 +18,10 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VaultAddCollateralConfirmScreen extends StatefulWidget {
-  LoanVault vault;
-  List<LoanVaultAmount> currentAmounts;
-  List<LoanVaultAmount> newAmounts;
-  Map<String, double> changes;
+  final LoanVault vault;
+  final List<LoanVaultAmount> currentAmounts;
+  final List<LoanVaultAmount> newAmounts;
+  final Map<String, double> changes;
 
   VaultAddCollateralConfirmScreen(this.vault, this.currentAmounts, this.newAmounts, this.changes);
 
@@ -39,24 +39,24 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
 
   Widget _buildTopPart() {
     return Column(children: [
-          Card(
-              child: Padding(
-                  padding: EdgeInsets.all(30),
-                  child: Column(children: [
-                    Row(children: <Widget>[
-                      Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
-                      Container(width: 10),
-                      Expanded(
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(
-                          widget.vault.vaultId,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headline6,
-                        )
-                      ])),
-                    ]),
-                  ])))
-        ]);
+      Card(
+          child: Padding(
+              padding: EdgeInsets.all(30),
+              child: Column(children: [
+                Row(children: <Widget>[
+                  Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
+                  Container(width: 10),
+                  Expanded(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(
+                      widget.vault.vaultId,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.headline6,
+                    )
+                  ])),
+                ]),
+              ])))
+    ]);
   }
 
   Future doAddCollaterals() async {
@@ -108,102 +108,100 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral Confirm')),
-      body: Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0), child: CustomScrollView(
-          slivers: [
-          SliverToBoxAdapter(child: _buildTopPart()),
-            SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Current Collaterals', style: Theme.of(context).textTheme.caption))),
-            SliverList(
-                delegate: SliverChildListDelegate([
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral Confirm')),
+        body: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: CustomScrollView(slivers: [
+              SliverToBoxAdapter(child: _buildTopPart()),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Current Collaterals', style: Theme.of(context).textTheme.caption))),
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: widget.currentAmounts.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final item = widget.currentAmounts[index];
+
+                              return Card(
+                                child: ListTile(
+                                  title: Text(item.displaySymbol),
+                                  subtitle: Text(FundFormatter.format(double.tryParse(item.amount))),
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                )
+              ])),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Changes', style: Theme.of(context).textTheme.caption))),
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: widget.changes.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final key = widget.changes.keys.elementAt(index);
+                              final amount = widget.changes.values.elementAt(index);
+
+                              return Card(
+                                child: ListTile(
+                                  title: Text(key),
+                                  subtitle: Text(FundFormatter.format(amount)),
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                )
+              ])),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Final Collateral after TX', style: Theme.of(context).textTheme.caption))),
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: widget.currentAmounts.length,
+                              itemCount: widget.newAmounts.length,
                               itemBuilder: (BuildContext context, int index) {
-                                final item = widget.currentAmounts[index];
+                                final item = widget.newAmounts[index];
 
                                 return Card(
-                                      child: ListTile(
-                                        title: Text(item.displaySymbol),
-                                        subtitle: Text(FundFormatter.format(double.tryParse(item.amount))),
-                                      ),
+                                  child: ListTile(
+                                    title: Text(item.displaySymbol),
+                                    subtitle: Text(item.amount),
+                                  ),
                                 );
-                              }),
-                        ),
-                      ],
-                    ),
-                  )
-                ])),
-            SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Changes', style: Theme.of(context).textTheme.caption))),
-            SliverList(
-                delegate: SliverChildListDelegate([
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: widget.changes.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final key = widget.changes.keys.elementAt(index);
-                                final amount = widget.changes.values.elementAt(index);
-
-                                return Card(
-                                      child: ListTile(
-                                        title: Text(key),
-                                        subtitle: Text(FundFormatter.format(amount)),
-                                      ),
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
-                  )
-                ])),
-            SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Final Collateral after TX', style: Theme.of(context).textTheme.caption))),
-            SliverList(
-                delegate: SliverChildListDelegate([
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: widget.newAmounts.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final item = widget.newAmounts[index];
-
-                                  return Card(
-                                        child: ListTile(
-                                          title: Text(item.displaySymbol),
-                                          subtitle: Text(item.amount),
-                                        ),
-                                  );
-                                })
-                        ),
-                      ],
-                    ),
-                  )
-                ])),
-            SliverToBoxAdapter(
-                child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                            child: Text('Continue'),
-                            onPressed: () async {
-                              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                                await doAddCollaterals();
-                              });
-                            }))),
-            SliverToBoxAdapter(child: Container(height: 40)),
-      ]))
-    );
+                              })),
+                    ],
+                  ),
+                )
+              ])),
+              SliverToBoxAdapter(
+                  child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          child: Text('Continue'),
+                          onPressed: () async {
+                            await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                              await doAddCollaterals();
+                            });
+                          }))),
+              SliverToBoxAdapter(child: Container(height: 40)),
+            ])));
   }
 }

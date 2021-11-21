@@ -44,10 +44,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   Map<String, double> changes = Map();
   Widget _panel = Container();
   List<AccountBalance> _accountBalance;
+  double _collateralValue;
 
   @override
   void initState() {
     super.initState();
+
+    _collateralValue = widget.collateralValue;
 
     _loadBalance();
   }
@@ -94,7 +97,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             style: Theme.of(context).textTheme.headline6,
                           ),
                           Text('Collateral Value'),
-                          Text(FundFormatter.format(widget.collateralValue, fractions: 2) + ' \$')
+                          Text(FundFormatter.format(_collateralValue, fractions: 2) + ' \$')
                         ])),
                       ],
                     ),
@@ -250,7 +253,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
               Container(height: 10),
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
-                TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(widget.collateralValue, amount, token).toStringAsFixed(2) + '%')]),
+                TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(_collateralValue, amount, token).toStringAsFixed(2) + '%')]),
                 TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
               ])
             ])));
@@ -336,8 +339,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             child: ElevatedButton(
                                 child: Text('Continue'),
                                 onPressed: changes.length > 0
-                                    ? () {
-                                        Navigator.of(context).push(MaterialPageRoute(
+                                    ? () async {
+                                        await Navigator.of(context).push(MaterialPageRoute(
                                             builder: (BuildContext context) =>
                                                 VaultAddCollateralConfirmScreen(widget.vault, widget.vault.collateralAmounts, widget._collateralAmounts, changes)));
                                       }

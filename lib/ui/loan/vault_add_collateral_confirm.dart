@@ -167,7 +167,8 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                 )
               ])),
               SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Final Collateral after TX', style: Theme.of(context).textTheme.caption))),
-              SliverList(
+              if (widget.newAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0), child: Text('No Collaterals'))),
+              if (widget.newAmounts.length > 0) SliverList(
                   delegate: SliverChildListDelegate([
                 SingleChildScrollView(
                   child: Column(

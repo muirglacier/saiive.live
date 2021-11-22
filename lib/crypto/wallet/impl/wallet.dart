@@ -468,7 +468,7 @@ abstract class Wallet extends IWallet {
 
   Future<int> getTxFee(int inputs, int outputs) async {
     if (inputs == 0 && outputs == 0) return 4000; //default fee is always the same for now
-    return (inputs * 250) + (outputs * 50) + 50;
+    return (inputs * 250) + (outputs * 200) + 200;
   }
 
   @protected

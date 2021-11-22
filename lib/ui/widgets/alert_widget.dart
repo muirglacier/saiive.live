@@ -26,8 +26,9 @@ extension ParseToStringLoanVaultHealthStatus on Alert {
 class AlertWidget extends StatefulWidget {
   final String text;
   final Alert alert;
+  final Color color;
 
-  AlertWidget(this.text, {this.alert = Alert.info});
+  AlertWidget(this.text, {this.alert = Alert.info, this.color});
 
   @override
   State<StatefulWidget> createState() => _AlertWidget();
@@ -45,7 +46,7 @@ class _AlertWidget extends State<AlertWidget> {
             color: widget.alert.toColor(),
           )),
       Container(width: 5),
-      Expanded(child: Text(widget.text, maxLines: 10,))
+      Expanded(child: Text(widget.text, maxLines: 10, style: TextStyle(color: widget.color),))
     ]);
   }
 }

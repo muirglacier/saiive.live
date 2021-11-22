@@ -6,11 +6,14 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
+import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +22,13 @@ import 'package:wakelock/wakelock.dart';
 
 class VaultAddCollateralConfirmScreen extends StatefulWidget {
   final LoanVault vault;
+  final List<LoanCollateral> collateralTokens;
   final List<LoanVaultAmount> currentAmounts;
   final List<LoanVaultAmount> newAmounts;
+  final double collateralValue;
   final Map<String, double> changes;
 
-  VaultAddCollateralConfirmScreen(this.vault, this.currentAmounts, this.newAmounts, this.changes);
+  VaultAddCollateralConfirmScreen(this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.changes);
 
   @override
   State<StatefulWidget> createState() {
@@ -105,6 +110,31 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
     }
   }
 
+  _buildCollateralEntry(LoanVaultAmount amount) {
+    var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
+    double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
+    double factor = token != null ? double.tryParse(token.factor) : 0;
+
+    return Card(
+        child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(children: [
+              Row(children: <Widget>[
+                TokenIcon(amount.symbol),
+                Container(width: 5),
+                Text(amount.displaySymbol),
+                Container(width: 10),
+                Chip(label: Text((factor * 100.00).toString() + '%')),
+              ]),
+              Container(height: 10),
+              Table(border: TableBorder(), children: [
+                TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(widget.collateralValue, amount, token).toStringAsFixed(2) + '%')]),
+                TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
+              ])
+            ])));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,12 +157,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                             itemBuilder: (BuildContext context, int index) {
                               final item = widget.currentAmounts[index];
 
-                              return Card(
-                                child: ListTile(
-                                  title: Text(item.displaySymbol),
-                                  subtitle: Text(FundFormatter.format(double.tryParse(item.amount))),
-                                ),
-                              );
+                              return _buildCollateralEntry(item);
                             }),
                       ),
                     ],
@@ -181,12 +206,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                               itemBuilder: (BuildContext context, int index) {
                                 final item = widget.newAmounts[index];
 
-                                return Card(
-                                  child: ListTile(
-                                    title: Text(item.displaySymbol),
-                                    subtitle: Text(item.amount),
-                                  ),
-                                );
+                                return _buildCollateralEntry(item);
                               })),
                     ],
                   ),

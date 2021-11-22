@@ -13,6 +13,7 @@ import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/Navigated.dart';
+import 'package:saiive.live/ui/widgets/alert_widget.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -22,12 +23,10 @@ class VaultAddCollateral extends StatefulWidget {
   final LoanVault vault;
   final List<LoanCollateral> collateralTokens;
   final key = GlobalKey();
-  double collateralValue;
 
   List<LoanVaultAmount> _collateralAmounts;
 
   VaultAddCollateral(this.vault, this.collateralTokens) {
-    this.collateralValue = double.tryParse(this.vault.collateralValue);
     this._collateralAmounts = vault.collateralAmounts
         .map((e) => LoanVaultAmount(id: e.id, amount: e.amount, symbol: e.symbol, symbolKey: e.symbolKey, name: e.name, displaySymbol: e.displaySymbol, activePrice: e.activePrice))
         .toList();
@@ -45,14 +44,31 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   Widget _panel = Container();
   List<AccountBalance> _accountBalance;
   double _collateralValue;
+  bool isDFILessThan50 = false;
 
   @override
   void initState() {
     super.initState();
 
-    _collateralValue = widget.collateralValue;
+    _collateralValue = double.tryParse(widget.vault.collateralValue);
 
     _loadBalance();
+  }
+
+  _calculateDFIPercentage() {
+    var amount = widget.vault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
+    var token = widget.collateralTokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
+    var percentage = 0.0;
+
+    if (null != amount && null != token) {
+      percentage = LoanHelper.calculateCollateralShare(
+          _collateralValue, amount, token
+      );
+    }
+
+    setState(() {
+      isDFILessThan50 = percentage < 50.0;
+    });
   }
 
   _loadBalance() async {
@@ -202,8 +218,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     });
 
     setState(() {
-      widget.collateralValue = val;
+      _collateralValue = val;
     });
+
+    _calculateDFIPercentage();
   }
 
   _buildTabCollaterals() {
@@ -307,6 +325,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
           body: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: _buildTopPart()),
+              if (isDFILessThan50) SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(10), child: AlertWidget("Your collateral has to be at least 50% DFI in order to get a loan.", color: Colors.red))),
               widget._collateralAmounts.length > 0
                   ? SliverPadding(padding: EdgeInsets.only(left: 10, right: 10), sliver: _buildTabCollaterals())
                   : SliverToBoxAdapter(child: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Text('No Collateral added so far'))),
@@ -342,7 +361,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                                     ? () async {
                                         await Navigator.of(context).push(MaterialPageRoute(
                                             builder: (BuildContext context) =>
-                                                VaultAddCollateralConfirmScreen(widget.vault, widget.vault.collateralAmounts, widget._collateralAmounts, changes)));
+                                                VaultAddCollateralConfirmScreen(widget.vault, widget.collateralTokens, widget.vault.collateralAmounts, widget._collateralAmounts, _collateralValue, changes)));
                                       }
                                     : null))
                       ])))

@@ -3,11 +3,14 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
+import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
+import 'package:saiive.live/ui/loan/vault_borrow_loan.dart';
+import 'package:saiive.live/ui/loan/vault_payback_loan.dart';
 import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/loan_collaterals.dart';
@@ -34,7 +37,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   TabController _tabController;
   ScrollController _scrollController;
   bool fixedScroll;
+  bool isDFILessThan50 = false;
   List <LoanCollateral> _tokens;
+  List <LoanToken> _loanTokens;
 
   @override
   void initState() {
@@ -50,12 +55,33 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   _initTokens() async {
     setState(() {
       _tokens = null;
+      _loanTokens = null;
     });
 
     var tokens = await sl.get<ILoansService>().getLoanCollaterals(DeFiConstants.DefiAccountSymbol);
+    var loanTokens = await sl.get<ILoansService>().getLoanTokens(DeFiConstants.DefiAccountSymbol);
 
     setState(() {
       _tokens = tokens;
+      _loanTokens = loanTokens;
+    });
+
+    _calculateDFIPercentage();
+  }
+
+  _calculateDFIPercentage() {
+    var amount = widget.vault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
+    var token = _tokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
+    var percentage = 0.0;
+
+    if (null != amount && null != token) {
+      percentage = LoanHelper.calculateCollateralShare(
+          double.tryParse(widget.vault.collateralValue), amount, token
+      );
+    }
+
+    setState(() {
+      isDFILessThan50 = percentage < 50.0;
     });
   }
 
@@ -94,6 +120,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   _buildLoanEntry(LoanVaultAmount amount) {
     var pricePerToken = amount.activePrice != null ? amount.activePrice.active.amount : 0;
     var totalAmount = pricePerToken * double.tryParse(amount.amount);
+    var token = _loanTokens.firstWhere((element) => element.token.symbol == amount.symbol, orElse: () => null);
 
     return Card(
         child: Padding(
@@ -116,16 +143,20 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               Container(height: 10),
               Row(children: [
                 ElevatedButton(
-                  child: Text('Repay Loan'),
+                  child: Text('Payback Loan'),
                   onPressed: () {
-                    //TODO
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            VaultPaybackLoanScreen(amount, token, widget.vault)));
                   },
                 ),
                 Container(width: 10),
                 ElevatedButton(
                   child: Text('Borrow more'),
-                  onPressed: () {
-                    //TODO
+                  onPressed: token == null ? null : () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            VaultBorrowLoan(token, loanVault: widget.vault)));
                   },
                 )
               ])
@@ -246,6 +277,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                         )
                       ]))
                     ]),
+                    if (isDFILessThan50) Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget("Your collateral has to be at least 50% DFI in order to get a loan.", color: Colors.red)),
                     Row(children: [Expanded(child: LoanCollateralsWidget(widget.vault, _tokens, widget.vault.collateralAmounts))]),
                     Container(height: 5),
                     Table(border: TableBorder(), children: [
@@ -281,7 +313,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   @override
   Widget build(Object context) {
-    if (_tokens == null) {
+    if (_tokens == null || _loanTokens == null) {
       return Scaffold(
           appBar: AppBar(
             title: Text('Vault Detail'),

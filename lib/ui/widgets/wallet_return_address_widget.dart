@@ -6,8 +6,9 @@ import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 class WalletReturnAddressWidget extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final String checkBoxText;
+  final String title;
 
-  WalletReturnAddressWidget({@required this.onChanged, this.checkBoxText});
+  WalletReturnAddressWidget({@required this.onChanged, this.checkBoxText, this.title});
 
   _WalletReturnAddressWidgetState createState() => _WalletReturnAddressWidgetState();
 }
@@ -52,7 +53,7 @@ class _WalletReturnAddressWidgetState extends State<WalletReturnAddressWidget> {
                     child: Container(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        S.of(context).expert,
+                        widget.title ?? S.of(context).expert,
                         style: TextStyle(
                           fontSize: 18,
                         ),

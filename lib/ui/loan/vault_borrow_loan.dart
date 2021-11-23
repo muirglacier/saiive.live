@@ -15,6 +15,7 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/navigated.dart';
 import 'package:saiive.live/ui/widgets/table_widget.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class VaultBorrowLoan extends StatefulWidget {
@@ -44,6 +45,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   double _totalInterest = 0;
   double _totalUSDValue = 0;
   LoanVault _loanVault;
+  String _returnAddress;
 
   @override
   void initState() {
@@ -302,13 +304,22 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                               decoration: InputDecoration(hintText: 'How much to add?', contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
                               keyboardType: TextInputType.numberWithOptions(decimal: true)),
                           buildTXDetails(),
+                          Padding(
+                              padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
+                              child: WalletReturnAddressWidget(
+                                onChanged: (v) {
+                                  setState(() {
+                                    _returnAddress = v;
+                                  });
+                                },
+                              )),
                           SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                 child: Text('Continue'),
                                 onPressed: () {
                                   Navigator.of(context)
-                                      .push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, widget.loanToken, _amount)));
+                                      .push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, widget.loanToken, _amount, _returnAddress)));
                                 },
                               ))
                         ]),

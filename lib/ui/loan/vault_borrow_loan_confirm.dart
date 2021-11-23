@@ -20,8 +20,9 @@ class VaultBorrowLoanConfirmScreen extends StatefulWidget {
   final LoanVault loanVault;
   final LoanToken loanToken;
   final double amount;
+  final String returnAddress;
 
-  VaultBorrowLoanConfirmScreen(this.loanVault, this.loanToken, this.amount);
+  VaultBorrowLoanConfirmScreen(this.loanVault, this.loanToken, this.amount, this.returnAddress);
 
   @override
   State<StatefulWidget> createState() {
@@ -121,7 +122,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     try {
       var streamController = StreamController<String>();
       var createVault = wallet.borrowLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (widget.amount * 100000000).round(),
-          loadingStream: streamController);
+          returnAddress: widget.returnAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createVault);

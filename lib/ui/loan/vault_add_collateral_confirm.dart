@@ -27,8 +27,9 @@ class VaultAddCollateralConfirmScreen extends StatefulWidget {
   final List<LoanVaultAmount> newAmounts;
   final double collateralValue;
   final Map<String, double> changes;
+  final String returnAddress;
 
-  VaultAddCollateralConfirmScreen(this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.changes);
+  VaultAddCollateralConfirmScreen(this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.changes, this.returnAddress);
 
   @override
   State<StatefulWidget> createState() {
@@ -92,9 +93,11 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
     try {
       Future<String> doBlockchainMagic;
       if (amount > 0) {
-        doBlockchainMagic = wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, loadingStream: loadingStream);
+        doBlockchainMagic =
+            wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, returnAddress: widget.returnAddress, loadingStream: loadingStream);
       } else {
-        doBlockchainMagic = wallet.withdrawFromVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount * -1, loadingStream: loadingStream);
+        doBlockchainMagic =
+            wallet.withdrawFromVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount * -1, returnAddress: widget.returnAddress, loadingStream: loadingStream);
       }
 
       final overlay = LoadingOverlay.of(context, loadingText: loadingStream.stream);
@@ -193,25 +196,26 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
               ])),
               SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Final Collateral after TX', style: Theme.of(context).textTheme.caption))),
               if (widget.newAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0), child: Text('No Collaterals'))),
-              if (widget.newAmounts.length > 0) SliverList(
-                  delegate: SliverChildListDelegate([
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: widget.newAmounts.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final item = widget.newAmounts[index];
+              if (widget.newAmounts.length > 0)
+                SliverList(
+                    delegate: SliverChildListDelegate([
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: widget.newAmounts.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final item = widget.newAmounts[index];
 
-                                return _buildCollateralEntry(item);
-                              })),
-                    ],
-                  ),
-                )
-              ])),
+                                  return _buildCollateralEntry(item);
+                                })),
+                      ],
+                    ),
+                  )
+                ])),
               SliverToBoxAdapter(
                   child: SizedBox(
                       width: double.infinity,

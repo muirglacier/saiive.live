@@ -16,6 +16,7 @@ import 'package:saiive.live/ui/widgets/Navigated.dart';
 import 'package:saiive.live/ui/widgets/alert_widget.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // ignore: must_be_immutable
@@ -45,6 +46,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   List<AccountBalance> _accountBalance;
   double _collateralValue;
   bool isDFILessThan50 = false;
+  String _returnAddress;
 
   @override
   void initState() {
@@ -61,9 +63,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var percentage = 0.0;
 
     if (null != amount && null != token) {
-      percentage = LoanHelper.calculateCollateralShare(
-          _collateralValue, amount, token
-      );
+      percentage = LoanHelper.calculateCollateralShare(_collateralValue, amount, token);
     }
 
     setState(() {
@@ -325,7 +325,9 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
           body: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: _buildTopPart()),
-              if (isDFILessThan50) SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(10), child: AlertWidget("Your collateral has to be at least 50% DFI in order to get a loan.", color: Colors.red))),
+              if (isDFILessThan50)
+                SliverToBoxAdapter(
+                    child: Padding(padding: EdgeInsets.all(10), child: AlertWidget("Your collateral has to be at least 50% DFI in order to get a loan.", color: Colors.red))),
               widget._collateralAmounts.length > 0
                   ? SliverPadding(padding: EdgeInsets.only(left: 10, right: 10), sliver: _buildTabCollaterals())
                   : SliverToBoxAdapter(child: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Text('No Collateral added so far'))),
@@ -353,6 +355,15 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                                   _panelController.open();
                                 })),
                         Container(height: 10),
+                        Padding(
+                            padding: const EdgeInsets.only(left: 0, right: 0, bottom: 10),
+                            child: WalletReturnAddressWidget(
+                              onChanged: (v) {
+                                setState(() {
+                                  _returnAddress = v;
+                                });
+                              },
+                            )),
                         SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -360,8 +371,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                                 onPressed: changes.length > 0
                                     ? () async {
                                         await Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                VaultAddCollateralConfirmScreen(widget.vault, widget.collateralTokens, widget.vault.collateralAmounts, widget._collateralAmounts, _collateralValue, changes)));
+                                            builder: (BuildContext context) => VaultAddCollateralConfirmScreen(widget.vault, widget.collateralTokens,
+                                                widget.vault.collateralAmounts, widget._collateralAmounts, _collateralValue, changes, _returnAddress)));
                                       }
                                     : null))
                       ])))

@@ -32,6 +32,7 @@ class VaultCreateConfirmScreen extends StatefulWidget {
 
 class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
   String _toAddress;
+  String _returnAddress;
 
   int _vaultFees = 200000000;
 
@@ -59,7 +60,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
     final walletTo = _toAddress;
     try {
       var streamController = StreamController<String>();
-      var createVault = wallet.createVault(widget.schema.id, _vaultFees, ownerAddress: walletTo, loadingStream: streamController);
+      var createVault = wallet.createVault(widget.schema.id, _vaultFees, returnAddress: _returnAddress, ownerAddress: walletTo, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createVault);
@@ -136,14 +137,35 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
             children: [
               Container(
                 child: CustomTableWidget(itemsSchema),
-              ),
+              )
+            ],
+          ),
+        )
+      ])),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).expert, style: Theme.of(context).textTheme.caption))),
+      SliverList(
+          delegate: SliverChildListDelegate([
+        SingleChildScrollView(
+          child: Column(
+            children: [
               Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10),
                   child: WalletReturnAddressWidget(
                     checkBoxText: "Use custom vault owner address",
+                    title: "Vault owner address",
                     onChanged: (v) {
                       setState(() {
                         _toAddress = v;
+                      });
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10),
+                  child: WalletReturnAddressWidget(
+                    title: "Return address",
+                    onChanged: (v) {
+                      setState(() {
+                        _returnAddress = v;
                       });
                     },
                   )),

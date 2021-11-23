@@ -285,13 +285,47 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return await createAccountTransaction(token, amount, to, loadingStream: loadingStream);
   }
 
-  Future<String> createVault(String schemeId, int vaultCreateFees, {String ownerAddress, StreamController<String> loadingStream}) async {
+  Future<String> closeVault(String vaultId, String ownerAddress, {String returnAddress, StreamController<String> loadingStream}) async {
+    var fees = await getTxFee(1, 2);
+    final unspentTxs = await walletDatabase.getUnspentTransactions();
+    final useTxs = List<tx.Transaction>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
+
+    final address = await walletDatabase.getWalletAddress(ownerAddress);
+    final walletAccount = await walletDatabase.getAccount(address.accountId);
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+
+    var keyPair = await getPrivateKey(address, walletAccount);
+    keys.add(Tuple2(address, keyPair));
+
+    if (!unspentTxs.any((element) => element.address == ownerAddress)) {
+      var inputTx = await createUtxoTransaction(fees, ownerAddress, ownerAddress, loadingStream: loadingStream);
+      var tx = await walletDatabase.getUnspentTransactionById(inputTx);
+      useTxs.add(tx);
+    } else {
+      var inputTx = unspentTxs.where((element) => element.address == ownerAddress);
+      useTxs.add(inputTx.first);
+    }
+
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, ownerAddress, 0, fees, changeAddress, (txb, inputTxs, nw) {
+      txb.addCloseVault(vaultId, ownerAddress);
+    }, chain, network);
+
+    var txi = await createTxAndWait(Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, ownerAddress), loadingStream: loadingStream);
+
+    loadingStream?.add(S.current.wallet_operation_send_tx);
+
+    return txi.txId;
+  }
+
+  Future<String> createVault(String schemeId, int vaultCreateFees, {String ownerAddress, String returnAddress, StreamController<String> loadingStream}) async {
     var owner = ownerAddress;
 
     if (owner == null || owner == "") {
       owner = await getPublicKey(false, AddressType.P2SHSegwit);
     }
 
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     var fees = await getTxFee(1, 2);
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
@@ -314,7 +348,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       useTxs.add(inputTx.first);
     }
 
-    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, owner, (minAmount - fees) * -1, fees, owner, (txb, inputTxs, nw) {
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, owner, (minAmount - fees) * -1, fees, changeAddress, (txb, inputTxs, nw) {
       txb.addCreateVault(owner, schemeId, vaultCreateFees);
     }, chain, network);
 
@@ -325,13 +359,15 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txi.txId;
   }
 
-  Future<String> borrowLoan(String vaultId, String to, String token, int amount, {StreamController<String> loadingStream}) async {
+  Future<String> borrowLoan(String vaultId, String to, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+
       loadingStream?.add(S.current.wallet_operation_create_swap_tx);
-      var swap = await _borrowLoan(vaultId, to, token, amount, loadingStream: loadingStream);
+      var swap = await _borrowLoan(vaultId, to, token, amount, changeAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       var tx = await createTxAndWait(swap, loadingStream: loadingStream);
 
@@ -341,8 +377,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
   }
 
-  Future<Tuple3<String, List<tx.Transaction>, String>> _borrowLoan(String vaultId, String to, String token, int amount, {StreamController<String> loadingStream}) async {
-    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
+  Future<Tuple3<String, List<tx.Transaction>, String>> _borrowLoan(String vaultId, String to, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTok = await apiService.tokenService.getToken("DFI", token);
@@ -351,7 +387,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (tokenBalance != null && tokenBalance.balance < (amount)) {
       loadingStream?.add(S.current.wallet_operation_send_tx);
     }
-    final txb = await createBaseTransaction(0, to, changeAddress, fees, (txb, inputTxs, nw) async {
+    final txb = await createBaseTransaction(0, to, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 
       Future addAuthInput(tx.Transaction tx) async {
@@ -389,17 +425,14 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txb;
   }
 
-  Future<String> withdrawFromVault(String vaultId, String from, String token, int amount, {StreamController<String> loadingStream}) async {
+  Future<String> paybackLoan(String vaultId, String to, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
-      if (from == null || from.isEmpty) {
-        from = await getPublicKey(false, AddressType.P2SHSegwit);
-      }
-
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
       loadingStream?.add(S.current.wallet_operation_create_swap_tx);
-      var swap = await _withdrawFromVault(vaultId, from, token, amount, loadingStream: loadingStream);
+      var swap = await _paybackLoan(vaultId, to, token, amount, changeAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       var tx = await createTxAndWait(swap, loadingStream: loadingStream);
 
@@ -409,8 +442,77 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
   }
 
-  Future<Tuple3<String, List<tx.Transaction>, String>> _withdrawFromVault(String vaultId, String from, String token, int amount, {StreamController<String> loadingStream}) async {
-    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
+  Future<Tuple3<String, List<tx.Transaction>, String>> _paybackLoan(String vaultId, String to, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
+    final fees = await getTxFee(1, 2) + 5000;
+
+    final fromTok = await apiService.tokenService.getToken("DFI", token);
+    final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(to, token);
+
+    if (tokenBalance != null && tokenBalance.balance < (amount)) {
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+    }
+    final txb = await createBaseTransaction(0, to, returnAddress, fees, (txb, inputTxs, nw) async {
+      var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
+
+      Future addAuthInput(tx.Transaction tx) async {
+        final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
+        if (inputContainsAuthTx.isEmpty) {
+          final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+          final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+          if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+            throw new ReadOnlyAccountError();
+          }
+          var keyPair = await getPrivateKey(addressInfo, walletAccount);
+          var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
+
+          var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
+
+          if (tx.value > 0) {
+            txb.addOutput(tx.address, tx.value);
+          }
+
+          final witnessValue = tx.valueRaw;
+          toSign.add(Tuple4(keyPair, addressInfo, vin, witnessValue));
+        }
+      }
+
+      var txAuth = await getAuthInputsSmart(to, AuthTxMin, fees, loadingStream: loadingStream);
+      await addAuthInput(txAuth);
+
+      txb.addPaybackLoan(vaultId, to, fromTok.id, amount);
+
+      for (var sign in toSign) {
+        HdWalletUtil.signInput(txb, sign.item1, sign.item2, sign.item3, sign.item4);
+      }
+    });
+    return txb;
+  }
+
+  Future<String> withdrawFromVault(String vaultId, String from, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      if (from == null || from.isEmpty) {
+        from = await getPublicKey(false, AddressType.P2SHSegwit);
+      }
+
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      loadingStream?.add(S.current.wallet_operation_create_swap_tx);
+      var swap = await _withdrawFromVault(vaultId, from, token, amount, changeAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(swap, loadingStream: loadingStream);
+
+      return tx.id;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _withdrawFromVault(String vaultId, String from, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTok = await apiService.tokenService.getToken("DFI", token);
@@ -419,7 +521,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (tokenBalance != null && tokenBalance.balance < (amount)) {
       loadingStream?.add(S.current.wallet_operation_send_tx);
     }
-    final txb = await createBaseTransaction(0, from, changeAddress, fees, (txb, inputTxs, nw) async {
+    final txb = await createBaseTransaction(0, from, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 
       Future addAuthInput(tx.Transaction tx) async {
@@ -457,7 +559,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txb;
   }
 
-  Future<String> depositToVault(String vaultId, String from, String token, int amount, {StreamController<String> loadingStream}) async {
+  Future<String> depositToVault(String vaultId, String from, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
@@ -466,8 +568,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         from = await getPublicKey(false, AddressType.P2SHSegwit);
       }
 
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
       loadingStream?.add(S.current.wallet_operation_create_swap_tx);
-      var swap = await _depositToVault(vaultId, from, token, amount, loadingStream: loadingStream);
+      var swap = await _depositToVault(vaultId, from, token, amount, changeAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       var tx = await createTxAndWait(swap, loadingStream: loadingStream);
 
@@ -477,13 +580,13 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
   }
 
-  Future<Tuple3<String, List<tx.Transaction>, String>> _depositToVault(String vaultId, String from, String token, int amount, {StreamController<String> loadingStream}) async {
+  Future<Tuple3<String, List<tx.Transaction>, String>> _depositToVault(String vaultId, String from, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
     if (DeFiConstants.isDfiToken(token)) {
       var prep = await prepareAccount(from, amount, loadingStream: loadingStream);
       amount = prep.item1;
     }
 
-    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTokenBalance = await walletDatabase.getAccountBalance(token);
@@ -504,7 +607,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
     await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
 
-    final txb = await createBaseTransaction(0, from, changeAddress, fees, (txb, inputTxs, nw) async {
+    final txb = await createBaseTransaction(0, from, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 
       Future addAuthInput(tx.Transaction tx) async {

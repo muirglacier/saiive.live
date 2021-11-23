@@ -14,7 +14,7 @@ variables:
 - name: AppVersion_Major
   value: 0
 - name: UseUseFlutterVersion
-  value: 2.6.0-12.0.pre.724
+  value: 2.5.2
 
 stages:
 - stage: Pre

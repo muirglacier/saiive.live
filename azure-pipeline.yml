@@ -76,7 +76,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -131,7 +131,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -244,7 +244,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
@@ -340,7 +340,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
@@ -451,7 +451,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
@@ -547,7 +547,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
@@ -672,7 +672,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
@@ -807,7 +807,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
@@ -943,7 +943,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
@@ -1066,7 +1066,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
@@ -1172,7 +1172,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
@@ -1330,7 +1330,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
@@ -1455,7 +1455,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
@@ -1581,7 +1581,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
@@ -1689,7 +1689,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
@@ -1817,7 +1817,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
@@ -1910,7 +1910,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
@@ -2002,7 +2002,7 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
+          version: 'latest'
           customVersion: $(UseFlutterVersion)
 
       - task: Bash@3

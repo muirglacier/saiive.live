@@ -12,7 +12,7 @@ import 'package:saiive.live/ui/loan/vault_add_collateral_confirm.dart';
 import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
-import 'package:saiive.live/ui/widgets/Navigated.dart';
+import 'package:saiive.live/ui/widgets/navigated.dart';
 import 'package:saiive.live/ui/widgets/alert_widget.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';

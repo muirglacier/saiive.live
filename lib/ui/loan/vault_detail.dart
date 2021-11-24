@@ -451,6 +451,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
           controller: _scrollController,
           headerSliverBuilder: (context, value) {
             return [
+              SliverToBoxAdapter(child: Container(padding: EdgeInsets.only(top: 10, left: 10, right: 10), child: AlertWidget(S.of(context).loan_beta, color: Colors.red, alert: Alert.error,))),
               SliverToBoxAdapter(child: _buildTopPart()),
               SliverToBoxAdapter(
                 child: TabBar(

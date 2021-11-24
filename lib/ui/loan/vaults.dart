@@ -6,6 +6,7 @@ import 'package:saiive.live/network/vaults_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_box.dart';
 import 'package:saiive.live/ui/loan/vault_create.dart';
+import 'package:saiive.live/ui/widgets/alert_widget.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
@@ -89,6 +90,7 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
 
     return CustomScrollView(
       slivers: <Widget>[
+        SliverToBoxAdapter(child: Container(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_beta, color: Colors.red, alert: Alert.error,))),
         SliverToBoxAdapter(child: Container(child: row)),
       ],
     );

@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:saiive.live/network/model/loan_vault.dart';
-import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 
 enum Alert { info, error }
 
@@ -46,7 +43,12 @@ class _AlertWidget extends State<AlertWidget> {
             color: widget.alert.toColor(),
           )),
       Container(width: 5),
-      Expanded(child: Text(widget.text, maxLines: 10, style: TextStyle(color: widget.color),))
+      Expanded(
+          child: Text(
+        widget.text,
+        maxLines: 10,
+        style: TextStyle(color: widget.color),
+      ))
     ]);
   }
 }

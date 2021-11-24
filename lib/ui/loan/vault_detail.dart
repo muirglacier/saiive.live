@@ -6,7 +6,6 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
-import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_token.dart';

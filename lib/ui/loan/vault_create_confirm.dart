@@ -70,7 +70,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Create vault successfull!"),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_create_vault_success),
       ));
 
       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -85,15 +85,15 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
 
   _buildView() {
     List<List<String>> items = [
-      ['Transaction Type', 'Create vault'],
-      ['Vault fee', FundFormatter.format(_vaultFees / 100000000)],
-      ['Estimated Fee', FundFormatter.format(0.0002)],
-      ['Total transaction cost', FundFormatter.format(_vaultFees / 100000000 + 0.0002)],
+      [S.of(context).loan_transaction_type, S.of(context).loan_create_vault],
+      [S.of(context).loan_create_vault_fee, FundFormatter.format(_vaultFees / 100000000)],
+      [S.of(context).loan_create_est_fee, FundFormatter.format(0.0002)],
+      [S.of(context).loan_create_fees, FundFormatter.format(_vaultFees / 100000000 + 0.0002)],
     ];
 
     List<List<String>> itemsSchema = [
-      ['Min. collateral ratio', widget.schema.minColRatio],
-      ['Interest rate (APR)', widget.schema.interestRate],
+      [S.of(context).loan_min_collateral_ratio, widget.schema.minColRatio],
+      [S.of(context).loan_vault_interest_rate_apr, widget.schema.interestRate],
     ];
 
     return CustomScrollView(slivers: [
@@ -102,21 +102,21 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
               child: Padding(
                   padding: EdgeInsets.all(30),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('You are creating a vault', style: Theme.of(context).textTheme.headline6),
+                    Text(S.of(context).loan_create_vault_info, style: Theme.of(context).textTheme.headline6),
                     Row(children: <Widget>[
                       Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                       Container(width: 10),
                       Expanded(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Text(
-                          'ID will be generated once the vault has been created',
+                          S.of(context).loan_create_id_generated,
                           overflow: TextOverflow.fade,
                           style: Theme.of(context).textTheme.caption,
                         )
                       ]))
                     ])
                   ])))),
-      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Transaction Details', style: Theme.of(context).textTheme.caption))),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_type, style: Theme.of(context).textTheme.caption))),
       SliverList(
           delegate: SliverChildListDelegate([
         SingleChildScrollView(
@@ -129,7 +129,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
           ),
         )
       ])),
-      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Vault Details', style: Theme.of(context).textTheme.caption))),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
       SliverList(
           delegate: SliverChildListDelegate([
         SingleChildScrollView(
@@ -151,8 +151,8 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
               Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10),
                   child: WalletReturnAddressWidget(
-                    checkBoxText: "Use custom vault owner address",
-                    title: "Vault owner address",
+                    checkBoxText: S.of(context).loan_vault_customer_owner_address,
+                    title: S.of(context).loan_vault_owner_address,
                     onChanged: (v) {
                       setState(() {
                         _toAddress = v;
@@ -162,7 +162,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
               Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10),
                   child: WalletReturnAddressWidget(
-                    title: "Return address",
+                    title: S.of(context).loan_return_address,
                     onChanged: (v) {
                       setState(() {
                         _returnAddress = v;
@@ -180,7 +180,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
                 SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                        child: Text('Continue'),
+                        child: Text(S.of(context).loan_continue),
                         onPressed: () async {
                           await sl.get<AuthenticationHelper>().forceAuth(context, () async {
                             await doCreateVault();
@@ -189,7 +189,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
                 SizedBox(
                     width: double.infinity,
                     child: TextButton(
-                        child: Text('Cancel'),
+                        child: Text(S.of(context).loan_cancel),
                         onPressed: () {
                           Navigator.of(context).pop();
                         }))
@@ -199,6 +199,6 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Confirm Create Vault')), body: _buildView());
+    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_confirm_create_vault)), body: _buildView());
   }
 }

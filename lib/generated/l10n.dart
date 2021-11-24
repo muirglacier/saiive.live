@@ -2264,6 +2264,926 @@ class S {
       args: [],
     );
   }
+
+  /// `Tresor`
+  String get loan_vault {
+    return Intl.message(
+      'Tresor',
+      name: 'loan_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Menge`
+  String get loan_amount {
+    return Intl.message(
+      'Menge',
+      name: 'loan_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen durchsuchen`
+  String get loan_browse_loans {
+    return Intl.message(
+      'Darlehen durchsuchen',
+      name: 'loan_browse_loans',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deine Darlehen`
+  String get loan_your_loans {
+    return Intl.message(
+      'Deine Darlehen',
+      name: 'loan_your_loans',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kein Tresor erstellt`
+  String get loan_no_vault_created {
+    return Intl.message(
+      'Kein Tresor erstellt',
+      name: 'loan_no_vault_created',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Erstelle einen Tresor und fürge DFI und andere Token als Kollateral ein.`
+  String get loan_vault_creation_info {
+    return Intl.message(
+      'Erstelle einen Tresor und fürge DFI und andere Token als Kollateral ein.',
+      name: 'loan_vault_creation_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor erstellen`
+  String get loan_create_vault {
+    return Intl.message(
+      'Tresor erstellen',
+      name: 'loan_create_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zinsen`
+  String get loan_interest {
+    return Intl.message(
+      'Zinsen',
+      name: 'loan_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preis (USD)`
+  String get loan_price_usd {
+    return Intl.message(
+      'Preis (USD)',
+      name: 'loan_price_usd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral`
+  String get loan_collaterals {
+    return Intl.message(
+      'Kollateral',
+      name: 'loan_collaterals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aktive Darlehen`
+  String get loan_active_loans {
+    return Intl.message(
+      'Aktive Darlehen',
+      name: 'loan_active_loans',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamtes Darlehen`
+  String get loan_total_loan_amount {
+    return Intl.message(
+      'Gesamtes Darlehen',
+      name: 'loan_total_loan_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamtes Kollateral`
+  String get loan_collateral_amount {
+    return Intl.message(
+      'Gesamtes Kollateral',
+      name: 'loan_collateral_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral Ratio`
+  String get loan_collateral_ratio {
+    return Intl.message(
+      'Kollateral Ratio',
+      name: 'loan_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Keine Aktiven Darlehen`
+  String get loan_no_active_loans {
+    return Intl.message(
+      'Keine Aktiven Darlehen',
+      name: 'loan_no_active_loans',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor wurde erfolgreich beendet`
+  String get loan_close_vault_success {
+    return Intl.message(
+      'Tresor wurde erfolgreich beendet',
+      name: 'loan_close_vault_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor wurde erfolgreich erstellt`
+  String get loan_create_vault_success {
+    return Intl.message(
+      'Tresor wurde erfolgreich erstellt',
+      name: 'loan_create_vault_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen wurde erfolgreich genommen.`
+  String get loan_borrow_success {
+    return Intl.message(
+      'Darlehen wurde erfolgreich genommen.',
+      name: 'loan_borrow_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral wurde erfolgreich hinzugefügt`
+  String get loan_collateral_success {
+    return Intl.message(
+      'Kollateral wurde erfolgreich hinzugefügt',
+      name: 'loan_collateral_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dahrlehen wurde erfolgreich zurückbezahlt.`
+  String get loan_payback_success {
+    return Intl.message(
+      'Dahrlehen wurde erfolgreich zurückbezahlt.',
+      name: 'loan_payback_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Geliehene Tokens`
+  String get loan_borrowed_tokens {
+    return Intl.message(
+      'Geliehene Tokens',
+      name: 'loan_borrowed_tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamte Zinsen`
+  String get loan_interest_amount {
+    return Intl.message(
+      'Gesamte Zinsen',
+      name: 'loan_interest_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zahlbarer Betrag`
+  String get loan_amount_payable {
+    return Intl.message(
+      'Zahlbarer Betrag',
+      name: 'loan_amount_payable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Preis pro Token`
+  String get loan_price_per_token {
+    return Intl.message(
+      'Preis pro Token',
+      name: 'loan_price_per_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen zurückzahlen`
+  String get loan_payback_loan {
+    return Intl.message(
+      'Darlehen zurückzahlen',
+      name: 'loan_payback_loan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mehr ausleihen`
+  String get loan_borrow_more {
+    return Intl.message(
+      'Mehr ausleihen',
+      name: 'loan_borrow_more',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min. Kollateral Ratio`
+  String get loan_min_collateral_ratio {
+    return Intl.message(
+      'Min. Kollateral Ratio',
+      name: 'loan_min_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor Zinsen`
+  String get loan_vault_interest {
+    return Intl.message(
+      'Tresor Zinsen',
+      name: 'loan_vault_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral Wert`
+  String get loan_collateral_value {
+    return Intl.message(
+      'Kollateral Wert',
+      name: 'loan_collateral_value',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor Status`
+  String get loan_vault_health {
+    return Intl.message(
+      'Tresor Status',
+      name: 'loan_vault_health',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen Schema`
+  String get loan_vault_loan_scheme {
+    return Intl.message(
+      'Darlehen Schema',
+      name: 'loan_vault_loan_scheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor Details`
+  String get loan_vault_details {
+    return Intl.message(
+      'Tresor Details',
+      name: 'loan_vault_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kein Kollateral vorhanden`
+  String get loan_no_collateral_amounts {
+    return Intl.message(
+      'Kein Kollateral vorhanden',
+      name: 'loan_no_collateral_amounts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Die Aktivität dieses Tresores wurde temporär angehalten. Grund: Starke Volatilität im Markt. Der Tresor wird fortgesetzt wenn sich der Markt stabilisiert hat.`
+  String get loan_vault_halted_info {
+    return Intl.message(
+      'Die Aktivität dieses Tresores wurde temporär angehalten. Grund: Starke Volatilität im Markt. Der Tresor wird fortgesetzt wenn sich der Markt stabilisiert hat.',
+      name: 'loan_vault_halted_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Das Kollateral muss mindestens 50% DFI sein um ein Darlehen zu bekommen`
+  String get loan_collateral_dfi_ratio {
+    return Intl.message(
+      'Das Kollateral muss mindestens 50% DFI sein um ein Darlehen zu bekommen',
+      name: 'loan_collateral_dfi_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral anpassen`
+  String get loan_change_collateral {
+    return Intl.message(
+      'Kollateral anpassen',
+      name: 'loan_change_collateral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor schließen`
+  String get loan_close_vault {
+    return Intl.message(
+      'Tresor schließen',
+      name: 'loan_close_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen`
+  String get loan_vault_details_tab_active_loan {
+    return Intl.message(
+      'Darlehen',
+      name: 'loan_vault_details_tab_active_loan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Details`
+  String get loan_vault_details_tab_details {
+    return Intl.message(
+      'Details',
+      name: 'loan_vault_details_tab_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral`
+  String get loan_vault_details_tab_collaterals {
+    return Intl.message(
+      'Kollateral',
+      name: 'loan_vault_details_tab_collaterals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Versteigerungen`
+  String get loan_vault_details_tab_auctions {
+    return Intl.message(
+      'Versteigerungen',
+      name: 'loan_vault_details_tab_auctions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction Typ`
+  String get loan_transaction_type {
+    return Intl.message(
+      'Transaction Typ',
+      name: 'loan_transaction_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor Gebühr`
+  String get loan_create_vault_fee {
+    return Intl.message(
+      'Tresor Gebühr',
+      name: 'loan_create_vault_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Geschätzte Gebühr`
+  String get loan_create_est_fee {
+    return Intl.message(
+      'Geschätzte Gebühr',
+      name: 'loan_create_est_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamte Gebühr`
+  String get loan_create_fees {
+    return Intl.message(
+      'Gesamte Gebühr',
+      name: 'loan_create_fees',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zinssatz (APR)`
+  String get loan_vault_interest_rate_apr {
+    return Intl.message(
+      'Zinssatz (APR)',
+      name: 'loan_vault_interest_rate_apr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Du erstellt einen neuen Tresor`
+  String get loan_create_vault_info {
+    return Intl.message(
+      'Du erstellt einen neuen Tresor',
+      name: 'loan_create_vault_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ID wird generiert wenn der Tresor erstellt wird.`
+  String get loan_create_id_generated {
+    return Intl.message(
+      'ID wird generiert wenn der Tresor erstellt wird.',
+      name: 'loan_create_id_generated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Benutze eigeene Tressor Besitzer Adresse`
+  String get loan_vault_customer_owner_address {
+    return Intl.message(
+      'Benutze eigeene Tressor Besitzer Adresse',
+      name: 'loan_vault_customer_owner_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor Benutzer Adresse`
+  String get loan_vault_owner_address {
+    return Intl.message(
+      'Tresor Benutzer Adresse',
+      name: 'loan_vault_owner_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rücksende Adresse`
+  String get loan_return_address {
+    return Intl.message(
+      'Rücksende Adresse',
+      name: 'loan_return_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weiter`
+  String get loan_continue {
+    return Intl.message(
+      'Weiter',
+      name: 'loan_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Abbrechen`
+  String get loan_cancel {
+    return Intl.message(
+      'Abbrechen',
+      name: 'loan_cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bestätigen Tresor erstellen`
+  String get loan_confirm_create_vault {
+    return Intl.message(
+      'Bestätigen Tresor erstellen',
+      name: 'loan_confirm_create_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wähle ein Darlehen Schema für deinen Tresor`
+  String get loan_create_choose_scheme {
+    return Intl.message(
+      'Wähle ein Darlehen Schema für deinen Tresor',
+      name: 'loan_create_choose_scheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Das setzt das Min. Kollateral Ratio und Zinsen für deinen Tresor.`
+  String get loan_create_choose_schema_info {
+    return Intl.message(
+      'Das setzt das Min. Kollateral Ratio und Zinsen für deinen Tresor.',
+      name: 'loan_create_choose_schema_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Du leihst dir aus`
+  String get loan_you_are_borrowing {
+    return Intl.message(
+      'Du leihst dir aus',
+      name: 'loan_you_are_borrowing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen Token zum leihen`
+  String get loan_tokens_to_borrow {
+    return Intl.message(
+      'Darlehen Token zum leihen',
+      name: 'loan_tokens_to_borrow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Token Zinsen`
+  String get loan_token_interest {
+    return Intl.message(
+      'Token Zinsen',
+      name: 'loan_token_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamt Zinsen`
+  String get loan_token_interest_amount {
+    return Intl.message(
+      'Gesamt Zinsen',
+      name: 'loan_token_interest_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamt Darlehen + Zinsen`
+  String get loan_token_total_interest {
+    return Intl.message(
+      'Gesamt Darlehen + Zinsen',
+      name: 'loan_token_total_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zinsen (Tresor + Token)`
+  String get loan_token_total_interest_rate {
+    return Intl.message(
+      'Zinsen (Tresor + Token)',
+      name: 'loan_token_total_interest_rate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamt Darlehen USD`
+  String get loan_total_loan_usd {
+    return Intl.message(
+      'Gesamt Darlehen USD',
+      name: 'loan_total_loan_usd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tresor ID`
+  String get loan_vault_id {
+    return Intl.message(
+      'Tresor ID',
+      name: 'loan_vault_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ergebnis Kollateral Ratio`
+  String get loan_resulting_collateral {
+    return Intl.message(
+      'Ergebnis Kollateral Ratio',
+      name: 'loan_resulting_collateral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen Token bestätigen`
+  String get loan_borrow_confirm_title {
+    return Intl.message(
+      'Darlehen Token bestätigen',
+      name: 'loan_borrow_confirm_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dahrlehen Token`
+  String get loan_borrow_title {
+    return Intl.message(
+      'Dahrlehen Token',
+      name: 'loan_borrow_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaktion Details`
+  String get loan_transaction_details {
+    return Intl.message(
+      'Transaktion Details',
+      name: 'loan_transaction_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaktion Ergebnis`
+  String get loan_transaction_result {
+    return Intl.message(
+      'Transaktion Ergebnis',
+      name: 'loan_transaction_result',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen bestätigen`
+  String get loan_borrow_confirm {
+    return Intl.message(
+      'Darlehen bestätigen',
+      name: 'loan_borrow_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wähle einen Darlehen Token`
+  String get loan_borrow_choose_token {
+    return Intl.message(
+      'Wähle einen Darlehen Token',
+      name: 'loan_borrow_choose_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wähle einen Tresor`
+  String get loan_borrow_choose_vault {
+    return Intl.message(
+      'Wähle einen Tresor',
+      name: 'loan_borrow_choose_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gesamt Kollateral`
+  String get loan_total_collateral {
+    return Intl.message(
+      'Gesamt Kollateral',
+      name: 'loan_total_collateral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen Token`
+  String get loan_token {
+    return Intl.message(
+      'Darlehen Token',
+      name: 'loan_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wie viel willst du hinzufügen?`
+  String get loan_borrow_amount {
+    return Intl.message(
+      'Wie viel willst du hinzufügen?',
+      name: 'loan_borrow_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral bestätigen`
+  String get loan_add_collateral_confirm_title {
+    return Intl.message(
+      'Kollateral bestätigen',
+      name: 'loan_add_collateral_confirm_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aktuelles Kollateral`
+  String get loan_current_collateral {
+    return Intl.message(
+      'Aktuelles Kollateral',
+      name: 'loan_current_collateral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Änderungen`
+  String get loan_collateral_changes {
+    return Intl.message(
+      'Änderungen',
+      name: 'loan_collateral_changes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral nach TX`
+  String get loan_collateral_after_tx {
+    return Intl.message(
+      'Kollateral nach TX',
+      name: 'loan_collateral_after_tx',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kein Kollateral`
+  String get loan_no_collaterals {
+    return Intl.message(
+      'Kein Kollateral',
+      name: 'loan_no_collaterals',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kollateral hinzufügen`
+  String get loan_add_collateral_title {
+    return Intl.message(
+      'Kollateral hinzufügen',
+      name: 'loan_add_collateral_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Füge Token als Kollateral hinzu`
+  String get loan_add_token_as_collateral {
+    return Intl.message(
+      'Füge Token als Kollateral hinzu',
+      name: 'loan_add_token_as_collateral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verfügbar`
+  String get loan_add_collateral_available {
+    return Intl.message(
+      'Verfügbar',
+      name: 'loan_add_collateral_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wie viel möchtest du hinzufügen?`
+  String get loan_add_collateral_how_much {
+    return Intl.message(
+      'Wie viel möchtest du hinzufügen?',
+      name: 'loan_add_collateral_how_much',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wie viel möchtest du ändern?`
+  String get loan_change_collateral_how_much {
+    return Intl.message(
+      'Wie viel möchtest du ändern?',
+      name: 'loan_change_collateral_how_much',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Menge ist ungültig, ungenügend Vermögen vorhanden`
+  String get loan_add_collateral_insufficient_funds {
+    return Intl.message(
+      'Menge ist ungültig, ungenügend Vermögen vorhanden',
+      name: 'loan_add_collateral_insufficient_funds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zurückzahlen`
+  String get loan_payback {
+    return Intl.message(
+      'Zurückzahlen',
+      name: 'loan_payback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Darlehen Zurückzahlen`
+  String get loan_payback_title {
+    return Intl.message(
+      'Darlehen Zurückzahlen',
+      name: 'loan_payback_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verfügbar`
+  String get loan_payback_available_balance {
+    return Intl.message(
+      'Verfügbar',
+      name: 'loan_payback_available_balance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokens zum Zurückzahlen`
+  String get loan_tokens_to_pay_back {
+    return Intl.message(
+      'Tokens zum Zurückzahlen',
+      name: 'loan_tokens_to_pay_back',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wert`
+  String get loan_payback_value {
+    return Intl.message(
+      'Wert',
+      name: 'loan_payback_value',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bearbeiten`
+  String get loan_collateral_edit {
+    return Intl.message(
+      'Bearbeiten',
+      name: 'loan_collateral_edit',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

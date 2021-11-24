@@ -40,9 +40,9 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
               controller: _tabController,
               tabs: [
                 Tab(
-                  text: 'Browse Loans',
+                  text: S.of(context).loan_browse_loans
                 ),
-                Tab(text: 'Your Loans'),
+                Tab(text: S.of(context).loan_your_loans),
               ],
             ),
             title: Text(S.of(context).loan_vaults),

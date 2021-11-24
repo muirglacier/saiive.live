@@ -109,7 +109,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildTabActiveLoans() {
     if (widget.vault.loanAmounts.length == 0) {
-      return Container(child: Text('no loan amounts'));
+      return Container(child: Text(S.of(context).loan_no_active_loans));
     }
 
     return CustomScrollView(slivers: [
@@ -139,7 +139,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
       streamController.close();
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Close vault successfull!"),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_close_vault_success),
       ));
 
       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -166,8 +166,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               Container(height: 10),
               Table(border: TableBorder(), children: [
                 TableRow(children: [
-                  Text('Borrowed Tokens', style: Theme.of(context).textTheme.caption),
-                  Text('Interest amount (${widget.vault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
+                  Text(S.of(context).loan_borrowed_tokens, style: Theme.of(context).textTheme.caption),
+                  Text(S.of(context).loan_interest_amount + ' (${widget.vault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
                 ]),
                 TableRow(children: [
                   Text(FundFormatter.format(double.tryParse(amount.amount))),
@@ -176,20 +176,20 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text('Amount Payable', style: Theme.of(context).textTheme.caption), Text('Price per Token', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [Text(FundFormatter.format(totalAmount, fractions: 2) + ' \$'), Text(FundFormatter.format(pricePerToken, fractions: 2) + ' \$')]),
               ]),
               Container(height: 10),
               Row(children: [
                 ElevatedButton(
-                  child: Text('Payback Loan'),
+                  child: Text(S.of(context).loan_payback_loan),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultPaybackLoanScreen(amount, token, widget.vault, interest)));
                   },
                 ),
                 Container(width: 10),
                 ElevatedButton(
-                  child: Text('Borrow more'),
+                  child: Text(S.of(context).loan_borrow_more),
                   onPressed: token == null
                       ? null
                       : () {
@@ -202,20 +202,20 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildTabDetails() {
     List<List<String>> items = [
-      ['Min. collateral ratio', widget.vault.schema.minColRatio],
-      ['Vault interest', widget.vault.schema.interestRate],
+      [S.of(context).loan_min_collateral_ratio, widget.vault.schema.minColRatio],
+      [S.of(context).loan_vault_interest, widget.vault.schema.interestRate],
     ];
 
     List<List<String>> itemsVault = [
-      ['Collateral ratio', widget.vault.collateralRatio],
-      ['Active loans', widget.vault.loanAmounts.length.toString()],
-      ['Total Value of Loans', widget.vault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
-      ['Collateral Value', FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + ' \$'],
-      ['Vault health', widget.vault.healthStatus.toString()],
+      [S.of(context).loan_collateral_ratio, widget.vault.collateralRatio],
+      [S.of(context).loan_active_loans, widget.vault.loanAmounts.length.toString()],
+      [S.of(context).loan_total_loan_amount, widget.vault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
+      [S.of(context).loan_collateral_value, FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + ' \$'],
+      [S.of(context).loan_vault_health, widget.vault.healthStatus.toString()],
     ];
 
     return CustomScrollView(slivers: [
-      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Loan Scheme', style: Theme.of(context).textTheme.caption))),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_loan_scheme, style: Theme.of(context).textTheme.caption))),
       SliverList(
           delegate: SliverChildListDelegate([
         SingleChildScrollView(
@@ -226,7 +226,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
           ),
         )
       ])),
-      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Vault Details', style: Theme.of(context).textTheme.caption))),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
       SliverList(
           delegate: SliverChildListDelegate([
         SingleChildScrollView(
@@ -244,7 +244,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildTabCollaterals() {
     if (widget.vault.collateralAmounts.length == 0) {
-      return Container(child: Text('no collateral amounts'));
+      return Container(child: Text(S.of(context).loan_no_collateral_amounts));
     }
 
     return CustomScrollView(slivers: [
@@ -277,7 +277,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(FundFormatter.format(double.tryParse(amount.amount))),
@@ -293,9 +293,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     return Container(
       child: ListView.builder(
         physics: const ClampingScrollPhysics(),
-        itemCount: 200,
+        itemCount: 1,
         itemBuilder: (BuildContext context, int index) {
-          return Text('some content');
+          return Text('disabled');
         },
       ),
     );
@@ -313,8 +313,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                     if (widget.vault.healthStatus == LoanVaultHealthStatus.halted)
                       Padding(
                           padding: EdgeInsets.only(bottom: 10),
-                          child: AlertWidget(
-                              "The activity of this vault has been temporarily halted due to price volatility in the market. This vault will resume its activity once the market stabilizes.")),
+                          child: AlertWidget(S.of(context).loan_vault_halted_info)),
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                       Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                       Container(width: 10),
@@ -328,11 +327,11 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                       ]))
                     ]),
                     if (isDFILessThan50)
-                      Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget("Your collateral has to be at least 50% DFI in order to get a loan.", color: Colors.red)),
+                      Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red)),
                     Row(children: [Expanded(child: LoanCollateralsWidget(widget.vault, _tokens, widget.vault.collateralAmounts))]),
                     Container(height: 5),
                     Table(border: TableBorder(), children: [
-                      TableRow(children: [Text('Active Loans', style: Theme.of(context).textTheme.caption), Text('Total Loan Amount', style: Theme.of(context).textTheme.caption)]),
+                      TableRow(children: [Text(S.of(context).loan_active_loans, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption)]),
                       TableRow(children: [
                         Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(widget.vault.loanAmounts, 3)),
                         Text(FundFormatter.format(double.tryParse(widget.vault.loanValue), fractions: 2) + ' \$')
@@ -341,7 +340,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                     Container(height: 10),
                     Table(border: TableBorder(), children: [
                       TableRow(
-                          children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Collateral Ratio', style: Theme.of(context).textTheme.caption)]),
+                          children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption)]),
                       TableRow(
                           children: [Text(FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + '\$'), Text(widget.vault.collateralRatio + ' %')]),
                     ]),
@@ -350,7 +349,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            child: Text('Change Collateral'),
+                            child: Text(S.of(context).loan_change_collateral),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(widget.vault, _tokens)));
                             },
@@ -359,7 +358,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            child: Text('Close Vault'),
+                            child: Text(S.of(context).loan_close_vault),
                             onPressed: () async {
                               await sl.get<AuthenticationHelper>().forceAuth(context, () async {
                                 await _doCloseVault();
@@ -376,7 +375,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     if (_tokens == null || _loanTokens == null) {
       return Scaffold(
           appBar: AppBar(
-            title: Text('Vault Detail'),
+            title: Text(S.of(context).loan_vault_details),
             actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           ),
           body: LoadingWidget(text: S.of(context).loading));
@@ -384,7 +383,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Vault Detail'),
+          title: Text(S.of(context).loan_vault_details),
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
         ),
         body: NestedScrollView(
@@ -397,10 +396,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                   controller: _tabController,
                   isScrollable: true,
                   tabs: [
-                    Tab(text: 'Active loan'),
-                    Tab(text: 'Details'),
-                    Tab(text: 'Collaterals'),
-                    Tab(text: 'Auctions'),
+                    Tab(text: S.of(context).loan_vault_details_tab_active_loan),
+                    Tab(text: S.of(context).loan_vault_details_tab_details),
+                    Tab(text: S.of(context).loan_vault_details_tab_collaterals),
+                    Tab(text: S.of(context).loan_vault_details_tab_auctions),
                   ],
                 ),
               ),

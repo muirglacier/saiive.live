@@ -64,32 +64,6 @@ class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliv
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    if (_tokens.length == 0) {
-      return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Expanded(
-            child: Container(
-                padding: new EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.shield, size: 64),
-                    Container(child: Text('No vault crated', style: Theme.of(context).textTheme.headline3), padding: new EdgeInsets.only(top: 5)),
-                    Container(
-                        child: Text('To get started, create a vault add add DFI and other tokens as collateral', textAlign: TextAlign.center),
-                        padding: new EdgeInsets.only(top: 5)),
-                    Container(
-                        child: ElevatedButton(
-                          child: Text('Create Vault'),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultCreateScreen()));
-                          },
-                        ),
-                        padding: new EdgeInsets.only(top: 5))
-                  ],
-                )))
-      ]);
-    }
-
     var row = Responsive.buildResponsive<LoanToken>(context, _tokens, 500, (el) => new VaultTokenBoxWidget(el));
 
     return CustomScrollView(

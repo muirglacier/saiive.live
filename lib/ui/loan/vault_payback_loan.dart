@@ -86,7 +86,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
       streamController.close();
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Payback successfull!"),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_payback_success),
       ));
 
       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -157,7 +157,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             )),
         if (percentage > 0)
           ElevatedButton(
-            child: Text('Payback'),
+            child: Text(S.of(context).loan_payback),
             onPressed: () async {
               await sl.get<AuthenticationHelper>().forceAuth(context, () async {
                 await doPaybakLoan();
@@ -180,8 +180,8 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
               Container(height: 10),
               Table(border: TableBorder(), children: [
                 TableRow(children: [
-                  Text('Borrowed Tokens', style: Theme.of(context).textTheme.caption),
-                  Text('Interest amount (${widget.loanVault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
+                  Text(S.of(context).loan_borrowed_tokens, style: Theme.of(context).textTheme.caption),
+                  Text(S.of(context).loan_interest_amount + ' (${widget.loanVault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
                 ]),
                 TableRow(children: [
                   Text(FundFormatter.format(totalVaultValue)),
@@ -190,12 +190,12 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text('Amount Payable', style: Theme.of(context).textTheme.caption), Text('Price per Token', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [Text(FundFormatter.format(totalAmount, fractions: 2) + ' \$'), Text(FundFormatter.format(pricePerToken, fractions: 2) + ' \$')]),
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text('Available Balance', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [Text(S.of(context).loan_payback_available_balance, style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [
                   Text(FundFormatter.format(availableBalance / DefiChainConstants.COIN)),
                 ]),
@@ -211,7 +211,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             padding: EdgeInsets.all(30),
             child: Column(children: [
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text('Tokens to pay back', style: Theme.of(context).textTheme.caption), Text('Value')]),
+                TableRow(children: [Text(S.of(context).loan_tokens_to_pay_back, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_payback_value)]),
                 TableRow(children: [Text(FundFormatter.format(amountToRemove)), Text(FundFormatter.format(amountToRemove * pricePerToken, fractions: 4))]),
               ])
             ])));
@@ -221,11 +221,11 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   Widget build(Object context) {
     if (!balanceLoaded) {
       return Scaffold(
-          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Payback Loan")), body: LoadingWidget(text: S.of(context).loading));
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)), body: LoadingWidget(text: S.of(context).loading));
     }
 
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text("Payback Loan")),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)),
         body: Padding(padding: EdgeInsets.all(20), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])));
   }
 }

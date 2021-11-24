@@ -120,7 +120,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
               child: Column(children: [
                 Row(children: <Widget>[
                   Text(
-                    'Choose a Loan Token',
+                    S.of(context).loan_borrow_choose_token,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headline6,
                   ),
@@ -152,11 +152,11 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
               ),
               Container(height: 5),
               Row(children: [
-                Text('Price', style: Theme.of(context).textTheme.caption),
+                Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
                 Spacer(),
                 Text(widget.loanToken.activePrice != null ? FundFormatter.format(widget.loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
               ]),
-              Row(children: [Text('Interest', style: Theme.of(context).textTheme.caption), Spacer(), Text(widget.loanToken.interest + '%')])
+              Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(widget.loanToken.interest + '%')])
             ])));
   }
 
@@ -175,11 +175,11 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
 
   buildTXDetails() {
     List<List<String>> items = [
-      ['Collateralization Ratio', _collateralizationRatio.toStringAsFixed(2) + '%'],
-      ['Min. collateralization', _loanVault.schema.minColRatio + '%'],
-      ['Interest (Vault + Token)', _totalInterest.toStringAsFixed(2) + '%'],
-      ['Total Interest Amount', FundFormatter.format(_totalInterestAmount) + ' ' + widget.loanToken.token.symbol],
-      ['Total Loan + interest', FundFormatter.format(_totalTokenWithInterest) + ' ' + widget.loanToken.token.symbol],
+      [S.of(context).loan_collateral_ratio, _collateralizationRatio.toStringAsFixed(2) + '%'],
+      [S.of(context).loan_min_collateral_ratio, _loanVault.schema.minColRatio + '%'],
+      [S.of(context).loan_token_total_interest_rate, _totalInterest.toStringAsFixed(2) + '%'],
+      [S.of(context).loan_token_interest_amount, FundFormatter.format(_totalInterestAmount) + ' ' + widget.loanToken.token.symbol],
+      [S.of(context).loan_token_total_interest, FundFormatter.format(_totalTokenWithInterest) + ' ' + widget.loanToken.token.symbol],
     ];
 
     return CustomTableWidget(items);
@@ -202,7 +202,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                     child: Column(children: [
                       Row(children: <Widget>[
                         Text(
-                          'Choose your Vault',
+                          S.of(context).loan_borrow_choose_vault,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.headline6,
                         ),
@@ -230,11 +230,11 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                       ]),
                       Container(height: 5),
                       Row(children: [
-                        Text('Total Collateral', style: Theme.of(context).textTheme.caption),
+                        Text(S.of(context).loan_total_collateral, style: Theme.of(context).textTheme.caption),
                         Spacer(),
                         Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue), fractions: 2) + ' \$'),
                       ]),
-                      Row(children: [Text('Vault Interest', style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')])
+                      Row(children: [Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')])
                     ]))));
   }
 
@@ -242,13 +242,13 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   Widget build(BuildContext context) {
     if (_vaults == null || _tokens == null) {
       return Scaffold(
-          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Borrow Loan Token')), body: LoadingWidget(text: S.of(context).loading));
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_title)), body: LoadingWidget(text: S.of(context).loading));
     }
 
     GlobalKey<NavigatorState> key = GlobalKey();
 
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Borrow Loan Token')),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_title)),
         body: SlidingUpPanel(
             controller: _panelController,
             backdropEnabled: true,
@@ -288,9 +288,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                 child: NestedScrollView(
                     headerSliverBuilder: (context, value) {
                       return [
-                        SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Loan Token', style: Theme.of(context).textTheme.caption))),
+                        SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
                         SliverToBoxAdapter(child: buildTokenEntry()),
-                        SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Vault', style: Theme.of(context).textTheme.caption))),
+                        SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
                         SliverToBoxAdapter(child: buildVaultEntry()),
                       ];
                     },
@@ -298,10 +298,10 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                       if (_loanVault != null && widget.loanToken != null)
                         Column(children: [
                           Container(height: 20),
-                          Text('Amount'),
+                          Text(S.of(context).loan_amount),
                           TextField(
                               controller: _amountController,
-                              decoration: InputDecoration(hintText: 'How much to add?', contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+                              decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
                               keyboardType: TextInputType.numberWithOptions(decimal: true)),
                           buildTXDetails(),
                           Padding(
@@ -316,7 +316,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                           SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                child: Text('Continue'),
+                                child: Text(S.of(context).loan_continue),
                                 onPressed: () {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, widget.loanToken, _amount, _returnAddress)));

@@ -64,7 +64,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
         padding: EdgeInsets.all(30),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
-            'You are borrowing',
+            S.of(context).loan_you_are_borrowing,
             style: Theme.of(context).textTheme.caption,
           ),
           Row(children: [
@@ -85,12 +85,12 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
 
   buildTXDetails() {
     List<List<String>> items = [
-      ['Loan Tokens to Borrow', FundFormatter.format(widget.amount) + ' ' + widget.loanToken.token.symbol],
-      ['Token interest', _interestToken.toStringAsFixed(2) + '%'],
-      ['Vault interest', _interestVault.toStringAsFixed(2) + '%'],
-      ['Total Interest Amount', FundFormatter.format(_totalInterestAmount) + ' ' + widget.loanToken.token.symbol],
-      ['Total Loan + interest', FundFormatter.format(_totalTokenWithInterest) + ' ' + widget.loanToken.token.symbol],
-      ['Total Loan USD', FundFormatter.format(_totalUSDValue, fractions: 2) + ' \$'],
+      [S.of(context).loan_tokens_to_borrow, FundFormatter.format(widget.amount) + ' ' + widget.loanToken.token.symbol],
+      [S.of(context).loan_token_interest, _interestToken.toStringAsFixed(2) + '%'],
+      [S.of(context).loan_vault_interest, _interestVault.toStringAsFixed(2) + '%'],
+      [S.of(context).loan_token_interest_amount, FundFormatter.format(_totalInterestAmount) + ' ' + widget.loanToken.token.symbol],
+      [S.of(context).loan_token_total_interest, FundFormatter.format(_totalTokenWithInterest) + ' ' + widget.loanToken.token.symbol],
+      [S.of(context).loan_total_loan_usd, FundFormatter.format(_totalUSDValue, fractions: 2) + ' \$'],
     ];
 
     return CustomTableWidget(items);
@@ -98,9 +98,9 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
 
   buildVaultDetails() {
     List<List<String>> items = [
-      ['Vault ID', widget.loanVault.vaultId],
-      ['Collateral Amount', FundFormatter.format(double.tryParse(widget.loanVault.collateralValue), fractions: 2) + ' \$'],
-      ['Collateralization Ratio', widget.loanVault.collateralRatio + '%'],
+      [S.of(context).loan_vault_id, widget.loanVault.vaultId],
+      [S.of(context).loan_collateral_amount, FundFormatter.format(double.tryParse(widget.loanVault.collateralValue), fractions: 2) + ' \$'],
+      [S.of(context).loan_collateral_ratio, widget.loanVault.collateralRatio + '%'],
     ];
 
     return CustomTableWidget(items);
@@ -108,7 +108,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
 
   buildResultDetails() {
     List<List<String>> items = [
-      ['Resulting collateral Ratio', _collateralizationRatio.toStringAsFixed(2) + '%'],
+      [S.of(context).loan_resulting_collateral, _collateralizationRatio.toStringAsFixed(2) + '%'],
     ];
 
     return CustomTableWidget(items);
@@ -130,7 +130,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
       streamController.close();
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Borrow successfull!"),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_borrow_success),
       ));
 
       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -146,25 +146,25 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Borrow Loan Token Confirm')),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_confirm_title)),
         body: Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: CustomScrollView(slivers: [
               SliverToBoxAdapter(child: buildTopPart()),
               SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Transaction Details', style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_details, style: Theme.of(context).textTheme.caption))),
               SliverToBoxAdapter(child: buildTXDetails()),
               SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Vault Details', style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
               SliverToBoxAdapter(child: buildVaultDetails()),
               SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Transcation Results', style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_result, style: Theme.of(context).textTheme.caption))),
               SliverToBoxAdapter(child: buildResultDetails()),
               SliverToBoxAdapter(
                   child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                          child: Text('Confirm Borrow'),
+                          child: Text(S.of(context).loan_borrow_confirm),
                           onPressed: () async {
                             await sl.get<AuthenticationHelper>().forceAuth(context, () async {
                               await doBorrowLoan();

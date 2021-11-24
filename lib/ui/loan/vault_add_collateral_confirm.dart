@@ -75,7 +75,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
       }
       if (lastTxId != null) {
         await Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTxId, "Add collateral successfull!"),
+          builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, lastTxId, S.of(context).loan_collateral_success),
         ));
       }
       Navigator.of(context).pop();
@@ -131,7 +131,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(widget.collateralValue, amount, token).toStringAsFixed(2) + '%')]),
                 TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
               ])
@@ -141,13 +141,14 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral Confirm')),
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_add_collateral_confirm_title)),
         body: Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: CustomScrollView(slivers: [
               SliverToBoxAdapter(child: _buildTopPart()),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Current Collaterals', style: Theme.of(context).textTheme.caption))),
-              SliverList(
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_current_collateral, style: Theme.of(context).textTheme.caption))),
+              if (widget.currentAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0, bottom: 10), child: Text(S.of(context).loan_no_collaterals))),
+              if (widget.currentAmounts.length > 0) SliverList(
                   delegate: SliverChildListDelegate([
                 SingleChildScrollView(
                   child: Column(
@@ -167,7 +168,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                   ),
                 )
               ])),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Changes', style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_changes, style: Theme.of(context).textTheme.caption))),
               SliverList(
                   delegate: SliverChildListDelegate([
                 SingleChildScrollView(
@@ -194,8 +195,8 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                   ),
                 )
               ])),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Final Collateral after TX', style: Theme.of(context).textTheme.caption))),
-              if (widget.newAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0), child: Text('No Collaterals'))),
+              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_after_tx, style: Theme.of(context).textTheme.caption))),
+              if (widget.newAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0), child: Text(S.of(context).loan_no_collaterals))),
               if (widget.newAmounts.length > 0)
                 SliverList(
                     delegate: SliverChildListDelegate([
@@ -220,7 +221,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                   child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                          child: Text('Continue'),
+                          child: Text(S.of(context).loan_continue),
                           onPressed: () async {
                             await sl.get<AuthenticationHelper>().forceAuth(context, () async {
                               await doAddCollaterals();

@@ -67,13 +67,13 @@ class _VaultAddCollateralAmountScreen
                       TextField(
                           controller: _amountController,
                           decoration: InputDecoration(
-                              hintText: 'How much to add?',
+                              hintText: S.of(context).loan_add_collateral_how_much,
                               contentPadding:
                                   const EdgeInsets.symmetric(vertical: 10.0)),
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true)),
                       Container(height: 10),
-                      Text('Available: ' +
+                      Text(S.of(context).loan_add_collateral_available + ': ' +
                           FundFormatter.format(widget.token.balanceDisplay)),
                       SizedBox(
                         height: 20,
@@ -89,7 +89,7 @@ class _VaultAddCollateralAmountScreen
                                   },
                           )),
                       Container(height: 10),
-                      if (!_valid) Text('Amount is invalid, insufficient funds')
+                      if (!_valid) Text(S.of(context).loan_add_collateral_insufficient_funds)
                     ]))));
   }
 }

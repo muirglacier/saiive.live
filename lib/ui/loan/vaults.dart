@@ -68,13 +68,13 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Icon(Icons.shield, size: 64),
-                    Container(child: Text('No vault crated', style: Theme.of(context).textTheme.headline3), padding: new EdgeInsets.only(top: 5)),
+                    Container(child: Text(S.of(context).loan_no_vault_created, style: Theme.of(context).textTheme.headline3), padding: new EdgeInsets.only(top: 5)),
                     Container(
-                        child: Text('To get started, create a vault add add DFI and other tokens as collateral', textAlign: TextAlign.center),
+                        child: Text(S.of(context).loan_vault_creation_info, textAlign: TextAlign.center),
                         padding: new EdgeInsets.only(top: 5)),
                     Container(
                         child: ElevatedButton(
-                          child: Text('Create Vault'),
+                          child: Text(S.of(context).loan_create_vault),
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultCreateScreen()));
                           },

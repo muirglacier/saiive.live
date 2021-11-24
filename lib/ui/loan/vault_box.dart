@@ -1,3 +1,4 @@
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/ui/loan/vault_detail.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                             style: Theme.of(context).textTheme.headline6,
                           ),
                           Row(children: [
-                            Text('Collaterals'),
+                            Text(S.of(context).loan_collaterals),
                             TokenSetIcons(widget.vault.collateralAmounts, 3)
                           ])
                         ])),
@@ -56,9 +57,9 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                   Container(height: 10),
                   Table(border: TableBorder(), children: [
                     TableRow(children: [
-                      Text('Active Loans',
+                      Text(S.of(context).loan_active_loans,
                           style: Theme.of(context).textTheme.caption),
-                      Text('Total Loan Amount',
+                      Text(S.of(context).loan_total_loan_amount,
                           style: Theme.of(context).textTheme.caption)
                     ]),
                     TableRow(children: [
@@ -71,9 +72,9 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                   Container(height: 10),
                   Table(border: TableBorder(), children: [
                     TableRow(children: [
-                      Text('Collateral Amount',
+                      Text(S.of(context).loan_collateral_amount,
                           style: Theme.of(context).textTheme.caption),
-                      Text('Collateral Ratio',
+                      Text(S.of(context).loan_collateral_ratio,
                           style: Theme.of(context).textTheme.caption)
                     ]),
                     TableRow(children: [

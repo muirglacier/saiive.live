@@ -1,4 +1,5 @@
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:flutter/material.dart';
@@ -74,13 +75,13 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
                       TextField(
                           controller: _amountController,
                           decoration: InputDecoration(
-                              hintText: 'How much to change?',
+                              hintText: S.of(context).loan_change_collateral_how_much,
                               contentPadding:
                               const EdgeInsets.symmetric(vertical: 10.0)),
                           keyboardType:
                           TextInputType.numberWithOptions(decimal: true)),
                       Container(height: 10),
-                      Text('Available: ' +
+                      Text(S.of(context).loan_add_collateral_available + ': ' +
                           FundFormatter.format(widget.balance != null ? widget.balance.balanceDisplay : '0')),
                       SizedBox(
                         height: 20,
@@ -88,14 +89,14 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            child: Text('Edit'),
+                            child: Text(S.of(context).loan_collateral_edit),
                             onPressed: _amount == null
                                 ? null : () {
                               this.widget.onCollateralChanged(widget.current, _amount);
                             },
                           )),
                       Container(height: 10),
-                      if (!_valid) Text('Amount is invalid, insufficient funds')
+                      if (!_valid) Text(S.of(context).loan_add_collateral_insufficient_funds)
                     ]))));
   }
 }

@@ -33,12 +33,12 @@ class VaultCreateLoanSchemeItem extends StatelessWidget {
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('Min. collateral Ratio', style: Theme.of(context).textTheme.caption), Text(this.minCollateralRatio)],
+              children: [Text(S.of(context).loan_min_collateral_ratio, style: Theme.of(context).textTheme.caption), Text(this.minCollateralRatio)],
             )),
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text('Interest Rate', style: Theme.of(context).textTheme.caption), Text(this.interestRate)],
+              children: [Text(S.of(context).loan_vault_interest_rate_apr, style: Theme.of(context).textTheme.caption), Text(this.interestRate)],
             ))
           ]))
         ],
@@ -80,9 +80,9 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
         child: Padding(
             padding: EdgeInsets.all(20),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Choose loan scheme for your vault', style: Theme.of(context).textTheme.headline6),
+              Text(S.of(context).loan_create_choose_scheme, style: Theme.of(context).textTheme.headline6),
               Container(height: 10),
-              Text('This sets the minimum collateral ratio and the vault\'s interest rate.'),
+              Text(S.of(context).loan_create_choose_schema_info),
               Container(height: 10),
               ListView.separated(
                   separatorBuilder: (context, index) => Divider(),
@@ -118,12 +118,12 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
                               });
                             }));
                   }),
-              Text('Keep note of your selected collateral ratio for your vault to sustain the loans within it', style: Theme.of(context).textTheme.caption),
-              Container(height: 20),
+              // Text('Keep note of your selected collateral ratio for your vault to sustain the loans within it', style: Theme.of(context).textTheme.caption),
+              // Container(height: 20),
               SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                      child: Text('Continue'),
+                      child: Text(S.of(context).loan_continue),
                       onPressed: _selectedSchema == null
                           ? null
                           : () {
@@ -134,6 +134,6 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Create Vault')), body: buildCreateVaultScreen(context));
+    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_create_vault)), body: buildCreateVaultScreen(context));
   }
 }

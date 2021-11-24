@@ -62,6 +62,21 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var token = widget.collateralTokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
     var percentage = 0.0;
 
+    var totalDFI = 0.0;
+
+    if (amount != null) {
+      totalDFI += double.tryParse(amount.amount);
+    }
+
+    if (changes.containsKey('DFI')) {
+      totalDFI += changes['DFI'];
+    }
+
+    if (null == amount && token != null) {
+      amount = LoanVaultAmount(id: '0', amount: totalDFI.toString(), symbol: 'DFI', symbolKey: 'DFI', activePrice: token.activePrice);
+    }
+
+
     if (null != amount && null != token) {
       percentage = LoanHelper.calculateCollateralShare(_collateralValue, amount, token);
     }
@@ -112,7 +127,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          Text('Collateral Value'),
+                          Text(S.of(context).loan_collateral_value),
                           Text(FundFormatter.format(_collateralValue, fractions: 2) + ' \$')
                         ])),
                       ],
@@ -270,7 +285,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text('Collateral Amount', style: Theme.of(context).textTheme.caption), Text('Vault %', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)]),
                 TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(_collateralValue, amount, token).toStringAsFixed(2) + '%')]),
                 TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
               ])
@@ -281,13 +296,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   Widget build(BuildContext context) {
     if (_accountBalance == null) {
       return Scaffold(
-          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral')), body: LoadingWidget(text: S.of(context).loading));
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_add_collateral_title)), body: LoadingWidget(text: S.of(context).loading));
     }
 
     GlobalKey<NavigatorState> key = GlobalKey();
 
     return Scaffold(
-      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Add Collateral')),
+      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_add_collateral_title)),
       body: SlidingUpPanel(
           controller: _panelController,
           backdropEnabled: true,
@@ -327,10 +342,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
               SliverToBoxAdapter(child: _buildTopPart()),
               if (isDFILessThan50)
                 SliverToBoxAdapter(
-                    child: Padding(padding: EdgeInsets.all(10), child: AlertWidget("Your collateral has to be at least 50% DFI in order to get a loan.", color: Colors.red))),
+                    child: Padding(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red))),
               widget._collateralAmounts.length > 0
                   ? SliverPadding(padding: EdgeInsets.only(left: 10, right: 10), sliver: _buildTabCollaterals())
-                  : SliverToBoxAdapter(child: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Text('No Collateral added so far'))),
+                  : SliverToBoxAdapter(child: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Text(S.of(context).loan_no_collateral_amounts))),
               SliverToBoxAdapter(
                   child: Padding(
                       padding: EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -342,7 +357,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                                   Icon(Icons.add, color: StateContainer.of(context).curTheme.text),
                                   SizedBox(width: 10),
                                   Text(
-                                    "Add token as collateral",
+                                    S.of(context).loan_add_token_as_collateral,
                                     style: TextStyle(color: StateContainer.of(context).curTheme.text),
                                   ),
                                 ]),
@@ -367,7 +382,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                         SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                                child: Text('Continue'),
+                                child: Text(S.of(context).loan_continue),
                                 onPressed: changes.length > 0
                                     ? () async {
                                         await Navigator.of(context).push(MaterialPageRoute(

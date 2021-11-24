@@ -1,11 +1,8 @@
 import 'dart:async';
 
 import 'package:event_taxi/event_taxi.dart';
-import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
-import 'package:saiive.live/network/vaults_service.dart';
-import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/loan/vault_tokens.dart';
 import 'package:saiive.live/ui/loan/vaults.dart';
@@ -75,7 +72,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () async {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultCreateScreen()));
+                      await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultCreateScreen()));
                     },
                     child: Icon(Icons.add, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   )),

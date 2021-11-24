@@ -39,7 +39,6 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   List<LoanToken> _tokens;
   var _amountController = TextEditingController(text: '');
   double _amount = 0;
-  bool _valid = false;
   double _collateralizationRatio = 0;
   double _totalTokenWithInterest = 0;
   double _totalInterestAmount = 0;
@@ -89,10 +88,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
 
   handleChange() async {
     double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
-    bool valid = true;
 
     if (null == amount) {
-      valid = false;
       return;
     }
 
@@ -111,7 +108,6 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     setState(() {
       _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
       _amount = amount;
-      _valid = valid;
     });
   }
 
@@ -284,7 +280,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   Widget build(BuildContext context) {
     if (_vaults == null || _tokens == null) {
       return Scaffold(
-          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_title)), body: LoadingWidget(text: S.of(context).loading));
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_title)),
+          body: LoadingWidget(text: S.of(context).loading));
     }
 
     GlobalKey<NavigatorState> key = GlobalKey();
@@ -330,9 +327,11 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                 child: NestedScrollView(
                     headerSliverBuilder: (context, value) {
                       return [
-                        SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
+                        SliverToBoxAdapter(
+                            child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
                         SliverToBoxAdapter(child: buildTokenEntry()),
-                        SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
+                        SliverToBoxAdapter(
+                            child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
                         SliverToBoxAdapter(child: buildVaultEntry()),
                       ];
                     },

@@ -76,7 +76,6 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       amount = LoanVaultAmount(id: '0', amount: totalDFI.toString(), symbol: 'DFI', symbolKey: 'DFI', activePrice: token.activePrice);
     }
 
-
     if (null != amount && null != token) {
       percentage = LoanHelper.calculateCollateralShare(_collateralValue, amount, token);
     }
@@ -285,7 +284,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [
+                  Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
+                  Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)
+                ]),
                 TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(_collateralValue, amount, token).toStringAsFixed(2) + '%')]),
                 TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
               ])
@@ -296,7 +298,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   Widget build(BuildContext context) {
     if (_accountBalance == null) {
       return Scaffold(
-          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_add_collateral_title)), body: LoadingWidget(text: S.of(context).loading));
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_add_collateral_title)),
+          body: LoadingWidget(text: S.of(context).loading));
     }
 
     GlobalKey<NavigatorState> key = GlobalKey();
@@ -340,9 +343,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
           body: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: _buildTopPart()),
-              if (isDFILessThan50)
-                SliverToBoxAdapter(
-                    child: Padding(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red))),
+              if (isDFILessThan50) SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red))),
               widget._collateralAmounts.length > 0
                   ? SliverPadding(padding: EdgeInsets.only(left: 10, right: 10), sliver: _buildTabCollaterals())
                   : SliverToBoxAdapter(child: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Text(S.of(context).loan_no_collateral_amounts))),
@@ -389,7 +390,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                                             builder: (BuildContext context) => VaultAddCollateralConfirmScreen(widget.vault, widget.collateralTokens,
                                                 widget.vault.collateralAmounts, widget._collateralAmounts, _collateralValue, changes, _returnAddress)));
                                       }
-                                    : null))
+                                    : null)),
+                        Padding(padding: EdgeInsets.only(bottom: 100))
                       ])))
             ],
           )),

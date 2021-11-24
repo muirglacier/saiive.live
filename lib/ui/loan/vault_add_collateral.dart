@@ -61,6 +61,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var amount = widget.vault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
     var token = widget.collateralTokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
     var percentage = 0.0;
+    var newAmount = null;
 
     var totalDFI = 0.0;
 
@@ -72,13 +73,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
       totalDFI += changes['DFI'];
     }
 
-    if (null == amount && token != null) {
-      amount = LoanVaultAmount(id: '0', amount: totalDFI.toString(), symbol: 'DFI', symbolKey: 'DFI', activePrice: token.activePrice);
+    if (token != null) {
+      newAmount = LoanVaultAmount(id: '0', amount: totalDFI.toString(), symbol: 'DFI', symbolKey: 'DFI', activePrice: token.activePrice);
     }
 
 
     if (null != amount && null != token) {
-      percentage = LoanHelper.calculateCollateralShare(_collateralValue, amount, token);
+      percentage = LoanHelper.calculateCollateralShare(_collateralValue, newAmount, token);
     }
 
     setState(() {
@@ -387,7 +388,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                                     ? () async {
                                         await Navigator.of(context).push(MaterialPageRoute(
                                             builder: (BuildContext context) => VaultAddCollateralConfirmScreen(widget.vault, widget.collateralTokens,
-                                                widget.vault.collateralAmounts, widget._collateralAmounts, _collateralValue, changes, _returnAddress)));
+                                                widget.vault.collateralAmounts, widget._collateralAmounts, _collateralValue, double.tryParse(widget.vault.collateralValue), changes, _returnAddress)));
                                       }
                                     : null))
                       ])))

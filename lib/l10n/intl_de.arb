@@ -279,6 +279,7 @@
   "loan_price_per_token": "Preis pro Token",
   "loan_payback_loan": "Darlehen zurückzahlen",
   "loan_borrow_more": "Mehr ausleihen",
+  "loan_borrow": "Darlehen erstellen",
   "loan_min_collateral_ratio": "Min. Kollateral Ratio",
   "loan_vault_interest": "Tresor Zinsen",
   "loan_collateral_value": "Kollateral Wert",

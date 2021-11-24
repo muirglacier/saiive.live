@@ -23,7 +23,7 @@ class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
         onTap: () async {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (BuildContext context) =>
-                  VaultBorrowLoan(widget.token)));
+                  VaultBorrowLoan(loanToken: widget.token)));
         },
         child: Card(
             child: Padding(

@@ -1,56 +1,40 @@
-import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saiive.live/crypto/chain.dart';
 import 'integration_test_base.dart';
 
 void main() async {
   await testSetupIntegration(
       "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow");
 
-  // group("#1 integration vault", () {
-  //   Future initTest() async {
-  //     await baseInit();
-  //   }
+  group("#1 integration vault", () {
+    test("#0 init", () async {
+      await baseInit();
+    });
+    test("#1 create vault", () async {
+      final wallet = sl.get<DeFiChainWallet>();
 
-  //   Future destoryTest() async {
-  //     await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
+      await wallet.createVault("C1000", 100000000, ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+    }, timeout: Timeout(Duration(minutes: 10)));
 
-  //     final wallet = sl.get<DeFiChainWallet>();
-  //     await wallet.close();
-  //   }
+    test("#2 create vault", () async {
+      final wallet = sl.get<DeFiChainWallet>();
 
-  //   test("#1 create vault", () async {
-  //     await initTest();
+      await wallet.createVault("C1000", 100000000);
+    }, timeout: Timeout(Duration(minutes: 10)));
 
-  //     final wallet = sl.get<DeFiChainWallet>();
+    test("#99 destroy", () async {
+      await destoryTest();
+    });
+    test("#1 deposit to vault", () async {
+      // await initTest();
 
-  //     await wallet.init();
-  //     await wallet.createVault("C1000", 100000000, ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+      // final wallet = sl.get<DeFiChainWallet>();
 
-  //     await destoryTest();
-  //   }, timeout: Timeout(Duration(minutes: 10)));
+      // await wallet.init();
+      // await wallet.createVault("C1000", ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
 
-  //   test("#2 create vault", () async {
-  //     await initTest();
-
-  //     final wallet = sl.get<DeFiChainWallet>();
-
-  //     await wallet.init();
-  //     await wallet.createVault("C1000", 100000000);
-
-  //     await destoryTest();
-  //   }, timeout: Timeout(Duration(minutes: 10)));
-  //   test("#1 deposit to vault", () async {
-  //     // await initTest();
-
-  //     // final wallet = sl.get<DeFiChainWallet>();
-
-  //     // await wallet.init();
-  //     // await wallet.createVault("C1000", ownerAddress: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
-
-  //     // await destoryTest();
-  //   }, timeout: Timeout(Duration(minutes: 10)));
-  // });
+      // await destoryTest();
+    }, timeout: Timeout(Duration(minutes: 10)));
+  });
 }

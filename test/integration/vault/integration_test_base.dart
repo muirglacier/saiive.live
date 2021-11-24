@@ -53,6 +53,13 @@ Future baseInit() async {
   await wallet.syncAll();
 }
 
+Future destoryTest() async {
+  await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
+
+  final wallet = sl.get<DeFiChainWallet>();
+  await wallet.close();
+}
+
 void setupTestServiceLocator(String seed) {
   sl.registerLazySingleton<ISharedPrefsUtil>(() => SharedPrefsMock());
   sl.registerLazySingleton<IVault>(() => VaultMock(seed));

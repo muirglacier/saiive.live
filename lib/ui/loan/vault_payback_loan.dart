@@ -80,6 +80,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     var streamController = StreamController<String>();
     try {
+      await wallet.ensureUtxo(loadingStream: streamController);
       var paybackLoan = wallet.paybackLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (amountToRemove * 100000000).round(),
           returnAddress: _returnAddress, loadingStream: streamController);
 
@@ -195,7 +196,10 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [
+                  Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption),
+                  Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)
+                ]),
                 TableRow(children: [Text(FundFormatter.format(totalAmount, fractions: 2) + ' \$'), Text(FundFormatter.format(pricePerToken, fractions: 2) + ' \$')]),
               ]),
               Container(height: 10),
@@ -226,7 +230,8 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   Widget build(Object context) {
     if (!balanceLoaded) {
       return Scaffold(
-          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)), body: LoadingWidget(text: S.of(context).loading));
+          appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)),
+          body: LoadingWidget(text: S.of(context).loading));
     }
 
     return Scaffold(

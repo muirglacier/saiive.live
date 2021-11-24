@@ -124,6 +124,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     var streamController = StreamController<String>();
 
     try {
+      await wallet.ensureUtxo(loadingStream: streamController);
       var createVault = wallet.borrowLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (widget.amount * 100000000).round(),
           returnAddress: widget.returnAddress, loadingStream: streamController);
 
@@ -157,13 +158,16 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
             child: CustomScrollView(slivers: [
               SliverToBoxAdapter(child: buildTopPart()),
               SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_details, style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(
+                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_details, style: Theme.of(context).textTheme.caption))),
               SliverToBoxAdapter(child: buildTXDetails()),
               SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(
+                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
               SliverToBoxAdapter(child: buildVaultDetails()),
               SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_result, style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(
+                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_result, style: Theme.of(context).textTheme.caption))),
               SliverToBoxAdapter(child: buildResultDetails()),
               SliverToBoxAdapter(
                   child: SizedBox(

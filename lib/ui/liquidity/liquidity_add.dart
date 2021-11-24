@@ -235,7 +235,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountTokenAController.text.replaceAll(',','.'));
+    double amount = double.tryParse(_amountTokenAController.text.replaceAll(',', '.'));
 
     if (amount == 0) {
       setState(() {
@@ -272,7 +272,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       return;
     }
 
-    double amount = double.tryParse(_amountTokenBController.text.replaceAll(',','.'));
+    double amount = double.tryParse(_amountTokenBController.text.replaceAll(',', '.'));
 
     if (amount == 0) {
       setState(() {
@@ -371,6 +371,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       "shareAddress": walletTo
     });
 
+    await wallet.ensureUtxo(loadingStream: streamController);
     var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo,
         returnAddress: _returnAddress, loadingStream: streamController);
     final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
@@ -466,8 +467,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       TextField(
           controller: _amountTokenAController,
           decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_a, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-          keyboardType: TextInputType.numberWithOptions(decimal: true)
-      ),
+          keyboardType: TextInputType.numberWithOptions(decimal: true)),
       Row(children: [
         Expanded(
             flex: 1,
@@ -507,8 +507,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       TextField(
           controller: _amountTokenBController,
           decoration: InputDecoration(hintText: S.of(context).liquidity_add_amount_b),
-          keyboardType: TextInputType.numberWithOptions(decimal: true)
-      ),
+          keyboardType: TextInputType.numberWithOptions(decimal: true)),
       SizedBox(height: 20),
       AccountSelectAddressWidget(
           label: Text(S.of(context).liquidity_add_shares_addr, style: Theme.of(context).inputDecorationTheme.hintStyle),

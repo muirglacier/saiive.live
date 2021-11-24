@@ -49,7 +49,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   @override
   Future<TransactionData> createAndSendAddPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
       {String returnAddress, StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
@@ -168,7 +167,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   Future<TransactionData> createAndSendSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
       {String returnAddress, StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
@@ -360,7 +358,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<String> borrowLoan(String vaultId, String to, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
@@ -426,7 +423,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<String> paybackLoan(String vaultId, String to, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
@@ -491,7 +487,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<String> withdrawFromVault(String vaultId, String from, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
@@ -560,7 +555,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   }
 
   Future<String> depositToVault(String vaultId, String from, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
-    await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {

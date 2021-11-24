@@ -31,7 +31,8 @@ class VaultAddCollateralConfirmScreen extends StatefulWidget {
   final Map<String, double> changes;
   final String returnAddress;
 
-  VaultAddCollateralConfirmScreen(this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.originalCollateralValue, this.changes, this.returnAddress);
+  VaultAddCollateralConfirmScreen(
+      this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.originalCollateralValue, this.changes, this.returnAddress);
 
   @override
   State<StatefulWidget> createState() {
@@ -97,6 +98,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
 
     try {
       Future<String> doBlockchainMagic;
+      await wallet.ensureUtxo(loadingStream: loadingStream);
       if (amount > 0) {
         doBlockchainMagic =
             wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, returnAddress: widget.returnAddress, loadingStream: loadingStream);
@@ -135,7 +137,10 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [
+                  Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
+                  Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)
+                ]),
                 TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(collateralValue, amount, token).toStringAsFixed(2) + '%')]),
                 TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
               ])
@@ -150,29 +155,33 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: CustomScrollView(slivers: [
               SliverToBoxAdapter(child: _buildTopPart()),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_current_collateral, style: Theme.of(context).textTheme.caption))),
-              if (widget.currentAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0, bottom: 10), child: Text(S.of(context).loan_no_collaterals))),
-              if (widget.currentAmounts.length > 0) SliverList(
-                  delegate: SliverChildListDelegate([
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: widget.currentAmounts.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final item = widget.currentAmounts[index];
+              SliverToBoxAdapter(
+                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_current_collateral, style: Theme.of(context).textTheme.caption))),
+              if (widget.currentAmounts.length == 0)
+                SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0, bottom: 10), child: Text(S.of(context).loan_no_collaterals))),
+              if (widget.currentAmounts.length > 0)
+                SliverList(
+                    delegate: SliverChildListDelegate([
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: widget.currentAmounts.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final item = widget.currentAmounts[index];
 
-                              return _buildCollateralEntry(item, widget.originalCollateralValue);
-                            }),
-                      ),
-                    ],
-                  ),
-                )
-              ])),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_changes, style: Theme.of(context).textTheme.caption))),
+                                return _buildCollateralEntry(item, widget.originalCollateralValue);
+                              }),
+                        ),
+                      ],
+                    ),
+                  )
+                ])),
+              SliverToBoxAdapter(
+                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_changes, style: Theme.of(context).textTheme.caption))),
               SliverList(
                   delegate: SliverChildListDelegate([
                 SingleChildScrollView(
@@ -199,7 +208,8 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                   ),
                 )
               ])),
-              SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_after_tx, style: Theme.of(context).textTheme.caption))),
+              SliverToBoxAdapter(
+                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_after_tx, style: Theme.of(context).textTheme.caption))),
               if (widget.newAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0), child: Text(S.of(context).loan_no_collaterals))),
               if (widget.newAmounts.length > 0)
                 SliverList(

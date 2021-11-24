@@ -60,6 +60,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
     final walletTo = _toAddress;
     var streamController = StreamController<String>();
     try {
+      await wallet.ensureUtxo(loadingStream: streamController);
       var createVault = wallet.createVault(widget.schema.id, _vaultFees, returnAddress: _returnAddress, ownerAddress: walletTo, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);

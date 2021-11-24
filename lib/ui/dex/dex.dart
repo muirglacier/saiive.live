@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_launcher_icons/main.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -399,6 +400,7 @@ class _DexScreen extends State<DexScreen> {
     final walletTo = _toAddress.publicKey;
     try {
       var streamController = StreamController<String>();
+      await wallet.ensureUtxo(loadingStream: streamController);
       var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807,
           returnAddress: _returnAddress, loadingStream: streamController);
 

@@ -80,7 +80,11 @@ class MemoryDatabaseMock extends IWalletDatabase {
   @override
   Future removeUnspentTransactions(List<Transaction> mintIds) async {
     for (var mint in mintIds) {
-      _unspentTransactions.removeWhere((element) => element.mintTxId == mint.mintTxId && element.mintHeight == mint.mintHeight);
+      var toRemove = _unspentTransactions.where((element) => element.mintTxId == mint.mintTxId && element.mintIndex == mint.mintIndex).toList();
+      for (var toRem in toRemove) {
+        _unspentTransactions.remove(toRem);
+      }
+      _transactions.removeWhere((element) => element.mintTxId == mint.mintTxId && element.mintIndex == mint.mintIndex);
     }
   }
 

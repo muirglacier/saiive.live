@@ -471,7 +471,6 @@ abstract class Wallet extends IWallet {
     return (inputs * 250) + (outputs * 200) + 200;
   }
 
-  @protected
   Future ensureUtxo({StreamController<String> loadingStream, bool force = false}) async {
     if (!await refreshBefore() && !force) {
       return;

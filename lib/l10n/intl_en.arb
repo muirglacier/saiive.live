@@ -259,6 +259,7 @@
   "dfx_buy_address": "Buy address",
 
 
+  "loan_beta": "Loans are currently a Beta Feature! Use at your own risk",
   "loan_vaults": "Vaults",
   "loan_vault": "Vault",
   "loan_amount": "Amount",

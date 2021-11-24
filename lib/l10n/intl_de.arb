@@ -252,6 +252,7 @@
   "dfx_buy_title": "DFI Kaufen/Verkaufen",
   "dfx_buy_address": "Kaufadresse",
 
+  "loan_beta": "Darlehen sind derzeit ein Beta Feature! Nutzung auf eigene Gefahr!",
   "loan_vaults": "Darlehen",
   "loan_vault": "Tresor",
   "loan_amount": "Menge",

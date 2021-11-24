@@ -2255,6 +2255,16 @@ class S {
     );
   }
 
+  /// `Loans are currently a Beta Feature! Use at your own risk`
+  String get loan_beta {
+    return Intl.message(
+      'Loans are currently a Beta Feature! Use at your own risk',
+      name: 'loan_beta',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vaults`
   String get loan_vaults {
     return Intl.message(

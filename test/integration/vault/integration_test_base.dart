@@ -10,6 +10,7 @@ import 'package:saiive.live/network/balance_service.dart';
 import 'package:saiive.live/network/healthcheck_service.dart';
 import 'package:saiive.live/network/http_service.dart';
 import 'package:saiive.live/network/ihttp_service.dart';
+import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/network/token_service.dart';
 import 'package:saiive.live/network/transaction_service.dart';
@@ -48,6 +49,11 @@ Future baseInit() async {
       name: "acc",
       selected: true);
   await db.addOrUpdateAccount(walletAccount);
+
+  final dfiToken =
+      Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
+
+  await db.setAccountBalance(dfiToken, walletAccount);
 
   await wallet.init();
   await wallet.syncAll();

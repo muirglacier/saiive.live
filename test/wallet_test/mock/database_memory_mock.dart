@@ -78,7 +78,11 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future removeUnspentTransactions(List<Transaction> mintIds) async {}
+  Future removeUnspentTransactions(List<Transaction> mintIds) async {
+    for (var mint in mintIds) {
+      _unspentTransactions.removeWhere((element) => element.mintTxId == mint.mintTxId && element.mintHeight == mint.mintHeight);
+    }
+  }
 
   @override
   Future close() async {}

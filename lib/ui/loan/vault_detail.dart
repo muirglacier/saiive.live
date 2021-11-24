@@ -13,6 +13,7 @@ import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
+import 'package:saiive.live/network/vaults_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan.dart';
@@ -52,11 +53,27 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   List<LoanCollateral> _tokens;
   List<LoanToken> _loanTokens;
 
+  LoanVault myVault;
+
+  Future refreshVault() async {
+    var vaults = await sl.get<IVaultsService>().getMyVault(DeFiConstants.DefiAccountSymbol, widget.vault.ownerAddress);
+
+    var myNewVault = vaults.firstWhere((element) => element.vaultId == myVault.vaultId);
+
+    if (myNewVault != null) {
+      setState(() {
+        myVault = myNewVault;
+      });
+    }
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
     _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(_smoothScrollToTop);
+
+    myVault = widget.vault;
 
     _initTokens();
 
@@ -81,12 +98,12 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   }
 
   _calculateDFIPercentage() {
-    var amount = widget.vault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
+    var amount = myVault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
     var token = _tokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
     var percentage = 0.0;
 
     if (null != amount && null != token) {
-      percentage = LoanHelper.calculateCollateralShare(double.tryParse(widget.vault.collateralValue), amount, token);
+      percentage = LoanHelper.calculateCollateralShare(double.tryParse(myVault.collateralValue), amount, token);
     }
 
     setState(() {
@@ -110,7 +127,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   }
 
   _buildTabActiveLoans() {
-    if (widget.vault.loanAmounts.length == 0) {
+    if (myVault.loanAmounts.length == 0) {
       return Container(child: Text(S.of(context).loan_no_active_loans));
     }
 
@@ -118,9 +135,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
       SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return _buildLoanEntry(widget.vault.loanAmounts.elementAt(index));
+            return _buildLoanEntry(myVault.loanAmounts.elementAt(index));
           },
-          childCount: widget.vault.loanAmounts.length,
+          childCount: myVault.loanAmounts.length,
         ),
       )
     ]);
@@ -133,7 +150,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     var streamController = StreamController<String>();
 
     try {
-      var closeVault = wallet.closeVault(widget.vault.vaultId, widget.vault.ownerAddress, loadingStream: streamController);
+      var closeVault = wallet.closeVault(myVault.vaultId, myVault.ownerAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(closeVault);
@@ -159,7 +176,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     var pricePerToken = amount.activePrice != null ? amount.activePrice.active.amount : 0;
     var totalAmount = pricePerToken * double.tryParse(amount.amount);
     var token = _loanTokens.firstWhere((element) => element.token.symbol == amount.symbol, orElse: () => null);
-    var interest = widget.vault.interestAmounts.firstWhere((element) => element.symbol == amount.symbol, orElse: () => null);
+    var interest = myVault.interestAmounts.firstWhere((element) => element.symbol == amount.symbol, orElse: () => null);
 
     return Card(
         child: Padding(
@@ -170,24 +187,28 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               Table(border: TableBorder(), children: [
                 TableRow(children: [
                   Text(S.of(context).loan_borrowed_tokens, style: Theme.of(context).textTheme.caption),
-                  Text(S.of(context).loan_interest_amount + ' (${widget.vault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
+                  Text(S.of(context).loan_interest_amount + ' (${myVault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
                 ]),
                 TableRow(children: [
                   Text(FundFormatter.format(double.tryParse(amount.amount))),
-                  Text(FundFormatter.format(double.tryParse(amount.amount) * double.tryParse(widget.vault.schema.interestRate) / 100, fractions: 4))
+                  Text(FundFormatter.format(double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100, fractions: 4))
                 ]),
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [
+                  Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption),
+                  Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)
+                ]),
                 TableRow(children: [Text(FundFormatter.format(totalAmount, fractions: 2) + ' \$'), Text(FundFormatter.format(pricePerToken, fractions: 2) + ' \$')]),
               ]),
               Container(height: 10),
               Row(children: [
                 ElevatedButton(
                   child: Text(S.of(context).loan_payback_loan),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultPaybackLoanScreen(amount, token, widget.vault, interest)));
+                  onPressed: () async {
+                    await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultPaybackLoanScreen(amount, token, myVault, interest)));
+                    await refreshVault();
                   },
                 ),
                 Container(width: 10),
@@ -195,8 +216,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                   child: Text(S.of(context).loan_borrow_more),
                   onPressed: token == null
                       ? null
-                      : () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(token, loanVault: widget.vault)));
+                      : () async {
+                          await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(token, loanVault: myVault)));
+                          await refreshVault();
                         },
                 )
               ])
@@ -205,16 +227,16 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildTabDetails() {
     List<List<String>> items = [
-      [S.of(context).loan_min_collateral_ratio, widget.vault.schema.minColRatio],
-      [S.of(context).loan_vault_interest, widget.vault.schema.interestRate],
+      [S.of(context).loan_min_collateral_ratio, myVault.schema.minColRatio],
+      [S.of(context).loan_vault_interest, myVault.schema.interestRate],
     ];
 
     List<List<String>> itemsVault = [
-      [S.of(context).loan_collateral_ratio, widget.vault.collateralRatio],
-      [S.of(context).loan_active_loans, widget.vault.loanAmounts.length.toString()],
-      [S.of(context).loan_total_loan_amount, widget.vault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
-      [S.of(context).loan_collateral_value, FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + ' \$'],
-      [S.of(context).loan_vault_health, widget.vault.healthStatus.toString()],
+      [S.of(context).loan_collateral_ratio, myVault.collateralRatio],
+      [S.of(context).loan_active_loans, myVault.loanAmounts.length.toString()],
+      [S.of(context).loan_total_loan_amount, myVault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
+      [S.of(context).loan_collateral_value, FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'],
+      [S.of(context).loan_vault_health, myVault.healthStatus.toString()],
     ];
 
     return CustomScrollView(slivers: [
@@ -246,7 +268,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   }
 
   _buildTabCollaterals() {
-    if (widget.vault.collateralAmounts.length == 0) {
+    if (myVault.collateralAmounts.length == 0) {
       return Container(child: Text(S.of(context).loan_no_collateral_amounts));
     }
 
@@ -254,9 +276,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
       SliverList(
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
-            return _buildCollateralEntry(widget.vault.collateralAmounts.elementAt(index));
+            return _buildCollateralEntry(myVault.collateralAmounts.elementAt(index));
           },
-          childCount: widget.vault.collateralAmounts.length,
+          childCount: myVault.collateralAmounts.length,
         ),
       )
     ]);
@@ -280,13 +302,16 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
-                TableRow(children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption)]),
+                TableRow(children: [
+                  Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
+                  Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption)
+                ]),
                 TableRow(children: [
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(FundFormatter.format(double.tryParse(amount.amount))),
                     Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + " \$", style: Theme.of(context).textTheme.caption)
                   ]),
-                  Text(LoanHelper.calculateCollateralShare(double.tryParse(widget.vault.collateralValue), amount, token).toStringAsFixed(2) + '%')
+                  Text(LoanHelper.calculateCollateralShare(double.tryParse(myVault.collateralValue), amount, token).toStringAsFixed(2) + '%')
                 ]),
               ])
             ])));
@@ -312,40 +337,41 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
               child: Padding(
                   padding: EdgeInsets.all(30),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    VaultStatusWidget(widget.vault.healthStatus),
-                    if (widget.vault.healthStatus == LoanVaultHealthStatus.halted)
-                      Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: AlertWidget(S.of(context).loan_vault_halted_info)),
+                    VaultStatusWidget(myVault.healthStatus),
+                    if (myVault.healthStatus == LoanVaultHealthStatus.halted)
+                      Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget(S.of(context).loan_vault_halted_info)),
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                       Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                       Container(width: 10),
                       Expanded(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         SelectableText(
-                          widget.vault.vaultId,
+                          myVault.vaultId,
                           maxLines: 4,
                           style: Theme.of(context).textTheme.subtitle2,
                         )
                       ]))
                     ]),
-                    if (isDFILessThan50)
-                      Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red)),
-                    Row(children: [Expanded(child: LoanCollateralsWidget(widget.vault, _tokens, widget.vault.collateralAmounts))]),
+                    if (isDFILessThan50) Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red)),
+                    Row(children: [Expanded(child: LoanCollateralsWidget(myVault, _tokens, myVault.collateralAmounts))]),
                     Container(height: 5),
                     Table(border: TableBorder(), children: [
-                      TableRow(children: [Text(S.of(context).loan_active_loans, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption)]),
                       TableRow(children: [
-                        Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(widget.vault.loanAmounts, 3)),
-                        Text(FundFormatter.format(double.tryParse(widget.vault.loanValue), fractions: 2) + ' \$')
+                        Text(S.of(context).loan_active_loans, style: Theme.of(context).textTheme.caption),
+                        Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption)
+                      ]),
+                      TableRow(children: [
+                        Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(myVault.loanAmounts, 3)),
+                        Text(FundFormatter.format(double.tryParse(myVault.loanValue), fractions: 2) + ' \$')
                       ]),
                     ]),
                     Container(height: 10),
                     Table(border: TableBorder(), children: [
-                      TableRow(
-                          children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption)]),
-                      TableRow(
-                          children: [Text(FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + '\$'), Text(widget.vault.collateralRatio + ' %')]),
+                      TableRow(children: [
+                        Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
+                        Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption)
+                      ]),
+                      TableRow(children: [Text(FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + '\$'), Text(myVault.collateralRatio + ' %')]),
                     ]),
                     Container(height: 10),
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -353,8 +379,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           width: double.infinity,
                           child: ElevatedButton(
                             child: Text(S.of(context).loan_change_collateral),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(widget.vault, _tokens)));
+                            onPressed: () async {
+                              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(myVault, _tokens)));
+                              await refreshVault();
                             },
                           )),
                       SizedBox(height: 10),

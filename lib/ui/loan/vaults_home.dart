@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:event_taxi/event_taxi.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
+import 'package:saiive.live/network/vaults_service.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/loan/vault_tokens.dart';
 import 'package:saiive.live/ui/loan/vaults.dart';
@@ -62,9 +65,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
             bottom: TabBar(
               controller: _tabController,
               tabs: [
-                Tab(
-                  text: S.of(context).loan_browse_loans
-                ),
+                Tab(text: S.of(context).loan_browse_loans),
                 Tab(text: S.of(context).loan_your_loans),
               ],
             ),

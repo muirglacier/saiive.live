@@ -99,9 +99,6 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
     try {
       Future<String> doBlockchainMagic;
 
-      var utxoOverlayFuture = wallet.ensureUtxo(loadingStream: loadingStream);
-      final overlayFuture = LoadingOverlay.of(context, loadingText: loadingStream.stream);
-      await overlayFuture.during(utxoOverlayFuture);
       if (amount > 0) {
         doBlockchainMagic =
             wallet.depositToVault(widget.vault.vaultId, widget.vault.ownerAddress, token, amount, returnAddress: widget.returnAddress, loadingStream: loadingStream);

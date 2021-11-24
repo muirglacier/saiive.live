@@ -400,10 +400,6 @@ class _DexScreen extends State<DexScreen> {
     try {
       var streamController = StreamController<String>();
 
-      var utxoOverlayFuture = wallet.ensureUtxo(loadingStream: streamController);
-      final overlayFuture = LoadingOverlay.of(context, loadingText: streamController.stream);
-      await overlayFuture.during(utxoOverlayFuture);
-
       var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807,
           returnAddress: _returnAddress, loadingStream: streamController);
 
@@ -415,7 +411,7 @@ class _DexScreen extends State<DexScreen> {
       var tx = await overlay.during(createSwapFuture);
 
       sl.get<AppCenterWrapper>().trackEvent("swapSuccess",
-          <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": valueFrom.toString(), "walletTo": walletTo, "txId": tx.mintTxId});
+          <String, String>{"fromToken": _selectedValueFrom.hash, "toToken": _selectedValueTo.hash, "valueFrom": valueFrom.toString(), "walletTo": walletTo, "txId": tx.txId});
 
       streamController.close();
 

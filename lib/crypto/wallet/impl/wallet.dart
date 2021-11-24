@@ -384,9 +384,9 @@ abstract class Wallet extends IWallet {
     return Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, changeAddress);
   }
 
-  Future<TransactionData> createTxAndWait(Tuple3<String, List<tx.Transaction>, String> tx, {StreamController<String> loadingStream}) async {
+  Future<TransactionData> createTxAndWait(Tuple3<String, List<tx.Transaction>, String> tx, {bool onlyConfirmed, StreamController<String> loadingStream}) async {
     final txHex = tx.item1;
-    final response = await createTxAndWaitInternal(txHex, loadingStream: loadingStream);
+    final response = await createTxAndWaitInternal(txHex, onlyConfirmed: onlyConfirmed, loadingStream: loadingStream);
 
     LogHelper.instance.i("Remove unspent txs " + tx.item2.map((e) => e.uniqueId).join(" - "));
     await _walletDatabase.removeUnspentTransactions(tx.item2);
@@ -410,11 +410,11 @@ abstract class Wallet extends IWallet {
   }
 
   Future<TransactionData> createRawTxAndWait(String txHex, {StreamController<String> loadingStream}) async {
-    return createTxAndWaitInternal(txHex, loadingStream: loadingStream);
+    return createTxAndWaitInternal(txHex, onlyConfirmed: true, loadingStream: loadingStream);
   }
 
   @protected
-  Future<TransactionData> createTxAndWaitInternal(String txHex, {StreamController<String> loadingStream}) async {
+  Future<TransactionData> createTxAndWaitInternal(String txHex, {bool onlyConfirmed = false, StreamController<String> loadingStream}) async {
     final r = RetryOptions(maxAttempts: 50, maxDelay: Duration(seconds: 10));
     // bool ensureUtxoCalled = false;
 
@@ -433,12 +433,12 @@ abstract class Wallet extends IWallet {
 
       LogHelper.instance.i("commited tx with id " + txId);
 
-      if (S.current != null) {
+      if (S.current != null && (onlyConfirmed != null && onlyConfirmed)) {
         loadingStream?.add(S.current.wallet_operation_wait_for_confirmation);
       }
 
       final response = await r.retry(() async {
-        return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId);
+        return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId, onlyConfirmed: onlyConfirmed);
       }, retryIf: (e) {
         if (e is HttpException || e is ErrorResponse) return true;
         return false;
@@ -471,6 +471,7 @@ abstract class Wallet extends IWallet {
     return (inputs * 250) + (outputs * 200) + 200;
   }
 
+  @protected
   Future ensureUtxo({StreamController<String> loadingStream, bool force = false}) async {
     if (!await refreshBefore() && !force) {
       return;

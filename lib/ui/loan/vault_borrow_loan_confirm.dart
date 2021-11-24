@@ -124,10 +124,6 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     var streamController = StreamController<String>();
 
     try {
-      var utxoOverlayFuture = wallet.ensureUtxo(loadingStream: streamController);
-      final overlayFuture = LoadingOverlay.of(context, loadingText: streamController.stream);
-      await overlayFuture.during(utxoOverlayFuture);
-
       var createVault = wallet.borrowLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (widget.amount * 100000000).round(),
           returnAddress: widget.returnAddress, loadingStream: streamController);
 

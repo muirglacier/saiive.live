@@ -80,10 +80,6 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     var streamController = StreamController<String>();
     try {
-      var utxoOverlayFuture = wallet.ensureUtxo(loadingStream: streamController);
-      final overlayFuture = LoadingOverlay.of(context, loadingText: streamController.stream);
-      await overlayFuture.during(utxoOverlayFuture);
-
       var paybackLoan = wallet.paybackLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (amountToRemove * 100000000).round(),
           returnAddress: _returnAddress, loadingStream: streamController);
 

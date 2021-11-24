@@ -371,9 +371,6 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       "shareAddress": walletTo
     });
 
-    var utxoOverlayFuture = wallet.ensureUtxo(loadingStream: streamController);
-    final overlayFuture = LoadingOverlay.of(context, loadingText: streamController.stream);
-    await overlayFuture.during(utxoOverlayFuture);
     var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo,
         returnAddress: _returnAddress, loadingStream: streamController);
     final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
@@ -387,7 +384,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
         "tokenB": _selectedTokenB.hash,
         "amountB": amountTokenB.toString(),
         "shareAddress": walletTo,
-        "txId": tx.mintTxId
+        "txId": tx.txId
       });
 
       streamController.close();

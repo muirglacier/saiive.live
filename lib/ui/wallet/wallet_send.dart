@@ -64,15 +64,15 @@ class _WalletSendScreen extends State<WalletSendScreen> {
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      sl
+          .get<AppCenterWrapper>()
+          .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
 
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionSuccessScreen(widget.chainType, txId, S.of(context).wallet_operation_success),
       ));
 
       Navigator.of(context).pop();
-      sl
-          .get<AppCenterWrapper>()
-          .trackEvent("sendTokenSuccess", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text, "txId": txId});
     } catch (e) {
       sl.get<AppCenterWrapper>().trackEvent("sendTokenFailure", <String, String>{"coin": widget.token, 'amount': _amountController.text, 'error': e.toString()});
       await Navigator.of(context).push(MaterialPageRoute(

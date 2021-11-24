@@ -286,9 +286,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildTabCollaterals() {
     if (myVault.collateralAmounts.length == 0) {
-      return Column(children: [
-        Text(S.of(context).loan_no_collateral_amounts)
-      ]);
+      return Column(children: [Text(S.of(context).loan_no_collateral_amounts)]);
     }
 
     return CustomScrollView(slivers: [
@@ -380,7 +378,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                         Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption)
                       ]),
                       TableRow(children: [
-                        myVault.loanAmounts.length > 0 ? Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(myVault.loanAmounts, 3)) : Text(S.of(context).loan_no_active_loans),
+                        myVault.loanAmounts.length > 0
+                            ? Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(myVault.loanAmounts, 3))
+                            : Text(S.of(context).loan_no_active_loans),
                         Text(FundFormatter.format(double.tryParse(myVault.loanValue), fractions: 2) + ' \$')
                       ]),
                     ]),
@@ -421,10 +421,21 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   @override
   Widget build(Object context) {
+    var actions = [
+      Padding(
+          padding: EdgeInsets.only(right: 20.0),
+          child: GestureDetector(
+            onTap: () async {
+              await refreshVault();
+            },
+            child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+          )),
+    ];
     if (_loading || _tokens == null || _loanTokens == null) {
       return Scaffold(
           appBar: AppBar(
             title: Text(S.of(context).loan_vault_details),
+            actions: actions,
             actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
           ),
           body: LoadingWidget(text: S.of(context).loading));
@@ -434,16 +445,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
         appBar: AppBar(
           title: Text(S.of(context).loan_vault_details),
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
-          actions: [
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    await refreshVault();
-                  },
-                  child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                )),
-          ],
+          actions: actions,
         ),
         body: NestedScrollView(
           controller: _scrollController,

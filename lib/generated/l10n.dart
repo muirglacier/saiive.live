@@ -2255,390 +2255,390 @@ class S {
     );
   }
 
-  /// `Darlehen`
+  /// `Vaults`
   String get loan_vaults {
     return Intl.message(
-      'Darlehen',
+      'Vaults',
       name: 'loan_vaults',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor`
+  /// `Vault`
   String get loan_vault {
     return Intl.message(
-      'Tresor',
+      'Vault',
       name: 'loan_vault',
       desc: '',
       args: [],
     );
   }
 
-  /// `Menge`
+  /// `Amount`
   String get loan_amount {
     return Intl.message(
-      'Menge',
+      'Amount',
       name: 'loan_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen durchsuchen`
+  /// `Browse Loans`
   String get loan_browse_loans {
     return Intl.message(
-      'Darlehen durchsuchen',
+      'Browse Loans',
       name: 'loan_browse_loans',
       desc: '',
       args: [],
     );
   }
 
-  /// `Deine Darlehen`
+  /// `Your Loans`
   String get loan_your_loans {
     return Intl.message(
-      'Deine Darlehen',
+      'Your Loans',
       name: 'loan_your_loans',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kein Tresor erstellt`
+  /// `No Vault created`
   String get loan_no_vault_created {
     return Intl.message(
-      'Kein Tresor erstellt',
+      'No Vault created',
       name: 'loan_no_vault_created',
       desc: '',
       args: [],
     );
   }
 
-  /// `Erstelle einen Tresor und fürge DFI und andere Token als Kollateral ein.`
+  /// `To get started, create a vault add DFI and other tokens as collateral`
   String get loan_vault_creation_info {
     return Intl.message(
-      'Erstelle einen Tresor und fürge DFI und andere Token als Kollateral ein.',
+      'To get started, create a vault add DFI and other tokens as collateral',
       name: 'loan_vault_creation_info',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor erstellen`
+  /// `Create Vault`
   String get loan_create_vault {
     return Intl.message(
-      'Tresor erstellen',
+      'Create Vault',
       name: 'loan_create_vault',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zinsen`
+  /// `Interest`
   String get loan_interest {
     return Intl.message(
-      'Zinsen',
+      'Interest',
       name: 'loan_interest',
       desc: '',
       args: [],
     );
   }
 
-  /// `Preis (USD)`
+  /// `Price (USD)`
   String get loan_price_usd {
     return Intl.message(
-      'Preis (USD)',
+      'Price (USD)',
       name: 'loan_price_usd',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral`
+  /// `Collaterals`
   String get loan_collaterals {
     return Intl.message(
-      'Kollateral',
+      'Collaterals',
       name: 'loan_collaterals',
       desc: '',
       args: [],
     );
   }
 
-  /// `Aktive Darlehen`
+  /// `Active Loans`
   String get loan_active_loans {
     return Intl.message(
-      'Aktive Darlehen',
+      'Active Loans',
       name: 'loan_active_loans',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamtes Darlehen`
+  /// `Total Loan Amount`
   String get loan_total_loan_amount {
     return Intl.message(
-      'Gesamtes Darlehen',
+      'Total Loan Amount',
       name: 'loan_total_loan_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamtes Kollateral`
+  /// `Collateral Amount`
   String get loan_collateral_amount {
     return Intl.message(
-      'Gesamtes Kollateral',
+      'Collateral Amount',
       name: 'loan_collateral_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral Ratio`
+  /// `Collateral Ratio`
   String get loan_collateral_ratio {
     return Intl.message(
-      'Kollateral Ratio',
+      'Collateral Ratio',
       name: 'loan_collateral_ratio',
       desc: '',
       args: [],
     );
   }
 
-  /// `Keine Aktiven Darlehen`
+  /// `No active Loans`
   String get loan_no_active_loans {
     return Intl.message(
-      'Keine Aktiven Darlehen',
+      'No active Loans',
       name: 'loan_no_active_loans',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor wurde erfolgreich beendet`
+  /// `Vault was successfully closed`
   String get loan_close_vault_success {
     return Intl.message(
-      'Tresor wurde erfolgreich beendet',
+      'Vault was successfully closed',
       name: 'loan_close_vault_success',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor wurde erfolgreich erstellt`
+  /// `Vault was successfully created`
   String get loan_create_vault_success {
     return Intl.message(
-      'Tresor wurde erfolgreich erstellt',
+      'Vault was successfully created',
       name: 'loan_create_vault_success',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen wurde erfolgreich genommen.`
+  /// `Borrow was successfully.`
   String get loan_borrow_success {
     return Intl.message(
-      'Darlehen wurde erfolgreich genommen.',
+      'Borrow was successfully.',
       name: 'loan_borrow_success',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral wurde erfolgreich hinzugefügt`
+  /// `Collateral was successfully added`
   String get loan_collateral_success {
     return Intl.message(
-      'Kollateral wurde erfolgreich hinzugefügt',
+      'Collateral was successfully added',
       name: 'loan_collateral_success',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dahrlehen wurde erfolgreich zurückbezahlt.`
+  /// `Loan was paid back successfully`
   String get loan_payback_success {
     return Intl.message(
-      'Dahrlehen wurde erfolgreich zurückbezahlt.',
+      'Loan was paid back successfully',
       name: 'loan_payback_success',
       desc: '',
       args: [],
     );
   }
 
-  /// `Geliehene Tokens`
+  /// `Borrowed Tokens`
   String get loan_borrowed_tokens {
     return Intl.message(
-      'Geliehene Tokens',
+      'Borrowed Tokens',
       name: 'loan_borrowed_tokens',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamte Zinsen`
+  /// `Interest amount`
   String get loan_interest_amount {
     return Intl.message(
-      'Gesamte Zinsen',
+      'Interest amount',
       name: 'loan_interest_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zahlbarer Betrag`
+  /// `Amount Payable`
   String get loan_amount_payable {
     return Intl.message(
-      'Zahlbarer Betrag',
+      'Amount Payable',
       name: 'loan_amount_payable',
       desc: '',
       args: [],
     );
   }
 
-  /// `Preis pro Token`
+  /// `Price per Token`
   String get loan_price_per_token {
     return Intl.message(
-      'Preis pro Token',
+      'Price per Token',
       name: 'loan_price_per_token',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen zurückzahlen`
+  /// `Payback Laon`
   String get loan_payback_loan {
     return Intl.message(
-      'Darlehen zurückzahlen',
+      'Payback Laon',
       name: 'loan_payback_loan',
       desc: '',
       args: [],
     );
   }
 
-  /// `Mehr ausleihen`
+  /// `Borrow more`
   String get loan_borrow_more {
     return Intl.message(
-      'Mehr ausleihen',
+      'Borrow more',
       name: 'loan_borrow_more',
       desc: '',
       args: [],
     );
   }
 
-  /// `Min. Kollateral Ratio`
+  /// `Min. collateral ratio`
   String get loan_min_collateral_ratio {
     return Intl.message(
-      'Min. Kollateral Ratio',
+      'Min. collateral ratio',
       name: 'loan_min_collateral_ratio',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor Zinsen`
+  /// `Vault Interest`
   String get loan_vault_interest {
     return Intl.message(
-      'Tresor Zinsen',
+      'Vault Interest',
       name: 'loan_vault_interest',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral Wert`
+  /// `Collateral Value`
   String get loan_collateral_value {
     return Intl.message(
-      'Kollateral Wert',
+      'Collateral Value',
       name: 'loan_collateral_value',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor Status`
+  /// `Vault Health`
   String get loan_vault_health {
     return Intl.message(
-      'Tresor Status',
+      'Vault Health',
       name: 'loan_vault_health',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen Schema`
+  /// `Loan Scheme`
   String get loan_vault_loan_scheme {
     return Intl.message(
-      'Darlehen Schema',
+      'Loan Scheme',
       name: 'loan_vault_loan_scheme',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor Details`
+  /// `Vault Details`
   String get loan_vault_details {
     return Intl.message(
-      'Tresor Details',
+      'Vault Details',
       name: 'loan_vault_details',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kein Kollateral vorhanden`
+  /// `No Collateral`
   String get loan_no_collateral_amounts {
     return Intl.message(
-      'Kein Kollateral vorhanden',
+      'No Collateral',
       name: 'loan_no_collateral_amounts',
       desc: '',
       args: [],
     );
   }
 
-  /// `Die Aktivität dieses Tresores wurde temporär angehalten. Grund: Starke Volatilität im Markt. Der Tresor wird fortgesetzt wenn sich der Markt stabilisiert hat.`
+  /// `The activity of this vault has been temporarily halted due to price volatility in the market. This vault will resume its activity once the market stabilizes.`
   String get loan_vault_halted_info {
     return Intl.message(
-      'Die Aktivität dieses Tresores wurde temporär angehalten. Grund: Starke Volatilität im Markt. Der Tresor wird fortgesetzt wenn sich der Markt stabilisiert hat.',
+      'The activity of this vault has been temporarily halted due to price volatility in the market. This vault will resume its activity once the market stabilizes.',
       name: 'loan_vault_halted_info',
       desc: '',
       args: [],
     );
   }
 
-  /// `Das Kollateral muss mindestens 50% DFI sein um ein Darlehen zu bekommen`
+  /// `Your collateral has to be at lea,st 50% DFI in order to get a loan.`
   String get loan_collateral_dfi_ratio {
     return Intl.message(
-      'Das Kollateral muss mindestens 50% DFI sein um ein Darlehen zu bekommen',
+      'Your collateral has to be at lea,st 50% DFI in order to get a loan.',
       name: 'loan_collateral_dfi_ratio',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral anpassen`
+  /// `Change Collateral`
   String get loan_change_collateral {
     return Intl.message(
-      'Kollateral anpassen',
+      'Change Collateral',
       name: 'loan_change_collateral',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor schließen`
+  /// `Close Vault`
   String get loan_close_vault {
     return Intl.message(
-      'Tresor schließen',
+      'Close Vault',
       name: 'loan_close_vault',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen`
+  /// `Active Loans`
   String get loan_vault_details_tab_active_loan {
     return Intl.message(
-      'Darlehen',
+      'Active Loans',
       name: 'loan_vault_details_tab_active_loan',
       desc: '',
       args: [],
@@ -2655,530 +2655,530 @@ class S {
     );
   }
 
-  /// `Kollateral`
+  /// `Collaterals`
   String get loan_vault_details_tab_collaterals {
     return Intl.message(
-      'Kollateral',
+      'Collaterals',
       name: 'loan_vault_details_tab_collaterals',
       desc: '',
       args: [],
     );
   }
 
-  /// `Versteigerungen`
+  /// `Auctions`
   String get loan_vault_details_tab_auctions {
     return Intl.message(
-      'Versteigerungen',
+      'Auctions',
       name: 'loan_vault_details_tab_auctions',
       desc: '',
       args: [],
     );
   }
 
-  /// `Transaction Typ`
+  /// `Transaction Type`
   String get loan_transaction_type {
     return Intl.message(
-      'Transaction Typ',
+      'Transaction Type',
       name: 'loan_transaction_type',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor Gebühr`
+  /// `Vault fee`
   String get loan_create_vault_fee {
     return Intl.message(
-      'Tresor Gebühr',
+      'Vault fee',
       name: 'loan_create_vault_fee',
       desc: '',
       args: [],
     );
   }
 
-  /// `Geschätzte Gebühr`
+  /// `Estimated Fee`
   String get loan_create_est_fee {
     return Intl.message(
-      'Geschätzte Gebühr',
+      'Estimated Fee',
       name: 'loan_create_est_fee',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamte Gebühr`
+  /// `Total transaction cost`
   String get loan_create_fees {
     return Intl.message(
-      'Gesamte Gebühr',
+      'Total transaction cost',
       name: 'loan_create_fees',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zinssatz (APR)`
+  /// `Interest Rate (APR)`
   String get loan_vault_interest_rate_apr {
     return Intl.message(
-      'Zinssatz (APR)',
+      'Interest Rate (APR)',
       name: 'loan_vault_interest_rate_apr',
       desc: '',
       args: [],
     );
   }
 
-  /// `Du erstellt einen neuen Tresor`
+  /// `You are creating a vault`
   String get loan_create_vault_info {
     return Intl.message(
-      'Du erstellt einen neuen Tresor',
+      'You are creating a vault',
       name: 'loan_create_vault_info',
       desc: '',
       args: [],
     );
   }
 
-  /// `ID wird generiert wenn der Tresor erstellt wird.`
+  /// `ID will be generated once the vault has been created`
   String get loan_create_id_generated {
     return Intl.message(
-      'ID wird generiert wenn der Tresor erstellt wird.',
+      'ID will be generated once the vault has been created',
       name: 'loan_create_id_generated',
       desc: '',
       args: [],
     );
   }
 
-  /// `Benutze eigeene Tressor Besitzer Adresse`
+  /// `Use custom vault owner address`
   String get loan_vault_customer_owner_address {
     return Intl.message(
-      'Benutze eigeene Tressor Besitzer Adresse',
+      'Use custom vault owner address',
       name: 'loan_vault_customer_owner_address',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor Benutzer Adresse`
+  /// `Vault owner address`
   String get loan_vault_owner_address {
     return Intl.message(
-      'Tresor Benutzer Adresse',
+      'Vault owner address',
       name: 'loan_vault_owner_address',
       desc: '',
       args: [],
     );
   }
 
-  /// `Rücksende Adresse`
+  /// `Change address`
   String get loan_return_address {
     return Intl.message(
-      'Rücksende Adresse',
+      'Change address',
       name: 'loan_return_address',
       desc: '',
       args: [],
     );
   }
 
-  /// `Weiter`
+  /// `Continue`
   String get loan_continue {
     return Intl.message(
-      'Weiter',
+      'Continue',
       name: 'loan_continue',
       desc: '',
       args: [],
     );
   }
 
-  /// `Abbrechen`
+  /// `Cancel`
   String get loan_cancel {
     return Intl.message(
-      'Abbrechen',
+      'Cancel',
       name: 'loan_cancel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bestätigen Tresor erstellen`
+  /// `Confirm Create Vault`
   String get loan_confirm_create_vault {
     return Intl.message(
-      'Bestätigen Tresor erstellen',
+      'Confirm Create Vault',
       name: 'loan_confirm_create_vault',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wähle ein Darlehen Schema für deinen Tresor`
+  /// `Choose loan scheme for your vault`
   String get loan_create_choose_scheme {
     return Intl.message(
-      'Wähle ein Darlehen Schema für deinen Tresor',
+      'Choose loan scheme for your vault',
       name: 'loan_create_choose_scheme',
       desc: '',
       args: [],
     );
   }
 
-  /// `Das setzt das Min. Kollateral Ratio und Zinsen für deinen Tresor.`
+  /// `This sets the minimum collateral ratio and the vault's interest rate.`
   String get loan_create_choose_schema_info {
     return Intl.message(
-      'Das setzt das Min. Kollateral Ratio und Zinsen für deinen Tresor.',
+      'This sets the minimum collateral ratio and the vault\'s interest rate.',
       name: 'loan_create_choose_schema_info',
       desc: '',
       args: [],
     );
   }
 
-  /// `Du leihst dir aus`
+  /// `You are borrowing`
   String get loan_you_are_borrowing {
     return Intl.message(
-      'Du leihst dir aus',
+      'You are borrowing',
       name: 'loan_you_are_borrowing',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen Token zum leihen`
+  /// `Loan Tokens to borrow`
   String get loan_tokens_to_borrow {
     return Intl.message(
-      'Darlehen Token zum leihen',
+      'Loan Tokens to borrow',
       name: 'loan_tokens_to_borrow',
       desc: '',
       args: [],
     );
   }
 
-  /// `Token Zinsen`
+  /// `Token Interest`
   String get loan_token_interest {
     return Intl.message(
-      'Token Zinsen',
+      'Token Interest',
       name: 'loan_token_interest',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamt Zinsen`
+  /// `Total Interest Amount`
   String get loan_token_interest_amount {
     return Intl.message(
-      'Gesamt Zinsen',
+      'Total Interest Amount',
       name: 'loan_token_interest_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamt Darlehen + Zinsen`
+  /// `Total Loan + interest`
   String get loan_token_total_interest {
     return Intl.message(
-      'Gesamt Darlehen + Zinsen',
+      'Total Loan + interest',
       name: 'loan_token_total_interest',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zinsen (Tresor + Token)`
+  /// `Interest (Vault + Token)`
   String get loan_token_total_interest_rate {
     return Intl.message(
-      'Zinsen (Tresor + Token)',
+      'Interest (Vault + Token)',
       name: 'loan_token_total_interest_rate',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamt Darlehen USD`
+  /// `Total Loan USD`
   String get loan_total_loan_usd {
     return Intl.message(
-      'Gesamt Darlehen USD',
+      'Total Loan USD',
       name: 'loan_total_loan_usd',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tresor ID`
+  /// `Vault ID`
   String get loan_vault_id {
     return Intl.message(
-      'Tresor ID',
+      'Vault ID',
       name: 'loan_vault_id',
       desc: '',
       args: [],
     );
   }
 
-  /// `Ergebnis Kollateral Ratio`
+  /// `Resulting collateral Ratio`
   String get loan_resulting_collateral {
     return Intl.message(
-      'Ergebnis Kollateral Ratio',
+      'Resulting collateral Ratio',
       name: 'loan_resulting_collateral',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen Token bestätigen`
+  /// `Borrow Loan Token Confirm`
   String get loan_borrow_confirm_title {
     return Intl.message(
-      'Darlehen Token bestätigen',
+      'Borrow Loan Token Confirm',
       name: 'loan_borrow_confirm_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Dahrlehen Token`
+  /// `Borrow Loan Token`
   String get loan_borrow_title {
     return Intl.message(
-      'Dahrlehen Token',
+      'Borrow Loan Token',
       name: 'loan_borrow_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Transaktion Details`
+  /// `Transaction Details`
   String get loan_transaction_details {
     return Intl.message(
-      'Transaktion Details',
+      'Transaction Details',
       name: 'loan_transaction_details',
       desc: '',
       args: [],
     );
   }
 
-  /// `Transaktion Ergebnis`
+  /// `Transaction Results`
   String get loan_transaction_result {
     return Intl.message(
-      'Transaktion Ergebnis',
+      'Transaction Results',
       name: 'loan_transaction_result',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen bestätigen`
+  /// `Confirm Borrow`
   String get loan_borrow_confirm {
     return Intl.message(
-      'Darlehen bestätigen',
+      'Confirm Borrow',
       name: 'loan_borrow_confirm',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wähle einen Darlehen Token`
+  /// `Choose a Loan Token`
   String get loan_borrow_choose_token {
     return Intl.message(
-      'Wähle einen Darlehen Token',
+      'Choose a Loan Token',
       name: 'loan_borrow_choose_token',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wähle einen Tresor`
+  /// `Choose your Vault`
   String get loan_borrow_choose_vault {
     return Intl.message(
-      'Wähle einen Tresor',
+      'Choose your Vault',
       name: 'loan_borrow_choose_vault',
       desc: '',
       args: [],
     );
   }
 
-  /// `Gesamt Kollateral`
+  /// `Total Collateral`
   String get loan_total_collateral {
     return Intl.message(
-      'Gesamt Kollateral',
+      'Total Collateral',
       name: 'loan_total_collateral',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen Token`
+  /// `Loan Token`
   String get loan_token {
     return Intl.message(
-      'Darlehen Token',
+      'Loan Token',
       name: 'loan_token',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wie viel willst du hinzufügen?`
+  /// `How much to add?`
   String get loan_borrow_amount {
     return Intl.message(
-      'Wie viel willst du hinzufügen?',
+      'How much to add?',
       name: 'loan_borrow_amount',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral bestätigen`
+  /// `Add Collateral Confirm`
   String get loan_add_collateral_confirm_title {
     return Intl.message(
-      'Kollateral bestätigen',
+      'Add Collateral Confirm',
       name: 'loan_add_collateral_confirm_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Aktuelles Kollateral`
+  /// `Current Collaterals`
   String get loan_current_collateral {
     return Intl.message(
-      'Aktuelles Kollateral',
+      'Current Collaterals',
       name: 'loan_current_collateral',
       desc: '',
       args: [],
     );
   }
 
-  /// `Änderungen`
+  /// `Changes`
   String get loan_collateral_changes {
     return Intl.message(
-      'Änderungen',
+      'Changes',
       name: 'loan_collateral_changes',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral nach TX`
+  /// `Final Collateral after TX`
   String get loan_collateral_after_tx {
     return Intl.message(
-      'Kollateral nach TX',
+      'Final Collateral after TX',
       name: 'loan_collateral_after_tx',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kein Kollateral`
+  /// `No Collaterals`
   String get loan_no_collaterals {
     return Intl.message(
-      'Kein Kollateral',
+      'No Collaterals',
       name: 'loan_no_collaterals',
       desc: '',
       args: [],
     );
   }
 
-  /// `Kollateral hinzufügen`
+  /// `Add Collateral`
   String get loan_add_collateral_title {
     return Intl.message(
-      'Kollateral hinzufügen',
+      'Add Collateral',
       name: 'loan_add_collateral_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Füge Token als Kollateral hinzu`
+  /// `Add token as collateral`
   String get loan_add_token_as_collateral {
     return Intl.message(
-      'Füge Token als Kollateral hinzu',
+      'Add token as collateral',
       name: 'loan_add_token_as_collateral',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verfügbar`
+  /// `Available`
   String get loan_add_collateral_available {
     return Intl.message(
-      'Verfügbar',
+      'Available',
       name: 'loan_add_collateral_available',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wie viel möchtest du hinzufügen?`
+  /// `How much to add?`
   String get loan_add_collateral_how_much {
     return Intl.message(
-      'Wie viel möchtest du hinzufügen?',
+      'How much to add?',
       name: 'loan_add_collateral_how_much',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wie viel möchtest du ändern?`
+  /// `How much to change?`
   String get loan_change_collateral_how_much {
     return Intl.message(
-      'Wie viel möchtest du ändern?',
+      'How much to change?',
       name: 'loan_change_collateral_how_much',
       desc: '',
       args: [],
     );
   }
 
-  /// `Menge ist ungültig, ungenügend Vermögen vorhanden`
+  /// `Amount is invalid, insufficient funds`
   String get loan_add_collateral_insufficient_funds {
     return Intl.message(
-      'Menge ist ungültig, ungenügend Vermögen vorhanden',
+      'Amount is invalid, insufficient funds',
       name: 'loan_add_collateral_insufficient_funds',
       desc: '',
       args: [],
     );
   }
 
-  /// `Zurückzahlen`
+  /// `Payback`
   String get loan_payback {
     return Intl.message(
-      'Zurückzahlen',
+      'Payback',
       name: 'loan_payback',
       desc: '',
       args: [],
     );
   }
 
-  /// `Darlehen Zurückzahlen`
+  /// `Payback Loan`
   String get loan_payback_title {
     return Intl.message(
-      'Darlehen Zurückzahlen',
+      'Payback Loan',
       name: 'loan_payback_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `Verfügbar`
+  /// `Available Balance`
   String get loan_payback_available_balance {
     return Intl.message(
-      'Verfügbar',
+      'Available Balance',
       name: 'loan_payback_available_balance',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tokens zum Zurückzahlen`
+  /// `Tokens to pay back`
   String get loan_tokens_to_pay_back {
     return Intl.message(
-      'Tokens zum Zurückzahlen',
+      'Tokens to pay back',
       name: 'loan_tokens_to_pay_back',
       desc: '',
       args: [],
     );
   }
 
-  /// `Wert`
+  /// `Value`
   String get loan_payback_value {
     return Intl.message(
-      'Wert',
+      'Value',
       name: 'loan_payback_value',
       desc: '',
       args: [],
     );
   }
 
-  /// `Bearbeiten`
+  /// `Edit`
   String get loan_collateral_edit {
     return Intl.message(
-      'Bearbeiten',
+      'Edit',
       name: 'loan_collateral_edit',
       desc: '',
       args: [],

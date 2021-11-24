@@ -53,13 +53,13 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.credit_card),
             label: S.of(context).loan_vaults,
             page: VaultsHomeScreen(key: PageStorageKey('Vaults')),
-            visibleForBottomNav: false,
+            visibleForBottomNav: true,
             routeSettingName: "/vaults"),
         NavigationEntry(
             icon: Icon(Icons.account_box),
             label: S.of(context).wallet_accounts,
             page: AccountsScreen(key: PageStorageKey('Accounts')),
-            visibleForBottomNav: true,
+            visibleForBottomNav: false,
             routeSettingName: "/accounts"),
         NavigationEntry(
             icon: Icon(Icons.import_contacts),

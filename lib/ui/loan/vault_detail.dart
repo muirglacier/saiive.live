@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
@@ -128,15 +130,15 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
+    var streamController = StreamController<String>();
 
     try {
-      var streamController = StreamController<String>();
       var closeVault = wallet.closeVault(widget.vault.vaultId, widget.vault.ownerAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(closeVault);
 
-      streamController.close();
+      EventTaxiImpl.singleton().fire(VaultSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_close_vault_success),
@@ -148,6 +150,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
     } finally {
+      streamController.close();
       Wakelock.disable();
     }
   }

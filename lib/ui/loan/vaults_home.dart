@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/loan/vault_tokens.dart';
 import 'package:saiive.live/ui/loan/vaults.dart';
@@ -19,6 +23,8 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
 
   var _tabs = [VaultTokensScreen(), VaultsScreen()];
 
+  StreamSubscription<VaultSyncStartEvent> _vaultSyncStartEvent;
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
@@ -27,7 +33,24 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
       _selectedIndex = _tabController.index;
     });
 
+    if (_vaultSyncStartEvent == null) {
+      _vaultSyncStartEvent = EventTaxiImpl.singleton().registerTo<VaultSyncStartEvent>().listen((event) async {
+        _tabs[0].refresh();
+        _tabs[1].refresh();
+      });
+    }
+
     super.initState();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+
+    if (_vaultSyncStartEvent != null) {
+      _vaultSyncStartEvent.cancel();
+      _vaultSyncStartEvent = null;
+    }
   }
 
   @override

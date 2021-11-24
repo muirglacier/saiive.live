@@ -5,6 +5,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
@@ -82,6 +83,9 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
     } catch (e) {
       // ignore
     } finally {
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      EventTaxiImpl.singleton().fire(VaultSyncStartEvent());
+
       Wakelock.disable();
       streamController.close();
     }
@@ -103,7 +107,6 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
       final overlay = LoadingOverlay.of(context, loadingText: loadingStream.stream);
       var tx = await overlay.during(doBlockchainMagic);
 
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
       return tx;
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(

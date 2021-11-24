@@ -26,11 +26,12 @@ class VaultAddCollateralConfirmScreen extends StatefulWidget {
   final List<LoanCollateral> collateralTokens;
   final List<LoanVaultAmount> currentAmounts;
   final List<LoanVaultAmount> newAmounts;
+  final double originalCollateralValue;
   final double collateralValue;
   final Map<String, double> changes;
   final String returnAddress;
 
-  VaultAddCollateralConfirmScreen(this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.changes, this.returnAddress);
+  VaultAddCollateralConfirmScreen(this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.originalCollateralValue, this.changes, this.returnAddress);
 
   @override
   State<StatefulWidget> createState() {
@@ -116,7 +117,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
     }
   }
 
-  _buildCollateralEntry(LoanVaultAmount amount) {
+  _buildCollateralEntry(LoanVaultAmount amount, double collateralValue) {
     var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
     double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
     double factor = token != null ? double.tryParse(token.factor) : 0;
@@ -135,7 +136,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
               Container(height: 10),
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)]),
-                TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(widget.collateralValue, amount, token).toStringAsFixed(2) + '%')]),
+                TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(collateralValue, amount, token).toStringAsFixed(2) + '%')]),
                 TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
               ])
             ])));
@@ -164,7 +165,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                             itemBuilder: (BuildContext context, int index) {
                               final item = widget.currentAmounts[index];
 
-                              return _buildCollateralEntry(item);
+                              return _buildCollateralEntry(item, widget.originalCollateralValue);
                             }),
                       ),
                     ],
@@ -214,7 +215,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                                 itemBuilder: (BuildContext context, int index) {
                                   final item = widget.newAmounts[index];
 
-                                  return _buildCollateralEntry(item);
+                                  return _buildCollateralEntry(item, widget.collateralValue);
                                 })),
                       ],
                     ),

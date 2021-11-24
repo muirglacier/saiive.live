@@ -51,10 +51,15 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   bool isDFILessThan50 = false;
   List<LoanCollateral> _tokens;
   List<LoanToken> _loanTokens;
+  bool _loading = false;
 
   LoanVault myVault;
 
   Future refreshVault() async {
+    setState(() {
+      _loading = true;
+    });
+
     var vaults = await sl.get<IVaultsService>().getMyVault(DeFiConstants.DefiAccountSymbol, widget.vault.ownerAddress);
 
     var myNewVault = vaults.firstWhere((element) => element.vaultId == myVault.vaultId);
@@ -64,6 +69,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
         myVault = myNewVault;
       });
     }
+
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -127,7 +136,16 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildTabActiveLoans() {
     if (myVault.loanAmounts.length == 0) {
-      return Container(child: Text(S.of(context).loan_no_active_loans));
+      return Column(children: [
+        Text(S.of(context).loan_no_active_loans),
+        ElevatedButton(
+          child: Text(S.of(context).loan_borrow),
+          onPressed: () async {
+            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
+            await refreshVault();
+          },
+        )
+      ]);
     }
 
     return CustomScrollView(slivers: [
@@ -216,7 +234,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                   onPressed: token == null
                       ? null
                       : () async {
-                          await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(token, loanVault: myVault)));
+                          await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanToken: token, loanVault: myVault)));
                           await refreshVault();
                         },
                 )
@@ -268,7 +286,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildTabCollaterals() {
     if (myVault.collateralAmounts.length == 0) {
-      return Container(child: Text(S.of(context).loan_no_collateral_amounts));
+      return Column(children: [
+        Text(S.of(context).loan_no_collateral_amounts)
+      ]);
     }
 
     return CustomScrollView(slivers: [
@@ -360,7 +380,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                         Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption)
                       ]),
                       TableRow(children: [
-                        Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(myVault.loanAmounts, 3)),
+                        myVault.loanAmounts.length > 0 ? Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(myVault.loanAmounts, 3)) : Text(S.of(context).loan_no_active_loans),
                         Text(FundFormatter.format(double.tryParse(myVault.loanValue), fractions: 2) + ' \$')
                       ]),
                     ]),
@@ -401,7 +421,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   @override
   Widget build(Object context) {
-    if (_tokens == null || _loanTokens == null) {
+    if (_loading || _tokens == null || _loanTokens == null) {
       return Scaffold(
           appBar: AppBar(
             title: Text(S.of(context).loan_vault_details),
@@ -414,6 +434,16 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
         appBar: AppBar(
           title: Text(S.of(context).loan_vault_details),
           actionsIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.appBarText),
+          actions: [
+            Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    await refreshVault();
+                  },
+                  child: Icon(Icons.refresh, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                )),
+          ],
         ),
         body: NestedScrollView(
           controller: _scrollController,

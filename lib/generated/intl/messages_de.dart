@@ -108,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_add_token_as_collateral" : MessageLookupByLibrary.simpleMessage("Füge Token als Kollateral hinzu"),
     "loan_amount" : MessageLookupByLibrary.simpleMessage("Menge"),
     "loan_amount_payable" : MessageLookupByLibrary.simpleMessage("Zahlbarer Betrag"),
+    "loan_borrow" : MessageLookupByLibrary.simpleMessage("Darlehen erstellen"),
     "loan_borrow_amount" : MessageLookupByLibrary.simpleMessage("Wie viel willst du hinzufügen?"),
     "loan_borrow_choose_token" : MessageLookupByLibrary.simpleMessage("Wähle einen Darlehen Token"),
     "loan_borrow_choose_vault" : MessageLookupByLibrary.simpleMessage("Wähle einen Tresor"),

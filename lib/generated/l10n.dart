@@ -2525,6 +2525,16 @@ class S {
     );
   }
 
+  /// `Create Loan`
+  String get loan_borrow {
+    return Intl.message(
+      'Create Loan',
+      name: 'loan_borrow',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Min. collateral ratio`
   String get loan_min_collateral_ratio {
     return Intl.message(

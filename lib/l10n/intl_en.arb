@@ -286,6 +286,7 @@
   "loan_price_per_token": "Price per Token",
   "loan_payback_loan": "Payback Laon",
   "loan_borrow_more": "Borrow more",
+  "loan_borrow": "Create Loan",
   "loan_min_collateral_ratio": "Min. collateral ratio",
   "loan_vault_interest": "Vault Interest",
   "loan_collateral_value": "Collateral Value",

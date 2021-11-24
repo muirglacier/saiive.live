@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -118,16 +121,17 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
+    var streamController = StreamController<String>();
 
     try {
-      var streamController = StreamController<String>();
       var createVault = wallet.borrowLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (widget.amount * 100000000).round(),
           returnAddress: widget.returnAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createVault);
 
-      streamController.close();
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      EventTaxiImpl.singleton().fire(VaultSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Borrow successfull!"),
@@ -135,6 +139,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
 
       Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
+      streamController.close();
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));

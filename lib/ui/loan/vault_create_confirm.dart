@@ -5,7 +5,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
-import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/model/loan_schema.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -58,16 +58,14 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
     final wallet = sl.get<DeFiChainWallet>();
 
     final walletTo = _toAddress;
+    var streamController = StreamController<String>();
     try {
-      var streamController = StreamController<String>();
       var createVault = wallet.createVault(widget.schema.id, _vaultFees, returnAddress: _returnAddress, ownerAddress: walletTo, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createVault);
 
-      streamController.close();
-
-      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      EventTaxiImpl.singleton().fire(VaultSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Create vault successfull!"),
@@ -79,6 +77,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
     } finally {
+      streamController.close();
       Wakelock.disable();
     }
   }

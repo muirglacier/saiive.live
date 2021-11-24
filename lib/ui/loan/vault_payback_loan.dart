@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/services.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -7,6 +8,8 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
+import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
@@ -75,15 +78,16 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     final wallet = sl.get<DeFiChainWallet>();
 
+    var streamController = StreamController<String>();
     try {
-      var streamController = StreamController<String>();
       var paybackLoan = wallet.paybackLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (amountToRemove * 100000000).round(),
           returnAddress: _returnAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(paybackLoan);
 
-      streamController.close();
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+      EventTaxiImpl.singleton().fire(VaultSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Payback successfull!"),
@@ -95,6 +99,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
       ));
     } finally {
+      streamController.close();
       Wakelock.disable();
     }
   }

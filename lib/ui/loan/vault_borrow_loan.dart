@@ -324,7 +324,12 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
             }),
             body: Padding(
                 padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: NestedScrollView(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onPanDown: (_) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: NestedScrollView(
                     headerSliverBuilder: (context, value) {
                       return [
                         SliverToBoxAdapter(
@@ -364,6 +369,6 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                                 },
                               ))
                         ]),
-                    ])))));
+                    ]))))));
   }
 }

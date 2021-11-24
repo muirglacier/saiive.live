@@ -63,7 +63,7 @@ class _ExpertScreen extends State<ExpertScreen> {
     try {
       Wakelock.enable();
 
-      final amount = double.parse(_amountController.text.replaceAll(',','.'));
+      final amount = double.parse(_amountController.text.replaceAll(',', '.'));
       final totalAmount = (amount * DefiChainConstants.COIN).toInt();
       final wallet = sl.get<DeFiChainWallet>();
       await wallet.ensureUtxoUnsafe(loadingStream: stream);

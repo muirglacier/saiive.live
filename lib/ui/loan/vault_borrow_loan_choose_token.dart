@@ -1,6 +1,5 @@
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
-import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 
@@ -38,7 +37,7 @@ class _VaultBorrowLoanChooseTokenScreen extends State<VaultBorrowLoanChooseToken
   Widget _buildTokenEntry(LoanToken token) {
     return Card(
         child: ListTile(
-      title: Column(crossAxisAlignment: CrossAxisAlignment.start ,children: [
+      title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           token.token.name,
           overflow: TextOverflow.ellipsis,

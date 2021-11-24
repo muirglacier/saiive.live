@@ -46,6 +46,8 @@ class SembastWalletDatabase extends IWalletDatabase {
   List<String> _activeReadonlyWalletAddresses = List<String>.empty(growable: true);
   List<String> _activeSpentableWalletAddresses = List<String>.empty(growable: true);
 
+  List<String> _removedUnspentTransactions = List<String>.empty(growable: true);
+
   final String _path;
   final ChainType _chain;
   SembastWalletDatabase(this._path, this._chain);
@@ -452,11 +454,19 @@ class SembastWalletDatabase extends IWalletDatabase {
   Future removeUnspentTransactions(List<tx.Transaction> txs) async {
     final txIds = txs.map((e) => e.uniqueId).toList();
     await _unspentStoreInstance.records(txIds).delete(await database);
+
+    for (var tx in txs) {
+      _removedUnspentTransactions.add(tx.uniqueId);
+    }
   }
 
   @override
   Future addUnspentTransaction(tx.Transaction transaction, WalletAccount account) async {
     final db = await database;
+
+    if (_removedUnspentTransactions.contains(transaction.uniqueId)) {
+      return;
+    }
 
     transaction.accountId = account.uniqueId;
     final obj = transaction.toJson();

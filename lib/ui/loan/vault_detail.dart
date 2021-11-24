@@ -167,7 +167,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     var streamController = StreamController<String>();
 
     try {
-      await wallet.ensureUtxo(loadingStream: streamController);
+      var utxoOverlayFuture = wallet.ensureUtxo(loadingStream: streamController);
+      final overlayFuture = LoadingOverlay.of(context, loadingText: streamController.stream);
+      await overlayFuture.during(utxoOverlayFuture);
+      
       var closeVault = wallet.closeVault(myVault.vaultId, myVault.ownerAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);

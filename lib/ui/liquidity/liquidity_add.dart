@@ -371,7 +371,9 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
       "shareAddress": walletTo
     });
 
-    await wallet.ensureUtxo(loadingStream: streamController);
+    var utxoOverlayFuture = wallet.ensureUtxo(loadingStream: streamController);
+    final overlayFuture = LoadingOverlay.of(context, loadingText: streamController.stream);
+    await overlayFuture.during(utxoOverlayFuture);
     var createSwapFuture = wallet.createAndSendAddPoolLiquidity(_selectedTokenA.hash, amountTokenA, _selectedTokenB.hash, amountTokenB, walletTo,
         returnAddress: _returnAddress, loadingStream: streamController);
     final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);

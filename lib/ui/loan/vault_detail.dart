@@ -196,7 +196,12 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   }
 
   _buildLoanEntry(LoanVaultAmount amount) {
-    var pricePerToken = amount.activePrice != null ? amount.activePrice.active.amount : 0;
+    var pricePerToken = amount.activePrice != null ? amount.activePrice.active.amount : 0.0;
+
+    if (amount.symbolKey == "DUSD") {
+      pricePerToken = 1.0;
+    }
+
     var totalAmount = pricePerToken * double.tryParse(amount.amount);
     var token = _loanTokens.firstWhere((element) => element.token.symbol == amount.symbol, orElse: () => null);
     var interest = myVault.interestAmounts.firstWhere((element) => element.symbol == amount.symbol, orElse: () => null);

@@ -44,7 +44,7 @@ class VaultPaybackLoanScreen extends StatefulWidget {
 class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   double percentage = 100;
   int amountToRemove = 0;
-  double amountToRemoveDouble = 0;
+  double amountToRemoveDouble = 0.0;
   int availableBalance = 0;
   bool balanceLoaded = false;
   var _percentageTextController = TextEditingController(text: '100');
@@ -73,7 +73,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     setState(() {
       balanceLoaded = true;
-      availableBalance = tokenBalance != null ? tokenBalance.balance : 0;
+      availableBalance = tokenBalance != null ? tokenBalance.balance : 0.0;
     });
   }
 
@@ -203,7 +203,12 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   buildAmount() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0;
+    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0.0;
+
+    if (widget.loanAmount.symbolKey == "DUSD") {
+      pricePerToken = 1.0;
+    }
+
     var totalAmount = pricePerToken * totalVaultValue;
 
     return Card(
@@ -241,7 +246,11 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   buildPayback() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0;
+    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0.0;
+
+    if (widget.loanAmount.symbolKey == "DUSD") {
+      pricePerToken = 1.0;
+    }
 
     return Card(
         child: Padding(

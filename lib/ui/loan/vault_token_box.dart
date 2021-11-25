@@ -21,9 +21,7 @@ class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
   Widget build(Object context) {
     return InkWell(
         onTap: () async {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  VaultBorrowLoan(loanToken: widget.token)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanToken: widget.token)));
         },
         child: Card(
             child: Padding(
@@ -43,10 +41,15 @@ class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
                   ]),
                   Container(height: 10),
                   Table(border: TableBorder(), children: [
-                    TableRow(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption)]),
+                    TableRow(children: [
+                      Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption),
+                      Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption)
+                    ]),
                     TableRow(children: [
                       Text(widget.token.interest),
-                      Text(widget.token.activePrice != null ? FundFormatter.format(widget.token.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
+                      Text(widget.token.activePrice != null
+                          ? FundFormatter.format(widget.token.token.symbolKey == "DUSD" ? 1.0 : widget.token.activePrice.active.amount, fractions: 2) + ' \$'
+                          : (widget.token.token.symbolKey == "DUSD" ? FundFormatter.format(1.0, fractions: 2) + ' \$' : '-')),
                     ]),
                   ]),
                 ]))));

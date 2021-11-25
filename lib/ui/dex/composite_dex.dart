@@ -5,35 +5,22 @@ import 'package:collection/src/iterable_extensions.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
-import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
-import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/pool_pair.dart';
 import 'package:saiive.live/network/model/pool_pair_token.dart';
-import 'package:saiive.live/network/model/token.dart';
 import 'package:saiive.live/network/model/token_balance.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
-import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
-import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
-import 'package:saiive.live/ui/utils/token_pair_icon.dart';
-import 'package:saiive.live/ui/utils/transaction_fail.dart';
-import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
-import 'package:saiive.live/ui/widgets/loading_overlay.dart';
-import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/table_widget.dart';
-import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
-import 'package:wakelock/wakelock.dart';
 
 class CompositeDexScreen extends StatefulWidget {
   const CompositeDexScreen({Key key}) : super(key: key);
@@ -51,6 +38,18 @@ class CompositeSwapResult
   double estimated = 0;
 }
 
+class CompositeSwapWayPoint
+{
+  final PoolPair pair;
+  final String fromSymbol;
+  final String toSymbol;
+
+  CompositeSwapWayPoint(
+      this.pair,
+      this.fromSymbol,
+      this.toSymbol);
+}
+
 class _CompositeDexScreen extends State<CompositeDexScreen> {
   bool _isLoading = true;
   List<TokenBalance> _fromTokens = [];
@@ -60,6 +59,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   List<PoolPair> _selectedPoolPairs;
   List<PoolPairToken> _tokens;
   CompositeSwapResult _price;
+  List<CompositeSwapWayPoint> _swapWays = [];
   var _amountFromController = TextEditingController(text: '');
 
   TokenBalance _selectedValueTo;
@@ -156,6 +156,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       setState(() {
         _amountFrom = null;
         _price = null;
+        _swapWays = [];
       });
       return;
     }
@@ -211,6 +212,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     var slippage = 1 - _amountFrom / tokenA.reserve;
     var lastTokenBySymbol = tokenA.symbol;
     var lastAmount = _amountFrom;
+    List<CompositeSwapWayPoint> swapWays = [];
 
     var price = _selectedPoolPairs.fold(new CompositeSwapResult(), (CompositeSwapResult previousValue, element) {
       var split = element.symbol.split('-');
@@ -230,6 +232,12 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       var bToaPrice = tokenASymbol == lastTokenBySymbol ? priceRateB : priceRateA;
       var estimated = lastAmount * aToBPrice;
 
+      swapWays.add(new CompositeSwapWayPoint(
+          element,
+          tokenASymbol,
+          tokenBSymbol,
+      ));
+
       lastAmount = estimated;
       lastTokenBySymbol = tokenBSymbol;
 
@@ -244,6 +252,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
     setState(() {
       _price = price;
+      _swapWays = swapWays;
     });
   }
 
@@ -398,7 +407,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                 ]),
                 if (_selectedValueFrom != null && _selectedValueTo != null) Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(height: 20),
-                  Text('How much from you wanna swap?'),
+                  Text('How much do you want to swap?'),
                   Row(children: [
                     Expanded(flex: 1, child: TextField(
                         controller: _amountFromController,
@@ -434,6 +443,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                   ]),
                   Container(height: 20),
                   if (_price != null) _buildSwapDetails(),
+                  if (_swapWays.length > 0) _buildSwapWaysDetails(),
                   if (_price != null) _buildTxDetails(),
                   if (_price != null) ElevatedButton(
                     child: Text(S.of(context).dex_swap),
@@ -467,6 +477,21 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
     return Column(children: [
       Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Prices', style: Theme.of(context).textTheme.caption)),
+      CustomTableWidget(items)
+    ]);
+  }
+
+  _buildSwapWaysDetails() {
+    List<List<String>> items = [
+
+    ];
+
+    _swapWays.forEach((e) {
+      items.add([e.pair.symbol, e.fromSymbol + ' -> ' + e.toSymbol]);
+    });
+
+    return Column(children: [
+      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Swap Ways', style: Theme.of(context).textTheme.caption)),
       CustomTableWidget(items)
     ]);
   }

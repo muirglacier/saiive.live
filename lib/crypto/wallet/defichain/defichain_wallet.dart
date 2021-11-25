@@ -317,7 +317,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     if (!unspentTxs.any((element) => element.address == ownerAddress)) {
       var inputTx = await createUtxoTransaction(fees, ownerAddress, ownerAddress, loadingStream: loadingStream);
-      var tx = await walletDatabase.getUnspentTransactionById(inputTx);
+      var tx = await walletDatabase.getUnspentTransactionByTxId(inputTx);
       useTxs.add(tx);
     } else {
       var inputTx = unspentTxs.where((element) => element.address == ownerAddress);
@@ -371,7 +371,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     if (!unspentTxs.any((element) => element.address == owner && element.value >= minAmount)) {
       var inputTx = await createUtxoTransaction(minAmount - fees, owner, owner, loadingStream: loadingStream);
-      var tx = await walletDatabase.getUnspentTransactionById(inputTx);
+      var tx = await walletDatabase.getUnspentTransactionByTxId(inputTx);
       useTxs.add(tx);
     } else {
       var inputTx = unspentTxs.where((element) => element.address == owner && element.value >= minAmount);

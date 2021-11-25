@@ -35,10 +35,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   @override
   Future<TransactionData> createAndSendRemovePoolLiquidity(int token, int amount, String shareAddress, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();
 
     try {
-      var removeLiq = await removePoolLiquidity(token, amount, shareAddress, returnAddress: returnAddress, loadingStream: loadingStream);
+      var removeLiq = await _removePoolLiquidity(token, amount, shareAddress, returnAddress: returnAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       return await createTxAndWait(removeLiq, loadingStream: loadingStream);
     } finally {
@@ -53,7 +54,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     await walletMutex.acquire();
 
     try {
-      var addLiq = await addPoolLiquidity(tokenA, amountA, tokenB, amountB, shareAddress, returnAddress: returnAddress, loadingStream: loadingStream);
+      var addLiq = await _addPoolLiquidity(tokenA, amountA, tokenB, amountB, shareAddress, returnAddress: returnAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       return await createTxAndWaitInternal(addLiq, loadingStream: loadingStream);
     } finally {
@@ -61,7 +62,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
   }
 
-  Future<Tuple3<String, List<tx.Transaction>, String>> removePoolLiquidity(int token, int amount, String shareAddress,
+  Future<Tuple3<String, List<tx.Transaction>, String>> _removePoolLiquidity(int token, int amount, String shareAddress,
       {String returnAddress, StreamController<String> loadingStream}) async {
     var fees = await getTxFee(0, 0);
     await prepareAccount(shareAddress, fees, loadingStream: loadingStream);
@@ -98,12 +99,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txb;
   }
 
-  Future<String> addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
+  Future<String> _addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
       {String returnAddress, StreamController<String> loadingStream}) async {
-    if (!DeFiConstants.isDfiToken(tokenA) && !DeFiConstants.isDfiToken(tokenB)) {
-      throw ArgumentError("One of the 2 tokens must be DFI!");
-    }
-
     final useAmount = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
 
     if (DeFiConstants.isDfiToken(tokenA)) {
@@ -177,7 +174,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     try {
       loadingStream?.add(S.current.wallet_operation_create_swap_tx);
-      var swap = await createSwap(fromToken, fromAmount, toToken, to, maxPrice, maxPriceFraction, loadingStream: loadingStream);
+      var swap = await _createSwap(fromToken, fromAmount, toToken, to, maxPrice, maxPriceFraction, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
       var tx = await createTxAndWait(swap, loadingStream: loadingStream);
 
@@ -187,7 +184,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
   }
 
-  Future<Tuple3<String, List<tx.Transaction>, String>> createSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
+  Future<Tuple3<String, List<tx.Transaction>, String>> _createSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
       {String returnAddress, StreamController<String> loadingStream}) async {
     if (DeFiConstants.isDfiToken(fromToken)) {
       var prep = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
@@ -287,6 +284,391 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       return await createUtxoTransaction(amount, to, changeAddress, sendMax: sendMax, loadingStream: loadingStream);
     }
     return await createAccountTransaction(token, amount, to, loadingStream: loadingStream);
+  }
+
+  Future<String> closeVault(String vaultId, String ownerAddress, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      loadingStream?.add(S.current.wallet_operation_build_tx);
+      var action = await _closeVault(vaultId, ownerAddress, returnAddress: returnAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(action, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx.txId;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _closeVault(String vaultId, String ownerAddress, {String returnAddress, StreamController<String> loadingStream}) async {
+    var fees = await getTxFee(1, 2);
+    final unspentTxs = await walletDatabase.getUnspentTransactions();
+    final useTxs = List<tx.Transaction>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
+
+    final address = await walletDatabase.getWalletAddress(ownerAddress);
+    final walletAccount = await walletDatabase.getAccount(address.accountId);
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+
+    var keyPair = await getPrivateKey(address, walletAccount);
+    keys.add(Tuple2(address, keyPair));
+
+    if (!unspentTxs.any((element) => element.address == ownerAddress)) {
+      var inputTx = await createUtxoTransaction(fees, ownerAddress, ownerAddress, loadingStream: loadingStream);
+      var tx = await walletDatabase.getUnspentTransactionById(inputTx);
+      useTxs.add(tx);
+    } else {
+      var inputTx = unspentTxs.where((element) => element.address == ownerAddress);
+      useTxs.add(inputTx.first);
+    }
+
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, ownerAddress, 0, fees, changeAddress, (txb, inputTxs, nw) {
+      txb.addCloseVault(vaultId, ownerAddress);
+    }, chain, network);
+
+    return Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, ownerAddress);
+  }
+
+  Future<String> createVault(String schemeId, int vaultCreateFees, {String ownerAddress, String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      loadingStream?.add(S.current.wallet_operation_build_tx);
+      var action = await _createVault(schemeId, vaultCreateFees, ownerAddress: ownerAddress, returnAddress: returnAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(action, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx.txId;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _createVault(String schemeId, int vaultCreateFees,
+      {String ownerAddress, String returnAddress, StreamController<String> loadingStream}) async {
+    var owner = ownerAddress;
+
+    if (owner == null || owner == "") {
+      owner = await getPublicKey(false, AddressType.P2SHSegwit);
+    }
+
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    var fees = await getTxFee(1, 2);
+    final unspentTxs = await walletDatabase.getUnspentTransactions();
+    final useTxs = List<tx.Transaction>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
+
+    final address = await walletDatabase.getWalletAddress(owner);
+    final walletAccount = await walletDatabase.getAccount(address.accountId);
+
+    var keyPair = await getPrivateKey(address, walletAccount);
+    keys.add(Tuple2(address, keyPair));
+
+    final minAmount = vaultCreateFees + fees;
+
+    if (!unspentTxs.any((element) => element.address == owner && element.value >= minAmount)) {
+      var inputTx = await createUtxoTransaction(minAmount - fees, owner, owner, loadingStream: loadingStream);
+      var tx = await walletDatabase.getUnspentTransactionById(inputTx);
+      useTxs.add(tx);
+    } else {
+      var inputTx = unspentTxs.where((element) => element.address == owner && element.value >= minAmount);
+      useTxs.add(inputTx.first);
+    }
+
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, owner, (minAmount - fees) * -1, fees, changeAddress, (txb, inputTxs, nw) {
+      txb.addCreateVault(owner, schemeId, vaultCreateFees);
+    }, chain, network);
+
+    return Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, ownerAddress);
+  }
+
+  Future<String> borrowLoan(String vaultId, String to, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+
+      loadingStream?.add(S.current.wallet_operation_build_tx);
+      var swap = await _borrowLoan(vaultId, to, token, amount, changeAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(swap, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx.txId;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _borrowLoan(String vaultId, String to, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
+    final fees = await getTxFee(1, 2) + 5000;
+
+    final fromTok = await apiService.tokenService.getToken("DFI", token);
+    final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(to, token);
+
+    if (tokenBalance != null && tokenBalance.balance < (amount)) {
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+    }
+    final txb = await createBaseTransaction(0, to, returnAddress, fees, (txb, inputTxs, nw) async {
+      var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
+
+      Future addAuthInput(tx.Transaction tx) async {
+        final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
+        if (inputContainsAuthTx.isEmpty) {
+          final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+          final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+          if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+            throw new ReadOnlyAccountError();
+          }
+          var keyPair = await getPrivateKey(addressInfo, walletAccount);
+          var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
+
+          var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
+
+          if (tx.value > 0) {
+            txb.addOutput(tx.address, tx.value);
+          }
+
+          final witnessValue = tx.valueRaw;
+          toSign.add(Tuple4(keyPair, addressInfo, vin, witnessValue));
+        }
+      }
+
+      var txAuth = await getAuthInputsSmart(to, AuthTxMin, fees, loadingStream: loadingStream);
+      await addAuthInput(txAuth);
+
+      txb.addTakeLoan(vaultId, to, fromTok.id, amount);
+
+      for (var sign in toSign) {
+        HdWalletUtil.signInput(txb, sign.item1, sign.item2, sign.item3, sign.item4);
+      }
+    });
+    return txb;
+  }
+
+  Future<String> paybackLoan(String vaultId, String to, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      loadingStream?.add(S.current.wallet_operation_build_tx);
+      var swap = await _paybackLoan(vaultId, to, token, amount, changeAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(swap, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx.txId;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _paybackLoan(String vaultId, String to, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
+    final fees = await getTxFee(1, 2) + 5000;
+
+    final fromTok = await apiService.tokenService.getToken("DFI", token);
+    final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(to, token);
+
+    if (tokenBalance != null && tokenBalance.balance < (amount)) {
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+    }
+    final txb = await createBaseTransaction(0, to, returnAddress, fees, (txb, inputTxs, nw) async {
+      var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
+
+      Future addAuthInput(tx.Transaction tx) async {
+        final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
+        if (inputContainsAuthTx.isEmpty) {
+          final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+          final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+          if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+            throw new ReadOnlyAccountError();
+          }
+          var keyPair = await getPrivateKey(addressInfo, walletAccount);
+          var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
+
+          var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
+
+          if (tx.value > 0) {
+            txb.addOutput(tx.address, tx.value);
+          }
+
+          final witnessValue = tx.valueRaw;
+          toSign.add(Tuple4(keyPair, addressInfo, vin, witnessValue));
+        }
+      }
+
+      var txAuth = await getAuthInputsSmart(to, AuthTxMin, fees, loadingStream: loadingStream);
+      await addAuthInput(txAuth);
+
+      txb.addPaybackLoan(vaultId, to, fromTok.id, amount);
+
+      for (var sign in toSign) {
+        HdWalletUtil.signInput(txb, sign.item1, sign.item2, sign.item3, sign.item4);
+      }
+    });
+    return txb;
+  }
+
+  Future<String> withdrawFromVault(String vaultId, String from, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      if (from == null || from.isEmpty) {
+        from = await getPublicKey(false, AddressType.P2SHSegwit);
+      }
+
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      loadingStream?.add(S.current.wallet_operation_build_tx);
+      var swap = await _withdrawFromVault(vaultId, from, token, amount, changeAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(swap, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx.txId;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _withdrawFromVault(String vaultId, String from, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
+    final fees = await getTxFee(1, 2) + 5000;
+
+    final fromTok = await apiService.tokenService.getToken("DFI", token);
+    final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(from, token);
+
+    if (tokenBalance != null && tokenBalance.balance < (amount)) {
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+    }
+    final txb = await createBaseTransaction(0, from, returnAddress, fees, (txb, inputTxs, nw) async {
+      var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
+
+      Future addAuthInput(tx.Transaction tx) async {
+        final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
+        if (inputContainsAuthTx.isEmpty) {
+          final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+          final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+          if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+            throw new ReadOnlyAccountError();
+          }
+          var keyPair = await getPrivateKey(addressInfo, walletAccount);
+          var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
+
+          var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
+
+          if (tx.value > 0) {
+            txb.addOutput(tx.address, tx.value);
+          }
+
+          final witnessValue = tx.valueRaw;
+          toSign.add(Tuple4(keyPair, addressInfo, vin, witnessValue));
+        }
+      }
+
+      var txAuth = await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
+      await addAuthInput(txAuth);
+
+      txb.addWithdrawToVault(vaultId, from, fromTok.id, amount);
+
+      for (var sign in toSign) {
+        HdWalletUtil.signInput(txb, sign.item1, sign.item2, sign.item3, sign.item4);
+      }
+    });
+    return txb;
+  }
+
+  Future<String> depositToVault(String vaultId, String from, String token, int amount, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      if (from == null || from.isEmpty) {
+        from = await getPublicKey(false, AddressType.P2SHSegwit);
+      }
+
+      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      loadingStream?.add(S.current.wallet_operation_build_tx);
+      var swap = await _depositToVault(vaultId, from, token, amount, changeAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(swap, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx.txId;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _depositToVault(String vaultId, String from, String token, int amount, String returnAddress,
+      {StreamController<String> loadingStream}) async {
+    if (DeFiConstants.isDfiToken(token)) {
+      var prep = await prepareAccount(from, amount, loadingStream: loadingStream);
+      amount = prep.item1;
+    }
+
+    final fees = await getTxFee(1, 2) + 5000;
+
+    final fromTokenBalance = await walletDatabase.getAccountBalance(token);
+
+    if (fromTokenBalance.balance < amount) {
+      throw new ArgumentError("Insufficient balance...");
+    }
+
+    final fromTok = await apiService.tokenService.getToken("DFI", token);
+    final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(from, token);
+
+    if (tokenBalance != null && tokenBalance.balance < (amount)) {
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+    }
+
+    if (tokenBalance == null || amount > tokenBalance?.balance) {
+      await createAccountTransaction(token, amount, from, loadingStream: loadingStream);
+    }
+    await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
+
+    final txb = await createBaseTransaction(0, from, returnAddress, fees, (txb, inputTxs, nw) async {
+      var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
+
+      Future addAuthInput(tx.Transaction tx) async {
+        final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
+        if (inputContainsAuthTx.isEmpty) {
+          final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+          final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+          if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+            throw new ReadOnlyAccountError();
+          }
+          var keyPair = await getPrivateKey(addressInfo, walletAccount);
+          var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
+
+          var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
+
+          if (tx.value > 0) {
+            txb.addOutput(tx.address, tx.value);
+          }
+
+          final witnessValue = tx.valueRaw;
+          toSign.add(Tuple4(keyPair, addressInfo, vin, witnessValue));
+        }
+      }
+
+      var txAuth = await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
+      await addAuthInput(txAuth);
+
+      txb.addDepositToVault(vaultId, from, fromTok.id, amount);
+
+      for (var sign in toSign) {
+        HdWalletUtil.signInput(txb, sign.item1, sign.item2, sign.item3, sign.item4);
+      }
+    });
+    return txb;
   }
 
   Future<String> createAccountTransaction(String token, int amount, String to,

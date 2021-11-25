@@ -208,7 +208,7 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
   Future<ChainNet> getChainNetwork() async {
     ChainNet defaultNetwork = ChainNet.Testnet;
     try {
-      final defaultNetworkString = env["DEFAULT_NETWORK"];
+      final defaultNetworkString = dotenv.env["DEFAULT_NETWORK"];
       defaultNetwork = ChainHelper.networkFromString(defaultNetworkString);
     } catch (e) {
       //ignore

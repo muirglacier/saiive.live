@@ -30,8 +30,8 @@ class HttpService extends IHttpService {
   Future init() async {
     final chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     this.network = ChainHelper.chainNetworkString(chainNet);
-    if (env.containsKey("API_URL")) {
-      this.serverAddress = env['API_URL'];
+    if (dotenv.env.containsKey("API_URL")) {
+      this.serverAddress = dotenv.env['API_URL'];
     }
   }
 
@@ -62,7 +62,7 @@ class HttpService extends IHttpService {
       throw error;
     }
     final decoded = await compute(HttpService._parseJson, response.body);
-    if (decoded.containsKey("error")) {
+    if (decoded is Map && decoded.containsKey("error")) {
       throw Error.fromJson(decoded);
     }
 

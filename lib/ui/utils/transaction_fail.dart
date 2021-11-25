@@ -159,7 +159,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         backgroundColor: Colors.red,
-        body: Center(
+        body: Padding(padding: EdgeInsets.all(10), child: Center(
             child: SingleChildScrollView(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.error_outline_outlined, size: 50),
@@ -174,7 +174,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
             ),
           if (widget.error != null) SizedBox(height: 30),
           if (widget.error != null)
-            Text(
+            SelectableText(
               _errorText,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
@@ -191,6 +191,6 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
                 child: Icon(Icons.share, size: 26.0, color: Colors.white),
               )),
           if (_isMissingUtxoError) utxoRechagerLink(context)
-        ]))));
+        ])))));
   }
 }

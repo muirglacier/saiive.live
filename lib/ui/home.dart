@@ -7,9 +7,11 @@ import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/drawer.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
+import 'package:saiive.live/ui/loan/vaults_home.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/tokens/tokens.dart';
 import 'package:saiive.live/ui/update/app_update_alert_widget.dart';
+
 // ignore: unused_import
 import 'package:saiive.live/ui/wallet/wallet_buy.dart';
 import 'package:saiive.live/ui/wallet/wallet_home.dart';
@@ -48,10 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
         NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(key: PageStorageKey('Liquidity')), routeSettingName: "/liqudity"),
         NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(key: PageStorageKey('DEX')), routeSettingName: "/dex"),
         NavigationEntry(
+            icon: Icon(Icons.credit_card),
+            label: S.of(context).loan_vaults,
+            page: VaultsHomeScreen(key: PageStorageKey('Vaults')),
+            visibleForBottomNav: true,
+            routeSettingName: "/vaults"),
+        NavigationEntry(
             icon: Icon(Icons.account_box),
             label: S.of(context).wallet_accounts,
             page: AccountsScreen(key: PageStorageKey('Accounts')),
-            visibleForBottomNav: true,
+            visibleForBottomNav: false,
             routeSettingName: "/accounts"),
         NavigationEntry(
             icon: Icon(Icons.import_contacts),
@@ -60,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
             visibleForBottomNav: false,
             routeSettingName: "/addressbook"),
         // NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
+
         NavigationEntry(
             icon: Icon(Icons.radio_button_unchecked),
             label: S.of(context).home_tokens,
@@ -99,35 +108,43 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        NavigationRail(
-            backgroundColor: StateContainer.of(context).curTheme.lightColor,
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            labelType: NavigationRailLabelType.all,
-            selectedIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.primary),
-            selectedLabelTextStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),
-            leading: Container(
-                child: Column(children: [
-              SizedBox(
-                  width: 200,
-                  child: Column(children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, top: 20, right: 20),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-                        Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5),
-                        VersionWidget(),
-                        if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
-                      ]),
-                    ),
-                    Divider(color: StateContainer.of(context).curTheme.backgroundColor)
-                  ]))
-            ])),
-            destinations: navBar),
+        LayoutBuilder(builder: (context, constraints) {
+          return SingleChildScrollView(
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                      child: NavigationRail(
+                          backgroundColor: StateContainer.of(context).curTheme.lightColor,
+                          selectedIndex: _selectedIndex,
+                          onDestinationSelected: (int index) {
+                            setState(() {
+                              _selectedIndex = index;
+                            });
+                          },
+                          labelType: NavigationRailLabelType.all,
+                          selectedIconTheme: IconThemeData(color: StateContainer.of(context).curTheme.primary),
+                          selectedLabelTextStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),
+                          leading: Container(
+                              child: Column(children: [
+                            SizedBox(
+                                width: 200,
+                                child: Column(children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 20, top: 20, right: 20),
+                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
+                                      Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
+                                      SizedBox(height: 5),
+                                      VersionWidget(),
+                                      if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
+                                    ]),
+                                  ),
+                                  Divider(color: StateContainer.of(context).curTheme.backgroundColor)
+                                ]))
+                          ])),
+                          destinations: navBar))));
+        }),
         VerticalDivider(thickness: 1, width: 1),
         // This is the main content.
         Expanded(

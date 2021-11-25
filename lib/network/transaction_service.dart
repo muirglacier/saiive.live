@@ -13,8 +13,11 @@ abstract class ITransactionService {
   Future<List<Transaction>> getAddressTransaction(String coin, String address);
   Future<List<Transaction>> getAddressesTransactions(String coin, List<String> addresses);
   Future<List<Transaction>> getUnspentTransactionOutputs(String coin, List<String> addresses);
-  Future<TransactionData> getWithTxId(String coin, String txId);
-  Future<String> sendRawTransaction(String coin, String rawTxHex);
+  Future<TransactionData> getWithTxId(String coin, String txId, {bool onlyConfirmed});
+  Future<String> sendRawTransaction(
+    String coin,
+    String rawTxHex,
+  );
 }
 
 class TransactionService extends NetworkService implements ITransactionService {
@@ -61,8 +64,9 @@ class TransactionService extends NetworkService implements ITransactionService {
     return transactions;
   }
 
-  Future<TransactionData> getWithTxId(String coin, String txId) async {
-    dynamic response = await this.httpService.makeDynamicHttpGetRequest('/tx/id/$txId', coin);
+  Future<TransactionData> getWithTxId(String coin, String txId, {bool onlyConfirmed}) async {
+    var onlyConfirmedParam = onlyConfirmed ?? false;
+    dynamic response = await this.httpService.makeDynamicHttpGetRequest('/tx/id/$txId?onlyConfirmed=$onlyConfirmedParam', coin);
 
     if (response is ErrorResponse) {
       this.handleError(response);

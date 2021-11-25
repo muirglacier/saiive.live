@@ -7,6 +7,7 @@ import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:uuid/uuid.dart';
+import 'mock/transaction_service_mock.dart';
 import 'wallet_test_base.dart';
 
 void main() async {
@@ -99,10 +100,10 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      final tx = await wallet.addPoolLiquidity("DFI", 100000000, "BTC", 8160367226, "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
-      final txHex = tx;
+      await wallet.createAndSendAddPoolLiquidity("DFI", 100000000, "BTC", 8160367226, "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv");
+      final txController = sl.get<TransactionServiceMock>();
 
-      expect(txHex,
+      expect(txController.lastTx,
           "04000000000101eb35805133257cf008acf107004ac4ed5fc5c444f1b1856b8786187ee5518bc9010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff020000000000000000526a4c4f446654786c0117a9141084ef98bacfecbc9f140496b26516ae55d79bfa87020000000000e1f50500000000010000007a5265e60100000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870060d1f5050000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa870002483045022100e352c311ee1698981b4f702ef5ccc33a5ae485e00ced6ea0a1c905d9ec9c617b02206ec857a48493954054e0ca662c905b4e1e94433482557594f2142c742ab38e78012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
 
       await destoryTest();

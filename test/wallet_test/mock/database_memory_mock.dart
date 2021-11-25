@@ -78,7 +78,15 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future removeUnspentTransactions(List<Transaction> mintIds) async {}
+  Future removeUnspentTransactions(List<Transaction> mintIds) async {
+    for (var mint in mintIds) {
+      var toRemove = _unspentTransactions.where((element) => element.mintTxId == mint.mintTxId && element.mintIndex == mint.mintIndex).toList();
+      for (var toRem in toRemove) {
+        _unspentTransactions.remove(toRem);
+      }
+      _transactions.removeWhere((element) => element.mintTxId == mint.mintTxId && element.mintIndex == mint.mintIndex);
+    }
+  }
 
   @override
   Future close() async {}
@@ -159,8 +167,13 @@ class MemoryDatabaseMock extends IWalletDatabase {
 
   @override
   Future<List<Transaction>> getUnspentTransactions({bool spentable = true}) {
-    _transactions.sort((a, b) => b.valueRaw.compareTo(a.valueRaw));
-    return Future.value(_transactions);
+    _unspentTransactions.sort((a, b) => b.valueRaw.compareTo(a.valueRaw));
+    return Future.value(_unspentTransactions);
+  }
+
+  @override
+  Future<Transaction> getUnspentTransactionById(String txId) {
+    return Future.value(_unspentTransactions.firstWhere((element) => element.mintTxId == txId));
   }
 
   @override

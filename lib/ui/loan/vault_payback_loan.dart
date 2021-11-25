@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/services.dart';
@@ -108,7 +109,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   calculateMaxToPayback() {
-    var dif = availableBalance / totalVaultValueSat;
+    var dif = min(availableBalance, totalVaultValueSat) / max(totalVaultValueSat, availableBalance);
     var difPercentage = dif * 100;
     _percentageTextController.text = difPercentage.toString();
 

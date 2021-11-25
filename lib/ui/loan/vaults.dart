@@ -51,6 +51,7 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
 
     try {
       var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+
       var vaults = await sl.get<IVaultsService>().getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
 
       setState(() {

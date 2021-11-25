@@ -9,15 +9,7 @@ class LoanVaultAmount {
   final String displaySymbol;
   final LoanVaultActivePrice activePrice;
 
-  LoanVaultAmount(
-      {this.id,
-      this.amount,
-      this.symbol,
-      this.symbolKey,
-      this.name,
-      this.displaySymbol,
-      this.activePrice
-      });
+  LoanVaultAmount({this.id, this.amount, this.symbol, this.symbolKey, this.name, this.displaySymbol, this.activePrice});
 
   factory LoanVaultAmount.fromJson(Map<String, dynamic> json) {
     return LoanVaultAmount(
@@ -27,7 +19,6 @@ class LoanVaultAmount {
         symbolKey: json['symbolKey'],
         name: json['name'],
         displaySymbol: json['displaySymbol'],
-        activePrice: LoanVaultActivePrice.fromJson(json['activePrice'])
-    );
+        activePrice: json.containsKey("activePrice") && json["activePrice"] != null ? LoanVaultActivePrice.fromJson(json['activePrice']) : null);
   }
 }

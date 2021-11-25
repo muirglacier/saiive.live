@@ -5,6 +5,7 @@
   "home_wallet": "Wallet",
   "home_liquidity": "Liquidity",
   "home_dex": "DEX",
+  "home_dex_v2": "DEX V2",
   "home_tokens": "Tokens",
   "welcome": "Willkommen",
   "loading": "Laden...",
@@ -190,6 +191,7 @@
   "cancel": "Abbrechen",
 
   "dex": "DEX",
+  "dex_v2": "DEX V2",
   "dex_add_max": "max",
   "dex_from_token": "Von Token",
   "dex_from_amount": "Menge Von",

@@ -95,6 +95,16 @@ class S {
     );
   }
 
+  /// `DEX V2`
+  String get home_dex_v2 {
+    return Intl.message(
+      'DEX V2',
+      name: 'home_dex_v2',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tokens`
   String get home_tokens {
     return Intl.message(
@@ -1730,6 +1740,16 @@ class S {
     return Intl.message(
       'DEX',
       name: 'dex',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DEX V2`
+  String get dex_v2 {
+    return Intl.message(
+      'DEX V2',
+      name: 'dex_v2',
       desc: '',
       args: [],
     );

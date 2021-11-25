@@ -245,6 +245,85 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return txb;
   }
 
+  Future<TransactionData> createAndSendSwapV2(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction, List<int> poolIds,
+      {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      loadingStream?.add(S.current.wallet_operation_create_swap_tx);
+      var swap = await _createSwapV2(fromToken, fromAmount, toToken, to, maxPrice, maxPriceFraction, poolIds, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(swap, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _createSwapV2(
+      String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction, List<int> poolIds,
+      {String returnAddress, StreamController<String> loadingStream}) async {
+    if (DeFiConstants.isDfiToken(fromToken)) {
+      var prep = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
+      fromAmount = prep.item1;
+    }
+
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final fees = await getTxFee(1, 2) + 5000;
+
+    final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
+
+    if (fromTokenBalance.balance < fromAmount) {
+      throw new ArgumentError("Insufficient balance...");
+    }
+
+    final fromTok = await apiService.tokenService.getToken("DFI", fromToken);
+    final toTok = await apiService.tokenService.getToken("DFI", toToken);
+    final fromAccounts = await walletDatabase.getAccountBalancesForToken(fromToken);
+    final fromAccount = await DefichainWalletHelper.getHighestAmountAddressForSymbol(fromAccounts, fromAmount);
+
+    final tokenBalance = await walletDatabase.getAccountBalance(fromToken, excludeAddresses: [fromAccount.address]);
+
+    if (tokenBalance.balance < (fromAmount - fromAccount.balance)) {
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+    }
+
+    if (fromAmount > fromAccount.balance) {
+      await createAccountTransaction(fromToken, fromAmount - fromAccount.balance, fromAccount.address, excludeAddresses: [fromAccount.address], loadingStream: loadingStream);
+    }
+    await getAuthInputsSmart(fromAccount.address, AuthTxMin, fees, loadingStream: loadingStream);
+
+    final txb = await createBaseTransaction(0, to, changeAddress, fees, (txb, inputTxs, nw) async {
+      var tx = await getAuthInputsSmart(fromAccount.address, AuthTxMin, fees, loadingStream: loadingStream);
+
+      txb.addSwapV2Output(fromTok.id, fromAccount.address, fromAmount, toTok.id, to, maxPrice, maxPriceFraction, poolIds);
+
+      final inputContainsAuthTx = inputTxs.where((element) => element.mintTxId == tx.mintTxId && element.mintIndex == tx.mintIndex);
+      if (inputContainsAuthTx.isEmpty) {
+        final addressInfo = await walletDatabase.getWalletAddress(tx.address);
+        final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
+
+        if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
+          throw new ReadOnlyAccountError();
+        }
+        var keyPair = await getPrivateKey(addressInfo, walletAccount);
+        var chainNetwork = HdWalletUtil.getNetworkType(chain, network);
+
+        var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
+
+        if (tx.value > 0) {
+          txb.addOutput(tx.address, tx.value);
+        }
+
+        final witnessValue = tx.valueRaw;
+        HdWalletUtil.signInput(txb, keyPair, addressInfo, vin, witnessValue);
+      }
+    });
+    return txb;
+  }
+
   @override
   Future<String> createSendTransaction(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
     final changeAddress = returnAddress ?? await this.getPublicKey(true, AddressType.P2SHSegwit);

@@ -8,9 +8,9 @@ name: $(BuildID)
 variables:
 - group: saiive.live
 - name: AppVersion
-  value: 0.9
+  value: 0.9.1
 - name: AppVersion_Minor
-  value: 9
+  value: 9.1
 - name: AppVersion_Major
   value: 0
 - name: UseUseFlutterVersion
@@ -1706,6 +1706,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get update
             sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
             
             $(FlutterToolPath)/flutter config --enable-linux-desktop
@@ -1842,6 +1843,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get update
             sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
             
             $(FlutterToolPath)/flutter config --enable-linux-desktop
@@ -1935,6 +1937,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get update
             sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
             
             $(FlutterToolPath)/flutter config --enable-linux-desktop

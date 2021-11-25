@@ -131,6 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_collateral_dfi_ratio" : MessageLookupByLibrary.simpleMessage("Your collateral has to be at lea,st 50% DFI in order to get a loan."),
     "loan_collateral_edit" : MessageLookupByLibrary.simpleMessage("Edit"),
     "loan_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Collateral Ratio"),
+    "loan_collateral_ratio_to_little" : MessageLookupByLibrary.simpleMessage("Your collateral ratio fell bellow the defined ratio in the Scheme."),
     "loan_collateral_success" : MessageLookupByLibrary.simpleMessage("Collateral was successfully added"),
     "loan_collateral_value" : MessageLookupByLibrary.simpleMessage("Collateral Value"),
     "loan_collaterals" : MessageLookupByLibrary.simpleMessage("Collaterals"),

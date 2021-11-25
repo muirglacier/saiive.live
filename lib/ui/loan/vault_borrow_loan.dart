@@ -103,7 +103,6 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     var _loanTokenPriceUSD = _loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0;
 
     _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD;
-    _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
 
     setState(() {
       _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
@@ -272,7 +271,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         Spacer(),
                         Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue), fractions: 2) + ' \$'),
                       ]),
-                      Row(children: [Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')])
+                      Row(children: [Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')]),
+                      Row(children: [Text(S.of(context).loan_min_collateral_ratio, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.minColRatio + '%')])
                     ]))));
   }
 

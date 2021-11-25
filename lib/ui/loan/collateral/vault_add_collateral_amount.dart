@@ -74,7 +74,7 @@ class _VaultAddCollateralAmountScreen
                               TextInputType.numberWithOptions(decimal: true)),
                       Container(height: 10),
                       Text(S.of(context).loan_add_collateral_available + ': ' +
-                          FundFormatter.format(widget.token.balanceDisplay)),
+                          FundFormatter.format(widget.token.balanceDisplay - widget.addedAmount)),
                       SizedBox(
                         height: 20,
                       ),

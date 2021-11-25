@@ -297,6 +297,7 @@
   "loan_no_collateral_amounts": "No Collateral",
   "loan_vault_halted_info": "The activity of this vault has been temporarily halted due to price volatility in the market. This vault will resume its activity once the market stabilizes.",
   "loan_collateral_dfi_ratio": "Your collateral has to be at lea,st 50% DFI in order to get a loan.",
+  "loan_collateral_ratio_to_little": "Your collateral ratio fell bellow the defined ratio in the Scheme.",
   "loan_change_collateral": "Change Collateral",
   "loan_close_vault": "Close Vault",
   "loan_vault_details_tab_active_loan": "Active Loans",

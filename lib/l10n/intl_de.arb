@@ -290,6 +290,7 @@
   "loan_no_collateral_amounts": "Kein Kollateral vorhanden",
   "loan_vault_halted_info": "Die Aktivität dieses Tresores wurde temporär angehalten. Grund: Starke Volatilität im Markt. Der Tresor wird fortgesetzt wenn sich der Markt stabilisiert hat.",
   "loan_collateral_dfi_ratio": "Das Kollateral muss mindestens 50% DFI sein um ein Darlehen zu bekommen",
+  "loan_collateral_ratio_to_little": "Deine Kollateral Ratio ist unterhalb des mindestwertes des Tresors Schemas!",
   "loan_change_collateral": "Kollateral anpassen",
   "loan_close_vault": "Tresor schließen",
   "loan_vault_details_tab_active_loan": "Darlehen",

@@ -220,7 +220,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                 TableRow(children: [Text(FundFormatter.format(totalAmount, fractions: 2) + ' \$'), Text(FundFormatter.format(pricePerToken, fractions: 2) + ' \$')]),
               ]),
               Container(height: 10),
-              Row(children: [
+              Wrap(crossAxisAlignment: WrapCrossAlignment.start, children: [
                 ElevatedButton(
                   child: Text(S.of(context).loan_payback_loan),
                   onPressed: () async {
@@ -237,19 +237,19 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanToken: token, loanVault: myVault)));
                           await refreshVault();
                         },
-                )
-              ])
+                )])
+
             ])));
   }
 
   _buildTabDetails() {
     List<List<String>> items = [
-      [S.of(context).loan_min_collateral_ratio, myVault.schema.minColRatio],
-      [S.of(context).loan_vault_interest, myVault.schema.interestRate],
+      [S.of(context).loan_min_collateral_ratio, myVault.schema.minColRatio + '%'],
+      [S.of(context).loan_vault_interest, myVault.schema.interestRate + '%'],
     ];
 
     List<List<String>> itemsVault = [
-      [S.of(context).loan_collateral_ratio, myVault.collateralRatio],
+      [S.of(context).loan_collateral_ratio, myVault.collateralRatio + '%'],
       [S.of(context).loan_active_loans, myVault.loanAmounts.length.toString()],
       [S.of(context).loan_total_loan_amount, myVault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
       [S.of(context).loan_collateral_value, FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'],

@@ -2635,6 +2635,16 @@ class S {
     );
   }
 
+  /// `Your collateral ratio fell bellow the defined ratio in the Scheme.`
+  String get loan_collateral_ratio_to_little {
+    return Intl.message(
+      'Your collateral ratio fell bellow the defined ratio in the Scheme.',
+      name: 'loan_collateral_ratio_to_little',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Change Collateral`
   String get loan_change_collateral {
     return Intl.message(

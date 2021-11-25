@@ -1,5 +1,6 @@
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
+import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/ui/loan/collateral/vault_add_collateral_amount.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -9,10 +10,11 @@ import 'package:flutter/material.dart';
 class VaultAddCollateralTokenScreen extends StatefulWidget {
   final List<AccountBalance> accountBalance;
   final List<LoanCollateral> collateralTokens;
+  final LoanVault vault;
   final Map<String,double> addedAmounts;
   final Function(LoanCollateral loanToken, double amount) onCollateralChanged;
 
-  VaultAddCollateralTokenScreen(this.accountBalance, this.collateralTokens, this.addedAmounts, this.onCollateralChanged);
+  VaultAddCollateralTokenScreen(this.accountBalance, this.collateralTokens, this.vault, this.addedAmounts, this.onCollateralChanged);
 
   @override
   State<StatefulWidget> createState() {
@@ -45,7 +47,7 @@ class _VaultAddCollateralTokenScreen
 
   Widget _buildAccountEntry(LoanCollateral loanCollateral) {
     var balance = widget.accountBalance.firstWhere((element) => element.token == loanCollateral.token.symbol, orElse: () => null);
-
+    var balanceChange = widget.addedAmounts.containsKey(loanCollateral.token.symbol) ? widget.addedAmounts[loanCollateral.token.symbol] : 0;
     return Card(
         child: ListTile(
           leading: Column(
@@ -60,7 +62,7 @@ class _VaultAddCollateralTokenScreen
               ),
               Expanded(
                   child: AutoSizeText(
-                    balance != null ? FundFormatter.format(balance.balanceDisplay) : '0',
+                    balance != null ? FundFormatter.format(balance.balanceDisplay - balanceChange) : '0',
                     style: Theme.of(context).textTheme.headline3,
                     textAlign: TextAlign.right,
                     maxLines: 1,
@@ -70,7 +72,7 @@ class _VaultAddCollateralTokenScreen
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) => VaultAddCollateralAmountScreen(
-                    balance, widget.addedAmounts.containsKey(loanCollateral.token.symbol) ? widget.addedAmounts[loanCollateral.token.symbol] : 0,
+                    balance, balanceChange,
                         (amount) =>
                     {this.widget.onCollateralChanged(loanCollateral, amount)})));
           },

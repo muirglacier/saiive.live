@@ -131,6 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_collateral_dfi_ratio" : MessageLookupByLibrary.simpleMessage("Das Kollateral muss mindestens 50% DFI sein um ein Darlehen zu bekommen"),
     "loan_collateral_edit" : MessageLookupByLibrary.simpleMessage("Bearbeiten"),
     "loan_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Kollateral Ratio"),
+    "loan_collateral_ratio_to_little" : MessageLookupByLibrary.simpleMessage("Deine Kollateral Ratio ist unterhalb des mindestwertes des Tresors Schemas!"),
     "loan_collateral_success" : MessageLookupByLibrary.simpleMessage("Kollateral wurde erfolgreich hinzugefügt"),
     "loan_collateral_value" : MessageLookupByLibrary.simpleMessage("Kollateral Wert"),
     "loan_collaterals" : MessageLookupByLibrary.simpleMessage("Kollateral"),

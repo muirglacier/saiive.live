@@ -8,9 +8,10 @@ import 'package:saiive.live/ui/utils/fund_formatter.dart';
 class VaultEditCollateralTokenScreen extends StatefulWidget {
   final LoanVaultAmount current;
   final AccountBalance balance;
+  final double changes;
   final Function(LoanVaultAmount loan, double newAmount) onCollateralChanged;
 
-  VaultEditCollateralTokenScreen(this.current, this.balance, this.onCollateralChanged);
+  VaultEditCollateralTokenScreen(this.current, this.changes, this.balance, this.onCollateralChanged);
 
   @override
   State<StatefulWidget> createState() {
@@ -47,7 +48,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
       }
     }
     else {
-      if (amount > widget.balance.balanceDisplay) {
+      if (amount + widget.changes  > widget.balance.balanceDisplay) {
         valid = false;
       }
     }
@@ -82,7 +83,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
                           TextInputType.numberWithOptions(decimal: true)),
                       Container(height: 10),
                       Text(S.of(context).loan_add_collateral_available + ': ' +
-                          FundFormatter.format(widget.balance != null ? widget.balance.balanceDisplay : '0')),
+                          FundFormatter.format(widget.balance != null ? widget.balance.balanceDisplay - widget.changes : '0')),
                       SizedBox(
                         height: 20,
                       ),

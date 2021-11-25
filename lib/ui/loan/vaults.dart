@@ -1,6 +1,8 @@
+import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/vaults_service.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -47,12 +49,19 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
       _vaults = null;
     });
 
-    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
-    var vaults = await sl.get<IVaultsService>().getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
+    try {
+      var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+      var vaults = await sl.get<IVaultsService>().getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
 
-    setState(() {
-      _vaults = vaults;
-    });
+      setState(() {
+        _vaults = vaults;
+      });
+    } catch (error) {
+      sl.get<AppCenterWrapper>().trackEvent("loadVaultsError", <String, String>{"error": error.toString()});
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(error.message),
+      ));
+    }
   }
 
   buildVaultScreen(BuildContext context) {
@@ -70,9 +79,7 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
                   children: <Widget>[
                     Icon(Icons.shield, size: 64),
                     Container(child: Text(S.of(context).loan_no_vault_created, style: Theme.of(context).textTheme.headline3), padding: new EdgeInsets.only(top: 5)),
-                    Container(
-                        child: Text(S.of(context).loan_vault_creation_info, textAlign: TextAlign.center),
-                        padding: new EdgeInsets.only(top: 5)),
+                    Container(child: Text(S.of(context).loan_vault_creation_info, textAlign: TextAlign.center), padding: new EdgeInsets.only(top: 5)),
                     Container(
                         child: ElevatedButton(
                           child: Text(S.of(context).loan_create_vault),
@@ -90,7 +97,14 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
 
     return CustomScrollView(
       slivers: <Widget>[
-        SliverToBoxAdapter(child: Container(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_beta, color: Colors.red, alert: Alert.error,))),
+        SliverToBoxAdapter(
+            child: Container(
+                padding: EdgeInsets.all(10),
+                child: AlertWidget(
+                  S.of(context).loan_beta,
+                  color: Colors.red,
+                  alert: Alert.error,
+                ))),
         SliverToBoxAdapter(child: Container(child: row)),
       ],
     );

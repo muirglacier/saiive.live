@@ -1,9 +1,11 @@
 // ignore_for_file: unused_import
 
+import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
@@ -52,12 +54,18 @@ class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliv
     setState(() {
       _tokens = null;
     });
+    try {
+      var tokens = await sl.get<ILoansService>().getLoanTokens(DeFiConstants.DefiAccountSymbol);
 
-    var tokens = await sl.get<ILoansService>().getLoanTokens(DeFiConstants.DefiAccountSymbol);
-
-    setState(() {
-      _tokens = tokens;
-    });
+      setState(() {
+        _tokens = tokens;
+      });
+    } catch (error) {
+      sl.get<AppCenterWrapper>().trackEvent("loadVaultTokensError", <String, String>{"error": error.toString()});
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(error.message),
+      ));
+    }
   }
 
   buildVaultScreen(BuildContext context) {
@@ -69,7 +77,14 @@ class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliv
 
     return CustomScrollView(
       slivers: <Widget>[
-        SliverToBoxAdapter(child: Container(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_beta, color: Colors.red, alert: Alert.error,))),
+        SliverToBoxAdapter(
+            child: Container(
+                padding: EdgeInsets.all(10),
+                child: AlertWidget(
+                  S.of(context).loan_beta,
+                  color: Colors.red,
+                  alert: Alert.error,
+                ))),
         SliverToBoxAdapter(child: Container(child: row)),
       ],
     );

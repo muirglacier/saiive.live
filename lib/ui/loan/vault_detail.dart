@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_taxi/event_taxi.dart';
+import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
@@ -93,15 +94,20 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
       _tokens = null;
       _loanTokens = null;
     });
+    try {
+      var tokens = await sl.get<ILoansService>().getLoanCollaterals(DeFiConstants.DefiAccountSymbol);
+      var loanTokens = await sl.get<ILoansService>().getLoanTokens(DeFiConstants.DefiAccountSymbol);
 
-    var tokens = await sl.get<ILoansService>().getLoanCollaterals(DeFiConstants.DefiAccountSymbol);
-    var loanTokens = await sl.get<ILoansService>().getLoanTokens(DeFiConstants.DefiAccountSymbol);
-
-    setState(() {
-      _tokens = tokens;
-      _loanTokens = loanTokens;
-    });
-
+      setState(() {
+        _tokens = tokens;
+        _loanTokens = loanTokens;
+      });
+    } catch (error) {
+      sl.get<AppCenterWrapper>().trackEvent("loadVaultDetailsError", <String, String>{"error": error.toString()});
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(error.message),
+      ));
+    }
     _calculateDFIPercentage();
   }
 
@@ -237,8 +243,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanToken: token, loanVault: myVault)));
                           await refreshVault();
                         },
-                )])
-
+                )
+              ])
             ])));
   }
 

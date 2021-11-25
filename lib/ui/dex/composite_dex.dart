@@ -463,7 +463,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                 if (_selectedValueFrom != null && _selectedValueTo != null)
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Container(height: 20),
-                    Text('How much do you want to swap?'),
+                    Text('How much from you wanna swap?'),
                     Row(children: [
                       Expanded(
                           flex: 1,
@@ -477,59 +477,62 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                               '50%',
                               style: TextStyle(color: StateContainer.of(context).curTheme.text),
                             ),
-                            onPressed: () {}),
+                            onPressed: () {
+                              setState(() {
+                                _amountFromController.text = ((_selectedValueFrom.balance / 2) / 100000000).toString();
+                              });
+                            }),
                         Container(width: 5),
-                        if (_selectedValueTo != null) TokenIcon(_selectedValueTo.hash),
-                      ]),
-                      Container(height: 20),
-                      if (_price != null) _buildSwapDetails(),
-                      if (_price != null) _buildTxDetails(),
-                      Container(height: 20),
-                      AccountSelectAddressWidget(
-                          label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _toAddress = newValue;
-                            });
-                          }),
-                      Container(height: 20),
-                      WalletReturnAddressWidget(
-                        onChanged: (v) {
-                          setState(() {
-                            _returnAddress = v;
-                          });
-                        },
-                      ),
-                      Container(height: 20),
-                      if (_price != null)
                         ElevatedButton(
                             child: Text(
                               'Max',
                               style: TextStyle(color: StateContainer.of(context).curTheme.text),
                             ),
-                            onPressed: () async {
-                              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                                await doSwap();
+                            onPressed: () {
+                              setState(() {
+                                _amountFromController.text = ((_selectedValueFrom.balance) / 100000000).toString();
                               });
                             })
-                    ])
-                  ]),
-                Container(height: 20),
-                Row(children: [
-                  Expanded(flex: 1, child: Text('Amount to receive')),
-                  if (_price != null) Text(FundFormatter.format(_price.estimated)),
-                  Container(width: 5),
-                  if (_selectedValueTo != null) TokenIcon(_selectedValueTo.hash),
-                ]),
-                Container(height: 20),
-                if (_price != null) _buildSwapDetails(),
-                if (_swapWays.length > 0) _buildSwapWaysDetails(),
-                if (_price != null) _buildTxDetails(),
-                if (_price != null)
-                  ElevatedButton(
-                    child: Text(S.of(context).dex_swap),
-                    onPressed: () async {},
-                  )
+                      ])
+                    ]),
+                    Container(height: 20),
+                    Row(children: [
+                      Expanded(flex: 1, child: Text('Amount to receive')),
+                      if (_price != null) Text(FundFormatter.format(_price.estimated)),
+                      Container(width: 5),
+                      if (_selectedValueTo != null) TokenIcon(_selectedValueTo.hash),
+                    ]),
+                    Container(height: 20),
+                    if (_price != null) _buildSwapDetails(),
+                    if (_price != null) _buildTxDetails(),
+                    Container(height: 20),
+                    AccountSelectAddressWidget(
+                        label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _toAddress = newValue;
+                          });
+                        }),
+                    Container(height: 20),
+                    WalletReturnAddressWidget(
+                      onChanged: (v) {
+                        setState(() {
+                          _returnAddress = v;
+                        });
+                      },
+                    ),
+                    Container(height: 20),
+                    if (_price != null)
+                      Center(
+                          child: ElevatedButton(
+                        child: Text(S.of(context).dex_swap),
+                        onPressed: () async {
+                          await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                            await doSwap();
+                          });
+                        },
+                      ))
+                  ])
               ])));
     }
   }

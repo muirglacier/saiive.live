@@ -47,6 +47,14 @@ class CompositeSwapResult {
   double estimated = 0;
 }
 
+class CompositeSwapWayPoint {
+  final PoolPair pair;
+  final String fromSymbol;
+  final String toSymbol;
+
+  CompositeSwapWayPoint(this.pair, this.fromSymbol, this.toSymbol);
+}
+
 class _CompositeDexScreen extends State<CompositeDexScreen> {
   bool _isLoading = true;
   List<TokenBalance> _fromTokens = [];
@@ -56,6 +64,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   List<PoolPair> _selectedPoolPairs;
   List<PoolPairToken> _tokens;
   CompositeSwapResult _price;
+  List<CompositeSwapWayPoint> _swapWays = [];
   var _amountFromController = TextEditingController(text: '');
 
   TokenBalance _selectedValueTo;
@@ -157,6 +166,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       setState(() {
         _amountFrom = null;
         _price = null;
+        _swapWays = [];
       });
       return;
     }
@@ -176,7 +186,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     var path = findPath(_poolPairs, _selectedValueFrom.idToken, _selectedValueTo.idToken);
     var visited = path[0];
     var foundPaths = path[1];
-    var poolPairs = List.from(foundPaths).foldIndexed(List<PoolPair>(), (index, pairs, token) {
+    var poolPairs = List.from(foundPaths).foldIndexed(List<PoolPair>.empty(growable: true), (index, pairs, token) {
       if (index + 1 >= foundPaths.length) {
         return pairs;
       }
@@ -207,6 +217,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     var slippage = 1 - _amountFrom / tokenA.reserve;
     var lastTokenBySymbol = tokenA.symbol;
     var lastAmount = _amountFrom;
+    List<CompositeSwapWayPoint> swapWays = [];
 
     var price = _selectedPoolPairs.fold(new CompositeSwapResult(), (CompositeSwapResult previousValue, element) {
       var split = element.symbol.split('-');
@@ -226,6 +237,12 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       var bToaPrice = tokenASymbol == lastTokenBySymbol ? priceRateB : priceRateA;
       var estimated = lastAmount * aToBPrice;
 
+      swapWays.add(new CompositeSwapWayPoint(
+        element,
+        tokenASymbol,
+        tokenBSymbol,
+      ));
+
       lastAmount = estimated;
       lastTokenBySymbol = tokenBSymbol;
 
@@ -240,6 +257,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
     setState(() {
       _price = price;
+      _swapWays = swapWays;
     });
   }
 
@@ -445,7 +463,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                 if (_selectedValueFrom != null && _selectedValueTo != null)
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Container(height: 20),
-                    Text('How much from you wanna swap?'),
+                    Text('How much do you want to swap?'),
                     Row(children: [
                       Expanded(
                           flex: 1,
@@ -461,51 +479,57 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                             ),
                             onPressed: () {}),
                         Container(width: 5),
+                        if (_selectedValueTo != null) TokenIcon(_selectedValueTo.hash),
+                      ]),
+                      Container(height: 20),
+                      if (_price != null) _buildSwapDetails(),
+                      if (_price != null) _buildTxDetails(),
+                      Container(height: 20),
+                      AccountSelectAddressWidget(
+                          label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _toAddress = newValue;
+                            });
+                          }),
+                      Container(height: 20),
+                      WalletReturnAddressWidget(
+                        onChanged: (v) {
+                          setState(() {
+                            _returnAddress = v;
+                          });
+                        },
+                      ),
+                      Container(height: 20),
+                      if (_price != null)
                         ElevatedButton(
                             child: Text(
                               'Max',
                               style: TextStyle(color: StateContainer.of(context).curTheme.text),
                             ),
-                            onPressed: () {})
-                      ])
-                    ]),
-                    Container(height: 20),
-                    Row(children: [
-                      Expanded(flex: 1, child: Text('Amount to receive')),
-                      if (_price != null) Text(FundFormatter.format(_price.estimated)),
-                      Container(width: 5),
-                      if (_selectedValueTo != null) TokenIcon(_selectedValueTo.hash),
-                    ]),
-                    Container(height: 20),
-                    if (_price != null) _buildSwapDetails(),
-                    if (_price != null) _buildTxDetails(),
-                    Container(height: 20),
-                    AccountSelectAddressWidget(
-                        label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
-                        onChanged: (newValue) {
-                          setState(() {
-                            _toAddress = newValue;
-                          });
-                        }),
-                    Container(height: 20),
-                    WalletReturnAddressWidget(
-                      onChanged: (v) {
-                        setState(() {
-                          _returnAddress = v;
-                        });
-                      },
-                    ),
-                    Container(height: 20),
-                    if (_price != null)
-                      ElevatedButton(
-                        child: Text(S.of(context).dex_swap),
-                        onPressed: () async {
-                          await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                            await doSwap();
-                          });
-                        },
-                      )
-                  ])
+                            onPressed: () async {
+                              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                await doSwap();
+                              });
+                            })
+                    ])
+                  ]),
+                Container(height: 20),
+                Row(children: [
+                  Expanded(flex: 1, child: Text('Amount to receive')),
+                  if (_price != null) Text(FundFormatter.format(_price.estimated)),
+                  Container(width: 5),
+                  if (_selectedValueTo != null) TokenIcon(_selectedValueTo.hash),
+                ]),
+                Container(height: 20),
+                if (_price != null) _buildSwapDetails(),
+                if (_swapWays.length > 0) _buildSwapWaysDetails(),
+                if (_price != null) _buildTxDetails(),
+                if (_price != null)
+                  ElevatedButton(
+                    child: Text(S.of(context).dex_swap),
+                    onPressed: () async {},
+                  )
               ])));
     }
   }
@@ -526,6 +550,16 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     ];
 
     return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Prices', style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
+  }
+
+  _buildSwapWaysDetails() {
+    List<List<String>> items = [];
+
+    _swapWays.forEach((e) {
+      items.add([e.pair.symbol, e.fromSymbol + ' -> ' + e.toSymbol]);
+    });
+
+    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Swap Ways', style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
   }
 
   @override

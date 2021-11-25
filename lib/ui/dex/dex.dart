@@ -136,9 +136,9 @@ class _DexScreen extends State<DexScreen> {
       var finalBalance = account != null ? account.balance : 0;
 
       if (account != null) {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, displayName: account.tokenDisplay));
       } else {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, displayName: "d" + tokenId));
       }
     });
 

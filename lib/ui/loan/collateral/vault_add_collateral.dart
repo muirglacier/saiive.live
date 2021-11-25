@@ -47,7 +47,7 @@ class _VaultAddCollateralTokenScreen
 
   Widget _buildAccountEntry(LoanCollateral loanCollateral) {
     var balance = widget.accountBalance.firstWhere((element) => element.token == loanCollateral.token.symbol, orElse: () => null);
-    var balanceChange = widget.addedAmounts.containsKey(loanCollateral.token.symbol) ? widget.addedAmounts[loanCollateral.token.symbol] : 0;
+    var balanceChange = widget.addedAmounts.containsKey(loanCollateral.token.symbol) ? widget.addedAmounts[loanCollateral.token.symbol] : 0.0;
     return Card(
         child: ListTile(
           leading: Column(

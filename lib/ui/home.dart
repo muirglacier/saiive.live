@@ -4,6 +4,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/ui/accounts/accounts_screen.dart';
+import 'package:saiive.live/ui/dex/composite_dex.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
 import 'package:saiive.live/ui/drawer.dart';
 import 'package:saiive.live/ui/liquidity/liquidity.dart';
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         NavigationEntry(
             icon: Icon(Icons.account_balance_wallet), label: S.of(context).home_wallet, page: WalletHomeScreen(key: PageStorageKey('WalletHome')), routeSettingName: "/home"),
         NavigationEntry(icon: Icon(Icons.pie_chart), label: S.of(context).home_liquidity, page: LiquidityScreen(key: PageStorageKey('Liquidity')), routeSettingName: "/liqudity"),
-        NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(key: PageStorageKey('DEX')), routeSettingName: "/dex"),
+        NavigationEntry(icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: CompositeDexScreen(key: PageStorageKey('CompositeDEX')), routeSettingName: "/dex"),
         NavigationEntry(
             icon: Icon(Icons.credit_card),
             label: S.of(context).loan_vaults,

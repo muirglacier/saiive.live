@@ -52,13 +52,13 @@ class _HomeScreenState extends State<HomeScreen> {
         NavigationEntry(
             icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex_v2, page: CompositeDexScreen(key: PageStorageKey('CompositeDEX')), routeSettingName: "/dexv2"),
         NavigationEntry(
-            icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(key: PageStorageKey('DEX')), routeSettingName: "/dex", visibleForBottomNav: false),
-        NavigationEntry(
             icon: Icon(Icons.credit_card),
             label: S.of(context).loan_vaults,
             page: VaultsHomeScreen(key: PageStorageKey('Vaults')),
             visibleForBottomNav: true,
             routeSettingName: "/vaults"),
+        NavigationEntry(
+            icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(key: PageStorageKey('DEX')), routeSettingName: "/dex", visibleForBottomNav: false),
         NavigationEntry(
             icon: Icon(Icons.account_box),
             label: S.of(context).wallet_accounts,

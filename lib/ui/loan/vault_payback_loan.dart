@@ -49,14 +49,15 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   var _percentageTextController = TextEditingController(text: '100');
 
   double totalVaultValue = 0.0;
+  int totalVaultValueSat = 0;
   String _returnAddress;
 
   @override
   void initState() {
     super.initState();
 
-    totalVaultValue = double.parse(widget.loanAmount.amount) - double.parse(widget.loanInterest.amount);
-
+    totalVaultValue = double.parse(widget.loanAmount.amount);
+    totalVaultValueSat = (totalVaultValue * 100000000).round();
     loadBalance();
 
     handleChangePercentage();
@@ -104,6 +105,14 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
       streamController.close();
       Wakelock.disable();
     }
+  }
+
+  calculateMaxToPayback() {
+    var dif = availableBalance / totalVaultValueSat;
+    var difPercentage = dif * 100;
+    _percentageTextController.text = difPercentage.toString();
+
+    handleChangePercentage();
   }
 
   handleChangePercentage() {
@@ -154,7 +163,13 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
                     _percentageTextController.text = value.toStringAsFixed(1);
                   });
                 },
-              ))
+              )),
+          ElevatedButton(
+            child: Text(S.of(context).dex_add_max),
+            onPressed: () {
+              calculateMaxToPayback();
+            },
+          )
         ]),
         Padding(
             padding: const EdgeInsets.only(left: 0, right: 0, bottom: 10, top: 10),

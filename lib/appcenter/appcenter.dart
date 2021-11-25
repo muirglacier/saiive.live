@@ -24,8 +24,8 @@ class AppCenterWrapper {
       }
     }
 
-    final android = env["APPCENTER_ANDROID_ID"];
-    final iOs = env["APPCENTER_IOS_ID"];
+    final android = dotenv.env["APPCENTER_ANDROID_ID"];
+    final iOs = dotenv.env["APPCENTER_IOS_ID"];
     await AppCenter.startAsync(
         appSecretAndroid: android,
         appSecretIOS: iOs,

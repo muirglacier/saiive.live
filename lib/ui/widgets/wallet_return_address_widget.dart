@@ -5,8 +5,10 @@ import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 
 class WalletReturnAddressWidget extends StatefulWidget {
   final ValueChanged<String> onChanged;
+  final String checkBoxText;
+  final String title;
 
-  WalletReturnAddressWidget({@required this.onChanged});
+  WalletReturnAddressWidget({@required this.onChanged, this.checkBoxText, this.title});
 
   _WalletReturnAddressWidgetState createState() => _WalletReturnAddressWidgetState();
 }
@@ -16,9 +18,21 @@ class _WalletReturnAddressWidgetState extends State<WalletReturnAddressWidget> {
   var _useCustomReturnAddress = false;
 
   WalletAddress _toAddress;
+  String _checkBoxText;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.checkBoxText == null || widget.checkBoxText.isEmpty) {
+      _checkBoxText = S.of(context).wallet_use_custom_return_address;
+    } else {
+      _checkBoxText = widget.checkBoxText;
+    }
+
     return ExpansionPanelList(
         expandedHeaderPadding: EdgeInsets.all(5),
         expansionCallback: (int index, bool isExpanded) {
@@ -39,7 +53,7 @@ class _WalletReturnAddressWidgetState extends State<WalletReturnAddressWidget> {
                     child: Container(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        S.of(context).expert,
+                        widget.title ?? S.of(context).expert,
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -52,7 +66,7 @@ class _WalletReturnAddressWidgetState extends State<WalletReturnAddressWidget> {
                     Column(children: <Widget>[
                       Row(
                         children: [
-                          Text(S.of(context).wallet_use_custom_return_address),
+                          Text(_checkBoxText),
                           Checkbox(
                             value: this._useCustomReturnAddress,
                             onChanged: (bool value) {

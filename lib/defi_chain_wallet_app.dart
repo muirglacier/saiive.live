@@ -124,7 +124,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     return MaterialApp(
         navigatorKey: NavigationHelper.navigatorKey,
         navigatorObservers: [SaiiveRouteObserver()],
-        debugShowCheckedModeBanner: env["ENV"] == "dev",
+        debugShowCheckedModeBanner: dotenv.env["ENV"] == "dev",
         localizationsDelegates: [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -169,6 +169,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
             fontFamily: 'Helvetica, Arial, sans-serif',
             tabBarTheme: TabBarTheme(labelColor: appBarTextColor),
             elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
+            textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
             textSelectionTheme: TextSelectionThemeData(cursorColor: StateContainer.of(context).curTheme.primary, selectionHandleColor: StateContainer.of(context).curTheme.primary),
             inputDecorationTheme: InputDecorationTheme(
                 counterStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),

@@ -22,7 +22,7 @@ class TransactionServiceMock implements ITransactionService {
   }
 
   @override
-  Future<TransactionData> getWithTxId(String coin, String txId) async {
+  Future<TransactionData> getWithTxId(String coin, String txId, {bool onlyConfirmed}) async {
     return new TransactionData(details: TransactionDetail(inputs: List<Transaction>.empty(), outputs: List<Transaction>.empty()));
   }
 

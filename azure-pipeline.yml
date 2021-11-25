@@ -8,11 +8,13 @@ name: $(BuildID)
 variables:
 - group: saiive.live
 - name: AppVersion
-  value: 0.9
+  value: 0.10
 - name: AppVersion_Minor
-  value: 9
+  value: 10
 - name: AppVersion_Major
   value: 0
+- name: UseUseFlutterVersion
+  value: 2.5.2
 
 stages:
 - stage: Pre
@@ -74,8 +76,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
       - task: Bash@3
         displayName: "Flutter prepare"
         inputs:
@@ -129,8 +131,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
       - task: Bash@3
         displayName: "Flutter prepare"
         inputs:
@@ -242,8 +244,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion)
+          version: 'latest'
+          customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter clean"
@@ -338,8 +340,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion)
+          version: 'latest'
+          customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter clean"
@@ -449,8 +451,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -545,8 +547,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -670,8 +672,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion)
+          version: 'latest'
+          customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -805,8 +807,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -941,8 +943,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -1064,8 +1066,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion)
+          version: 'latest'
+          customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -1170,8 +1172,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
         displayName: "Flutter prepare"
@@ -1229,12 +1231,12 @@ stages:
           buildNumber: $(Build.BuildNumber)
           extraArgs: --target=lib/main.dart
 
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)\flutter pub run msix:create
+      # - task: CmdLine@2
+      #   displayName: "Flutter run msix"
+      #   inputs:
+      #     script: |
+      #       cd $(Build.SourcesDirectory)
+      #       $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -1277,12 +1279,12 @@ stages:
           script: |
             rm -rf '$(build.artifactStagingDirectory)/*'
 
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)\flutter pub run msix:create
+      # - task: CmdLine@2
+      #   displayName: "Flutter run msix"
+      #   inputs:
+      #     script: |
+      #       cd $(Build.SourcesDirectory)
+      #       $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -1328,8 +1330,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
         displayName: "Flutter clean"
@@ -1402,12 +1404,12 @@ stages:
           script: |
             rm -rf '$(build.artifactStagingDirectory)/*'
 
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)\flutter pub run msix:create
+      # - task: CmdLine@2
+      #   displayName: "Flutter run msix"
+      #   inputs:
+      #     script: |
+      #       cd $(Build.SourcesDirectory)
+      #       $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -1453,8 +1455,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
         displayName: "Flutter clean"
@@ -1528,12 +1530,12 @@ stages:
           script: |
             rm -rf '$(build.artifactStagingDirectory)/*'
 
-      - task: CmdLine@2
-        displayName: "Flutter run msix"
-        inputs:
-          script: |
-            cd $(Build.SourcesDirectory)
-            $(FlutterToolPath)\flutter pub run msix:create
+      # - task: CmdLine@2
+      #   displayName: "Flutter run msix"
+      #   inputs:
+      #     script: |
+      #       cd $(Build.SourcesDirectory)
+      #       $(FlutterToolPath)\flutter pub run msix:create
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -1579,8 +1581,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: CmdLine@2
         displayName: "Flutter clean"
@@ -1687,8 +1689,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion) 
+          version: 'latest'
+          customVersion: $(UseFlutterVersion) 
 
       - task: Bash@3
         displayName: "Flutter prepare"
@@ -1704,6 +1706,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get update
             sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
             
             $(FlutterToolPath)/flutter config --enable-linux-desktop
@@ -1815,8 +1818,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion)
+          version: 'latest'
+          customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter clean"
@@ -1840,6 +1843,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get update
             sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
             
             $(FlutterToolPath)/flutter config --enable-linux-desktop
@@ -1908,8 +1912,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion)
+          version: 'latest'
+          customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
         displayName: "Flutter clean"
@@ -1933,6 +1937,7 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
+            sudo apt-get update
             sudo apt-get -y install libsecret-1-dev libjsoncpp-dev cmake libgtk-3-0 libblkid1 liblzma5 clang cmake ninja-build pkg-config libgtk-3-dev
             
             $(FlutterToolPath)/flutter config --enable-linux-desktop
@@ -2000,8 +2005,8 @@ stages:
         displayName: "Flutter install"
         inputs:
           channel: 'stable'
-          version: 'custom'
-          customVersion: $(FlutterVersion)
+          version: 'latest'
+          customVersion: $(UseFlutterVersion)
 
       - task: Bash@3
         displayName: "Snapcraft"

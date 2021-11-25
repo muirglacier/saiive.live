@@ -41,7 +41,7 @@ class HealthService implements IHealthService {
             action: SnackBarAction(
               label: S.of(context).wallet_uptime_stats,
               onPressed: () async {
-                final url = env["STATS_URL"];
+                final url = dotenv.env["STATS_URL"];
 
                 await launch(url);
               },

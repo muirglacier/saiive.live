@@ -5,7 +5,7 @@ class EnvHelper {
   static EnvironmentType getEnvironment() {
     var currentEnvironment = EnvironmentType.Unknonw;
 
-    switch (env["ENV"]) {
+    switch (dotenv.env["ENV"]) {
       case "dev":
         currentEnvironment = EnvironmentType.Development;
         break;
@@ -21,7 +21,7 @@ class EnvHelper {
   }
 
   static String getAzBlobKey() {
-    return env["AZ_STORAGE_KEY"];
+    return dotenv.env["AZ_STORAGE_KEY"];
   }
 
   static String environmentToString(EnvironmentType type) {

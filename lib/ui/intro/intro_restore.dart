@@ -32,7 +32,7 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (env["ENV"] == "dev") {
+    if (dotenv.env["ENV"] == "dev") {
       var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
 
       if (Platform.isAndroid || Platform.isWindows) {

@@ -18,6 +18,7 @@ class PublicPrivateKeyPair {
 }
 
 const DEFICHAIN_COIN_TYPE = 1129;
+const DUST_AMOUNT = 3000;
 
 class HdWalletUtil {
   static bip32.NetworkType _getNetwork(ChainType chainType, ChainNet network) {
@@ -272,18 +273,27 @@ class HdWalletUtil {
     if (amount > 0) {
       if (to == returnAddress) {
         var val = totalInputValue - fee;
-        if (val > 0) {
+        if (val > 0 && val > DUST_AMOUNT) {
           txb.addOutput(to, val);
         }
         changeAmount = 0;
       } else {
-        txb.addOutput(to, amount);
+        if (amount > DUST_AMOUNT) {
+          txb.addOutput(to, amount);
+        }
       }
     }
 
-    if (totalInputValue > (amount)) {
-      if (changeAmount > 0) {
+    if (amount < 0) {
+      changeAmount = totalInputValue + amount - fee;
+      if (changeAmount > 0 && changeAmount > DUST_AMOUNT) {
         txb.addOutput(returnAddress, changeAmount);
+      }
+    } else {
+      if (totalInputValue > (amount)) {
+        if (changeAmount > 0 && changeAmount > DUST_AMOUNT) {
+          txb.addOutput(returnAddress, changeAmount);
+        }
       }
     }
 

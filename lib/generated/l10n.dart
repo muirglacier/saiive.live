@@ -2515,11 +2515,21 @@ class S {
     );
   }
 
-  /// `Payback Laon`
+  /// `Payback Loan`
   String get loan_payback_loan {
     return Intl.message(
-      'Payback Laon',
+      'Payback Loan',
       name: 'loan_payback_loan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insufficient tokens to paybkack loan!`
+  String get loan_payback_loan_insufficient_funds {
+    return Intl.message(
+      'Insufficient tokens to paybkack loan!',
+      name: 'loan_payback_loan_insufficient_funds',
       desc: '',
       args: [],
     );

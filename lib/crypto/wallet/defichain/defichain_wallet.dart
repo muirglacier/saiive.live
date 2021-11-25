@@ -56,7 +56,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     try {
       var addLiq = await _addPoolLiquidity(tokenA, amountA, tokenB, amountB, shareAddress, returnAddress: returnAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
-      return await createTxAndWaitInternal(addLiq, loadingStream: loadingStream);
+      return await createTxAndWaitInternal(addLiq, onlyConfirmed: true, loadingStream: loadingStream);
     } finally {
       walletMutex.release();
     }
@@ -176,7 +176,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       loadingStream?.add(S.current.wallet_operation_create_swap_tx);
       var swap = await _createSwap(fromToken, fromAmount, toToken, to, maxPrice, maxPriceFraction, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
-      var tx = await createTxAndWait(swap, loadingStream: loadingStream);
+      var tx = await createTxAndWait(swap, onlyConfirmed: true, loadingStream: loadingStream);
 
       return tx;
     } finally {
@@ -474,10 +474,24 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final fromTok = await apiService.tokenService.getToken("DFI", token);
     final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(to, token);
+    final totalBalance = await walletDatabase.getAccountBalance(token);
+
+    if (amount > totalBalance.balance) {
+      throw new ArgumentError("Insufficient balance for $token");
+    }
+
+    if (tokenBalance == null || tokenBalance.balance < amount) {
+      var transferBalance = amount;
+      if (tokenBalance != null) {
+        transferBalance -= tokenBalance.balance;
+      }
+      await createAccountTransaction(token, transferBalance, to);
+    }
 
     if (tokenBalance != null && tokenBalance.balance < (amount)) {
       loadingStream?.add(S.current.wallet_operation_send_tx);
     }
+
     final txb = await createBaseTransaction(0, to, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 

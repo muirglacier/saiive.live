@@ -157,6 +157,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_payback" : MessageLookupByLibrary.simpleMessage("Zurückzahlen"),
     "loan_payback_available_balance" : MessageLookupByLibrary.simpleMessage("Verfügbar"),
     "loan_payback_loan" : MessageLookupByLibrary.simpleMessage("Darlehen zurückzahlen"),
+    "loan_payback_loan_insufficient_funds" : MessageLookupByLibrary.simpleMessage("Zu wenig Token um das Darlehen zurückzahlen zu können!"),
     "loan_payback_success" : MessageLookupByLibrary.simpleMessage("Dahrlehen wurde erfolgreich zurückbezahlt."),
     "loan_payback_title" : MessageLookupByLibrary.simpleMessage("Darlehen Zurückzahlen"),
     "loan_payback_value" : MessageLookupByLibrary.simpleMessage("Wert"),

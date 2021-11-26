@@ -95,6 +95,16 @@ class S {
     );
   }
 
+  /// `DEX V2`
+  String get home_dex_v2 {
+    return Intl.message(
+      'DEX V2',
+      name: 'home_dex_v2',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tokens`
   String get home_tokens {
     return Intl.message(
@@ -1860,6 +1870,166 @@ class S {
     return Intl.message(
       'Receive tokens at',
       name: 'dex_to_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DEX V2`
+  String get dex_v2 {
+    return Intl.message(
+      'DEX V2',
+      name: 'dex_v2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `max`
+  String get dex_v2_add_max {
+    return Intl.message(
+      'max',
+      name: 'dex_v2_add_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From Token`
+  String get dex_v2_from_token {
+    return Intl.message(
+      'From Token',
+      name: 'dex_v2_from_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From Token`
+  String get dex_v2_to_token {
+    return Intl.message(
+      'From Token',
+      name: 'dex_v2_to_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From Amount`
+  String get dex_v2_from_amount {
+    return Intl.message(
+      'From Amount',
+      name: 'dex_v2_from_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max.`
+  String get dex_v2_max {
+    return Intl.message(
+      'Max.',
+      name: 'dex_v2_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `50%`
+  String get dex_v2_50 {
+    return Intl.message(
+      '50%',
+      name: 'dex_v2_50',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How much from you wanna swap?`
+  String get dex_v2_swap_amount {
+    return Intl.message(
+      'How much from you wanna swap?',
+      name: 'dex_v2_swap_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount ro receive`
+  String get dex_v2_amount_to_receive {
+    return Intl.message(
+      'Amount ro receive',
+      name: 'dex_v2_amount_to_receive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `price in`
+  String get dex_v2_price_in {
+    return Intl.message(
+      'price in',
+      name: 'dex_v2_price_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount to be converted`
+  String get dex_v2_amount_to_be_converted {
+    return Intl.message(
+      'Amount to be converted',
+      name: 'dex_v2_amount_to_be_converted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated to receive`
+  String get dex_v2_estimated_to_receive {
+    return Intl.message(
+      'Estimated to receive',
+      name: 'dex_v2_estimated_to_receive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prices`
+  String get dex_v2_prices {
+    return Intl.message(
+      'Prices',
+      name: 'dex_v2_prices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction Details`
+  String get dex_v2_tx_details {
+    return Intl.message(
+      'Transaction Details',
+      name: 'dex_v2_tx_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swap Details`
+  String get dex_v2_swap_details {
+    return Intl.message(
+      'Swap Details',
+      name: 'dex_v2_swap_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swap was successful!`
+  String get dex_v2_swap_successful {
+    return Intl.message(
+      'Swap was successful!',
+      name: 'dex_v2_swap_successful',
       desc: '',
       args: [],
     );

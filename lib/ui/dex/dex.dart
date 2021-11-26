@@ -136,9 +136,9 @@ class _DexScreen extends State<DexScreen> {
       var finalBalance = account != null ? account.balance : 0;
 
       if (account != null) {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: account.tokenDisplay));
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, displayName: account.tokenDisplay));
       } else {
-        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, isPopularToken: popularSymbols.contains(tokenId), displayName: "d" + tokenId));
+        tokenMap.add(TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, displayName: "d" + tokenId));
       }
     });
 
@@ -638,21 +638,6 @@ class _DexScreen extends State<DexScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
-            title: Row(children: [
-              if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
-                Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: GestureDetector(
-                      onTap: () {
-                        var key = StateContainer.of(context).scaffoldKey;
-                        key.currentState.openDrawer();
-                      },
-                      child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                    )),
-              Text(S.of(context).dex)
-            ])),
-        body: _buildDexPage(context));
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Row(children: [Text(S.of(context).dex)])), body: _buildDexPage(context));
   }
 }

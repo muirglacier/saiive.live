@@ -9,6 +9,7 @@
   "home_wallet": "Wallet",
   "home_liquidity": "Liquidez",
   "home_dex": "DEX",
+  "home_dex_v2": "DEX V2",
   "home_tokens": "Tokens",
   
   "welcome": "Bienvenido",
@@ -195,6 +196,7 @@
   "cancel": "cancelar",
 
   "dex": "DEX",
+  "dex_v2": "DEX V2",
   "dex_add_max": "max",
   "dex_from_token": "De Token",
   "dex_from_amount": "De Cantidad",

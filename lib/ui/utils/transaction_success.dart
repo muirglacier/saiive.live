@@ -49,11 +49,12 @@ class TransactionSuccessScreen extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         backgroundColor: Color(0xFF1EBCA3),
-        body: Center(
+        body: Padding(padding: EdgeInsets.all(10), child: Center(
             child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.check_circle_outline_outlined, size: 50, color: Colors.white),
           Text(
             text,
+            textAlign: TextAlign.center,
             style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w800),
           ),
           if (additional != null && additional.isNotEmpty)
@@ -82,6 +83,6 @@ class TransactionSuccessScreen extends StatelessWidget {
                     txId,
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                   )))
-        ])));
+        ]))));
   }
 }

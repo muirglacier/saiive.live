@@ -79,7 +79,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   @override
   void initState() {
     _scrollController = ScrollController();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_smoothScrollToTop);
 
     myVault = widget.vault;
@@ -144,6 +144,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     if (myVault.loanAmounts.length == 0) {
       return Column(children: [
         Text(S.of(context).loan_no_active_loans),
+        Container(height: 10),
         ElevatedButton(
           child: Text(S.of(context).loan_borrow),
           onPressed: () async {
@@ -416,6 +417,16 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           )),
                       SizedBox(height: 10),
                       SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          child: Text(S.of(context).loan_borrow),
+                          onPressed: () async {
+                            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
+                            await refreshVault();
+                          },
+                      )),
+                      SizedBox(height: 10),
+                      SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             child: Text(S.of(context).loan_close_vault),
@@ -479,7 +490,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                     Tab(text: S.of(context).loan_vault_details_tab_active_loan),
                     Tab(text: S.of(context).loan_vault_details_tab_details),
                     Tab(text: S.of(context).loan_vault_details_tab_collaterals),
-                    Tab(text: S.of(context).loan_vault_details_tab_auctions),
+                    // Tab(text: S.of(context).loan_vault_details_tab_auctions),
                   ],
                 ),
               ),
@@ -490,7 +501,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                 padding: EdgeInsets.all(10),
                 child: TabBarView(
                   controller: _tabController,
-                  children: [_buildTabActiveLoans(), _buildTabDetails(), _buildTabCollaterals(), _buildTabAuctions()],
+                  children: [_buildTabActiveLoans(), _buildTabDetails(), _buildTabCollaterals(), /*_buildTabAuctions()*/],
                 )),
           ),
         ));

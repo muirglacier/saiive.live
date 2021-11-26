@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Text(S.of(context).wallet_home_network, style: TextStyle(fontWeight: FontWeight.bold)),
                                       SizedBox(height: 5),
                                       VersionWidget(),
-                                      if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
+                                      // if (currentEnvironment != EnvironmentType.Production) Text(EnvHelper.environmentToString(currentEnvironment))
                                     ]),
                                   ),
                                   Divider(color: StateContainer.of(context).curTheme.backgroundColor)

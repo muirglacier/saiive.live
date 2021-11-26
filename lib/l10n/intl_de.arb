@@ -275,6 +275,8 @@
   "loan_vaults": "Darlehen",
   "loan_vault": "Tresor",
   "loan_amount": "Menge",
+  "loan_current_amount": "Aktuelle Menge",
+  "loan_current_amount_usd": "Aktuelle Wert (USD)",
   "loan_browse_loans": "Darlehen durchsuchen",
   "loan_your_loans": "Deine Darlehen",
   "loan_no_vault_created": "Kein Tresor erstellt",

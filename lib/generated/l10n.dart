@@ -2465,6 +2465,26 @@ class S {
     );
   }
 
+  /// `Current Amount`
+  String get loan_current_amount {
+    return Intl.message(
+      'Current Amount',
+      name: 'loan_current_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Value (USD)`
+  String get loan_current_amount_usd {
+    return Intl.message(
+      'Current Value (USD)',
+      name: 'loan_current_amount_usd',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Browse Loans`
   String get loan_browse_loans {
     return Intl.message(

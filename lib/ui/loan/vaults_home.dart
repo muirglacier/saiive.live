@@ -80,7 +80,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                       },
                       child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                     )),
-              Text(S.of(context).dex_v2)
+              Text(S.of(context).loan_vaults)
             ]),
             actions: [
               Padding(

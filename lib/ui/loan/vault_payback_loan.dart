@@ -258,7 +258,10 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             child: Column(children: [
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text(S.of(context).loan_tokens_to_pay_back, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_payback_value)]),
-                TableRow(children: [Text(FundFormatter.format(amountToRemoveDouble)), Text(FundFormatter.format(amountToRemove * pricePerToken, fractions: 4))]),
+                TableRow(children: [
+                  Text(FundFormatter.format(amountToRemoveDouble)),
+                  Text(FundFormatter.format((amountToRemoveDouble) * pricePerToken, fractions: 2) + " \$"),
+                ]),
               ])
             ])));
   }

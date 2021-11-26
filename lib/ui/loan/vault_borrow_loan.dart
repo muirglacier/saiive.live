@@ -100,7 +100,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     }
 
     var otherLoanValues = _loanVault.loanAmounts.fold(0.0, (previousValue, element) {
-      if (element.symbol == widget.loanToken.token.symbol) {
+      if (element.symbol == _loanToken.token.symbol) {
         return previousValue;
       }
 
@@ -114,7 +114,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       return previousValue + (amount * _loanTokenPriceUSD);
     });
 
-    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == widget.loanToken.token.symbol, orElse: () => null);
+    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null);
 
     var _interestToken = double.tryParse(_loanToken.interest);
     var _interestVault = double.tryParse(_loanVault.schema.interestRate);
@@ -139,7 +139,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   buildTokenEntry() {
-    var currentLoanAmount = _loanToken != null && _loanVault != null ? _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null) : null;
+    var currentLoanAmount =
+        _loanToken != null && _loanVault != null ? _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null) : null;
 
     return InkWell(
         onTap: () {
@@ -190,16 +191,19 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         Spacer(),
                         Text(_loanToken.activePrice != null ? FundFormatter.format(_loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
                       ]),
-                      if (currentLoanAmount != null) Row(children: [
+                      if (currentLoanAmount != null)
+                        Row(children: [
                           Text(S.of(context).loan_current_amount, style: Theme.of(context).textTheme.caption),
                           Spacer(),
                           Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount))),
-                      ]),
-                      if (currentLoanAmount != null) Row(children: [
-                        Text(S.of(context).loan_current_amount_usd, style: Theme.of(context).textTheme.caption),
-                        Spacer(),
-                        Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) + ' \$'),
-                      ]),
+                        ]),
+                      if (currentLoanAmount != null)
+                        Row(children: [
+                          Text(S.of(context).loan_current_amount_usd, style: Theme.of(context).textTheme.caption),
+                          Spacer(),
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) +
+                              ' \$'),
+                        ]),
                       Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanToken.interest + '%')])
                     ]))));
   }
@@ -397,8 +401,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     child: Text(S.of(context).loan_continue),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
+                                    onPressed: () async {
+                                      await Navigator.of(context).push(
                                           MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
                                     },
                                   ))

@@ -492,6 +492,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (tokenBalance != null && tokenBalance.balance < (amount)) {
       loadingStream?.add(S.current.wallet_operation_send_tx);
     }
+
+    var txAuth = await getAuthInputsSmart(to, AuthTxMin, fees, loadingStream: loadingStream);
+
     final txb = await createBaseTransaction(0, to, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 
@@ -518,7 +521,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         }
       }
 
-      var txAuth = await getAuthInputsSmart(to, AuthTxMin, fees, loadingStream: loadingStream);
       await addAuthInput(txAuth);
 
       txb.addTakeLoan(vaultId, to, fromTok.id, amount);
@@ -570,6 +572,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (tokenBalance != null && tokenBalance.balance < (amount)) {
       loadingStream?.add(S.current.wallet_operation_send_tx);
     }
+    var txAuth = await getAuthInputsSmart(to, AuthTxMin, fees, loadingStream: loadingStream);
 
     final txb = await createBaseTransaction(0, to, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
@@ -597,7 +600,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         }
       }
 
-      var txAuth = await getAuthInputsSmart(to, AuthTxMin, fees, loadingStream: loadingStream);
       await addAuthInput(txAuth);
 
       txb.addPaybackLoan(vaultId, to, fromTok.id, amount);
@@ -640,6 +642,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (tokenBalance != null && tokenBalance.balance < (amount)) {
       loadingStream?.add(S.current.wallet_operation_send_tx);
     }
+    var txAuth = await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
     final txb = await createBaseTransaction(0, from, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 
@@ -666,7 +669,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         }
       }
 
-      var txAuth = await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
       await addAuthInput(txAuth);
 
       txb.addWithdrawToVault(vaultId, from, fromTok.id, amount);
@@ -724,8 +726,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (tokenBalance == null || amount > tokenBalance?.balance) {
       await createAccountTransaction(token, amount, from, loadingStream: loadingStream);
     }
-    await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
 
+    var txAuth = await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
     final txb = await createBaseTransaction(0, from, returnAddress, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 
@@ -752,7 +754,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         }
       }
 
-      var txAuth = await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
       await addAuthInput(txAuth);
 
       txb.addDepositToVault(vaultId, from, fromTok.id, amount);

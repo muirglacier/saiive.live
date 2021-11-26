@@ -58,6 +58,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     _initTokens();
     _initVaults();
 
+    _collateralizationRatio = double.tryParse(widget.loanVault.collateralRatio);
+
     _amountController.addListener(handleChange);
   }
 
@@ -93,12 +95,30 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       return;
     }
 
+    var otherLoanValues = _loanVault.loanAmounts.fold(0.0, (previousValue, element) {
+      if (element.symbol == widget.loanToken.token.symbol) {
+        return previousValue;
+      }
+
+      var amount = double.tryParse(element.amount);
+      var _loanTokenPriceUSD = element.activePrice != null ? element.activePrice.active.amount : 0;
+
+      if (_loanToken.token.symbolKey == "DUSD") {
+        _loanTokenPriceUSD = 1;
+      }
+
+      return previousValue + (amount * _loanTokenPriceUSD);
+    });
+
+    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == widget.loanToken.token.symbol, orElse: () => null);
+
     var _interestToken = double.tryParse(_loanToken.interest);
     var _interestVault = double.tryParse(_loanVault.schema.interestRate);
+    var totalAmount = (currentLoanAmount != null ? double.tryParse(currentLoanAmount.amount) : 0.0) + amount;
 
     _totalInterest = _interestVault + _interestToken;
-    _totalInterestAmount = (amount * _totalInterest / 100);
-    _totalTokenWithInterest = amount + _totalInterestAmount;
+    _totalInterestAmount = (totalAmount * _totalInterest / 100);
+    _totalTokenWithInterest = totalAmount + _totalInterestAmount;
 
     var _loanTokenPriceUSD = _loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0;
 
@@ -106,7 +126,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       _loanTokenPriceUSD = 1;
     }
 
-    _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD;
+    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + otherLoanValues;
 
     setState(() {
       _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
@@ -115,6 +135,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   buildTokenEntry() {
+    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == widget.loanToken.token.symbol, orElse: () => null);
+
     return InkWell(
         onTap: () {
           setState(() {
@@ -159,11 +181,20 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                           Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.swap_vert_outlined))
                         ],
                       ),
-                      Container(height: 5),
                       Row(children: [
                         Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
                         Spacer(),
                         Text(_loanToken.activePrice != null ? FundFormatter.format(_loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
+                      ]),
+                      if (currentLoanAmount != null) Row(children: [
+                          Text(S.of(context).loan_amount, style: Theme.of(context).textTheme.caption),
+                          Spacer(),
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount))),
+                      ]),
+                      if (currentLoanAmount != null) Row(children: [
+                        Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
+                        Spacer(),
+                        Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) + ' \$'),
                       ]),
                       Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanToken.interest + '%')])
                     ]))));
@@ -256,12 +287,22 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         Spacer(),
                         Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue), fractions: 2) + ' \$'),
                       ]),
-                      Row(children: [Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')]),
+                      Row(children: [
+                        Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption),
+                        Spacer(),
+                        Text(FundFormatter.format(double.tryParse(_loanVault.loanValue), fractions: 2) + ' \$'),
+                      ]),
+                      Row(children: [
+                        Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption),
+                        Spacer(),
+                        Text(_loanVault.collateralRatio + '%'),
+                      ]),
                       Row(children: [
                         Text(S.of(context).loan_min_collateral_ratio, style: Theme.of(context).textTheme.caption),
                         Spacer(),
                         Text(_loanVault.schema.minColRatio + '%')
-                      ])
+                      ]),
+                      Row(children: [Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')]),
                     ]))));
   }
 

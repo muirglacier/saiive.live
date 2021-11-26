@@ -143,6 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_change_collateral" : MessageLookupByLibrary.simpleMessage("Kollateral anpassen"),
     "loan_change_collateral_how_much" : MessageLookupByLibrary.simpleMessage("Wie viel möchtest du ändern?"),
     "loan_close_vault" : MessageLookupByLibrary.simpleMessage("Tresor schließen"),
+    "loan_close_vault_not_possible_due_loans" : MessageLookupByLibrary.simpleMessage("Tresor kann nicht geschlossen werden, du musst zuerst deine Darlehen zurückzahlen!"),
     "loan_close_vault_success" : MessageLookupByLibrary.simpleMessage("Tresor wurde erfolgreich beendet"),
     "loan_collateral_after_tx" : MessageLookupByLibrary.simpleMessage("Kollateral nach TX"),
     "loan_collateral_amount" : MessageLookupByLibrary.simpleMessage("Gesamtes Kollateral"),

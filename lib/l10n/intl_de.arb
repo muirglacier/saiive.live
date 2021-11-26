@@ -316,6 +316,7 @@
   "loan_collateral_ratio_to_little": "Deine Kollateral Ratio ist unterhalb des mindestwertes des Tresors Schemas!",
   "loan_change_collateral": "Kollateral anpassen",
   "loan_close_vault": "Tresor schließen",
+  "loan_close_vault_not_possible_due_loans": "Tresor kann nicht geschlossen werden, du musst zuerst deine Darlehen zurückzahlen!",
   "loan_vault_details_tab_active_loan": "Darlehen",
   "loan_vault_details_tab_details": "Details",
   "loan_vault_details_tab_collaterals": "Kollateral",

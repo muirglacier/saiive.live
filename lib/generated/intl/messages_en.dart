@@ -143,6 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_change_collateral" : MessageLookupByLibrary.simpleMessage("Change Collateral"),
     "loan_change_collateral_how_much" : MessageLookupByLibrary.simpleMessage("How much to change?"),
     "loan_close_vault" : MessageLookupByLibrary.simpleMessage("Close Vault"),
+    "loan_close_vault_not_possible_due_loans" : MessageLookupByLibrary.simpleMessage("Close vault not possible, you still have open loans in it!"),
     "loan_close_vault_success" : MessageLookupByLibrary.simpleMessage("Vault was successfully closed"),
     "loan_collateral_after_tx" : MessageLookupByLibrary.simpleMessage("Final Collateral after TX"),
     "loan_collateral_amount" : MessageLookupByLibrary.simpleMessage("Collateral Amount"),

@@ -165,8 +165,6 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     if (amount == null || amount == 0) {
       setState(() {
         _amountFrom = null;
-        _price = null;
-        _swapWays = [];
       });
       return;
     }
@@ -175,12 +173,15 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       _amountFrom = amount;
     });
 
-    if (_amountFrom != null && _amountFrom > 0) {
-      findPrice();
+    if (calculatePriceRates != null && _amountFrom > 0) {
+      calculatePriceRates();
     }
   }
 
-  handleChangeTokenTo() {}
+  handleChangeTokenTo()
+  {
+    findPrice();
+  }
 
   findPrice() {
     var path = findPath(_poolPairs, _selectedValueFrom.idToken, _selectedValueTo.idToken);
@@ -204,10 +205,13 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     });
 
     _selectedPoolPairs = poolPairs;
-    calculatePriceRates();
   }
 
   calculatePriceRates() {
+    if (_selectedPoolPairs == null) {
+      return;
+    }
+
     var tokenA = _tokens.firstWhereOrNull((element) => element.id == _selectedValueFrom.idToken);
 
     if (tokenA == null) {
@@ -386,7 +390,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx.txId, S.of(context).dex_swap_successfull),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx.txId, S.of(context).dex_v2_swap_successful),
       ));
 
       // resetForm();
@@ -417,7 +421,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                           height: 60,
                           child: DropdownButton<TokenBalance>(
                             isExpanded: true,
-                            hint: Text(S.of(context).dex_from_token),
+                            hint: Text(S.of(context).dex_v2_from_token),
                             value: _selectedValueFrom,
                             items: _fromTokens.map((e) {
                               return new DropdownMenuItem<TokenBalance>(
@@ -441,7 +445,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                           height: 60,
                           child: DropdownButton<TokenBalance>(
                             isExpanded: true,
-                            hint: Text(S.of(context).dex_to_token),
+                            hint: Text(S.of(context).dex_v2_to_token),
                             value: _selectedValueTo,
                             items: _selectedValueFrom == null
                                 ? null
@@ -463,18 +467,18 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                 if (_selectedValueFrom != null && _selectedValueTo != null)
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Container(height: 20),
-                    Text('How much from you wanna swap?'),
+                    Text(S.of(context).dex_v2_swap_amount),
                     Row(children: [
                       Expanded(
                           flex: 1,
                           child: TextField(
                               controller: _amountFromController,
-                              decoration: InputDecoration(hintText: S.of(context).dex_from_amount),
+                              decoration: InputDecoration(hintText: S.of(context).dex_v2_from_amount),
                               keyboardType: TextInputType.numberWithOptions(decimal: true))),
                       Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                         ElevatedButton(
                             child: Text(
-                              '50%',
+                              S.of(context).dex_v2_50,
                               style: TextStyle(color: StateContainer.of(context).curTheme.text),
                             ),
                             onPressed: () {
@@ -485,7 +489,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                         Container(width: 5),
                         ElevatedButton(
                             child: Text(
-                              'Max',
+                              S.of(context).dex_v2_max,
                               style: TextStyle(color: StateContainer.of(context).curTheme.text),
                             ),
                             onPressed: () {
@@ -497,14 +501,15 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                     ]),
                     Container(height: 20),
                     Row(children: [
-                      Expanded(flex: 1, child: Text('Amount to receive')),
-                      if (_price != null) Text(FundFormatter.format(_price.estimated)),
+                      Expanded(flex: 1, child: Text(S.of(context).dex_v2_amount_to_receive)),
+                      if (_amountFrom != null && _amountFrom > 0 && _price != null) Text(FundFormatter.format(_price.estimated)),
                       Container(width: 5),
                       if (_selectedValueTo != null) TokenIcon(_selectedValueTo.hash),
                     ]),
                     Container(height: 20),
-                    if (_price != null) _buildSwapDetails(),
-                    if (_price != null) _buildTxDetails(),
+                    if (_amountFrom != null && _amountFrom > 0 && _price != null) _buildSwapDetails(),
+                    if (_amountFrom != null && _amountFrom > 0 && _swapWays.length > 0) _buildSwapWaysDetails(),
+                    if (_amountFrom != null && _amountFrom > 0 && _price != null) _buildTxDetails(),
                     Container(height: 20),
                     AccountSelectAddressWidget(
                         label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
@@ -539,20 +544,20 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
   _buildSwapDetails() {
     List<List<String>> items = [
-      [_selectedValueFrom.displayName + ' price in ' + _selectedValueTo.displayName, FundFormatter.format(_price.aToBPrice)],
-      [_selectedValueTo.displayName + ' price in ' + _selectedValueFrom.displayName, FundFormatter.format(_price.bToAPrice)]
+      [_selectedValueFrom.displayName + ' ' + S.of(context).dex_v2_price_in + ' ' + _selectedValueTo.displayName, FundFormatter.format(_price.aToBPrice)],
+      [_selectedValueTo.displayName + ' ' + S.of(context).dex_v2_price_in + ' ' + _selectedValueFrom.displayName, FundFormatter.format(_price.bToAPrice)]
     ];
 
-    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Prices', style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
+    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_prices, style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
   }
 
   _buildTxDetails() {
     List<List<String>> items = [
-      ['Amount to be converted', FundFormatter.format(_amountFrom) + ' ' + _selectedValueFrom.displayName],
-      ['Estimated to receive', FundFormatter.format(_price.estimated) + ' ' + _selectedValueTo.displayName]
+      [S.of(context).dex_v2_amount_to_be_converted, FundFormatter.format(_amountFrom) + ' ' + _selectedValueFrom.displayName],
+      [S.of(context).dex_v2_estimated_to_receive, FundFormatter.format(_price.estimated) + ' ' + _selectedValueTo.displayName]
     ];
 
-    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Prices', style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
+    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_tx_details, style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
   }
 
   _buildSwapWaysDetails() {
@@ -562,7 +567,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       items.add([e.pair.symbol, e.fromSymbol + ' -> ' + e.toSymbol]);
     });
 
-    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text('Swap Ways', style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
+    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_swap_details, style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
   }
 
   @override

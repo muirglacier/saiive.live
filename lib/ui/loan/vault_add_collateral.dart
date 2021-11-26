@@ -165,24 +165,42 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   }
 
   handleChangeEditCollateral(LoanVaultAmount loanAmount, double newAmount) {
-    var totalLoanAmountWithChanges = double.tryParse(loanAmount.amount);
-    var diff = newAmount - totalLoanAmountWithChanges;
-    var existing = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
+    var existingCollateral = widget.vault.collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
+    var existingChange = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
 
-    if (existing != null) {
-      if (-1 * diff >= changes[existing]) {
+    if (existingCollateral != null) {
+      var totalLoanAmountWithChanges = double.tryParse(existingCollateral.amount);
+      var diff = newAmount - totalLoanAmountWithChanges;
+
+      if (diff == 0) {
         changes.remove(loanAmount.symbolKey);
-      } else {
-        changes[loanAmount.symbolKey] += diff;
       }
-    } else {
-      changes[loanAmount.symbolKey] = diff;
+      else {
+        var changedAmount = totalLoanAmountWithChanges + diff;
+        changes[loanAmount.symbolKey] = diff;
+
+        loanAmount.amount = changedAmount.toString();
+      }
+    }
+    else {
+      var totalLoanAmountWithChanges = double.tryParse(loanAmount.amount);
+      var diff = newAmount - totalLoanAmountWithChanges;
+
+      if (existingChange != null) {
+        if (-1 * diff >= changes[existingChange]) {
+          changes.remove(loanAmount.symbolKey);
+        } else {
+          changes[loanAmount.symbolKey] += diff;
+        }
+      } else {
+        changes[loanAmount.symbolKey] = diff;
+      }
+
+      newAmount = double.tryParse(loanAmount.amount) + diff;
     }
 
-    newAmount = double.tryParse(loanAmount.amount) + diff;
-
     setState(() {
-      loanAmount.amount = newAmount.toString();
+      loanAmount = loanAmount;
       _panel = Container();
     });
     _recalculateValue();

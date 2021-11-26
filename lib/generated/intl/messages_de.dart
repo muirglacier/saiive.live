@@ -163,6 +163,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_create_vault_fee" : MessageLookupByLibrary.simpleMessage("Tresor Gebühr"),
     "loan_create_vault_info" : MessageLookupByLibrary.simpleMessage("Du erstellt einen neuen Tresor"),
     "loan_create_vault_success" : MessageLookupByLibrary.simpleMessage("Tresor wurde erfolgreich erstellt"),
+    "loan_current_amount" : MessageLookupByLibrary.simpleMessage("Aktuelle Menge"),
+    "loan_current_amount_usd" : MessageLookupByLibrary.simpleMessage("Aktuelle Wert (USD)"),
     "loan_current_collateral" : MessageLookupByLibrary.simpleMessage("Aktuelles Kollateral"),
     "loan_interest" : MessageLookupByLibrary.simpleMessage("Zinsen"),
     "loan_interest_amount" : MessageLookupByLibrary.simpleMessage("Gesamte Zinsen"),

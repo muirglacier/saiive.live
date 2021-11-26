@@ -135,7 +135,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   buildTokenEntry() {
-    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == widget.loanToken.token.symbol, orElse: () => null);
+    var currentLoanAmount = _loanToken != null && _loanVault != null ? _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null) : null;
 
     return InkWell(
         onTap: () {
@@ -187,12 +187,12 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         Text(_loanToken.activePrice != null ? FundFormatter.format(_loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
                       ]),
                       if (currentLoanAmount != null) Row(children: [
-                          Text(S.of(context).loan_amount, style: Theme.of(context).textTheme.caption),
+                          Text(S.of(context).loan_current_amount, style: Theme.of(context).textTheme.caption),
                           Spacer(),
                           Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount))),
                       ]),
                       if (currentLoanAmount != null) Row(children: [
-                        Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
+                        Text(S.of(context).loan_current_amount_usd, style: Theme.of(context).textTheme.caption),
                         Spacer(),
                         Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) + ' \$'),
                       ]),

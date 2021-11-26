@@ -281,6 +281,8 @@
   "loan_vaults": "Vaults",
   "loan_vault": "Vault",
   "loan_amount": "Amount",
+  "loan_current_amount": "Current Amount",
+  "loan_current_amount_usd": "Current Value (USD)",
   "loan_browse_loans": "Browse Loans",
   "loan_your_loans": "Your Loans",
   "loan_no_vault_created": "No Vault created",

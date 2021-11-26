@@ -163,6 +163,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_create_vault_fee" : MessageLookupByLibrary.simpleMessage("Vault fee"),
     "loan_create_vault_info" : MessageLookupByLibrary.simpleMessage("You are creating a vault"),
     "loan_create_vault_success" : MessageLookupByLibrary.simpleMessage("Vault was successfully created"),
+    "loan_current_amount" : MessageLookupByLibrary.simpleMessage("Current Amount"),
+    "loan_current_amount_usd" : MessageLookupByLibrary.simpleMessage("Current Value (USD)"),
     "loan_current_collateral" : MessageLookupByLibrary.simpleMessage("Current Collaterals"),
     "loan_interest" : MessageLookupByLibrary.simpleMessage("Interest"),
     "loan_interest_amount" : MessageLookupByLibrary.simpleMessage("Interest amount"),

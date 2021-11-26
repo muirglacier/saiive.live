@@ -775,6 +775,16 @@ class S {
     );
   }
 
+  /// `Wait for confirmation {txId}...`
+  String wallet_operation_tx_wait_for_confirmation(Object txId) {
+    return Intl.message(
+      'Wait for confirmation $txId...',
+      name: 'wallet_operation_tx_wait_for_confirmation',
+      desc: '',
+      args: [txId],
+    );
+  }
+
   /// `Transaction was successful :)`
   String get wallet_operation_success {
     return Intl.message(

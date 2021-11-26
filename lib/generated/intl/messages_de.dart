@@ -29,7 +29,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m4(from, to) => "Aktualisiere Transaktionen (${from}/${to})";
 
-  static m5(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
+  static m5(txId) => "Warte auf Bestätigung ${txId}...";
+
+  static m6(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -330,9 +332,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_share" : MessageLookupByLibrary.simpleMessage("Teilen..."),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Transaktion im Explorer anzeigen..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaktion war erfolgreich :)"),
+    "wallet_operation_tx_wait_for_confirmation" : m5,
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Warte auf Bestätigung..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
-    "wallet_receive_warning" : m5,
+    "wallet_receive_warning" : m6,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter Test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("Wir haben die Kontos in deinem lokalen Datestore hinzugefügt! Deine Konten werden im Hintergrund aktualisiert!"),

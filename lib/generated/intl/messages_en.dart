@@ -29,7 +29,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m4(from, to) => "Refreshing transactions (${from}/${to})";
 
-  static m5(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
+  static m5(txId) => "Wait for confirmation ${txId}...";
+
+  static m6(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -331,9 +333,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_share" : MessageLookupByLibrary.simpleMessage("Share..."),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Show transaction in the explorer..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaction was successful :)"),
+    "wallet_operation_tx_wait_for_confirmation" : m5,
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Wait for confirmation..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Receive"),
-    "wallet_receive_warning" : m5,
+    "wallet_receive_warning" : m6,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("The accounts have been added to your local datastore! Your acounts will be synced in the background!"),

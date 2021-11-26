@@ -29,7 +29,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m4(from, to) => "Refrescando transacciones (${from}/${to})";
 
-  static m5(coin) => "Envía solo ${coin} a esta dirección. Enviar monedas o fichas que no sean ${coin} a esta dirección puede resultar en la pérdida de tu depósito!";
+  static m5(txId) => "Esperando confirmación (${txId})...";
+
+  static m6(coin) => "Envía solo ${coin} a esta dirección. Enviar monedas o fichas que no sean ${coin} a esta dirección puede resultar en la pérdida de tu depósito!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -215,9 +217,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Enviando transacción"),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Mostrar transacción en el explorador..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transacción exitosa :)"),
+    "wallet_operation_tx_wait_for_confirmation" : m5,
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Esperando confirmación..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Recibir"),
-    "wallet_receive_warning" : m5,
+    "wallet_receive_warning" : m6,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Prueba frase de recuperación"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Frase de recuperación"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("¡Las cuentas se han agregado a tu base de datos local! Tus cuentas se sincronizarán en segundo plano!"),

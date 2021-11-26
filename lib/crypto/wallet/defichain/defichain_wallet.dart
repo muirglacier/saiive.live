@@ -101,14 +101,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   Future<String> _addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
       {String returnAddress, StreamController<String> loadingStream}) async {
-    final useAmount = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
-
-    if (DeFiConstants.isDfiToken(tokenA)) {
-      amountA = useAmount.item1;
-    } else {
-      amountB = useAmount.item1;
-    }
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     final tokenABalance = await walletDatabase.getAccountBalance(tokenA);
     final tokenBBalance = await walletDatabase.getAccountBalance(tokenB);
 
@@ -119,6 +111,15 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (tokenBBalance.balance < amountB) {
       throw new ArgumentError("Insufficient balance...");
     }
+
+    final useAmount = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
+
+    if (DeFiConstants.isDfiToken(tokenA)) {
+      amountA = useAmount.item1;
+    } else {
+      amountB = useAmount.item1;
+    }
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
 
     final tokenAType = await apiService.tokenService.getToken("DFI", tokenA);
     final tokenBType = await apiService.tokenService.getToken("DFI", tokenB);
@@ -186,6 +187,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   Future<Tuple3<String, List<tx.Transaction>, String>> _createSwap(String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction,
       {String returnAddress, StreamController<String> loadingStream}) async {
+    final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
+
+    if (fromTokenBalance.balance < fromAmount) {
+      throw new ArgumentError("Insufficient balance...");
+    }
+
     if (DeFiConstants.isDfiToken(fromToken)) {
       var prep = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
       fromAmount = prep.item1;
@@ -193,12 +200,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     final fees = await getTxFee(1, 2) + 5000;
-
-    final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
-
-    if (fromTokenBalance.balance < fromAmount) {
-      throw new ArgumentError("Insufficient balance...");
-    }
 
     final fromTok = await apiService.tokenService.getToken("DFI", fromToken);
     final toTok = await apiService.tokenService.getToken("DFI", toToken);
@@ -265,6 +266,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<Tuple3<String, List<tx.Transaction>, String>> _createSwapV2(
       String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction, List<int> poolIds,
       {String returnAddress, StreamController<String> loadingStream}) async {
+    final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
+
+    if (fromTokenBalance.balance < fromAmount) {
+      throw new ArgumentError("Insufficient balance...");
+    }
+
     if (DeFiConstants.isDfiToken(fromToken)) {
       var prep = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
       fromAmount = prep.item1;
@@ -272,12 +279,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     final fees = await getTxFee(1, 2) + 5000;
-
-    final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
-
-    if (fromTokenBalance.balance < fromAmount) {
-      throw new ArgumentError("Insufficient balance...");
-    }
 
     final fromTok = await apiService.tokenService.getToken("DFI", fromToken);
     final toTok = await apiService.tokenService.getToken("DFI", toToken);

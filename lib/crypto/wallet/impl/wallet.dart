@@ -448,6 +448,8 @@ abstract class Wallet extends IWallet {
       }
 
       final response = await r.retry(() async {
+        if (S.current != null) loadingStream?.add(S.current.wallet_operation_tx_wait_for_confirmation(txId));
+
         return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId, onlyConfirmed: onlyConfirmed);
       }, retryIf: (e) {
         if (e is HttpException || e is ErrorResponse) return true;

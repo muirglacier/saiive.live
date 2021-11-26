@@ -417,14 +417,14 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           )),
                       SizedBox(height: 10),
                       SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          child: Text(S.of(context).loan_borrow),
-                          onPressed: () async {
-                            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
-                            await refreshVault();
-                          },
-                      )),
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            child: Text(S.of(context).loan_borrow),
+                            onPressed: () async {
+                              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
+                              await refreshVault();
+                            },
+                          )),
                       SizedBox(height: 10),
                       SizedBox(
                           width: double.infinity,
@@ -486,6 +486,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                 child: TabBar(
                   controller: _tabController,
                   isScrollable: true,
+                  indicatorColor: StateContainer.of(context).curTheme.primary,
+                  labelColor: StateContainer.of(context).curTheme.darkColor,
                   tabs: [
                     Tab(text: S.of(context).loan_vault_details_tab_active_loan),
                     Tab(text: S.of(context).loan_vault_details_tab_details),
@@ -501,7 +503,11 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                 padding: EdgeInsets.all(10),
                 child: TabBarView(
                   controller: _tabController,
-                  children: [_buildTabActiveLoans(), _buildTabDetails(), _buildTabCollaterals(), /*_buildTabAuctions()*/],
+                  children: [
+                    _buildTabActiveLoans(),
+                    _buildTabDetails(),
+                    _buildTabCollaterals(), /*_buildTabAuctions()*/
+                  ],
                 )),
           ),
         ));

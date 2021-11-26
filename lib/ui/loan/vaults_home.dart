@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:event_taxi/event_taxi.dart';
+import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/ui/loan/vault_create.dart';
@@ -59,6 +61,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
             bottom: TabBar(
               controller: _tabController,
               tabs: [
@@ -66,7 +69,19 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                 Tab(text: S.of(context).loan_your_loans),
               ],
             ),
-            title: Text(S.of(context).loan_vaults),
+            title: Row(children: [
+              if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+                Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: GestureDetector(
+                      onTap: () {
+                        var key = StateContainer.of(context).scaffoldKey;
+                        key.currentState.openDrawer();
+                      },
+                      child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                    )),
+              Text(S.of(context).dex_v2)
+            ]),
             actions: [
               Padding(
                   padding: EdgeInsets.only(right: 20.0),

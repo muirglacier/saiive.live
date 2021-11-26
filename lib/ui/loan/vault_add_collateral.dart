@@ -88,7 +88,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
     setState(() {
       isDFILessThan50 = percentage < 50.0;
-      _collateralizationRatio = hasLoan ? (100 / totalLoanValue) * _collateralValue : 0;
+      _collateralizationRatio = hasLoan ? (100 / totalLoanValue) * _collateralValue : -1;
       collateralRatioNotRight = hasLoan ? minCollateralRatio > _collateralizationRatio : false;
     });
   }

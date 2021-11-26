@@ -265,7 +265,8 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<String> createAndSend(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
+  Future<String> createAndSend(int amount, String token, String to,
+      {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
     isInitialzed();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
@@ -275,7 +276,8 @@ abstract class Wallet extends IWallet {
 
     try {
       loadingStream?.add(S.current.wallet_operation_build_tx);
-      var txData = await createSendTransaction(amount, token, to, returnAddress: returnAddress, sendMax: sendMax, loadingStream: loadingStream);
+      var txData =
+          await createSendTransaction(amount, token, to, waitForConfirmation: waitForConfirmation, returnAddress: returnAddress, sendMax: sendMax, loadingStream: loadingStream);
 
       return txData;
     } catch (error) {
@@ -291,10 +293,11 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false, int version = 4}) async {
+  Future<String> createUtxoTransaction(int amount, String to, String changeAddress,
+      {bool waitForConfirmation, StreamController<String> loadingStream, bool sendMax = false, int version = 4}) async {
     final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax, version: version);
 
-    var tx = await createTxAndWait(txb, loadingStream: loadingStream);
+    var tx = await createTxAndWait(txb, onlyConfirmed: waitForConfirmation, loadingStream: loadingStream);
 
     loadingStream?.add(S.current.wallet_operation_send_tx);
 
@@ -308,7 +311,14 @@ abstract class Wallet extends IWallet {
       final pubKey = HdWalletUtil.getPublicKey(
           key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType, walletAccount.derivationPathType);
 
-      if (pubKey != address.publicKey) {
+      var needPubKey = address.publicKey;
+      if (pubKey != needPubKey) {
+        LogHelper.instance.i("Generated pubKey is: $pubKey. Needed pubkey is $needPubKey." +
+            "Address account id is: ${address.accountId}. WalletAccountId is ${walletAccount.uniqueId}" +
+            "Address path is ${address.path(walletAccount)}" +
+            "Address type is ${address.addressType}" +
+            "WalletAccount derivation path is ${walletAccount.derivationPathType}" +
+            "WalletAccount default address type is ${walletAccount.defaultAddressType}");
         throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");
       }
       return keyPair;

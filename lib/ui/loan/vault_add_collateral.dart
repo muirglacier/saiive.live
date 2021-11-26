@@ -67,7 +67,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var amount = widget.vault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
     var token = widget.collateralTokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
     var percentage = 0.0;
-    var newAmount = null;
+    var newAmount;
     var totalLoanValue = double.tryParse(widget.vault.loanValue);
     var minCollateralRatio = double.tryParse(widget.vault.schema.minColRatio);
 
@@ -174,15 +174,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
       if (diff == 0) {
         changes.remove(loanAmount.symbolKey);
-      }
-      else {
+      } else {
         var changedAmount = totalLoanAmountWithChanges + diff;
         changes[loanAmount.symbolKey] = diff;
 
         loanAmount.amount = changedAmount.toString();
       }
-    }
-    else {
+    } else {
       var totalLoanAmountWithChanges = double.tryParse(loanAmount.amount);
       var diff = newAmount - totalLoanAmountWithChanges;
 

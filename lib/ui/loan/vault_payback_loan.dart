@@ -109,10 +109,14 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   calculateMaxToPayback() {
-    var dif = min(availableBalance, totalVaultValueSat) / max(totalVaultValueSat, availableBalance);
-    var difPercentage = dif * 100;
-    _percentageTextController.text = difPercentage.toString();
+    if (availableBalance > totalVaultValueSat) {
+      _percentageTextController.text = "100.0";
+    } else {
+      var dif = min(availableBalance, totalVaultValueSat) / max(totalVaultValueSat, availableBalance);
 
+      var difPercentage = dif * 100;
+      _percentageTextController.text = difPercentage.toString();
+    }
     handleChangePercentage();
   }
 

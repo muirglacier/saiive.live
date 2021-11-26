@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
-import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/dex/composite_dex.dart';
 import 'package:saiive.live/ui/dex/dex.dart';
@@ -106,7 +105,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final List<NavigationRailDestination> navBar = _navigationEntries.map((e) => NavigationRailDestination(icon: e.icon, label: Text(e.label))).toList();
-    var currentEnvironment = EnvHelper.getEnvironment();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,

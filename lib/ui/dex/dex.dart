@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
@@ -125,7 +124,6 @@ class _DexScreen extends State<DexScreen> {
     }
 
     var accountBalance = await new BalanceHelper().getDisplayAccountBalance(onlyDfi: true);
-    var popularSymbols = ['DFI', 'ETH', 'BTC', 'DOGE', 'LTC'];
 
     if (null == accountBalance.firstWhere((element) => element.token == DeFiConstants.DefiAccountSymbol, orElse: () => null)) {
       accountBalance.add(AccountBalance(token: DeFiConstants.DefiAccountSymbol, balance: 0, chain: ChainType.DeFiChain));

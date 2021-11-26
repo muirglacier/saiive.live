@@ -38,8 +38,9 @@ abstract class IWallet {
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 
-  Future<String> createSendTransaction(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false});
-  Future<String> createAndSend(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createSendTransaction(int amount, String token, String to,
+      {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false});
+  Future<String> createAndSend(int amount, String token, String to, {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false});
 
   Future<bool> refreshBefore();
 

@@ -57,9 +57,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl
-          .get<IWalletService>()
-          .createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
+      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress,
+          waitForConfirmaton: true, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
 
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");

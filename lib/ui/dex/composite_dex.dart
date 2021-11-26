@@ -116,7 +116,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     uniqueTokenList.forEach((symbolKey, tokenId) {
       var account = accountBalance.firstWhere((element) => element.token == tokenId, orElse: () => null);
       var finalBalance = account != null ? account.balance : 0;
-      var balance = null;
+      var balance;
 
       if (account != null) {
         balance = TokenBalance(hash: tokenId, idToken: symbolKey, balance: finalBalance, displayName: account.tokenDisplay);
@@ -178,14 +178,12 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     }
   }
 
-  handleChangeTokenTo()
-  {
+  handleChangeTokenTo() {
     findPrice();
   }
 
   findPrice() {
     var path = findPath(_poolPairs, _selectedValueFrom.idToken, _selectedValueTo.idToken);
-    var visited = path[0];
     var foundPaths = path[1];
     var poolPairs = List.from(foundPaths).foldIndexed(List<PoolPair>.empty(growable: true), (index, pairs, token) {
       if (index + 1 >= foundPaths.length) {
@@ -269,7 +267,6 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     bool isPathFound = false;
     List<String> nodesToVisit = [origin];
     List<String> visitedNodes = [];
-    int currentDistance = 0;
     List<String> path = [];
 
     bfs(String start, List<String> edges, String target) {
@@ -292,7 +289,6 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       visitedNodes.add(start);
 
       while (nodesToVisit.length > 0) {
-        currentDistance += 1;
         nodesToVisit.removeAt(0);
 
         var nextNodeVisitEdges = edges;
@@ -548,7 +544,10 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       [_selectedValueTo.displayName + ' ' + S.of(context).dex_v2_price_in + ' ' + _selectedValueFrom.displayName, FundFormatter.format(_price.bToAPrice)]
     ];
 
-    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_prices, style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
+    return Column(children: [
+      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_prices, style: Theme.of(context).textTheme.caption)),
+      CustomTableWidget(items)
+    ]);
   }
 
   _buildTxDetails() {
@@ -557,7 +556,10 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       [S.of(context).dex_v2_estimated_to_receive, FundFormatter.format(_price.estimated) + ' ' + _selectedValueTo.displayName]
     ];
 
-    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_tx_details, style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
+    return Column(children: [
+      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_tx_details, style: Theme.of(context).textTheme.caption)),
+      CustomTableWidget(items)
+    ]);
   }
 
   _buildSwapWaysDetails() {
@@ -567,7 +569,10 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       items.add([e.pair.symbol, e.fromSymbol + ' -> ' + e.toSymbol]);
     });
 
-    return Column(children: [Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_swap_details, style: Theme.of(context).textTheme.caption)), CustomTableWidget(items)]);
+    return Column(children: [
+      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_swap_details, style: Theme.of(context).textTheme.caption)),
+      CustomTableWidget(items)
+    ]);
   }
 
   @override

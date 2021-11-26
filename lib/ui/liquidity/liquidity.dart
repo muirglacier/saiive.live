@@ -80,34 +80,18 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       _isLoading = true;
     });
 
-    try {
-      var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
-      var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
+    var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
+    var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
 
-      setState(() {
-        _liquidity = liquidity;
-        _poolPairLiquidity = poolPairLiquidity;
-        _isLoading = false;
-      });
-
-      sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadEnd", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
-    } catch (e) {
-      if (e is HttpException) {
-        LogHelper.instance.e("Error loading data", e.message);
-        ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
-          content: Text(e.message),
-        ));
-      } else {
-        LogHelper.instance.e("Error loading data", e);
-        ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
-          content: Text(e.toString()),
-        ));
-      }
-
-      setState(() {
-        _isLoading = false;
-      });
+    if (!this.mounted) {
+      return;
     }
+    
+    setState(() {
+      _liquidity = liquidity;
+      _poolPairLiquidity = poolPairLiquidity;
+      _isLoading = false;
+    });
   }
 
   Widget _buildPoolPairLiquidityEntry(PoolPairLiquidity liquidity) {

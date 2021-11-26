@@ -33,12 +33,12 @@ class VaultCreateLoanSchemeItem extends StatelessWidget {
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(S.of(context).loan_min_collateral_ratio, style: Theme.of(context).textTheme.caption), Text(this.minCollateralRatio)],
+              children: [Text(S.of(context).loan_min_collateral_ratio, style: Theme.of(context).textTheme.caption), Text(this.minCollateralRatio + ' %')],
             )),
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(S.of(context).loan_vault_interest_rate_apr, style: Theme.of(context).textTheme.caption), Text(this.interestRate)],
+              children: [Text(S.of(context).loan_vault_interest_rate_apr, style: Theme.of(context).textTheme.caption), Text(this.interestRate + ' %')],
             ))
           ]))
         ],

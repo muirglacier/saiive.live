@@ -91,8 +91,8 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
     ];
 
     List<List<String>> itemsSchema = [
-      [S.of(context).loan_min_collateral_ratio, widget.schema.minColRatio],
-      [S.of(context).loan_vault_interest_rate_apr, widget.schema.interestRate],
+      [S.of(context).loan_min_collateral_ratio, widget.schema.minColRatio + ' %'],
+      [S.of(context).loan_vault_interest_rate_apr, widget.schema.interestRate + ' %'],
     ];
 
     return CustomScrollView(slivers: [

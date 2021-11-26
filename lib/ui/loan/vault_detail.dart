@@ -220,7 +220,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                 ]),
                 TableRow(children: [
                   Text(FundFormatter.format(double.tryParse(amount.amount))),
-                  Text(FundFormatter.format(double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100, fractions: 4))
+                  Text(FundFormatter.format(double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100, fractions: 4) + '\$')
                 ]),
               ]),
               Container(height: 10),

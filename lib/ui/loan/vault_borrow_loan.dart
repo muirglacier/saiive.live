@@ -58,8 +58,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     _initTokens();
     _initVaults();
 
-    _collateralizationRatio = double.tryParse(widget.loanVault.collateralRatio);
-
+    if (widget.loanVault != null) {
+      _collateralizationRatio = double.tryParse(widget.loanVault.collateralRatio);
+    }
     _amountController.addListener(handleChange);
   }
 
@@ -89,6 +90,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   handleChange() async {
+    if (_loanVault == null) {
+      return;
+    }
     double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
 
     if (null == amount) {

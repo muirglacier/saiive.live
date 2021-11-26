@@ -58,8 +58,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     _initTokens();
     _initVaults();
 
-    _collateralizationRatio = double.tryParse(widget.loanVault.collateralRatio);
-
+    if (widget.loanVault != null) {
+      _collateralizationRatio = double.tryParse(widget.loanVault.collateralRatio);
+    }
     _amountController.addListener(handleChange);
   }
 
@@ -89,6 +90,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   handleChange() async {
+    if (_loanVault == null) {
+      return;
+    }
     double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
 
     if (null == amount) {
@@ -135,7 +139,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   buildTokenEntry() {
-    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == widget.loanToken.token.symbol, orElse: () => null);
+    var currentLoanAmount = _loanVault == null ? null : _loanVault.loanAmounts.firstWhere((element) => element.symbol == widget.loanToken.token.symbol, orElse: () => null);
 
     return InkWell(
         onTap: () {
@@ -186,16 +190,19 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         Spacer(),
                         Text(_loanToken.activePrice != null ? FundFormatter.format(_loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
                       ]),
-                      if (currentLoanAmount != null) Row(children: [
+                      if (currentLoanAmount != null)
+                        Row(children: [
                           Text(S.of(context).loan_amount, style: Theme.of(context).textTheme.caption),
                           Spacer(),
                           Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount))),
-                      ]),
-                      if (currentLoanAmount != null) Row(children: [
-                        Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
-                        Spacer(),
-                        Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) + ' \$'),
-                      ]),
+                        ]),
+                      if (currentLoanAmount != null)
+                        Row(children: [
+                          Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
+                          Spacer(),
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) +
+                              ' \$'),
+                        ]),
                       Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanToken.interest + '%')])
                     ]))));
   }

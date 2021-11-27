@@ -11,6 +11,7 @@ import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
+import 'package:saiive.live/crypto/errors/RegenerateWalletAddressError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
@@ -313,13 +314,15 @@ abstract class Wallet extends IWallet {
 
       var needPubKey = address.publicKey;
       if (pubKey != needPubKey) {
-        LogHelper.instance.i("Generated pubKey is: $pubKey. Needed pubkey is $needPubKey." +
+        var errorInfo = "Generated pubKey is: $pubKey. Needed pubkey is $needPubKey." +
             "Address account id is: ${address.accountId}. WalletAccountId is ${walletAccount.uniqueId}" +
             "Address path is ${address.path(walletAccount)}" +
             "Address type is ${address.addressType}" +
             "WalletAccount derivation path is ${walletAccount.derivationPathType}" +
-            "WalletAccount default address type is ${walletAccount.defaultAddressType}");
-        throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");
+            "WalletAccount default address type is ${walletAccount.defaultAddressType}";
+        LogHelper.instance.i(errorInfo);
+
+        throw new RegenerateWalletAddressError(error: "Could not regenerate your address, seems your wallet is corrupted", debugInfo: errorInfo);
       }
       return keyPair;
     } else if (walletAccount.walletAccountType == WalletAccountType.PrivateKey) {

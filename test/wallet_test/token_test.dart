@@ -1,4 +1,5 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
+import 'package:saiive.live/crypto/errors/RegenerateWalletAddressError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/network/model/account.dart';
@@ -197,6 +198,100 @@ void main() async {
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,
           "040000000001010c96a0a530e98fc0edb0528db77d1b164774f8ad4f8da1217df5145f422ea0f90000000017160014f5baba69ac8107ca3f47bf3a0d7afef76c5d2d4bffffffff0200ca9a3b0000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8700ee5db50d0600000017a9146015a95984366c654bbd6ab55edab391ff8d747f870002483045022100ab77468293bf3ac6e51ccc8e8d6b288aeed8037aa4c093dc74badc3935c7117202207b2d1f10cf262f4a820ee8135026e60e810519ad2f1b896f097519c2b5e7f224012103d9692afdab3120cb1b9d848de7d72c97cc2e21c00af07d0d5a98df1a4498359600000000");
+      await destroyTest();
+    });
+  });
+
+  group("#1 create tx", () {
+    initTest() async {
+      final db = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, ChainNet.Testnet);
+
+      final walletAccount = WalletAccount(Uuid().v4(),
+          id: 0,
+          chain: ChainType.DeFiChain,
+          account: 0,
+          walletAccountType: WalletAccountType.HdAccount,
+          derivationPathType: PathDerivationType.FullNodeWallet,
+          name: "acc",
+          selected: true);
+      await db.addOrUpdateAccount(walletAccount);
+
+      await db.addTransaction(
+          Transaction(
+              id: "601496faf1963a034ec57842",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 1,
+              mintTxId: "c06adf474ef073fa320ab531bfc366546a9e2db2c39eac9e696790f30f428371",
+              mintHeight: 192706,
+              spentHeight: -2,
+              address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
+              value: 1000000000,
+              confirmations: -1),
+          walletAccount);
+      await db.addTransaction(
+          Transaction(
+              id: "60156e30dc5c117a2b211187",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 0,
+              mintTxId: "d85da07fec78d920cf24507156b71130565d7eaade8bc0ff337485bc5c8e2727",
+              mintHeight: 192738,
+              spentHeight: -2,
+              address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
+              value: 26999795496,
+              confirmations: -1),
+          walletAccount);
+      await db.addUnspentTransaction(
+          Transaction(
+              id: "601496faf1963a034ec57842",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 1,
+              mintTxId: "c06adf474ef073fa320ab531bfc366546a9e2db2c39eac9e696790f30f428371",
+              mintHeight: 192706,
+              spentHeight: -2,
+              address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv",
+              value: 1000000000,
+              confirmations: -1),
+          walletAccount);
+      await db.addUnspentTransaction(
+          Transaction(
+              id: "60156e30dc5c117a2b211187",
+              chain: "DFI",
+              network: "testnet",
+              mintIndex: 0,
+              mintTxId: "d85da07fec78d920cf24507156b71130565d7eaade8bc0ff337485bc5c8e2727",
+              mintHeight: 192738,
+              spentHeight: -2,
+              address: "tbTMwPQAtLUYCxHjPRc9upUmHBdGFr8cKN",
+              value: 26999795496,
+              confirmations: -1),
+          walletAccount);
+
+      final dfiToken =
+          Account(token: DeFiConstants.DefiTokenSymbol, address: "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", balance: 500 * 100000000, raw: "@DFI", chain: "DFI", network: "testnet");
+
+      await db.setAccountBalance(dfiToken, walletAccount);
+    }
+
+    Future destroyTest() async {
+      await sl.get<IWalletDatabaseFactory>().destroy(ChainType.DeFiChain, ChainNet.Testnet);
+
+      final wallet = sl.get<DeFiChainWallet>();
+      await wallet.close();
+    }
+
+    test("#1 change address not spentable", () async {
+      await initTest();
+      final wallet = sl.get<DeFiChainWallet>();
+
+      await wallet.init();
+
+      expect(() async {
+        await wallet.createSendTransaction(1000000, "\$DFI", "tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", returnAddress: "tXdQc5VmwMCgJS9b2tckvcQxKBo9wYdXAB");
+      }, throwsA(isA<RegenerateWalletAddressError>()));
+
       await destroyTest();
     });
   });

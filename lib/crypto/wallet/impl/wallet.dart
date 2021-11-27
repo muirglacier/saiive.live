@@ -128,6 +128,9 @@ abstract class Wallet extends IWallet {
 
   @override
   Future<bool> isAlive() async {
+    if (_chain == ChainType.Bitcoin) {
+      return true;
+    }
     var isAlive = await _apiService.healthService.isAlive(ChainHelper.chainTypeString(_chain));
 
     return isAlive;
@@ -306,7 +309,7 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future checkIfWeCanSpentTheChangeAddress(String changeAddress) async {
+  Future checkIfWeCanSpendTheChangeAddress(String changeAddress) async {
     final retAddress = await walletDatabase.getWalletAddress(changeAddress);
     final retWalletAccount = await walletDatabase.getAccount(retAddress.accountId);
 
@@ -353,7 +356,7 @@ abstract class Wallet extends IWallet {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
 
-    await checkIfWeCanSpentTheChangeAddress(changeAddress);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);

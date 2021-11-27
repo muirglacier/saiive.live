@@ -120,7 +120,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       amountB = useAmount.item1;
     }
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
-    await checkIfWeCanSpentTheChangeAddress(changeAddress);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     final tokenAType = await apiService.tokenService.getToken("DFI", tokenA);
     final tokenBType = await apiService.tokenService.getToken("DFI", tokenB);
@@ -398,7 +398,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final address = await walletDatabase.getWalletAddress(ownerAddress);
     final walletAccount = await walletDatabase.getAccount(address.accountId);
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
-    await checkIfWeCanSpentTheChangeAddress(changeAddress);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     var keyPair = await getPrivateKey(address, walletAccount);
     keys.add(Tuple2(address, keyPair));
@@ -444,7 +444,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
-    await checkIfWeCanSpentTheChangeAddress(changeAddress);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     var fees = await getTxFee(1, 2);
     final unspentTxs = await walletDatabase.getUnspentTransactions();
@@ -807,7 +807,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 
       final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
-      await checkIfWeCanSpentTheChangeAddress(changeAddress);
+      await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
       if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
         continue;

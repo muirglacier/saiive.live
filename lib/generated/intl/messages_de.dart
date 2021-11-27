@@ -216,6 +216,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_vault_details" : MessageLookupByLibrary.simpleMessage("Vault Details"),
     "loan_vault_details_tab_active_loan" : MessageLookupByLibrary.simpleMessage("Darlehen"),
     "loan_vault_details_tab_auctions" : MessageLookupByLibrary.simpleMessage("Versteigerungen"),
+    "loan_vault_details_tab_collaterals" : MessageLookupByLibrary.simpleMessage("Kollateral"),
     "loan_vault_details_tab_details" : MessageLookupByLibrary.simpleMessage("Details"),
     "loan_vault_halted_info" : MessageLookupByLibrary.simpleMessage("Die Aktivität dieses Vaultes wurde temporär angehalten. Grund: Starke Volatilität im Markt. Der Vault wird fortgesetzt wenn sich der Markt stabilisiert hat."),
     "loan_vault_health" : MessageLookupByLibrary.simpleMessage("Vault Status"),

@@ -266,6 +266,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<Tuple3<String, List<tx.Transaction>, String>> _createSwapV2(
       String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction, List<int> poolIds,
       {String returnAddress, StreamController<String> loadingStream}) async {
+    if (DeFiConstants.isDfiToken(fromToken)) {
+      var prep = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
+      fromAmount = prep.item1;
+    }
+
     final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
 
     if (fromTokenBalance.balance < fromAmount) {

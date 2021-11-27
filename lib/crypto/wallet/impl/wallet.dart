@@ -314,12 +314,12 @@ abstract class Wallet extends IWallet {
 
       var needPubKey = address.publicKey;
       if (pubKey != needPubKey) {
-        var errorInfo = "Generated pubKey is: $pubKey. Needed pubkey is $needPubKey." +
-            "Address account id is: ${address.accountId}. WalletAccountId is ${walletAccount.uniqueId}" +
-            "Address path is ${address.path(walletAccount)}" +
-            "Address type is ${address.addressType}" +
-            "WalletAccount derivation path is ${walletAccount.derivationPathType}" +
-            "WalletAccount default address type is ${walletAccount.defaultAddressType}";
+        var errorInfo = "Generated pubKey is: $pubKey. Needed pubkey is $needPubKey. " +
+            "Address account id is: ${address.accountId}. WalletAccountId is ${walletAccount.uniqueId} " +
+            "Address path is ${address.path(walletAccount)} " +
+            "Address type is ${address.addressType} " +
+            "WalletAccount derivation path is ${walletAccount.derivationPathType} " +
+            "WalletAccount default address type is ${walletAccount.defaultAddressType} ";
         LogHelper.instance.i(errorInfo);
 
         throw new RegenerateWalletAddressError(error: "Could not regenerate your address, seems your wallet is corrupted", debugInfo: errorInfo);

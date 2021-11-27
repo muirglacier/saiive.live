@@ -305,6 +305,15 @@ abstract class Wallet extends IWallet {
     return tx.txId;
   }
 
+  @protected
+  Future checkIfWeCanSpentTheChangeAddress(String changeAddress) async {
+    final retAddress = await walletDatabase.getWalletAddress(changeAddress);
+    final retWalletAccount = await walletDatabase.getAccount(retAddress.accountId);
+
+    // add check that we can spent the utxo from the changeAddress
+    await getPrivateKey(retAddress, retWalletAccount);
+  }
+
   Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
     if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
       final key = seedList;
@@ -343,6 +352,8 @@ abstract class Wallet extends IWallet {
     if (amount > tokenBalance?.balance) {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
+
+    await checkIfWeCanSpentTheChangeAddress(changeAddress);
 
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);

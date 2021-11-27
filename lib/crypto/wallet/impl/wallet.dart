@@ -311,6 +311,10 @@ abstract class Wallet extends IWallet {
   @protected
   Future checkIfWeCanSpendTheChangeAddress(String changeAddress) async {
     final retAddress = await walletDatabase.getWalletAddress(changeAddress);
+
+    if (retAddress == null) {
+      throw new RegenerateWalletAddressError(error: "Could not regenerate your address, seems your wallet is corrupted", debugInfo: "");
+    }
     final retWalletAccount = await walletDatabase.getAccount(retAddress.accountId);
 
     // add check that we can spent the utxo from the changeAddress

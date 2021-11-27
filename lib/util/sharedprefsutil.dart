@@ -151,10 +151,10 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
   }
 
   Future<String> getInstanceId() async {
-    final rand = getRandString(10);
     final value = await get(instance_id, defaultValue: null);
 
     if (value == null) {
+      final rand = getRandString(10);
       await set(instance_id, rand);
       return rand;
     }

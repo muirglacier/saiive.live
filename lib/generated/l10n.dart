@@ -2435,16 +2435,6 @@ class S {
     );
   }
 
-  /// `Loans are currently a Beta Feature! Use at your own risk`
-  String get loan_beta {
-    return Intl.message(
-      'Loans are currently a Beta Feature! Use at your own risk',
-      name: 'loan_beta',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Vaults`
   String get loan_vaults {
     return Intl.message(
@@ -3420,6 +3410,116 @@ class S {
     return Intl.message(
       'Edit',
       name: 'loan_collateral_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FAQ`
+  String get loan_faq {
+    return Intl.message(
+      'FAQ',
+      name: 'loan_faq',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How is the collateralization ratio calculated?`
+  String get loan_faq_collateral {
+    return Intl.message(
+      'How is the collateralization ratio calculated?',
+      name: 'loan_faq_collateral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The collateralization ratio is calculated by taking the total collateral value deposited in a vault; divided by the amount of loan taken plus total interest, expressed in percentage.`
+  String get loan_faq_collateral_answer {
+    return Intl.message(
+      'The collateralization ratio is calculated by taking the total collateral value deposited in a vault; divided by the amount of loan taken plus total interest, expressed in percentage.',
+      name: 'loan_faq_collateral_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What is the collateralization ratio used for?`
+  String get loan_faq_collateral_ratio {
+    return Intl.message(
+      'What is the collateralization ratio used for?',
+      name: 'loan_faq_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The collateralization ratio determines the state of the vault. A ratio below the minimum collaterization ratio results in liquidation, upon which, a vault's collaterals will be sent for auction.\n\nIndicators have been included to help visualise the health of your vault, where:\n\nRed: 1x – 1.25x above the minimum collateralization ratio\n\nYellow: 1.25x – 1.5x the minimum collateralization ratio\n\nGreen: More than 1.5x the minimum collateralization ratio`
+  String get loan_faq_collateral_ratio_answer {
+    return Intl.message(
+      'The collateralization ratio determines the state of the vault. A ratio below the minimum collaterization ratio results in liquidation, upon which, a vault\'s collaterals will be sent for auction.\n\nIndicators have been included to help visualise the health of your vault, where:\n\nRed: 1x – 1.25x above the minimum collateralization ratio\n\nYellow: 1.25x – 1.5x the minimum collateralization ratio\n\nGreen: More than 1.5x the minimum collateralization ratio',
+      name: 'loan_faq_collateral_ratio_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What does the different status of a vault mean?`
+  String get loan_faq_vault_status {
+    return Intl.message(
+      'What does the different status of a vault mean?',
+      name: 'loan_faq_vault_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active: When a vault has been created but no loan has been taken yet\n\nAt risk: When the collateralization ratio of a vault is between 1x – 1.5x the minimum collateralization ratio\n\nHealthy: When the collateralization ratio of a vault is more than 1.5x the minimum collateralization ratio\n\nIn liquidation: When a vault's collateralization ratio falls below the minimum requirement\n\nHalted: When any token in the vault (collateral or loan) has fluctuated more than 30% in the past hour`
+  String get loan_faq_vault_status_answer {
+    return Intl.message(
+      'Active: When a vault has been created but no loan has been taken yet\n\nAt risk: When the collateralization ratio of a vault is between 1x – 1.5x the minimum collateralization ratio\n\nHealthy: When the collateralization ratio of a vault is more than 1.5x the minimum collateralization ratio\n\nIn liquidation: When a vault\'s collateralization ratio falls below the minimum requirement\n\nHalted: When any token in the vault (collateral or loan) has fluctuated more than 30% in the past hour',
+      name: 'loan_faq_vault_status_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How are interests calculated for loan?`
+  String get loan_faq_vault_interests {
+    return Intl.message(
+      'How are interests calculated for loan?',
+      name: 'loan_faq_vault_interests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are 2 types of interests that applies for loans, namely vault interest rate and token interest rate.\n\nThe vault interest rate is determined when the vault owner selects the vault scheme, where the higher the minimum collateralization ratio, the lower the vault interest rate.\n\nThe token interest rate is applied on specific loan tokens, and can differ from token to token.\n\nThe total interest rate applied on a loan is derived by taking the vault interest rate + token interest rate, and is calculated on a per annum basis.`
+  String get loan_faq_vault_interests_answer {
+    return Intl.message(
+      'There are 2 types of interests that applies for loans, namely vault interest rate and token interest rate.\n\nThe vault interest rate is determined when the vault owner selects the vault scheme, where the higher the minimum collateralization ratio, the lower the vault interest rate.\n\nThe token interest rate is applied on specific loan tokens, and can differ from token to token.\n\nThe total interest rate applied on a loan is derived by taking the vault interest rate + token interest rate, and is calculated on a per annum basis.',
+      name: 'loan_faq_vault_interests_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What is collateral factor?`
+  String get loan_faq_vault_factor {
+    return Intl.message(
+      'What is collateral factor?',
+      name: 'loan_faq_vault_factor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, $100 worth of the token would contribute to $70 of collateral value in a vault.`
+  String get loan_faq_vault_factor_answer {
+    return Intl.message(
+      'The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, \$100 worth of the token would contribute to \$70 of collateral value in a vault.',
+      name: 'loan_faq_vault_factor_answer',
       desc: '',
       args: [],
     );

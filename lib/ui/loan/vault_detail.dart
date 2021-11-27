@@ -430,7 +430,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           width: double.infinity,
                           child: ElevatedButton(
                             child: Text(S.of(context).loan_close_vault),
-                            onPressed: () async {
+                            onPressed: widget.vault.loanAmounts.length > 0 ? null : () async {
                               await sl.get<AuthenticationHelper>().forceAuth(context, () async {
                                 await _doCloseVault();
                               });
@@ -473,14 +473,6 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
           controller: _scrollController,
           headerSliverBuilder: (context, value) {
             return [
-              SliverToBoxAdapter(
-                  child: Container(
-                      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                      child: AlertWidget(
-                        S.of(context).loan_beta,
-                        color: Colors.red,
-                        alert: Alert.error,
-                      ))),
               SliverToBoxAdapter(child: _buildTopPart()),
               SliverToBoxAdapter(
                 child: TabBar(

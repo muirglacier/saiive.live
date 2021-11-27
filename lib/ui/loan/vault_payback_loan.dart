@@ -73,7 +73,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     setState(() {
       balanceLoaded = true;
-      availableBalance = tokenBalance != null ? tokenBalance.balance : 0.0;
+      availableBalance = tokenBalance != null ? tokenBalance.balance : 0;
     });
   }
 

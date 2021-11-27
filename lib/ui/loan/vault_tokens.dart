@@ -77,14 +77,6 @@ class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliv
 
     return CustomScrollView(
       slivers: <Widget>[
-        SliverToBoxAdapter(
-            child: Container(
-                padding: EdgeInsets.all(10),
-                child: AlertWidget(
-                  S.of(context).loan_beta,
-                  color: Colors.red,
-                  alert: Alert.error,
-                ))),
         SliverToBoxAdapter(child: Container(child: row)),
       ],
     );

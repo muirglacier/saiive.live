@@ -320,6 +320,7 @@
   "loan_collateral_ratio_to_little": "Your collateral ratio fell bellow the defined ratio in the Scheme.",
   "loan_change_collateral": "Change Collateral",
   "loan_close_vault": "Close Vault",
+  "loan_close_vault_not_possible_due_loans": "Close vault not possible, you still have open loans in it!",
   "loan_vault_details_tab_active_loan": "Active Loans",
   "loan_vault_details_tab_details": "Details",
   "loan_vault_details_tab_collaterals": "Collaterals",

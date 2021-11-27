@@ -68,6 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     await sl.get<IVault>().setSeed(null);
     await sl.get<ISharedPrefsUtil>().setPasswordHash(null);
+    await sl.get<ISharedPrefsUtil>().resetInstanceId();
     await sl.get<IWalletService>().close();
     await sl.get<IWalletService>().destroy();
 

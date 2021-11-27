@@ -35,6 +35,11 @@ class _VaultBorrowLoanChooseTokenScreen extends State<VaultBorrowLoanChooseToken
   }
 
   Widget _buildTokenEntry(LoanToken token) {
+    var loanTokenPriceUSD = token.activePrice != null ? token.activePrice.active.amount : 0.0;
+
+    if (token.token.symbolKey == "DUSD") {
+      loanTokenPriceUSD = 1.0;
+    }
     return Card(
         child: ListTile(
       title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -48,7 +53,7 @@ class _VaultBorrowLoanChooseTokenScreen extends State<VaultBorrowLoanChooseToken
             style: Theme.of(context).textTheme.caption,
           ),
           Container(width: 5),
-          Text(FundFormatter.format(token.activePrice != null ? token.activePrice.active.amount : 0, fractions: 2))
+          Text(FundFormatter.format(loanTokenPriceUSD, fractions: 2))
         ])
       ]),
       onTap: () {

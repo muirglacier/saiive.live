@@ -44,21 +44,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
     try {
       // iOS key store is persistent, so if this is first launch then we will clear the keystore
-      bool hasSeedGenerated = true;
-      var seed = await sl.get<IVault>().getSeed();
-
-      hasSeedGenerated = seed != null;
-
       bool firstLaunch = await sl.get<ISharedPrefsUtil>().getFirstLaunch();
       if (firstLaunch) {
         await sl.get<IVault>().deleteAll();
       } else {
-        if (!_alreadyUnlocked && hasSeedGenerated) {
+        if (!_alreadyUnlocked) {
           _alreadyUnlocked = await sl.get<IUnlockHandler>().unlockScreen(context, canCancel: false);
         }
       }
       await sl.get<ISharedPrefsUtil>().setFirstLaunch();
       // See if have already a seed generated
+      bool hasSeedGenerated = true;
+      var seed = await sl.get<IVault>().getSeed();
+
+      hasSeedGenerated = seed != null;
 
       var route = '/intro_welcome';
       if (hasSeedGenerated) {

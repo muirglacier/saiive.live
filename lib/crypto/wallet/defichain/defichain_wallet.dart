@@ -120,6 +120,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       amountB = useAmount.item1;
     }
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     final tokenAType = await apiService.tokenService.getToken("DFI", tokenA);
     final tokenBType = await apiService.tokenService.getToken("DFI", tokenB);
@@ -266,6 +267,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<Tuple3<String, List<tx.Transaction>, String>> _createSwapV2(
       String fromToken, int fromAmount, String toToken, String to, int maxPrice, int maxPriceFraction, List<int> poolIds,
       {String returnAddress, StreamController<String> loadingStream}) async {
+    if (DeFiConstants.isDfiToken(fromToken)) {
+      var prep = await prepareAccount(to, fromAmount, loadingStream: loadingStream);
+      fromAmount = prep.item1;
+    }
+
     final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
 
     if (fromTokenBalance.balance < fromAmount) {
@@ -392,6 +398,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final address = await walletDatabase.getWalletAddress(ownerAddress);
     final walletAccount = await walletDatabase.getAccount(address.accountId);
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     var keyPair = await getPrivateKey(address, walletAccount);
     keys.add(Tuple2(address, keyPair));
@@ -437,6 +444,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
+
     var fees = await getTxFee(1, 2);
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
@@ -798,6 +807,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 
       final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
+      await checkIfWeCanSpendTheChangeAddress(changeAddress);
+
       if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
         continue;
       }

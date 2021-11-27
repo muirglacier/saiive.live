@@ -2865,6 +2865,16 @@ class S {
     );
   }
 
+  /// `Close vault not possible, you still have open loans in it!`
+  String get loan_close_vault_not_possible_due_loans {
+    return Intl.message(
+      'Close vault not possible, you still have open loans in it!',
+      name: 'loan_close_vault_not_possible_due_loans',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Active Loans`
   String get loan_vault_details_tab_active_loan {
     return Intl.message(

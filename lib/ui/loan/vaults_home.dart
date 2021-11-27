@@ -64,6 +64,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
             toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
             bottom: TabBar(
               controller: _tabController,
+              indicatorColor: StateContainer.of(context).curTheme.lightColor,
               tabs: [
                 Tab(text: S.of(context).loan_browse_loans),
                 Tab(text: S.of(context).loan_your_loans),

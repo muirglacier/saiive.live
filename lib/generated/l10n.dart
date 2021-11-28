@@ -1595,6 +1595,16 @@ class S {
     );
   }
 
+  /// `Resync wallet`
+  String get resync_wallet_from_seed {
+    return Intl.message(
+      'Resync wallet',
+      name: 'resync_wallet_from_seed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Removed saved seed`
   String get settings_removed_seed {
     return Intl.message(

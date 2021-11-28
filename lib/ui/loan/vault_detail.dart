@@ -17,6 +17,7 @@ import 'package:saiive.live/network/vaults_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan.dart';
+import 'package:saiive.live/ui/loan/vault_edit_scheme.dart';
 import 'package:saiive.live/ui/loan/vault_payback_loan.dart';
 import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
@@ -53,6 +54,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   List<LoanCollateral> _tokens;
   List<LoanToken> _loanTokens;
   bool _loading = false;
+  bool _canEditCollateral = true;
 
   LoanVault myVault;
 
@@ -85,6 +87,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     myVault = widget.vault;
 
     _initTokens();
+
+    _canEditCollateral = widget.vault.state != LoanVaultStatus.inLiquidation && widget.vault.state != LoanVaultStatus.unknown && widget.vault.state != LoanVaultStatus.frozen;
 
     super.initState();
   }
@@ -410,10 +414,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           width: double.infinity,
                           child: ElevatedButton(
                             child: Text(S.of(context).loan_change_collateral),
-                            onPressed: () async {
+                            onPressed: _canEditCollateral ? () async {
                               await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(myVault, _tokens)));
                               await refreshVault();
-                            },
+                            } : null,
                           )),
                       SizedBox(height: 10),
                       SizedBox(
@@ -422,6 +426,16 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                             child: Text(S.of(context).loan_borrow),
                             onPressed: () async {
                               await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
+                              await refreshVault();
+                            },
+                          )),
+                      SizedBox(height: 10),
+                      SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            child: Text(S.of(context).loan_edit_scheme),
+                            onPressed: () async {
+                              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultEditSchemeScreen(myVault)));
                               await refreshVault();
                             },
                           )),

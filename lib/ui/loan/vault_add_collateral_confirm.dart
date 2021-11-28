@@ -82,6 +82,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
         ));
       }
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } catch (e) {
       // ignore
     } finally {

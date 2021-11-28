@@ -23,7 +23,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
   TabController _tabController;
   int _selectedIndex = 0;
 
-  var _tabs = [VaultTokensScreen(), VaultsScreen()];
+  var _tabs = [VaultsScreen(), VaultTokensScreen()];
 
   StreamSubscription<VaultSyncStartEvent> _vaultSyncStartEvent;
 
@@ -66,8 +66,8 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
               controller: _tabController,
               indicatorColor: StateContainer.of(context).curTheme.lightColor,
               tabs: [
-                Tab(text: S.of(context).loan_browse_loans),
                 Tab(text: S.of(context).loan_your_loans),
+                Tab(text: S.of(context).loan_browse_loans),
               ],
             ),
             title: Row(children: [

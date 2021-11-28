@@ -36,7 +36,10 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
       var demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
 
       if (Platform.isAndroid || Platform.isWindows) {
-        demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+        demoWords2 =
+            "wrong turtle frost decide labor verify correct north interest explain velvet mirror that frost alcohol brain ripple coach fortune verb surge suffer pizza rate";
+        // demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+        //demoWords2 = "rely denial exact surprise entire female lounge play put click charge finger leader true raven mobile inflict kitten lady topic caught input there apple";
       }
       //demoWords2 = "capital sick crisp frozen dial black syrup burden fruit loan material wheel giraffe slight sentence long cancel quit parrot arena wine island mutual praise";
       // demoWords2 = "";

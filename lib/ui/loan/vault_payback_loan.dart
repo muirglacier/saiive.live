@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
+import 'package:saiive.live/ui/widgets/alert_widget.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
@@ -41,20 +43,22 @@ class VaultPaybackLoanScreen extends StatefulWidget {
 
 class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   double percentage = 100;
-  double amountToRemove = 0;
+  int amountToRemove = 0;
+  double amountToRemoveDouble = 0.0;
   int availableBalance = 0;
   bool balanceLoaded = false;
   var _percentageTextController = TextEditingController(text: '100');
 
   double totalVaultValue = 0.0;
+  int totalVaultValueSat = 0;
   String _returnAddress;
 
   @override
   void initState() {
     super.initState();
 
-    totalVaultValue = double.parse(widget.loanAmount.amount) - double.parse(widget.loanInterest.amount);
-
+    totalVaultValue = double.parse(widget.loanAmount.amount);
+    totalVaultValueSat = (totalVaultValue * 100000000).round();
     loadBalance();
 
     handleChangePercentage();
@@ -80,7 +84,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     var streamController = StreamController<String>();
     try {
-      var paybackLoan = wallet.paybackLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, (amountToRemove * 100000000).round(),
+      var paybackLoan = wallet.paybackLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, amountToRemove,
           returnAddress: _returnAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
@@ -93,7 +97,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_payback_success),
       ));
 
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pop();
     } catch (e) {
       await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
@@ -104,20 +108,35 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
     }
   }
 
+  calculateMaxToPayback() {
+    if (availableBalance > totalVaultValueSat) {
+      _percentageTextController.text = "100.0";
+    } else {
+      var dif = min(availableBalance, totalVaultValueSat) / max(totalVaultValueSat, availableBalance);
+
+      var difPercentage = dif * 100;
+      _percentageTextController.text = difPercentage.toString();
+    }
+    handleChangePercentage();
+  }
+
   handleChangePercentage() {
     double amount = double.tryParse(_percentageTextController.text.replaceAll(',', '.'));
 
     if (amount == null) {
       return;
     }
+    double toRemove = 0;
+    percentage = amount;
+    if (percentage == 100) {
+      toRemove = totalVaultValue;
+    } else {
+      toRemove = (totalVaultValue / 100) * amount;
+    }
 
     setState(() {
-      percentage = amount;
-      if (percentage == 100) {
-        amountToRemove = totalVaultValue;
-      } else {
-        amountToRemove = (totalVaultValue / 100) * amount;
-      }
+      amountToRemoveDouble = toRemove;
+      amountToRemove = (toRemove * 100000000).round();
     });
   }
 
@@ -149,7 +168,13 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
                     _percentageTextController.text = value.toStringAsFixed(1);
                   });
                 },
-              ))
+              )),
+          ElevatedButton(
+            child: Text(S.of(context).dex_add_max),
+            onPressed: () {
+              calculateMaxToPayback();
+            },
+          )
         ]),
         Padding(
             padding: const EdgeInsets.only(left: 0, right: 0, bottom: 10, top: 10),
@@ -160,21 +185,34 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
                 });
               },
             )),
+        if (amountToRemove > availableBalance)
+          AlertWidget(
+            S.of(context).loan_payback_loan_insufficient_funds,
+            color: Colors.red,
+            alert: Alert.error,
+          ),
         if (percentage > 0)
           ElevatedButton(
             child: Text(S.of(context).loan_payback),
-            onPressed: () async {
-              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                await doPaybakLoan();
-              });
-            },
+            onPressed: availableBalance >= amountToRemove
+                ? () async {
+                    await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                      await doPaybakLoan();
+                    });
+                  }
+                : null,
           )
       ])
     ]);
   }
 
   buildAmount() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0;
+    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0.0;
+
+    if (widget.loanAmount.symbolKey == "DUSD") {
+      pricePerToken = 1.0;
+    }
+
     var totalAmount = pricePerToken * totalVaultValue;
 
     return Card(
@@ -212,7 +250,11 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   buildPayback() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0;
+    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0.0;
+
+    if (widget.loanAmount.symbolKey == "DUSD") {
+      pricePerToken = 1.0;
+    }
 
     return Card(
         child: Padding(
@@ -220,7 +262,10 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             child: Column(children: [
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text(S.of(context).loan_tokens_to_pay_back, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_payback_value)]),
-                TableRow(children: [Text(FundFormatter.format(amountToRemove)), Text(FundFormatter.format(amountToRemove * pricePerToken, fractions: 4))]),
+                TableRow(children: [
+                  Text(FundFormatter.format(amountToRemoveDouble)),
+                  Text(FundFormatter.format((amountToRemoveDouble) * pricePerToken, fractions: 2) + " \$"),
+                ]),
               ])
             ])));
   }

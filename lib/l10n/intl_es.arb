@@ -9,6 +9,7 @@
   "home_wallet": "Wallet",
   "home_liquidity": "Liquidez",
   "home_dex": "DEX",
+  "home_dex_v2": "DEX V2",
   "home_tokens": "Tokens",
   
   "welcome": "Bienvenido",
@@ -85,6 +86,7 @@
   "wallet_operation_failed": "Transacción fallida :(",
   "wallet_operation_no_utxo": "No UTXO existing. To create a transaction your wallet needs to have some UTXO!",
   "wallet_operation_wait_for_confirmation": "Esperando confirmación...",
+  "wallet_operation_tx_wait_for_confirmation": "Esperando confirmación ({txId})...",
   "wallet_operation_success": "Transacción exitosa :)",
   "wallet_operation_show_tx": "Mostrar transacción en el explorador...",
   "wallet_restore_noAccountFound": "No encontramos una cuenta de usuario, ¡pero la hemos creado para ti!",
@@ -195,6 +197,7 @@
   "cancel": "cancelar",
 
   "dex": "DEX",
+  "dex_v2": "DEX V2",
   "dex_add_max": "max",
   "dex_from_token": "De Token",
   "dex_from_amount": "De Cantidad",

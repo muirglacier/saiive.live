@@ -58,6 +58,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     _initTokens();
     _initVaults();
 
+    if (widget.loanVault != null) {
+      _collateralizationRatio = double.tryParse(widget.loanVault.collateralRatio);
+    }
     _amountController.addListener(handleChange);
   }
 
@@ -87,23 +90,47 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   handleChange() async {
+    if (_loanVault == null) {
+      return;
+    }
     double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
 
     if (null == amount) {
       return;
     }
 
+    var otherLoanValues = _loanVault.loanAmounts.fold(0.0, (previousValue, element) {
+      if (element.symbol == _loanToken.token.symbol) {
+        return previousValue;
+      }
+
+      var amount = double.tryParse(element.amount);
+      var _loanTokenPriceUSD = element.activePrice != null ? element.activePrice.active.amount : 0;
+
+      if (_loanToken.token.symbolKey == "DUSD") {
+        _loanTokenPriceUSD = 1;
+      }
+
+      return previousValue + (amount * _loanTokenPriceUSD);
+    });
+
+    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null);
+
     var _interestToken = double.tryParse(_loanToken.interest);
     var _interestVault = double.tryParse(_loanVault.schema.interestRate);
+    var totalAmount = (currentLoanAmount != null ? double.tryParse(currentLoanAmount.amount) : 0.0) + amount;
 
     _totalInterest = _interestVault + _interestToken;
-    _totalInterestAmount = (amount * _totalInterest / 100);
-    _totalTokenWithInterest = amount + _totalInterestAmount;
+    _totalInterestAmount = (totalAmount * _totalInterest / 100);
+    _totalTokenWithInterest = totalAmount + _totalInterestAmount;
 
     var _loanTokenPriceUSD = _loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0;
 
-    _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD;
-    _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
+    if (_loanToken.token.symbolKey == "DUSD") {
+      _loanTokenPriceUSD = 1;
+    }
+
+    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + otherLoanValues;
 
     setState(() {
       _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
@@ -112,6 +139,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   }
 
   buildTokenEntry() {
+    var currentLoanAmount =
+        _loanToken != null && _loanVault != null ? _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null) : null;
+
     return InkWell(
         onTap: () {
           setState(() {
@@ -142,46 +172,39 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                     child: Column(children: [
                       Row(
                         children: <Widget>[
-                          Container(
-                              decoration:
-                                  BoxDecoration(color: Colors.transparent),
-                              child: TokenIcon(_loanToken.token.symbolKey)),
+                          Container(decoration: BoxDecoration(color: Colors.transparent), child: TokenIcon(_loanToken.token.symbolKey)),
                           Container(width: 10),
                           Expanded(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                Text(
-                                  _loanToken.token.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.headline6,
-                                )
-                              ])),
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            Text(
+                              _loanToken.token.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.headline6,
+                            )
+                          ])),
                           Container(width: 10),
-                          Container(
-                              decoration:
-                                  BoxDecoration(color: Colors.transparent),
-                              child: Icon(Icons.swap_vert_outlined))
+                          Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.swap_vert_outlined))
                         ],
                       ),
-                      Container(height: 5),
                       Row(children: [
-                        Text(S.of(context).loan_price_usd,
-                            style: Theme.of(context).textTheme.caption),
+                        Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(_loanToken.activePrice != null
-                            ? FundFormatter.format(
-                                    _loanToken.activePrice.active.amount,
-                                    fractions: 2) +
-                                ' \$'
-                            : '-'),
+                        Text(_loanToken.activePrice != null ? FundFormatter.format(_loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
                       ]),
-                      Row(children: [
-                        Text(S.of(context).loan_interest,
-                            style: Theme.of(context).textTheme.caption),
-                        Spacer(),
-                        Text(_loanToken.interest + '%')
-                      ])
+                      if (currentLoanAmount != null)
+                        Row(children: [
+                          Text(S.of(context).loan_current_amount, style: Theme.of(context).textTheme.caption),
+                          Spacer(),
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount))),
+                        ]),
+                      if (currentLoanAmount != null)
+                        Row(children: [
+                          Text(S.of(context).loan_current_amount_usd, style: Theme.of(context).textTheme.caption),
+                          Spacer(),
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) +
+                              ' \$'),
+                        ]),
+                      Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanToken.interest + '%')])
                     ]))));
   }
 
@@ -201,7 +224,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
   Widget _buildChooseLoanTokenPanel() {
     return Navigated(
         child: VaultBorrowLoanChooseTokenScreen(_tokens, (LoanToken token) {
-          _loanToken = token;
+      _loanToken = token;
 
       setState(() {
         _panel = Container();
@@ -272,7 +295,22 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         Spacer(),
                         Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue), fractions: 2) + ' \$'),
                       ]),
-                      Row(children: [Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')])
+                      Row(children: [
+                        Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption),
+                        Spacer(),
+                        Text(FundFormatter.format(double.tryParse(_loanVault.loanValue), fractions: 2) + ' \$'),
+                      ]),
+                      Row(children: [
+                        Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption),
+                        Spacer(),
+                        Text(_loanVault.collateralRatio + '%'),
+                      ]),
+                      Row(children: [
+                        Text(S.of(context).loan_min_collateral_ratio, style: Theme.of(context).textTheme.caption),
+                        Spacer(),
+                        Text(_loanVault.schema.minColRatio + '%')
+                      ]),
+                      Row(children: [Text(S.of(context).loan_vault_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanVault.schema.interestRate + '%')]),
                     ]))));
   }
 
@@ -325,50 +363,50 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
             body: Padding(
                 padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onPanDown: (_) {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                  child: NestedScrollView(
-                    headerSliverBuilder: (context, value) {
-                      return [
-                        SliverToBoxAdapter(
-                            child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
-                        SliverToBoxAdapter(child: buildTokenEntry()),
-                        SliverToBoxAdapter(
-                            child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
-                        SliverToBoxAdapter(child: buildVaultEntry()),
-                      ];
+                    behavior: HitTestBehavior.opaque,
+                    onPanDown: (_) {
+                      FocusScope.of(context).requestFocus(FocusNode());
                     },
-                    body: Column(children: [
-                      if (_loanVault != null && _loanToken != null)
-                        Column(children: [
-                          Container(height: 20),
-                          Text(S.of(context).loan_amount),
-                          TextField(
-                              controller: _amountController,
-                              decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-                              keyboardType: TextInputType.numberWithOptions(decimal: true)),
-                          buildTXDetails(),
-                          Padding(
-                              padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
-                              child: WalletReturnAddressWidget(
-                                onChanged: (v) {
-                                  setState(() {
-                                    _returnAddress = v;
-                                  });
-                                },
-                              )),
-                          SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                child: Text(S.of(context).loan_continue),
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
-                                },
-                              ))
-                        ]),
-                    ]))))));
+                    child: NestedScrollView(
+                        headerSliverBuilder: (context, value) {
+                          return [
+                            SliverToBoxAdapter(
+                                child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
+                            SliverToBoxAdapter(child: buildTokenEntry()),
+                            SliverToBoxAdapter(
+                                child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
+                            SliverToBoxAdapter(child: buildVaultEntry()),
+                          ];
+                        },
+                        body: Column(children: [
+                          if (_loanVault != null && _loanToken != null)
+                            Column(children: [
+                              Container(height: 20),
+                              Text(S.of(context).loan_amount),
+                              TextField(
+                                  controller: _amountController,
+                                  decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+                                  keyboardType: TextInputType.numberWithOptions(decimal: true)),
+                              buildTXDetails(),
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
+                                  child: WalletReturnAddressWidget(
+                                    onChanged: (v) {
+                                      setState(() {
+                                        _returnAddress = v;
+                                      });
+                                    },
+                                  )),
+                              SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    child: Text(S.of(context).loan_continue),
+                                    onPressed: () async {
+                                      await Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
+                                    },
+                                  ))
+                            ]),
+                        ]))))));
   }
 }

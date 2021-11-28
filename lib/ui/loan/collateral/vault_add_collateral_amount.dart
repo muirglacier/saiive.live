@@ -17,8 +17,7 @@ class VaultAddCollateralAmountScreen extends StatefulWidget {
   }
 }
 
-class _VaultAddCollateralAmountScreen
-    extends State<VaultAddCollateralAmountScreen> {
+class _VaultAddCollateralAmountScreen extends State<VaultAddCollateralAmountScreen> {
   var _amountController = TextEditingController(text: '');
   double _amount = 0;
   bool _valid = false;
@@ -31,8 +30,7 @@ class _VaultAddCollateralAmountScreen
   }
 
   handleChange() async {
-    double amount =
-        double.tryParse(_amountController.text.replaceAll(',', '.'));
+    double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     bool valid = true;
 
     if (null == amount) {
@@ -54,6 +52,15 @@ class _VaultAddCollateralAmountScreen
     });
   }
 
+  handleSetMax() async {
+    if (widget.token == null) {
+      return;
+    }
+    setState(() {
+      _amountController.text = widget.token.balanceDisplay.toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,35 +68,36 @@ class _VaultAddCollateralAmountScreen
             color: StateContainer.of(context).curTheme.cardBackgroundColor,
             child: Padding(
                 padding: EdgeInsets.all(30),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextField(
-                          controller: _amountController,
-                          decoration: InputDecoration(
-                              hintText: S.of(context).loan_add_collateral_how_much,
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 10.0)),
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true)),
-                      Container(height: 10),
-                      Text(S.of(context).loan_add_collateral_available + ': ' +
-                          FundFormatter.format(widget.token.balanceDisplay)),
-                      SizedBox(
-                        height: 20,
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  TextField(
+                      controller: _amountController,
+                      decoration: InputDecoration(
+                        hintText: S.of(context).loan_change_collateral_how_much,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                        suffixIcon: ElevatedButton(
+                            child: Text(S.of(context).liquidity_add_max),
+                            onPressed: () {
+                              handleSetMax();
+                            }),
                       ),
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            child: Text(S.of(context).liquidity_add),
-                            onPressed: _amount == null || _amount == 0
-                                ? null
-                                : () {
-                                    this.widget.onCollateralChanged(_amount);
-                                  },
-                          )),
-                      Container(height: 10),
-                      if (!_valid) Text(S.of(context).loan_add_collateral_insufficient_funds)
-                    ]))));
+                      keyboardType: TextInputType.numberWithOptions(decimal: true)),
+                  Container(height: 10),
+                  Text(S.of(context).loan_add_collateral_available + ': ' + FundFormatter.format(widget.token.balanceDisplay - widget.addedAmount)),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        child: Text(S.of(context).liquidity_add),
+                        onPressed: _amount == null || _amount == 0
+                            ? null
+                            : () {
+                                this.widget.onCollateralChanged(_amount);
+                              },
+                      )),
+                  Container(height: 10),
+                  if (!_valid) Text(S.of(context).loan_add_collateral_insufficient_funds)
+                ]))));
   }
 }

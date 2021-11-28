@@ -4,6 +4,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/errors/NoUtxoError.dart';
 import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
+import 'package:saiive.live/crypto/errors/RegenerateWalletAddressError.dart';
 import 'package:saiive.live/crypto/errors/TransactionError.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/env.dart';
@@ -85,6 +86,11 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     } else if (widget.error is ReadOnlyAccountError) {
       _errorText = "We used a readonly address to create the transaction. This should not happen!";
       _copyText += _errorText;
+    } else if (widget.error is RegenerateWalletAddressError) {
+      final txError = widget.error as RegenerateWalletAddressError;
+      _errorText = txError.error;
+
+      _copyText += txError.copyText() + "\r\n" + stackTrace;
     } else {
       _errorText = widget.error.toString();
       _copyText += _errorText + "\r\n" + stackTrace;
@@ -159,38 +165,40 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         backgroundColor: Colors.red,
-        body: Padding(padding: EdgeInsets.all(10), child: Center(
-            child: SingleChildScrollView(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(Icons.error_outline_outlined, size: 50),
-          Text(
-            widget.text,
-            style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w800),
-          ),
-          if (widget.additional != null && widget.additional.isNotEmpty)
-            Text(
-              widget.additional,
-              style: TextStyle(fontSize: 30, color: Colors.white),
-            ),
-          if (widget.error != null) SizedBox(height: 30),
-          if (widget.error != null)
-            SelectableText(
-              _errorText,
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            ),
-          if (widget.error != null) SizedBox(height: 30),
-          Text(S.of(context).wallet_operation_share, style: TextStyle(fontSize: 30, color: Colors.white)),
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () async {
-                  var pasteAndShareFuture = pasteAndShare();
-                  final overlay = LoadingOverlay.of(context);
-                  await overlay.during(pasteAndShareFuture);
-                },
-                child: Icon(Icons.share, size: 26.0, color: Colors.white),
-              )),
-          if (_isMissingUtxoError) utxoRechagerLink(context)
-        ])))));
+        body: Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+                child: SingleChildScrollView(
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(Icons.error_outline_outlined, size: 50),
+              Text(
+                widget.text,
+                style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w800),
+              ),
+              if (widget.additional != null && widget.additional.isNotEmpty)
+                Text(
+                  widget.additional,
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              if (widget.error != null) SizedBox(height: 30),
+              if (widget.error != null)
+                SelectableText(
+                  _errorText,
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              if (widget.error != null) SizedBox(height: 30),
+              Text(S.of(context).wallet_operation_share, style: TextStyle(fontSize: 30, color: Colors.white)),
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      var pasteAndShareFuture = pasteAndShare();
+                      final overlay = LoadingOverlay.of(context);
+                      await overlay.during(pasteAndShareFuture);
+                    },
+                    child: Icon(Icons.share, size: 26.0, color: Colors.white),
+                  )),
+              if (_isMissingUtxoError) utxoRechagerLink(context)
+            ])))));
   }
 }

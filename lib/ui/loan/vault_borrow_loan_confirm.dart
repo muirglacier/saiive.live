@@ -137,7 +137,8 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
         builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_borrow_success),
       ));
 
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } catch (e) {
       streamController.close();
       await Navigator.of(context).push(MaterialPageRoute(

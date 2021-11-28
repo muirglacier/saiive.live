@@ -46,13 +46,19 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   List<AccountBalance> _accountBalance;
   double _collateralValue;
   bool isDFILessThan50 = false;
+  bool hasLoan = false;
   String _returnAddress;
+  bool collateralRatioNotRight = false;
+
+  double _collateralizationRatio = 0;
 
   @override
   void initState() {
     super.initState();
 
     _collateralValue = double.tryParse(widget.vault.collateralValue);
+    _collateralizationRatio = double.tryParse(widget.vault.collateralRatio);
+    hasLoan = widget.vault.loanAmounts.length > 0;
 
     _loadBalance();
   }
@@ -61,7 +67,9 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var amount = widget.vault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
     var token = widget.collateralTokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
     var percentage = 0.0;
-    var newAmount = null;
+    var newAmount;
+    var totalLoanValue = double.tryParse(widget.vault.loanValue);
+    var minCollateralRatio = double.tryParse(widget.vault.schema.minColRatio);
 
     var totalDFI = 0.0;
 
@@ -75,14 +83,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
     if (token != null) {
       newAmount = LoanVaultAmount(id: '0', amount: totalDFI.toString(), symbol: 'DFI', symbolKey: 'DFI', activePrice: token.activePrice);
-    }
-
-    if (null != amount && null != token) {
       percentage = LoanHelper.calculateCollateralShare(_collateralValue, newAmount, token);
     }
 
     setState(() {
       isDFILessThan50 = percentage < 50.0;
+      _collateralizationRatio = hasLoan ? (100 / totalLoanValue) * _collateralValue : -1;
+      collateralRatioNotRight = hasLoan ? minCollateralRatio > _collateralizationRatio : false;
     });
   }
 
@@ -99,13 +106,16 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
   Widget _buildAddCollateralPanel() {
     return Navigated(
-        child: VaultAddCollateralTokenScreen(this._accountBalance, widget.collateralTokens, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
+        child: VaultAddCollateralTokenScreen(
+            this._accountBalance, widget.collateralTokens, widget.vault, this.changes, (token, amount) => this.handleChangeAddCollateral(token, amount)));
   }
 
   Widget _buildChangeCollateralPanel(LoanVaultAmount amount) {
     var balance = _accountBalance.firstWhere((element) => element.token == amount.symbolKey, orElse: () => null);
 
-    return Navigated(child: VaultEditCollateralTokenScreen(amount, balance, (loanAmount, amount) => this.handleChangeEditCollateral(loanAmount, amount)));
+    return Navigated(
+        child: VaultEditCollateralTokenScreen(
+            amount, changes.containsKey(amount.symbol) ? changes[amount.symbol] : 0, balance, (loanAmount, amount) => this.handleChangeEditCollateral(loanAmount, amount)));
   }
 
   Widget _buildTopPart() {
@@ -128,7 +138,11 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             style: Theme.of(context).textTheme.headline6,
                           ),
                           Text(S.of(context).loan_collateral_value),
-                          Text(FundFormatter.format(_collateralValue, fractions: 2) + ' \$')
+                          Text(FundFormatter.format(_collateralValue, fractions: 2) + ' \$'),
+                          Text(S.of(context).loan_min_collateral_ratio),
+                          Text(widget.vault.schema.minColRatio + '%'),
+                          Text(S.of(context).loan_collateral_ratio),
+                          Text(_collateralizationRatio.toStringAsFixed(2) + '%')
                         ])),
                       ],
                     ),
@@ -137,14 +151,9 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   }
 
   handleRemoveCollateral(LoanVaultAmount loanAmount) {
-    var existing = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
     var existingCollateral = widget._collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
 
-    if (existing != null) {
-      this.changes.remove(loanAmount.symbolKey);
-    } else {
-      this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
-    }
+    this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
 
     if (existingCollateral != null) {
       setState(() {
@@ -156,24 +165,40 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
   }
 
   handleChangeEditCollateral(LoanVaultAmount loanAmount, double newAmount) {
-    var totalLoanAmountWithChanges = double.tryParse(loanAmount.amount);
-    var diff = newAmount - totalLoanAmountWithChanges;
-    var existing = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
+    var existingCollateral = widget.vault.collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
+    var existingChange = this.changes.keys.firstWhere((element) => element == loanAmount.symbolKey, orElse: () => null);
 
-    if (existing != null) {
-      if (-1 * diff >= changes[existing]) {
+    if (existingCollateral != null) {
+      var totalLoanAmountWithChanges = double.tryParse(existingCollateral.amount);
+      var diff = newAmount - totalLoanAmountWithChanges;
+
+      if (diff == 0) {
         changes.remove(loanAmount.symbolKey);
       } else {
-        changes[loanAmount.symbolKey] += diff;
+        var changedAmount = totalLoanAmountWithChanges + diff;
+        changes[loanAmount.symbolKey] = diff;
+
+        loanAmount.amount = changedAmount.toString();
       }
     } else {
-      changes[loanAmount.symbolKey] = diff;
+      var totalLoanAmountWithChanges = double.tryParse(loanAmount.amount);
+      var diff = newAmount - totalLoanAmountWithChanges;
+
+      if (existingChange != null) {
+        if (-1 * diff >= changes[existingChange]) {
+          changes.remove(loanAmount.symbolKey);
+        } else {
+          changes[loanAmount.symbolKey] += diff;
+        }
+      } else {
+        changes[loanAmount.symbolKey] = diff;
+      }
+
+      newAmount = double.tryParse(loanAmount.amount) + diff;
     }
 
-    newAmount = double.tryParse(loanAmount.amount) + diff;
-
     setState(() {
-      loanAmount.amount = newAmount.toString();
+      loanAmount = loanAmount;
       _panel = Container();
     });
     _recalculateValue();
@@ -345,6 +370,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
             slivers: [
               SliverToBoxAdapter(child: _buildTopPart()),
               if (isDFILessThan50) SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red))),
+              if (collateralRatioNotRight)
+                SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(10), child: AlertWidget(S.of(context).loan_collateral_ratio_to_little, color: Colors.red))),
               widget._collateralAmounts.length > 0
                   ? SliverPadding(padding: EdgeInsets.only(left: 10, right: 10), sliver: _buildTabCollaterals())
                   : SliverToBoxAdapter(child: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: Text(S.of(context).loan_no_collateral_amounts))),
@@ -385,11 +412,18 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             width: double.infinity,
                             child: ElevatedButton(
                                 child: Text(S.of(context).loan_continue),
-                                onPressed: changes.length > 0
+                                onPressed: changes.length > 0 && !collateralRatioNotRight
                                     ? () async {
                                         await Navigator.of(context).push(MaterialPageRoute(
-                                            builder: (BuildContext context) => VaultAddCollateralConfirmScreen(widget.vault, widget.collateralTokens,
-                                                widget.vault.collateralAmounts, widget._collateralAmounts, _collateralValue, double.tryParse(widget.vault.collateralValue), changes, _returnAddress)));
+                                            builder: (BuildContext context) => VaultAddCollateralConfirmScreen(
+                                                widget.vault,
+                                                widget.collateralTokens,
+                                                widget.vault.collateralAmounts,
+                                                widget._collateralAmounts,
+                                                _collateralValue,
+                                                double.tryParse(widget.vault.collateralValue),
+                                                changes,
+                                                _returnAddress)));
                                       }
                                     : null)),
                         Padding(padding: EdgeInsets.only(bottom: 100))

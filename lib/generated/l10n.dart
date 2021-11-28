@@ -95,6 +95,16 @@ class S {
     );
   }
 
+  /// `DEX V2`
+  String get home_dex_v2 {
+    return Intl.message(
+      'DEX V2',
+      name: 'home_dex_v2',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tokens`
   String get home_tokens {
     return Intl.message(
@@ -762,6 +772,16 @@ class S {
       name: 'wallet_operation_wait_for_confirmation',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Wait for confirmation {txId}...`
+  String wallet_operation_tx_wait_for_confirmation(Object txId) {
+    return Intl.message(
+      'Wait for confirmation $txId...',
+      name: 'wallet_operation_tx_wait_for_confirmation',
+      desc: '',
+      args: [txId],
     );
   }
 
@@ -1575,6 +1595,16 @@ class S {
     );
   }
 
+  /// `Resync wallet`
+  String get resync_wallet_from_seed {
+    return Intl.message(
+      'Resync wallet',
+      name: 'resync_wallet_from_seed',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Removed saved seed`
   String get settings_removed_seed {
     return Intl.message(
@@ -1860,6 +1890,166 @@ class S {
     return Intl.message(
       'Receive tokens at',
       name: 'dex_to_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DEX V2`
+  String get dex_v2 {
+    return Intl.message(
+      'DEX V2',
+      name: 'dex_v2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `max`
+  String get dex_v2_add_max {
+    return Intl.message(
+      'max',
+      name: 'dex_v2_add_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From Token`
+  String get dex_v2_from_token {
+    return Intl.message(
+      'From Token',
+      name: 'dex_v2_from_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From Token`
+  String get dex_v2_to_token {
+    return Intl.message(
+      'From Token',
+      name: 'dex_v2_to_token',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From Amount`
+  String get dex_v2_from_amount {
+    return Intl.message(
+      'From Amount',
+      name: 'dex_v2_from_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max.`
+  String get dex_v2_max {
+    return Intl.message(
+      'Max.',
+      name: 'dex_v2_max',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `50%`
+  String get dex_v2_50 {
+    return Intl.message(
+      '50%',
+      name: 'dex_v2_50',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How much from you wanna swap?`
+  String get dex_v2_swap_amount {
+    return Intl.message(
+      'How much from you wanna swap?',
+      name: 'dex_v2_swap_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount ro receive`
+  String get dex_v2_amount_to_receive {
+    return Intl.message(
+      'Amount ro receive',
+      name: 'dex_v2_amount_to_receive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `price in`
+  String get dex_v2_price_in {
+    return Intl.message(
+      'price in',
+      name: 'dex_v2_price_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount to be converted`
+  String get dex_v2_amount_to_be_converted {
+    return Intl.message(
+      'Amount to be converted',
+      name: 'dex_v2_amount_to_be_converted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated to receive`
+  String get dex_v2_estimated_to_receive {
+    return Intl.message(
+      'Estimated to receive',
+      name: 'dex_v2_estimated_to_receive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prices`
+  String get dex_v2_prices {
+    return Intl.message(
+      'Prices',
+      name: 'dex_v2_prices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction Details`
+  String get dex_v2_tx_details {
+    return Intl.message(
+      'Transaction Details',
+      name: 'dex_v2_tx_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swap Details`
+  String get dex_v2_swap_details {
+    return Intl.message(
+      'Swap Details',
+      name: 'dex_v2_swap_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Swap was successful!`
+  String get dex_v2_swap_successful {
+    return Intl.message(
+      'Swap was successful!',
+      name: 'dex_v2_swap_successful',
       desc: '',
       args: [],
     );
@@ -2255,16 +2445,6 @@ class S {
     );
   }
 
-  /// `Loans are currently a Beta Feature! Use at your own risk`
-  String get loan_beta {
-    return Intl.message(
-      'Loans are currently a Beta Feature! Use at your own risk',
-      name: 'loan_beta',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Vaults`
   String get loan_vaults {
     return Intl.message(
@@ -2290,6 +2470,26 @@ class S {
     return Intl.message(
       'Amount',
       name: 'loan_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Amount`
+  String get loan_current_amount {
+    return Intl.message(
+      'Current Amount',
+      name: 'loan_current_amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current Value (USD)`
+  String get loan_current_amount_usd {
+    return Intl.message(
+      'Current Value (USD)',
+      name: 'loan_current_amount_usd',
       desc: '',
       args: [],
     );
@@ -2435,6 +2635,16 @@ class S {
     );
   }
 
+  /// `Vault was successfully update`
+  String get loan_update_vault_success {
+    return Intl.message(
+      'Vault was successfully update',
+      name: 'loan_update_vault_success',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vault was successfully created`
   String get loan_create_vault_success {
     return Intl.message(
@@ -2515,11 +2725,21 @@ class S {
     );
   }
 
-  /// `Payback Laon`
+  /// `Payback Loan`
   String get loan_payback_loan {
     return Intl.message(
-      'Payback Laon',
+      'Payback Loan',
       name: 'loan_payback_loan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Insufficient tokens to paybkack loan!`
+  String get loan_payback_loan_insufficient_funds {
+    return Intl.message(
+      'Insufficient tokens to paybkack loan!',
+      name: 'loan_payback_loan_insufficient_funds',
       desc: '',
       args: [],
     );
@@ -2555,11 +2775,51 @@ class S {
     );
   }
 
+  /// `Prev. Min. collateral ratio`
+  String get loan_prev_min_collateral_ratio {
+    return Intl.message(
+      'Prev. Min. collateral ratio',
+      name: 'loan_prev_min_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Min. collateral ratio`
+  String get loan_new_min_collateral_ratio {
+    return Intl.message(
+      'New Min. collateral ratio',
+      name: 'loan_new_min_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vault Interest`
   String get loan_vault_interest {
     return Intl.message(
       'Vault Interest',
       name: 'loan_vault_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prev. Vault Interest`
+  String get loan_prev_vault_interest {
+    return Intl.message(
+      'Prev. Vault Interest',
+      name: 'loan_prev_vault_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New. Vault Interest`
+  String get loan_new_vault_interest {
+    return Intl.message(
+      'New. Vault Interest',
+      name: 'loan_new_vault_interest',
       desc: '',
       args: [],
     );
@@ -2635,6 +2895,16 @@ class S {
     );
   }
 
+  /// `Your collateral ratio fell bellow the defined ratio in the Scheme.`
+  String get loan_collateral_ratio_to_little {
+    return Intl.message(
+      'Your collateral ratio fell bellow the defined ratio in the Scheme.',
+      name: 'loan_collateral_ratio_to_little',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Change Collateral`
   String get loan_change_collateral {
     return Intl.message(
@@ -2650,6 +2920,26 @@ class S {
     return Intl.message(
       'Close Vault',
       name: 'loan_close_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Scheme`
+  String get loan_edit_scheme {
+    return Intl.message(
+      'Edit Scheme',
+      name: 'loan_edit_scheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close vault not possible, you still have open loans in it!`
+  String get loan_close_vault_not_possible_due_loans {
+    return Intl.message(
+      'Close vault not possible, you still have open loans in it!',
+      name: 'loan_close_vault_not_possible_due_loans',
       desc: '',
       args: [],
     );
@@ -2725,6 +3015,16 @@ class S {
     );
   }
 
+  /// `Estimated Fee`
+  String get loan_edit_est_fee {
+    return Intl.message(
+      'Estimated Fee',
+      name: 'loan_edit_est_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Total transaction cost`
   String get loan_create_fees {
     return Intl.message(
@@ -2750,6 +3050,16 @@ class S {
     return Intl.message(
       'You are creating a vault',
       name: 'loan_create_vault_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are editing scheme of Vault`
+  String get loan_edit_vault_info {
+    return Intl.message(
+      'You are editing scheme of Vault',
+      name: 'loan_edit_vault_info',
       desc: '',
       args: [],
     );
@@ -2820,6 +3130,16 @@ class S {
     return Intl.message(
       'Confirm Create Vault',
       name: 'loan_confirm_create_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Edit Vault`
+  String get loan_confirm_edit_vault {
+    return Intl.message(
+      'Confirm Edit Vault',
+      name: 'loan_confirm_edit_vault',
       desc: '',
       args: [],
     );
@@ -3200,6 +3520,116 @@ class S {
     return Intl.message(
       'Edit',
       name: 'loan_collateral_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FAQ`
+  String get loan_faq {
+    return Intl.message(
+      'FAQ',
+      name: 'loan_faq',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How is the collateralization ratio calculated?`
+  String get loan_faq_collateral {
+    return Intl.message(
+      'How is the collateralization ratio calculated?',
+      name: 'loan_faq_collateral',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The collateralization ratio is calculated by taking the total collateral value deposited in a vault; divided by the amount of loan taken plus total interest, expressed in percentage.`
+  String get loan_faq_collateral_answer {
+    return Intl.message(
+      'The collateralization ratio is calculated by taking the total collateral value deposited in a vault; divided by the amount of loan taken plus total interest, expressed in percentage.',
+      name: 'loan_faq_collateral_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What is the collateralization ratio used for?`
+  String get loan_faq_collateral_ratio {
+    return Intl.message(
+      'What is the collateralization ratio used for?',
+      name: 'loan_faq_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The collateralization ratio determines the state of the vault. A ratio below the minimum collaterization ratio results in liquidation, upon which, a vault's collaterals will be sent for auction.\n\nIndicators have been included to help visualise the health of your vault, where:\n\nRed: 1x – 1.25x above the minimum collateralization ratio\n\nYellow: 1.25x – 1.5x the minimum collateralization ratio\n\nGreen: More than 1.5x the minimum collateralization ratio`
+  String get loan_faq_collateral_ratio_answer {
+    return Intl.message(
+      'The collateralization ratio determines the state of the vault. A ratio below the minimum collaterization ratio results in liquidation, upon which, a vault\'s collaterals will be sent for auction.\n\nIndicators have been included to help visualise the health of your vault, where:\n\nRed: 1x – 1.25x above the minimum collateralization ratio\n\nYellow: 1.25x – 1.5x the minimum collateralization ratio\n\nGreen: More than 1.5x the minimum collateralization ratio',
+      name: 'loan_faq_collateral_ratio_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What does the different status of a vault mean?`
+  String get loan_faq_vault_status {
+    return Intl.message(
+      'What does the different status of a vault mean?',
+      name: 'loan_faq_vault_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active: When a vault has been created but no loan has been taken yet\n\nAt risk: When the collateralization ratio of a vault is between 1x – 1.5x the minimum collateralization ratio\n\nHealthy: When the collateralization ratio of a vault is more than 1.5x the minimum collateralization ratio\n\nIn liquidation: When a vault's collateralization ratio falls below the minimum requirement\n\nHalted: When any token in the vault (collateral or loan) has fluctuated more than 30% in the past hour`
+  String get loan_faq_vault_status_answer {
+    return Intl.message(
+      'Active: When a vault has been created but no loan has been taken yet\n\nAt risk: When the collateralization ratio of a vault is between 1x – 1.5x the minimum collateralization ratio\n\nHealthy: When the collateralization ratio of a vault is more than 1.5x the minimum collateralization ratio\n\nIn liquidation: When a vault\'s collateralization ratio falls below the minimum requirement\n\nHalted: When any token in the vault (collateral or loan) has fluctuated more than 30% in the past hour',
+      name: 'loan_faq_vault_status_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How are interests calculated for loan?`
+  String get loan_faq_vault_interests {
+    return Intl.message(
+      'How are interests calculated for loan?',
+      name: 'loan_faq_vault_interests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are 2 types of interests that applies for loans, namely vault interest rate and token interest rate.\n\nThe vault interest rate is determined when the vault owner selects the vault scheme, where the higher the minimum collateralization ratio, the lower the vault interest rate.\n\nThe token interest rate is applied on specific loan tokens, and can differ from token to token.\n\nThe total interest rate applied on a loan is derived by taking the vault interest rate + token interest rate, and is calculated on a per annum basis.`
+  String get loan_faq_vault_interests_answer {
+    return Intl.message(
+      'There are 2 types of interests that applies for loans, namely vault interest rate and token interest rate.\n\nThe vault interest rate is determined when the vault owner selects the vault scheme, where the higher the minimum collateralization ratio, the lower the vault interest rate.\n\nThe token interest rate is applied on specific loan tokens, and can differ from token to token.\n\nThe total interest rate applied on a loan is derived by taking the vault interest rate + token interest rate, and is calculated on a per annum basis.',
+      name: 'loan_faq_vault_interests_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `What is collateral factor?`
+  String get loan_faq_vault_factor {
+    return Intl.message(
+      'What is collateral factor?',
+      name: 'loan_faq_vault_factor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, $100 worth of the token would contribute to $70 of collateral value in a vault.`
+  String get loan_faq_vault_factor_answer {
+    return Intl.message(
+      'The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, \$100 worth of the token would contribute to \$70 of collateral value in a vault.',
+      name: 'loan_faq_vault_factor_answer',
       desc: '',
       args: [],
     );

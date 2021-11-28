@@ -11,6 +11,7 @@ import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
+import 'package:saiive.live/crypto/errors/RegenerateWalletAddressError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
@@ -127,6 +128,9 @@ abstract class Wallet extends IWallet {
 
   @override
   Future<bool> isAlive() async {
+    if (_chain == ChainType.Bitcoin) {
+      return true;
+    }
     var isAlive = await _apiService.healthService.isAlive(ChainHelper.chainTypeString(_chain));
 
     return isAlive;
@@ -265,7 +269,8 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<String> createAndSend(int amount, String token, String to, {String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
+  Future<String> createAndSend(int amount, String token, String to,
+      {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
     isInitialzed();
 
     loadingStream?.add(S.current.wallet_operation_refresh_utxo);
@@ -275,7 +280,8 @@ abstract class Wallet extends IWallet {
 
     try {
       loadingStream?.add(S.current.wallet_operation_build_tx);
-      var txData = await createSendTransaction(amount, token, to, returnAddress: returnAddress, sendMax: sendMax, loadingStream: loadingStream);
+      var txData =
+          await createSendTransaction(amount, token, to, waitForConfirmation: waitForConfirmation, returnAddress: returnAddress, sendMax: sendMax, loadingStream: loadingStream);
 
       return txData;
     } catch (error) {
@@ -291,14 +297,28 @@ abstract class Wallet extends IWallet {
   }
 
   @protected
-  Future<String> createUtxoTransaction(int amount, String to, String changeAddress, {StreamController<String> loadingStream, bool sendMax = false, int version = 4}) async {
+  Future<String> createUtxoTransaction(int amount, String to, String changeAddress,
+      {bool waitForConfirmation, StreamController<String> loadingStream, bool sendMax = false, int version = 4}) async {
     final txb = await createBaseTransaction(amount, to, changeAddress, 0, (txb, inputTxs, nw) => {}, sendMax: sendMax, version: version);
 
-    var tx = await createTxAndWait(txb, loadingStream: loadingStream);
+    var tx = await createTxAndWait(txb, onlyConfirmed: waitForConfirmation, loadingStream: loadingStream);
 
     loadingStream?.add(S.current.wallet_operation_send_tx);
 
     return tx.txId;
+  }
+
+  @protected
+  Future checkIfWeCanSpendTheChangeAddress(String changeAddress) async {
+    final retAddress = await walletDatabase.getWalletAddress(changeAddress);
+
+    if (retAddress == null) {
+      throw new RegenerateWalletAddressError(error: "Could not regenerate your address, seems your wallet is corrupted", debugInfo: "");
+    }
+    final retWalletAccount = await walletDatabase.getAccount(retAddress.accountId);
+
+    // add check that we can spent the utxo from the changeAddress
+    await getPrivateKey(retAddress, retWalletAccount);
   }
 
   Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
@@ -308,8 +328,17 @@ abstract class Wallet extends IWallet {
       final pubKey = HdWalletUtil.getPublicKey(
           key, address.account, address.isChangeAddress, address.index, address.chain, address.network, address.addressType, walletAccount.derivationPathType);
 
-      if (pubKey != address.publicKey) {
-        throw ArgumentError("Could not regenerate your address, seems your wallet is corrupted");
+      var needPubKey = address.publicKey;
+      if (pubKey != needPubKey) {
+        var errorInfo = "Generated pubKey is: $pubKey. Needed pubkey is $needPubKey. " +
+            "Address account id is: ${address.accountId}. WalletAccountId is ${walletAccount.uniqueId} " +
+            "Address path is ${address.path(walletAccount)} " +
+            "Address type is ${address.addressType} " +
+            "WalletAccount derivation path is ${walletAccount.derivationPathType} " +
+            "WalletAccount default address type is ${walletAccount.defaultAddressType} ";
+        LogHelper.instance.i(errorInfo);
+
+        throw new RegenerateWalletAddressError(error: "Could not regenerate your address, seems your wallet is corrupted", debugInfo: errorInfo);
       }
       return keyPair;
     } else if (walletAccount.walletAccountType == WalletAccountType.PrivateKey) {
@@ -330,6 +359,8 @@ abstract class Wallet extends IWallet {
     if (amount > tokenBalance?.balance) {
       throw ArgumentError("Insufficent funds"); //insufficent funds
     }
+
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
@@ -438,6 +469,8 @@ abstract class Wallet extends IWallet {
       }
 
       final response = await r.retry(() async {
+        if (S.current != null) loadingStream?.add(S.current.wallet_operation_tx_wait_for_confirmation(txId));
+
         return await _apiService.transactionService.getWithTxId(ChainHelper.chainTypeString(_chain), txId, onlyConfirmed: onlyConfirmed);
       }, retryIf: (e) {
         if (e is HttpException || e is ErrorResponse) return true;

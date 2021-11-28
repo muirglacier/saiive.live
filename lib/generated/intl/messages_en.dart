@@ -218,6 +218,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_transaction_details" : MessageLookupByLibrary.simpleMessage("Transaction Details"),
     "loan_transaction_result" : MessageLookupByLibrary.simpleMessage("Transaction Results"),
     "loan_transaction_type" : MessageLookupByLibrary.simpleMessage("Transaction Type"),
+    "loan_update_vault_success" : MessageLookupByLibrary.simpleMessage("Vault was successfully update"),
     "loan_vault" : MessageLookupByLibrary.simpleMessage("Vault"),
     "loan_vault_creation_info" : MessageLookupByLibrary.simpleMessage("To get started, create a vault add DFI and other tokens as collateral"),
     "loan_vault_customer_owner_address" : MessageLookupByLibrary.simpleMessage("Use custom vault owner address"),

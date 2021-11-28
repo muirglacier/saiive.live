@@ -33,12 +33,41 @@ class VaultEditSchemeConfirmScreen extends StatefulWidget {
 }
 
 class _VaultEditSchemeConfirmScreen extends State<VaultEditSchemeConfirmScreen> {
-  String _toAddress;
   String _returnAddress;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  _doUpdateVault() async {
+    Wakelock.enable();
+
+    final wallet = sl.get<DeFiChainWallet>();
+    var streamController = StreamController<String>();
+
+    try {
+      var closeVault = wallet.updateVault(widget.vault.vaultId, widget.schema.id, widget.vault.ownerAddress, returnAddress: _returnAddress, loadingStream: streamController);
+
+      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+      var tx = await overlay.during(closeVault);
+
+      EventTaxiImpl.singleton().fire(VaultSyncStartEvent());
+
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_update_vault_success),
+      ));
+
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    } catch (e) {
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
+      ));
+    } finally {
+      streamController.close();
+      Wakelock.disable();
+    }
   }
 
   _buildView() {
@@ -93,17 +122,6 @@ class _VaultEditSchemeConfirmScreen extends State<VaultEditSchemeConfirmScreen> 
               Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10),
                   child: WalletReturnAddressWidget(
-                    checkBoxText: S.of(context).loan_vault_customer_owner_address,
-                    title: S.of(context).loan_vault_owner_address,
-                    onChanged: (v) {
-                      setState(() {
-                        _toAddress = v;
-                      });
-                    },
-                  )),
-              Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 10),
-                  child: WalletReturnAddressWidget(
                     title: S.of(context).loan_return_address,
                     onChanged: (v) {
                       setState(() {
@@ -117,15 +135,16 @@ class _VaultEditSchemeConfirmScreen extends State<VaultEditSchemeConfirmScreen> 
       ])),
       SliverToBoxAdapter(
           child: Padding(
-              padding: EdgeInsets.only(left: 30, right: 30),
+              padding: EdgeInsets.only(left: 30, right: 30, bottom: 20),
               child: Column(children: [
                 SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                         child: Text(S.of(context).loan_continue),
                         onPressed: () async {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+                          await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                            await _doUpdateVault();
+                          });
                         })),
                 SizedBox(
                     width: double.infinity,

@@ -296,6 +296,7 @@
   "loan_collateral_ratio": "Collateral Ratio",
   "loan_no_active_loans": "No active Loans",
   "loan_close_vault_success": "Vault was successfully closed",
+  "loan_update_vault_success": "Vault was successfully update",
   "loan_create_vault_success": "Vault was successfully created",
   "loan_borrow_success": "Borrow was successfully.",
   "loan_collateral_success": "Collateral was successfully added",

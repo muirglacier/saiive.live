@@ -6,7 +6,6 @@ import 'package:saiive.live/network/model/loan_schema.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_create.dart';
-import 'package:saiive.live/ui/loan/vault_create_confirm.dart';
 import 'package:saiive.live/ui/loan/vault_edit_scheme_confirm.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -61,22 +60,25 @@ class _VaultEditSchemeScreen extends State<VaultEditSchemeScreen> {
         padding: EdgeInsets.all(10),
         child: Column(children: [
           Card(
-              child: Padding(padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 5), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child: Padding(
+                  padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 5),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     VaultStatusWidget(widget.vault.healthStatus),
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                       Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                       Container(width: 10),
                       Expanded(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            SelectableText(
-                              widget.vault.vaultId,
-                              maxLines: 4,
-                              style: Theme.of(context).textTheme.subtitle2,
-                            )
-                          ]))
+                        SelectableText(
+                          widget.vault.vaultId,
+                          maxLines: 4,
+                          style: Theme.of(context).textTheme.subtitle2,
+                        )
+                      ]))
                     ]),
-                  ])))
-        , CustomTableWidget(items)]));
+                  ]))),
+          CustomTableWidget(items)
+        ]));
   }
 
   buildEditVaultScreen(BuildContext context) {
@@ -84,67 +86,64 @@ class _VaultEditSchemeScreen extends State<VaultEditSchemeScreen> {
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    return CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-            child:_buildTopPart()),
-            SliverToBoxAdapter(
-              child: Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    ListView.separated(
-                        separatorBuilder: (context, index) => Divider(),
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: _schemes.length,
-                        itemBuilder: (context, index) {
-                          final navItem = _schemes[index];
+    return CustomScrollView(slivers: [
+      SliverToBoxAdapter(child: _buildTopPart()),
+      SliverToBoxAdapter(
+          child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                ListView.separated(
+                    separatorBuilder: (context, index) => Divider(),
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _schemes.length,
+                    itemBuilder: (context, index) {
+                      final navItem = _schemes[index];
 
-                          return Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: _selection[index] ? StateContainer.of(context).curTheme.primary : StateContainer.of(context).curTheme.appBarText)),
-                              child: ListTile(
-                                  leading: Icon(_selection[index] ? Icons.radio_button_checked : Icons.radio_button_off),
-                                  title: VaultCreateLoanSchemeItem(minCollateralRatio: navItem.minColRatio, interestRate: navItem.interestRate),
-                                  onTap: () {
-                                    setState(() {
-                                      //here am trying to implement single selection for the options in the list but it don't work well
-                                      for (int i = 0; i < _schemes.length; i++) {
-                                        if (i == index) {
-                                          setState(() {
-                                            _selection[i] = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            _selection[i] = false;
-                                          });
-                                        }
+                      return Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: _selection[index] ? StateContainer.of(context).curTheme.primary : StateContainer.of(context).curTheme.appBarText)),
+                          child: ListTile(
+                              leading: Icon(_selection[index] ? Icons.radio_button_checked : Icons.radio_button_off),
+                              title: VaultCreateLoanSchemeItem(minCollateralRatio: navItem.minColRatio, interestRate: navItem.interestRate),
+                              onTap: () {
+                                setState(() {
+                                  //here am trying to implement single selection for the options in the list but it don't work well
+                                  for (int i = 0; i < _schemes.length; i++) {
+                                    if (i == index) {
+                                      setState(() {
+                                        _selection[i] = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _selection[i] = false;
+                                      });
+                                    }
 
-                                        _selectedSchema = _schemes[index];
-                                      }
-                                    });
-                                  }));
-                        }),
-                    // Text('Keep note of your selected collateral ratio for your vault to sustain the loans within it', style: Theme.of(context).textTheme.caption),
-                    // Container(height: 20),
-                    SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                            child: Text(S.of(context).loan_continue),
-                            onPressed: _selectedSchema == null || _selectedSchema.id == widget.vault.schema.id
-                                ? null
-                                : () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultEditSchemeConfirmScreen(widget.vault, _selectedSchema)));
-                            }))
-                  ]))
-            )
-          ]
-    );
+                                    _selectedSchema = _schemes[index];
+                                  }
+                                });
+                              }));
+                    }),
+                // Text('Keep note of your selected collateral ratio for your vault to sustain the loans within it', style: Theme.of(context).textTheme.caption),
+                Container(height: 20),
+                SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        child: Text(S.of(context).loan_continue),
+                        onPressed: _selectedSchema == null || _selectedSchema.id == widget.vault.schema.id
+                            ? null
+                            : () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultEditSchemeConfirmScreen(widget.vault, _selectedSchema)));
+                              }))
+              ])))
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_edit_scheme)), body: buildEditVaultScreen(context));
+    return Scaffold(
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_edit_scheme)), body: buildEditVaultScreen(context));
   }
 }

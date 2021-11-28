@@ -218,6 +218,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_transaction_details" : MessageLookupByLibrary.simpleMessage("Transaktion Details"),
     "loan_transaction_result" : MessageLookupByLibrary.simpleMessage("Transaktion Ergebnis"),
     "loan_transaction_type" : MessageLookupByLibrary.simpleMessage("Transaction Typ"),
+    "loan_update_vault_success" : MessageLookupByLibrary.simpleMessage("Vault wurde erfolgreich geändert"),
     "loan_vault" : MessageLookupByLibrary.simpleMessage("Vault"),
     "loan_vault_creation_info" : MessageLookupByLibrary.simpleMessage("Erstelle einen Vault und fürge DFI und andere Token als Kollateral ein."),
     "loan_vault_customer_owner_address" : MessageLookupByLibrary.simpleMessage("Benutze eigeene Tressor Besitzer Adresse"),

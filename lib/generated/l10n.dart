@@ -2625,6 +2625,16 @@ class S {
     );
   }
 
+  /// `Vault was successfully update`
+  String get loan_update_vault_success {
+    return Intl.message(
+      'Vault was successfully update',
+      name: 'loan_update_vault_success',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vault was successfully created`
   String get loan_create_vault_success {
     return Intl.message(

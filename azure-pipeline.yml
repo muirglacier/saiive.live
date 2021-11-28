@@ -97,14 +97,16 @@ stages:
 
       - task: Bash@3
         displayName: 'Generate CodeCoverage html'
+        continueOnError: true
         inputs:
           workingDirectory: $(Build.SourcesDirectory)
-          target: 'inline'
+          targetType: 'inline'
           script: |
             ls -lah
             genhtml coverage/lcov.info -o coverage/html
             python3 lcov_cobertura.py coverage/lcov.info
             mv coverage.xml coverage/coverage.xml
+
 
       - task: PublishCodeCoverageResults@1
         inputs:

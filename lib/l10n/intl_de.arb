@@ -168,6 +168,7 @@
 
   "settings_network": "Netzwerk",
   "settings_remove_seed": "Seed löschen",
+  "resync_wallet_from_seed": "Wallet synchronisieren",
   "settings_show_logs": "Logs zeigen",
   "settings_logs_copied": "Logs kopiert...",
   "settings_show_wallet_addresses": "Wallet Adressen",

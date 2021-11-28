@@ -63,8 +63,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
-  void doDeleteSeed() async {
+  Future doResyncWallet() async {
+    await destoryDatabase();
+    Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
+  }
+
+  Future destoryDatabase() async {
+    var db = sl.get<IWalletDatabaseFactory>();
+    await db.destroy(ChainType.Bitcoin, ChainNet.Mainnet);
+    await db.destroy(ChainType.Bitcoin, ChainNet.Testnet);
+    await db.destroy(ChainType.DeFiChain, ChainNet.Mainnet);
+    await db.destroy(ChainType.DeFiChain, ChainNet.Testnet);
+  }
+
+  Future doDeleteSeed() async {
     sl.get<AppCenterWrapper>().trackEvent("settingsDeleteSeed", {});
+
+    await destoryDatabase();
 
     await sl.get<IVault>().setSeed(null);
     await sl.get<ISharedPrefsUtil>().setPasswordHash(null);
@@ -210,8 +225,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           CardItemWidget(S.of(context).settings_wallet, null, backgroundColor: Colors.transparent),
                           SizedBox(height: 5),
                           CardItemWidget(S.of(context).settings_remove_seed, () async {
-                            sl.get<AuthenticationHelper>().forceAuth(context, () {
-                              doDeleteSeed();
+                            sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                              await doDeleteSeed();
+                            });
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).resync_wallet_from_seed, () async {
+                            sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                              await doResyncWallet();
                             });
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                           CardItemWidget(S.of(context).settings_show_seed, () async {

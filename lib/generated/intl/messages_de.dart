@@ -235,6 +235,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pin_return" : MessageLookupByLibrary.simpleMessage("Zurück zum ersten Schritt"),
     "receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Adresse wurde in die Zwischenablage übernommen"),
+    "resync_wallet_from_seed" : MessageLookupByLibrary.simpleMessage("Wallet synchronisieren"),
     "save" : MessageLookupByLibrary.simpleMessage("Speichern"),
     "send" : MessageLookupByLibrary.simpleMessage("Senden"),
     "settings" : MessageLookupByLibrary.simpleMessage("Einstellungen"),

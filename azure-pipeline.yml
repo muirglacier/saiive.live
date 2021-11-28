@@ -97,8 +97,8 @@ stages:
 
       - task: Bash@3
         displayName: 'Generate CodeCoverage html'
-        workingDirectory: cd $(Build.SourcesDirectory)
         inputs:
+          workingDirectory: cd $(Build.SourcesDirectory)
           target: 'inline'
           script: |
             ls -lah

@@ -10,7 +10,7 @@ variables:
 - name: AppVersion
   value: 0.11
 - name: AppVersion_Minor
-  value: 10
+  value: 11
 - name: AppVersion_Major
   value: 0
 - name: UseUseFlutterVersion

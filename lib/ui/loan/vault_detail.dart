@@ -17,6 +17,7 @@ import 'package:saiive.live/network/vaults_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan.dart';
+import 'package:saiive.live/ui/loan/vault_edit_scheme.dart';
 import 'package:saiive.live/ui/loan/vault_payback_loan.dart';
 import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
@@ -53,6 +54,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   List<LoanCollateral> _tokens;
   List<LoanToken> _loanTokens;
   bool _loading = false;
+  bool _canEditCollateral = true;
 
   LoanVault myVault;
 
@@ -85,6 +87,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     myVault = widget.vault;
 
     _initTokens();
+
+    _canEditCollateral = widget.vault.state != LoanVaultStatus.inLiquidation && widget.vault.state != LoanVaultStatus.unknown && widget.vault.state != LoanVaultStatus.frozen;
 
     super.initState();
   }
@@ -365,10 +369,33 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
           Card(
               child: Padding(
                   padding: EdgeInsets.all(30),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    VaultStatusWidget(myVault.healthStatus),
-                    if (myVault.healthStatus == LoanVaultHealthStatus.halted)
-                      Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget(S.of(context).loan_vault_halted_info)),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      VaultStatusWidget(myVault.healthStatus),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () async {
+                                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultEditSchemeScreen(myVault)));
+                                await refreshVault();
+                              },
+                              icon: Icon(Icons.edit)),
+                          SizedBox(width: 10),
+                          IconButton(
+                              onPressed: () async {
+                                if (widget.vault.loanAmounts.length > 0) {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).loan_close_vault_not_possible_due_loans)));
+                                  return;
+                                }
+
+                                await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                  await _doCloseVault();
+                                });
+                              },
+                              icon: Icon(Icons.close))
+                        ],
+                      )
+                    ]),
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                       Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                       Container(width: 10),
@@ -410,10 +437,12 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           width: double.infinity,
                           child: ElevatedButton(
                             child: Text(S.of(context).loan_change_collateral),
-                            onPressed: () async {
-                              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(myVault, _tokens)));
-                              await refreshVault();
-                            },
+                            onPressed: _canEditCollateral
+                                ? () async {
+                                    await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(myVault, _tokens)));
+                                    await refreshVault();
+                                  }
+                                : null,
                           )),
                       SizedBox(height: 10),
                       SizedBox(
@@ -423,22 +452,6 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                             onPressed: () async {
                               await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
                               await refreshVault();
-                            },
-                          )),
-                      SizedBox(height: 10),
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            child: Text(S.of(context).loan_close_vault),
-                            onPressed: () async {
-                              if (widget.vault.loanAmounts.length > 0) {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).loan_close_vault_not_possible_due_loans)));
-                                return;
-                              }
-
-                              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                                await _doCloseVault();
-                              });
                             },
                           ))
                     ])

@@ -373,6 +373,53 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return await createAccountTransaction(token, amount, to, waitForConfirmation: waitForConfirmation, loadingStream: loadingStream);
   }
 
+  Future<String> updateVault(String vaultId, String schemeId, String ownerAddress, {String returnAddress, StreamController<String> loadingStream}) async {
+    await ensureUtxo(loadingStream: loadingStream);
+    await walletMutex.acquire();
+
+    try {
+      loadingStream?.add(S.current.wallet_operation_build_tx);
+      var action = await _updateVault(vaultId, schemeId, ownerAddress, returnAddress: returnAddress, loadingStream: loadingStream);
+      loadingStream?.add(S.current.wallet_operation_send_tx);
+      var tx = await createTxAndWait(action, onlyConfirmed: true, loadingStream: loadingStream);
+
+      return tx.txId;
+    } finally {
+      walletMutex.release();
+    }
+  }
+
+  Future<Tuple3<String, List<tx.Transaction>, String>> _updateVault(String vaultId, String schemeId, String ownerAddress,
+      {String returnAddress, StreamController<String> loadingStream}) async {
+    var fees = await getTxFee(1, 2);
+    final unspentTxs = await walletDatabase.getUnspentTransactions();
+    final useTxs = List<tx.Transaction>.empty(growable: true);
+    final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
+
+    final address = await walletDatabase.getWalletAddress(ownerAddress);
+    final walletAccount = await walletDatabase.getAccount(address.accountId);
+    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    await checkIfWeCanSpendTheChangeAddress(changeAddress);
+
+    var keyPair = await getPrivateKey(address, walletAccount);
+    keys.add(Tuple2(address, keyPair));
+
+    if (!unspentTxs.any((element) => element.address == ownerAddress)) {
+      var inputTx = await createUtxoTransaction(fees, ownerAddress, ownerAddress, loadingStream: loadingStream);
+      var tx = await walletDatabase.getUnspentTransactionByTxId(inputTx);
+      useTxs.add(tx);
+    } else {
+      var inputTx = unspentTxs.where((element) => element.address == ownerAddress);
+      useTxs.add(inputTx.first);
+    }
+
+    final txb = await HdWalletUtil.buildTransaction(useTxs, keys, ownerAddress, 0, fees, changeAddress, (txb, inputTxs, nw) {
+      txb.addUpdateVault(vaultId, ownerAddress, schemeId);
+    }, chain, network);
+
+    return Tuple3<String, List<tx.Transaction>, String>(txb, useTxs, ownerAddress);
+  }
+
   Future<String> closeVault(String vaultId, String ownerAddress, {String returnAddress, StreamController<String> loadingStream}) async {
     await ensureUtxo(loadingStream: loadingStream);
     await walletMutex.acquire();

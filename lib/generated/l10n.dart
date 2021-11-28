@@ -2635,6 +2635,16 @@ class S {
     );
   }
 
+  /// `Vault was successfully update`
+  String get loan_update_vault_success {
+    return Intl.message(
+      'Vault was successfully update',
+      name: 'loan_update_vault_success',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vault was successfully created`
   String get loan_create_vault_success {
     return Intl.message(
@@ -2765,11 +2775,51 @@ class S {
     );
   }
 
+  /// `Prev. Min. collateral ratio`
+  String get loan_prev_min_collateral_ratio {
+    return Intl.message(
+      'Prev. Min. collateral ratio',
+      name: 'loan_prev_min_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Min. collateral ratio`
+  String get loan_new_min_collateral_ratio {
+    return Intl.message(
+      'New Min. collateral ratio',
+      name: 'loan_new_min_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Vault Interest`
   String get loan_vault_interest {
     return Intl.message(
       'Vault Interest',
       name: 'loan_vault_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prev. Vault Interest`
+  String get loan_prev_vault_interest {
+    return Intl.message(
+      'Prev. Vault Interest',
+      name: 'loan_prev_vault_interest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New. Vault Interest`
+  String get loan_new_vault_interest {
+    return Intl.message(
+      'New. Vault Interest',
+      name: 'loan_new_vault_interest',
       desc: '',
       args: [],
     );
@@ -2875,6 +2925,16 @@ class S {
     );
   }
 
+  /// `Edit Scheme`
+  String get loan_edit_scheme {
+    return Intl.message(
+      'Edit Scheme',
+      name: 'loan_edit_scheme',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Close vault not possible, you still have open loans in it!`
   String get loan_close_vault_not_possible_due_loans {
     return Intl.message(
@@ -2955,6 +3015,16 @@ class S {
     );
   }
 
+  /// `Estimated Fee`
+  String get loan_edit_est_fee {
+    return Intl.message(
+      'Estimated Fee',
+      name: 'loan_edit_est_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Total transaction cost`
   String get loan_create_fees {
     return Intl.message(
@@ -2980,6 +3050,16 @@ class S {
     return Intl.message(
       'You are creating a vault',
       name: 'loan_create_vault_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You are editing scheme of Vault`
+  String get loan_edit_vault_info {
+    return Intl.message(
+      'You are editing scheme of Vault',
+      name: 'loan_edit_vault_info',
       desc: '',
       args: [],
     );
@@ -3050,6 +3130,16 @@ class S {
     return Intl.message(
       'Confirm Create Vault',
       name: 'loan_confirm_create_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm Edit Vault`
+  String get loan_confirm_edit_vault {
+    return Intl.message(
+      'Confirm Edit Vault',
+      name: 'loan_confirm_edit_vault',
       desc: '',
       args: [],
     );

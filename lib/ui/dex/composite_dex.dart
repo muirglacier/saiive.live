@@ -265,18 +265,18 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
   findPath(List<PoolPair> pairs, String origin, String target) {
     bool isPathFound = false;
-    List<String> nodesToVisit = [origin];
+    List<String> nodesToVisit = [origin, ...getAdjacentNodes(origin, pairs)];
     List<String> visitedNodes = [];
-    List<String> path = [];
+    Map<int, String> path = new Map();
 
-    bfs(String start, List<String> edges, String target) {
+    bfs(String start, List<String> edges, currentDistance, String target) {
       if (edges.length == 0 && start != target) {
         visitedNodes.add(start);
         return;
       }
 
       if (!isPathFound) {
-        path.add(start);
+        path[currentDistance] = start;
       }
 
       if (start == target) {
@@ -299,7 +299,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
           nodesToVisit.addAll(innerEdges);
 
-          bfs(startValue, innerEdges, target);
+          bfs(startValue, innerEdges, currentDistance+1, target);
 
           nextNodeVisitEdges.removeAt(0);
         }
@@ -307,8 +307,8 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     }
 
     var adjacentNodes = getAdjacentNodes(origin, pairs);
-    bfs(origin, adjacentNodes, target);
-    return [visitedNodes, isPathFound ? path : []];
+    bfs(origin, adjacentNodes, 0, target);
+    return [visitedNodes, isPathFound ? path.values.toList() : []];
   }
 
   List<String> getAdjacentNodes(String startNode, List<PoolPair> pairs) {

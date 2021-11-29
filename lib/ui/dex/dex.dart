@@ -390,15 +390,19 @@ class _DexScreen extends State<DexScreen> {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
-
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-    //int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
     final walletTo = _toAddress.publicKey;
     try {
       var streamController = StreamController<String>();
 
-      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807,
+      var maxPrice = _amountFrom / (_amountTo) * (1 + DefiChainConstants.DEFAULT_SLIPPAGE);
+      var oneHundredMillions = DefiChainConstants.COIN;
+      var n = maxPrice * oneHundredMillions;
+      var fraction = (n % oneHundredMillions).round();
+      var integer = ((n - fraction) / oneHundredMillions).round();
+
+      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, integer, fraction,
           returnAddress: _returnAddress, loadingStream: streamController);
 
       sl

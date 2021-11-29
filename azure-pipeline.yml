@@ -87,10 +87,34 @@ stages:
             $(FlutterToolPath)/flutter doctor -v
             $(FlutterToolPath)/flutter precache
 
+            sudo apt-get update -qq -y
+            sudo apt-get install lcov -y
+
       - task: FlutterTest@0
         inputs:
           projectDirectory: '$(Build.SourcesDirectory)'
           generateCodeCoverageReport: true
+
+      - task: Bash@3
+        displayName: 'Generate CodeCoverage html'
+        continueOnError: true
+        inputs:
+          workingDirectory: $(Build.SourcesDirectory)
+          targetType: 'inline'
+          script: |
+            ls -lah
+            genhtml coverage/lcov.info -o coverage/html
+            python3 lcov_cobertura.py coverage/lcov.info
+            mv coverage.xml coverage/coverage.xml
+
+
+      - task: PublishCodeCoverageResults@1
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: 'coverage/coverage.xml'
+          reportDirectory: 'coverage'
+          #additionalCodeCoverageFiles: # Optional
+          #failIfCoverageEmpty: false # Optional
 
 
 - stage: Android

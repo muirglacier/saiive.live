@@ -378,7 +378,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                             SliverToBoxAdapter(child: buildVaultEntry()),
                           ];
                         },
-                        body: Column(children: [
+                        body: Expanded(
+                            child: Column(children: [
                           if (_loanVault != null && _loanToken != null)
                             Column(children: [
                               Container(height: 20),
@@ -397,16 +398,17 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                                       });
                                     },
                                   )),
-                              SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    child: Text(S.of(context).loan_continue),
-                                    onPressed: () async {
-                                      await Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
-                                    },
-                                  ))
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 20),
+                                  child: SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                          child: Text(S.of(context).loan_continue),
+                                          onPressed: () async {
+                                            await Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
+                                          })))
                             ]),
-                        ]))))));
+                        ])))))));
   }
 }

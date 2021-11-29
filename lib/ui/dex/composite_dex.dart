@@ -299,7 +299,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
           nodesToVisit.addAll(innerEdges);
 
-          bfs(startValue, innerEdges, currentDistance+1, target);
+          bfs(startValue, innerEdges, currentDistance + 1, target);
 
           nextNodeVisitEdges.removeAt(0);
         }
@@ -357,9 +357,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
-
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-    //int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
     final walletTo = _toAddress.publicKey;
     try {
@@ -369,7 +367,14 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       for (var pool in _selectedPoolPairs) {
         poolIds.add(int.parse(pool.id));
       }
-      var createSwapFuture = wallet.createAndSendSwapV2(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807, poolIds,
+
+      var maxPrice = _amountFrom / (_price.estimated) * (1 + DefiChainConstants.DEFAULT_SLIPPAGE);
+      var oneHundredMillions = DefiChainConstants.COIN;
+      var n = maxPrice * oneHundredMillions;
+      var fraction = (n % oneHundredMillions).round();
+      var integer = ((n - fraction) / oneHundredMillions).round();
+
+      var createSwapFuture = wallet.createAndSendSwapV2(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, integer, fraction, poolIds,
           returnAddress: _returnAddress, loadingStream: streamController);
 
       sl

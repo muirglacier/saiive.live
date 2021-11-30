@@ -625,6 +625,7 @@ class _DexScreen extends State<DexScreen> {
                             ],
                           )),
                     ]),
+                    SizedBox(height: 20),
                     WalletReturnAddressWidget(
                       onChanged: (v) {
                         setState(() {

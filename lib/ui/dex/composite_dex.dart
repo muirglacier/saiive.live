@@ -219,7 +219,9 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     if (tokenA == null) {
       return;
     }
-
+    if (_amountFrom == null) {
+      return;
+    }
     var slippage = 1 - _amountFrom / tokenA.reserve;
     var lastTokenBySymbol = tokenA.symbol;
     var lastAmount = _amountFrom;

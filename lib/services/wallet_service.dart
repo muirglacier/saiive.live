@@ -99,9 +99,9 @@ class WalletService implements IWalletService {
   Future<String> createAndSend(ChainType chainType, int amount, String token, String to, String retAddress,
       {bool waitForConfirmaton, StreamController<String> loadingStream, bool sendMax = false}) {
     if (chainType == ChainType.DeFiChain) {
-      return _defiWallet.createAndSend(amount, token, to, returnAddress: retAddress, loadingStream: loadingStream, sendMax: sendMax);
+      return _defiWallet.createAndSend(amount, token, to, waitForConfirmation: waitForConfirmaton, returnAddress: retAddress, loadingStream: loadingStream, sendMax: sendMax);
     }
-    return _bitcoinWallet.createAndSend(amount, token, to, returnAddress: retAddress, loadingStream: loadingStream, sendMax: sendMax);
+    return _bitcoinWallet.createAndSend(amount, token, to, waitForConfirmation: waitForConfirmaton, returnAddress: retAddress, loadingStream: loadingStream, sendMax: sendMax);
   }
 
   @override

@@ -104,6 +104,7 @@ void main() async {
       await wallet.init();
 
       expect(() async {
+        // ignore: invalid_use_of_protected_member
         await wallet.checkIfWeCanSpendTheChangeAddress("tXdQc5VmwMCgJS9b2tckvcQxKBo9wYdXAB");
       }, throwsA(isA<RegenerateWalletAddressError>()));
 
@@ -130,6 +131,7 @@ void main() async {
       await wallet.init();
 
       expect(() async {
+        // ignore: invalid_use_of_protected_member
         await wallet.checkIfWeCanSpendTheChangeAddress("tXdQc5VmwMCgJS9b2tckvcQxKBo9wYdXAB");
       }, throwsA(isA<RegenerateWalletAddressError>()));
 

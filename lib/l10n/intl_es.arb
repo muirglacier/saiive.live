@@ -119,6 +119,7 @@
   "wallet_operation_mempool_conflict_retry": "Encontramos transacciones pendientes. Vamos a esperarlas, ¡esto podría llevar algo de tiempo!",
   "wallet_operation_mempool_conflict": "Espere a que su transacción se refleje en el siguiente bloque antes de continuar con una nueva transacción.",
   "wallet_operation_missing_inputs": "Tu Wallet no está sincronizado. Vuelva a intentar la transacción.",
+  "wallet_operation_price_higher_than_indicated": "Price is higher than indicated. Increase the slippage to commit the transaction to the blockchain!",
 
 
   "wallet_accounts": "Accounts",
@@ -211,6 +212,7 @@
   "dex_swap_successfull": "Intercambio exitoso",
   "dex_swap_show_transaction": "En el explorador",
   "dex_to_address": "Reciba tokens en",
+  "dex_slippage": "Slippage",
 
   "home_welcome_good_morning": "Buenos dias",
   "home_welcome_good_day": "Buenos días",

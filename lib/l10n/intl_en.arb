@@ -119,6 +119,7 @@
   "wallet_operation_mempool_conflict_retry": "We found some pending transactions. We try to wait for them, this could take some time!",
   "wallet_operation_mempool_conflict": "Please wait for your transaction to be reflected in the next block before proceeding with a new transaction.",
   "wallet_operation_missing_inputs": "Wallet is not synced. Please retry your transaction.",
+  "wallet_operation_price_higher_than_indicated": "Price is higher than indicated. Increase the slippage to commit the transaction to the blockchain!",
 
   "addressbook": "Addressbook",
   "addressbook_add": "Add address",
@@ -210,6 +211,7 @@
   "dex_swap_successfull": "Swap successfull",
   "dex_swap_show_transaction": "In Explorer",
   "dex_to_address": "Receive tokens at",
+  "dex_slippage": "Slippage",
 
   "dex_v2": "DEX V2",
   "dex_v2_add_max": "max",

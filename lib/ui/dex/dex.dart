@@ -16,6 +16,7 @@ import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
+import 'package:saiive.live/ui/dex/slippage_widget.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -63,6 +64,7 @@ class _DexScreen extends State<DexScreen> {
 
   WalletAddress _toAddress;
   String _returnAddress;
+  double _slippage = DefiChainConstants.DEFAULT_SLIPPAGE;
 
   void resetForm() {
     setState(() {
@@ -396,7 +398,7 @@ class _DexScreen extends State<DexScreen> {
     try {
       var streamController = StreamController<String>();
 
-      var maxPrice = _amountFrom / (_amountTo) * (1 + DefiChainConstants.DEFAULT_SLIPPAGE);
+      var maxPrice = _amountFrom / (_amountTo) * (1 + _slippage);
       var oneHundredMillions = DefiChainConstants.COIN;
       var n = maxPrice * oneHundredMillions;
       var fraction = (n % oneHundredMillions).round();
@@ -558,6 +560,16 @@ class _DexScreen extends State<DexScreen> {
                     decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
                     keyboardType: TextInputType.numberWithOptions(decimal: true)),
                 SizedBox(height: 20),
+                Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: SlippageWidget(
+                        initialValue: DefiChainConstants.DEFAULT_SLIPPAGE,
+                        isExpanded: true,
+                        title: S.of(context).dex_slippage,
+                        onValueChange: (a) {
+                          _slippage = a;
+                        })),
+                SizedBox(height: 20),
                 AccountSelectAddressWidget(
                     label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
                     onChanged: (newValue) {
@@ -613,6 +625,7 @@ class _DexScreen extends State<DexScreen> {
                             ],
                           )),
                     ]),
+                    SizedBox(height: 20),
                     WalletReturnAddressWidget(
                       onChanged: (v) {
                         setState(() {

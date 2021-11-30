@@ -66,17 +66,21 @@ class WalletRestore {
       }
     }
 
-    var fullNode = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
-    checkIfExistingAndAddToList(fullNode);
+    try {
+      var fullNode = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
+      checkIfExistingAndAddToList(fullNode);
 
-    var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
-    checkIfExistingAndAddToList(jellyFish);
+      var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
+      checkIfExistingAndAddToList(jellyFish);
 
-    var bip32 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
-    checkIfExistingAndAddToList(bip32);
+      var bip32 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
+      checkIfExistingAndAddToList(bip32);
 
-    var bip44 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
-    checkIfExistingAndAddToList(bip44);
+      var bip44 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
+      checkIfExistingAndAddToList(bip44);
+    } catch (error) {
+      //ignore
+    }
 
     return Tuple2(walletAccounts, walletAddresses);
   }
@@ -136,14 +140,37 @@ class WalletRestore {
           }
         }
 
+        var accounts = await api.accountService.getAccounts(ChainHelper.chainTypeString(chain), publicKeys);
+        LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${accounts.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
+
+        for (final accountBalance in accounts) {
+          final keyIndex = publicKeys.indexWhere((item) => item == accountBalance.address);
+          var pathString = path[keyIndex];
+
+          if (!addresses.any((element) => element.publicKey == accountBalance.address)) {
+            final walletAddress = WalletAddress(
+                account: account.account,
+                accountId: account.uniqueId,
+                index: HdWalletUtil.getIndexFromPath(pathString),
+                isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
+                chain: chain,
+                network: net,
+                publicKey: publicKeys[keyIndex],
+                addressType: addressType);
+
+            addresses.add(walletAddress);
+          }
+        }
+
         if (transactions.length == 0) {
           maxEmpty--;
         } else {
-          return addresses;
+          maxEmpty = IWallet.MaxUnusedIndexScan;
         }
       } catch (e) {
         LogHelper.instance.e(e);
         maxEmpty--;
+        throw e;
       } finally {
         i++;
       }

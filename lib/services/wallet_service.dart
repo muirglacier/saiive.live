@@ -50,6 +50,8 @@ abstract class IWalletService {
 
   Future<Map<String, bool>> getIsAlive();
   Future<String> getWifPrivateKey(WalletAccount account, WalletAddress address);
+
+  Future<bool> validateAddress(WalletAccount account, WalletAddress address);
 }
 
 class WalletService implements IWalletService {
@@ -228,6 +230,14 @@ class WalletService implements IWalletService {
     return privateKey.toWIF();
   }
 
+  Future<bool> validateAddress(WalletAccount walletAccount, WalletAddress address) async {
+    if (walletAccount.chain == ChainType.DeFiChain) {
+      return await _defiWallet.validateAddress(walletAccount, address);
+    } else {
+      return await _bitcoinWallet.validateAddress(walletAccount, address);
+    }
+  }
+
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet) async {
     var dataMap = Map();
     dataMap["chain"] = chain;
@@ -235,10 +245,13 @@ class WalletService implements IWalletService {
     dataMap["seed"] = await sl.get<IVault>().getSeed();
     dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
     dataMap["apiService"] = sl.get<ApiService>();
+    var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
+
+    await db.destroy();
+    db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
 
     var result = await compute(_searchAccounts, dataMap);
 
-    var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
     for (var element in result.item1) {
       element.selected = true;
       await db.addOrUpdateAccount(element);

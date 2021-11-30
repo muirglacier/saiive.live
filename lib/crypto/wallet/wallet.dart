@@ -10,7 +10,7 @@ import 'address_type.dart';
 
 abstract class IWallet {
   static const int MaxUnusedAccountScan = 1;
-  static const int MaxUnusedIndexScan = 1;
+  static const int MaxUnusedIndexScan = 2;
   static const int KeysPerQuery = 50;
 
   String get walletType;
@@ -46,4 +46,6 @@ abstract class IWallet {
 
   Future<String> signMessage(String address, String message);
   Future<int> getTxFee(int inputs, int outputs);
+
+  Future<bool> validateAddress(WalletAccount account, WalletAddress address);
 }

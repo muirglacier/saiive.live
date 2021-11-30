@@ -17,7 +17,6 @@ import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/widgets/table_widget.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
-import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VaultEditSchemeConfirmScreen extends StatefulWidget {

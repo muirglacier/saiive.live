@@ -88,7 +88,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
         var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
-        if (tx.value > 0) {
+        if (tx.value > 0 && tx.value > DUST_AMOUNT) {
           txb.addOutput(tx.address, tx.value);
         }
 
@@ -237,7 +237,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
         var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
-        if (tx.value > 0) {
+        if (tx.value > 0 && tx.value > DUST_AMOUNT) {
           txb.addOutput(tx.address, tx.value);
         }
 
@@ -321,7 +321,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
         var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
-        if (tx.value > 0) {
+        if (tx.value > 0 && tx.value > DUST_AMOUNT) {
           txb.addOutput(tx.address, tx.value);
         }
 
@@ -571,7 +571,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
           var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
-          if (tx.value > 0) {
+          if (tx.value > 0 && tx.value > DUST_AMOUNT) {
             txb.addOutput(tx.address, tx.value);
           }
 
@@ -650,7 +650,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
           var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
-          if (tx.value > 0) {
+          if (tx.value > 0 && tx.value > DUST_AMOUNT) {
             txb.addOutput(tx.address, tx.value);
           }
 
@@ -719,7 +719,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
           var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
-          if (tx.value > 0) {
+          if (tx.value > 0 && tx.value > DUST_AMOUNT) {
             txb.addOutput(tx.address, tx.value);
           }
 
@@ -804,7 +804,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
           var vin = HdWalletUtil.addInput(txb, keyPair, tx, addressInfo, chainNetwork);
 
-          if (tx.value > 0) {
+          if (tx.value > 0 && tx.value > DUST_AMOUNT) {
             txb.addOutput(tx.address, tx.value);
           }
 
@@ -1161,7 +1161,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       var txHex = await HdWalletUtil.buildTransaction(useInputs, keys, pubKey, 0, fees, pubKey, (txb, inputTxs, network) async {
         final mintingStartsAt = txb.tx.ins.length + 1;
 
-        if (useAcc.balance > 0) {
+        if (useAcc.balance > DUST_AMOUNT) {
           txb.addOutput(pubKey, useAcc.balance);
           txb.addAccountToUtxoOutput(tokenType.id, acc.address, useAcc.balance, mintingStartsAt);
         }

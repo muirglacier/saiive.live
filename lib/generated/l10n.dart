@@ -1085,6 +1085,16 @@ class S {
     );
   }
 
+  /// `Price is higher than indicated. Increase the slippage to commit the transaction to the blockchain!`
+  String get wallet_operation_price_higher_than_indicated {
+    return Intl.message(
+      'Price is higher than indicated. Increase the slippage to commit the transaction to the blockchain!',
+      name: 'wallet_operation_price_higher_than_indicated',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Addressbook`
   String get addressbook {
     return Intl.message(

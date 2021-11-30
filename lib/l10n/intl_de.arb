@@ -120,6 +120,7 @@
   "wallet_operation_mempool_conflict_retry": "Es befinden sich noch Transaktionen in der Warteschlange, wir versuchen auf diese zu Warten, dies kann etwas dauern!",
   "wallet_operation_mempool_conflict": "Bitte warte bis deine Transaktion dem nächsten Block hinzugefügt wurde, bevor du mit einer neuen Transaktion fortfährst.",
   "wallet_operation_missing_inputs": "Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut.",
+  "wallet_operation_price_higher_than_indicated": "Der Preis ist höher als angegeben. Um die Transaktion erfolgreich auszuführen musst du das Slippage erhöhen!",
 
 
   "addressbook": "Addressbuch",

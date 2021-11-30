@@ -346,6 +346,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("Es befinden sich noch Transaktionen in der Warteschlange, wir versuchen auf diese zu Warten, dies kann etwas dauern!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut."),
     "wallet_operation_no_utxo" : MessageLookupByLibrary.simpleMessage("Keine UTXO vorhanden. Um eine Transaktionen erstellen zu können, musst du UTXO in deinem Wallet haben."),
+    "wallet_operation_price_higher_than_indicated" : MessageLookupByLibrary.simpleMessage("Der Preis ist höher als angegeben. Um die Transaktion erfolgreich auszuführen musst du das Slippage erhöhen!"),
     "wallet_operation_refresh_addresses" : m3,
     "wallet_operation_refresh_tx" : m4,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("UTXO aktualisieren..."),

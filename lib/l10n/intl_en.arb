@@ -119,6 +119,7 @@
   "wallet_operation_mempool_conflict_retry": "We found some pending transactions. We try to wait for them, this could take some time!",
   "wallet_operation_mempool_conflict": "Please wait for your transaction to be reflected in the next block before proceeding with a new transaction.",
   "wallet_operation_missing_inputs": "Wallet is not synced. Please retry your transaction.",
+  "wallet_operation_price_higher_than_indicated": "Price is higher than indicated. Increase the slippage to commit the transaction to the blockchain!",
 
   "addressbook": "Addressbook",
   "addressbook_add": "Add address",

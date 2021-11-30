@@ -11,6 +11,7 @@ import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
+import 'package:saiive.live/crypto/errors/PriceHigherThanIndicatedError.dart';
 import 'package:saiive.live/crypto/errors/RegenerateWalletAddressError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
@@ -497,6 +498,9 @@ abstract class Wallet extends IWallet {
         }
         if (e.error.error.contains("Missing inputs")) {
           throw new MissingInputsError(S.current.wallet_operation_missing_inputs, txHex);
+        }
+        if (e.error.error.contains("Price is higher than indicated.")) {
+          throw new PriceHigherThanIndicatedError(S.current.wallet_operation_price_higher_than_indicated, txHex);
         }
       }
 

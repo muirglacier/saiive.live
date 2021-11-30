@@ -136,6 +136,28 @@ class WalletRestore {
           }
         }
 
+        var accounts = await api.accountService.getAccounts(ChainHelper.chainTypeString(chain), publicKeys);
+        LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${accounts.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
+
+        for (final accountBalance in accounts) {
+          final keyIndex = publicKeys.indexWhere((item) => item == accountBalance.address);
+          var pathString = path[keyIndex];
+
+          if (!addresses.any((element) => element.publicKey == accountBalance.address)) {
+            final walletAddress = WalletAddress(
+                account: account.account,
+                accountId: account.uniqueId,
+                index: HdWalletUtil.getIndexFromPath(pathString),
+                isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
+                chain: chain,
+                network: net,
+                publicKey: publicKeys[keyIndex],
+                addressType: addressType);
+
+            addresses.add(walletAddress);
+          }
+        }
+
         if (transactions.length == 0) {
           maxEmpty--;
         } else {

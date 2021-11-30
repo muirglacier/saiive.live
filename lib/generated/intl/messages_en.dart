@@ -312,7 +312,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_readonly" : MessageLookupByLibrary.simpleMessage("Readonly"),
     "wallet_accounts_saved" : MessageLookupByLibrary.simpleMessage("Account saved"),
     "wallet_accounts_select_type" : MessageLookupByLibrary.simpleMessage("Select type"),
-    "wallet_accounts_spentable" : MessageLookupByLibrary.simpleMessage("Spentable"),
+    "wallet_accounts_spentable" : MessageLookupByLibrary.simpleMessage("Spendable"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Your wallet is empty!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Network"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet is synchronising right now!"),

@@ -1158,7 +1158,7 @@ class S {
   /// `Spentable`
   String get wallet_accounts_spentable {
     return Intl.message(
-      'Spentable',
+      'Spendable',
       name: 'wallet_accounts_spentable',
       desc: '',
       args: [],

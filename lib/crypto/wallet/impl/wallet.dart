@@ -410,10 +410,6 @@ abstract class Wallet extends IWallet {
     var fees = await getTxFee(useTxs.length, 2);
     fees += additionalFees;
 
-    if (sendMax) {
-      //fees *= -1;
-    }
-
     if (amount == tokenBalance?.balance) {
       amount -= fees;
     }

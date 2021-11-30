@@ -44,21 +44,20 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _amountController = TextEditingController(text: '1');
   EnvironmentType _currentEnvironment;
 
+  var _sendAmount = 0;
+
   String _toAddress;
 
   Future sendFunds(StreamController<String> stream) async {
     try {
       Wakelock.enable();
 
-      final amount = double.parse(_amountController.text.replaceAll(',', '.'));
-      final totalAmount = (amount * DefiChainConstants.COIN).toInt();
-
       var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress,
-          waitForConfirmaton: true, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
+      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, _sendAmount, widget.token, _addressController.text, _toAddress,
+          waitForConfirmaton: true, loadingStream: stream, sendMax: _sendAmount == tokenAmount.balance);
 
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");
@@ -85,6 +84,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   handleSetMax() async {
     var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
     _amountController.text = (tokenAmount.balance / DefiChainConstants.COIN).toString();
+
+    _sendAmount = tokenAmount.balance;
   }
 
   @override
@@ -103,6 +104,12 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     }
 
     _addressController = TextEditingController(text: toAddress);
+
+    _amountController.addListener(() {
+      final amount = double.parse(_amountController.text.replaceAll(',', '.'));
+      final totalAmount = (amount * DefiChainConstants.COIN).toInt();
+      _sendAmount = totalAmount;
+    });
   }
 
   @override

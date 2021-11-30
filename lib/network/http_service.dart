@@ -23,6 +23,8 @@ class HttpService extends IHttpService {
 
   HttpService();
 
+  String getNetwork() => network;
+
   static Future<dynamic> _parseJson(String str) async {
     return json.decode(str);
   }

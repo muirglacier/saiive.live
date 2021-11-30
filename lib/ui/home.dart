@@ -70,8 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             page: AddressBookScreen(key: PageStorageKey('AddressBook')),
             visibleForBottomNav: false,
             routeSettingName: "/addressbook"),
-        // NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
-
+        NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
         NavigationEntry(
             icon: Icon(Icons.radio_button_unchecked),
             label: S.of(context).home_tokens,

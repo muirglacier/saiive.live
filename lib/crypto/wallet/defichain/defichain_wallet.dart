@@ -829,11 +829,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (token == DeFiConstants.DefiTokenSymbol) {
       throw new ArgumentError("$token not supported for account transactions...");
     }
-    // final tokenBalance = await walletDatabase.getAccountBalance(token, excludeAddresses: excludeAddresses);
+    final tokenBalance = await walletDatabase.getAccountBalance(token, excludeAddresses: excludeAddresses);
 
-    // if (amount > tokenBalance.balance) {
-    //   throw ArgumentError("Insufficent funds"); //insufficent funds
-    // }
+    if (amount > tokenBalance.balance) {
+      throw new InsufficientBalanceError("${tokenBalance.balance} is less than $amount", "");
+    }
 
     final tokenType = await apiService.tokenService.getToken("DFI", token);
 

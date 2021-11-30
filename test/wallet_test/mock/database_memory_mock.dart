@@ -232,7 +232,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType) async {
+  Future<bool> addressExists(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType) async {
     for (final address in _addresses) {
       if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index && address.addressType == addressType) {
         return true;
@@ -279,7 +279,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType) async {
+  Future<WalletAddress> getWalletAddressById(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType) async {
     for (final address in _addresses) {
       if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index && address.addressType == addressType) {
         return address;

@@ -245,10 +245,13 @@ class WalletService implements IWalletService {
     dataMap["seed"] = await sl.get<IVault>().getSeed();
     dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
     dataMap["apiService"] = sl.get<ApiService>();
+    var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
+
+    await db.destroy();
+    db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
 
     var result = await compute(_searchAccounts, dataMap);
 
-    var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
     for (var element in result.item1) {
       element.selected = true;
       await db.addOrUpdateAccount(element);

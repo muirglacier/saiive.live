@@ -78,18 +78,25 @@ class _LiquidityScreen extends State<LiquidityScreen> {
       _isLoading = true;
     });
 
-    var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
-    var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
+    try {
+      var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
+      var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
 
-    if (!this.mounted) {
-      return;
+      if (!this.mounted) {
+        return;
+      }
+      setState(() {
+        _liquidity = liquidity;
+        _poolPairLiquidity = poolPairLiquidity;
+        _isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
     }
-
-    setState(() {
-      _liquidity = liquidity;
-      _poolPairLiquidity = poolPairLiquidity;
-      _isLoading = false;
-    });
   }
 
   Widget _buildPoolPairLiquidityEntry(PoolPairLiquidity liquidity) {

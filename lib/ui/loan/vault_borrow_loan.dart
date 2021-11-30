@@ -378,9 +378,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                             SliverToBoxAdapter(child: buildVaultEntry()),
                           ];
                         },
-                        body: Expanded(
-                            child: Column(children: [
-                          if (_loanVault != null && _loanToken != null)
+                        body: Container(child:
+                          (_loanVault != null && _loanToken != null) ?
+                            SingleChildScrollView(child:
                             Column(children: [
                               Container(height: 20),
                               Text(S.of(context).loan_amount),
@@ -408,7 +408,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                                             await Navigator.of(context).push(MaterialPageRoute(
                                                 builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
                                           })))
-                            ]),
-                        ])))))));
+                            ])) : Container(),
+                        ))))));
   }
 }

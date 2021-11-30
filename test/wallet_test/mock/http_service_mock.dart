@@ -41,4 +41,9 @@ class MockHttpService extends IHttpService {
     await Future.delayed(Duration(microseconds: 1));
     return null;
   }
+
+  @override
+  String getNetwork() {
+    return "testnet";
+  }
 }

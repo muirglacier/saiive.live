@@ -5,6 +5,7 @@ import 'package:defichaindart/defichaindart.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/from_account.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
+import 'package:saiive.live/crypto/errors/InsufficientBalanceError.dart';
 import 'package:saiive.live/crypto/errors/ReadOnlyAccountError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
@@ -107,11 +108,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final tokenBBalance = await walletDatabase.getAccountBalance(tokenB);
 
     if (tokenABalance.balance < amountA) {
-      throw new ArgumentError("Insufficient balance...");
+      throw new InsufficientBalanceError("${tokenABalance.balance} is less than $amountA", "");
     }
 
     if (tokenBBalance.balance < amountB) {
-      throw new ArgumentError("Insufficient balance...");
+      throw new InsufficientBalanceError("${tokenBBalance.balance} is less than $amountB", "");
     }
 
     if (DeFiConstants.isDfiToken(tokenA)) {
@@ -191,7 +192,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
 
     if (fromTokenBalance.balance < fromAmount) {
-      throw new ArgumentError("Insufficient balance...");
+      throw new InsufficientBalanceError("${fromTokenBalance.balance} is less than $fromAmount", "");
     }
 
     if (DeFiConstants.isDfiToken(fromToken)) {
@@ -275,7 +276,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final fromTokenBalance = await walletDatabase.getAccountBalance(fromToken);
 
     if (fromTokenBalance.balance < fromAmount) {
-      throw new ArgumentError("Insufficient balance...");
+      throw new InsufficientBalanceError("${fromTokenBalance.balance} is less than $fromAmount", "");
     }
 
     if (DeFiConstants.isDfiToken(fromToken)) {
@@ -616,7 +617,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final totalBalance = await walletDatabase.getAccountBalance(token);
 
     if (amount > totalBalance.balance) {
-      throw new ArgumentError("Insufficient balance for $token");
+      throw new InsufficientBalanceError("${totalBalance.balance} is less than $amount", "");
     }
 
     if (tokenBalance == null || tokenBalance.balance < amount) {
@@ -771,7 +772,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final fromTokenBalance = await walletDatabase.getAccountBalance(token);
 
     if (fromTokenBalance.balance < amount) {
-      throw new ArgumentError("Insufficient balance...");
+      throw new InsufficientBalanceError("${fromTokenBalance.balance} is less than $amount", "");
     }
 
     final fromTok = await apiService.tokenService.getToken("DFI", token);
@@ -828,11 +829,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     if (token == DeFiConstants.DefiTokenSymbol) {
       throw new ArgumentError("$token not supported for account transactions...");
     }
-    final tokenBalance = await walletDatabase.getAccountBalance(token, excludeAddresses: excludeAddresses);
+    // final tokenBalance = await walletDatabase.getAccountBalance(token, excludeAddresses: excludeAddresses);
 
-    if (amount > tokenBalance.balance) {
-      throw ArgumentError("Insufficent funds"); //insufficent funds
-    }
+    // if (amount > tokenBalance.balance) {
+    //   throw ArgumentError("Insufficent funds"); //insufficent funds
+    // }
 
     final tokenType = await apiService.tokenService.getToken("DFI", token);
 
@@ -938,9 +939,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       amount -= MinKeepUTXO;
     }
 
-    if (amount > totalBalance) {
-      throw ArgumentError("Insufficent funds"); //insufficent funds
-    }
+    // if (amount > totalBalance) {
+    //   throw ArgumentError("Insufficent funds"); //insufficent funds
+    // }
 
     loadingStream?.add(S.current.wallet_operation_create_pepare_acc_tx);
 

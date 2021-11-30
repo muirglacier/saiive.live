@@ -1895,6 +1895,16 @@ class S {
     );
   }
 
+  /// `Slippage`
+  String get dex_slippage {
+    return Intl.message(
+      'Slippage',
+      name: 'dex_slippage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `DEX V2`
   String get dex_v2 {
     return Intl.message(

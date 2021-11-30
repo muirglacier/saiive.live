@@ -206,6 +206,7 @@
   "dex_swap_successfull": "Swap erfolgreich",
   "dex_swap_show_transaction": "Im Explorer",
   "dex_to_address": "Token erhalten an",
+  "dex_slippage": "Slippage",
 
 
   "dex_v2": "DEX V2",

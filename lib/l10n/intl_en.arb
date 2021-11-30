@@ -210,6 +210,7 @@
   "dex_swap_successfull": "Swap successfull",
   "dex_swap_show_transaction": "In Explorer",
   "dex_to_address": "Receive tokens at",
+  "dex_slippage": "Slippage",
 
   "dex_v2": "DEX V2",
   "dex_v2_add_max": "max",

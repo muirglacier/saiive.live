@@ -178,7 +178,10 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                           },
                           body: Column(children: <Widget>[
                             ListTile(
-                              leading: Text(S.of(context).address + ": ", overflow: TextOverflow.clip,),
+                              leading: Text(
+                                S.of(context).address + ": ",
+                                overflow: TextOverflow.clip,
+                              ),
                               title: Row(children: [
                                 Flexible(child: SelectableText(widget.walletAddress.publicKey, maxLines: 1, scrollPhysics: NeverScrollableScrollPhysics())),
                                 SizedBox(width: 10),
@@ -282,6 +285,23 @@ class _AccountsAddressAddScreen extends State<AccountsAddressAddScreen> {
                                   });
                                 },
                                 child: Text(S.of(context).wallet_account_export_private_key)),
+                            SizedBox(height: 10),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  final walletService = sl.get<IWalletService>();
+                                  bool valid = await walletService.validateAddress(widget.walletAccount, widget.walletAddress);
+
+                                  if (valid) {
+                                    ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
+                                      content: Text("Address and private key are valid"),
+                                    ));
+                                  } else {
+                                    ScaffoldMessenger.of(NavigationHelper.navigatorKey.currentContext).showSnackBar(SnackBar(
+                                      content: Text("NOT VALID!"),
+                                    ));
+                                  }
+                                },
+                                child: Text("Validate address")),
                             SizedBox(
                               height: 20,
                             ),

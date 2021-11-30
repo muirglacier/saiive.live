@@ -321,6 +321,16 @@ abstract class Wallet extends IWallet {
     await getPrivateKey(retAddress, retWalletAccount);
   }
 
+  @override
+  Future<bool> validateAddress(WalletAccount account, WalletAddress address) async {
+    try {
+      await getPrivateKey(address, account);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
     if (walletAccount.walletAccountType == WalletAccountType.HdAccount) {
       final key = seedList;

@@ -187,18 +187,24 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
-  Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType) async {
+  Future<bool> addressExists(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType) async {
     var dbStore = _addressesStoreInstance;
 
     var finder = Finder(
         filter: Filter.equals('account', account) &
             Filter.equals('isChangeAddress', isChangeAddress) &
             Filter.equals('index', index) &
-            Filter.equals('addressType', addressType.index));
+            Filter.equals('addressType', addressType.index) &
+            Filter.equals('accountId', walletAccount.uniqueId));
+
     var accounts = await dbStore.find(await database, finder: finder);
 
     if (accounts.isEmpty && addressType == AddressType.P2SHSegwit) {
-      finder = Finder(filter: Filter.equals('account', account) & Filter.equals('isChangeAddress', isChangeAddress) & Filter.equals('index', index));
+      finder = Finder(
+          filter: Filter.equals('account', account) &
+              Filter.equals('isChangeAddress', isChangeAddress) &
+              Filter.equals('index', index) &
+              Filter.equals('accountId', walletAccount.uniqueId));
 
       accounts = await dbStore.find(await database, finder: finder);
     }
@@ -207,14 +213,15 @@ class SembastWalletDatabase extends IWalletDatabase {
   }
 
   @override
-  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType) async {
+  Future<WalletAddress> getWalletAddressById(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType) async {
     var dbStore = _addressesStoreInstance;
 
     var finder = Finder(
         filter: Filter.equals('account', account) &
             Filter.equals('isChangeAddress', isChangeAddress) &
             Filter.equals('index', index) &
-            Filter.equals('addressType', addressType.index));
+            Filter.equals('addressType', addressType.index) &
+            Filter.equals('accountId', walletAccount.uniqueId));
 
     var accounts = await dbStore.find(await database, finder: finder);
     if (accounts.isEmpty && addressType == AddressType.P2SHSegwit) {
@@ -224,7 +231,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     }
     var data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
 
-    final activeAddresses = _activeSpentableWalletAddresses;
+    final activeAddresses = await _getActiveAddresses(spentable: true);
     data = data.where((element) => activeAddresses.contains(element.publicKey)).toList();
 
     return data.firstOrNull;

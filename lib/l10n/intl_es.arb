@@ -211,6 +211,7 @@
   "dex_swap_successfull": "Intercambio exitoso",
   "dex_swap_show_transaction": "En el explorador",
   "dex_to_address": "Reciba tokens en",
+  "dex_slippage": "Slippage",
 
   "home_welcome_good_morning": "Buenos dias",
   "home_welcome_good_day": "Buenos días",

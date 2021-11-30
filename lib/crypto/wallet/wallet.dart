@@ -46,4 +46,6 @@ abstract class IWallet {
 
   Future<String> signMessage(String address, String message);
   Future<int> getTxFee(int inputs, int outputs);
+
+  Future<bool> validateAddress(WalletAccount account, WalletAddress address);
 }

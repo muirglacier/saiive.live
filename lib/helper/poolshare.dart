@@ -1,7 +1,6 @@
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/network/coingecko_service.dart';
-import 'package:saiive.live/network/defichain_service.dart';
 import 'package:saiive.live/network/gov_service.dart';
 import 'package:saiive.live/network/model/pool_share.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
@@ -28,13 +27,8 @@ class PoolShareHelper {
   Future<List<PoolShareLiquidity>> handleFetchPoolShares(String coin, String currency, List<PoolShare> poolShares) async {
     var gov = await sl.get<IGovService>().getGov(coin);
     var lpDailyDfiReward = gov['LP_DAILY_DFI_REWARD'];
-    var poolStatsTmp = await sl.get<IDefichainService>().getStatsYieldFarming(coin);
     var poolStats = new Map<String, YieldFarming>();
     var priceData = await sl.get<ICoingeckoService>().getCoins(coin, currency);
-
-    poolStatsTmp.forEach((value) {
-      poolStats[value.idTokenA + '_' + value.idTokenB] = value;
-    });
 
     var combinedPoolShares = new Map<String, PoolShare>();
 
@@ -100,16 +94,16 @@ class PoolShareHelper {
       var dailyReward = hourlyReword * 24;
       var yearlyReward = dailyReward * 365;
 
-      var blockRewardFiat = blockReward * (dfiCoin != null ? dfiCoin.fiat : 0);
-      var minuteRewardFiat = minuteReward * (dfiCoin != null ? dfiCoin.fiat : 0);
-      var hourlyRewordFiat = hourlyReword * (dfiCoin != null ? dfiCoin.fiat : 0);
-      var dailyRewardFiat = dailyReward * (dfiCoin != null ? dfiCoin.fiat : 0);
-      var yearlyRewardFiat = yearlyReward * (dfiCoin != null ? dfiCoin.fiat : 0);
+      var blockRewardFiat = blockReward * (dfiCoin != null ? dfiCoin.fiat : 0.0);
+      var minuteRewardFiat = minuteReward * (dfiCoin != null ? dfiCoin.fiat : 0.0);
+      var hourlyRewordFiat = hourlyReword * (dfiCoin != null ? dfiCoin.fiat : 0.0);
+      var dailyRewardFiat = dailyReward * (dfiCoin != null ? dfiCoin.fiat : 0.0);
+      var yearlyRewardFiat = yearlyReward * (dfiCoin != null ? dfiCoin.fiat : 0.0);
 
-      var liquidityReserveidTokenA = poolPair.reserveA * (priceA != null ? priceA.fiat : 0);
-      var liquidityReserveidTokenB = poolPair.reserveB * (priceB != null ? priceB.fiat : 0);
+      var liquidityReserveidTokenA = poolPair.reserveA * (priceA != null ? priceA.fiat : 0.0);
+      var liquidityReserveidTokenB = poolPair.reserveB * (priceB != null ? priceB.fiat : 0.0);
       var totalLiquidity = liquidityReserveidTokenA + liquidityReserveidTokenB;
-      var apy = poolStats.containsKey(idTokenA + '_' + idTokenB) ? poolStats[idTokenA + '_' + idTokenB].apy : 0;
+      var apy = poolStats.containsKey(idTokenA + '_' + idTokenB) ? poolStats[idTokenA + '_' + idTokenB].apy : 0.0;
 
       return new PoolShareLiquidity(
           tokenA: tokenA.symbol,

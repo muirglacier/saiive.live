@@ -383,7 +383,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           SizedBox(width: 10),
                           IconButton(
                               onPressed: () async {
-                                if (widget.vault.loanAmounts.length > 0) {
+                                if (myVault.loanAmounts.length > 0) {
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).loan_close_vault_not_possible_due_loans)));
                                   return;
                                 }

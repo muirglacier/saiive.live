@@ -102,7 +102,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
   Future<String> _addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
       {String returnAddress, StreamController<String> loadingStream}) async {
-    final useAmount = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
+    var useAmount = amountA;
+    if (DeFiConstants.isDfiToken(tokenA) || DeFiConstants.isDfiToken(tokenB)) {
+      final prepareAccountData = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
+      useAmount = prepareAccountData.item1;
+    }
 
     final tokenABalance = await walletDatabase.getAccountBalance(tokenA);
     final tokenBBalance = await walletDatabase.getAccountBalance(tokenB);
@@ -116,9 +120,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     if (DeFiConstants.isDfiToken(tokenA)) {
-      amountA = useAmount.item1;
-    } else {
-      amountB = useAmount.item1;
+      amountA = useAmount;
+    } else if (DeFiConstants.isDfiToken(tokenB)) {
+      amountB = useAmount;
     }
     final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
     await checkIfWeCanSpendTheChangeAddress(changeAddress);

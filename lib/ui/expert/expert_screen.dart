@@ -68,7 +68,7 @@ class _ExpertScreen extends State<ExpertScreen> {
       final wallet = sl.get<DeFiChainWallet>();
       await wallet.ensureUtxoUnsafe(loadingStream: stream);
 
-      TransactionData lastTxId;
+      var lastTxId;
 
       if (_action == ExpertScreenAction.UtxoToAccount) {
         var prep = await wallet.prepareAccount(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
@@ -76,11 +76,8 @@ class _ExpertScreen extends State<ExpertScreen> {
           lastTxId = prep.item2.first;
         }
       } else {
-        final tx = await wallet.prepareAccountToUtxosTransactions(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
-
-        for (final txHex in tx.item1) {
-          lastTxId = await wallet.createRawTxAndWait(txHex, loadingStream: stream);
-        }
+        var txs = await wallet.prepareAccountToUtxosTransactions(_toAddress.publicKey, totalAmount, loadingStream: stream, force: true);
+        lastTxId = txs.item1.first;
       }
 
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());

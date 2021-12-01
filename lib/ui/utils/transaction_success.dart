@@ -49,40 +49,42 @@ class TransactionSuccessScreen extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         backgroundColor: Color(0xFF1EBCA3),
-        body: Padding(padding: EdgeInsets.all(10), child: Center(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
-          Icon(Icons.check_circle_outline_outlined, size: 50, color: Colors.white),
-          Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w800),
-          ),
-          if (additional != null && additional.isNotEmpty)
-            Text(
-              additional,
-              style: TextStyle(fontSize: 30, color: Colors.white),
-            ),
-          if (txId != null && txId.isNotEmpty)
-            GestureDetector(
-                onTap: () async {
-                  await this.openExplorerLink(context);
-                },
-                child: Padding(
-                    padding: EdgeInsets.only(top: 50),
-                    child: Text(
-                      showTxText,
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-                    ))),
-          GestureDetector(
-              onTap: () async {
-                await this.openExplorerLink(context);
-              },
-              child: Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Text(
-                    txId,
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-                  )))
-        ]))));
+        body: Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(Icons.check_circle_outline_outlined, size: 50, color: Colors.white),
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w800),
+              ),
+              if (additional != null && additional.isNotEmpty)
+                Text(
+                  additional,
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              if (txId != null && txId.isNotEmpty)
+                GestureDetector(
+                    onTap: () async {
+                      await this.openExplorerLink(context);
+                    },
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 50),
+                        child: Text(
+                          showTxText,
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                        ))),
+              GestureDetector(
+                  onTap: () async {
+                    await this.openExplorerLink(context);
+                  },
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
+                        txId ?? "",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                      )))
+            ]))));
   }
 }

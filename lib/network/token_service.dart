@@ -14,7 +14,7 @@ class TokenService extends NetworkService implements ITokenService {
   Map<String, Map<String, Token>> _tokenMap = Map<String, Map<String, Token>>();
 
   Future<List<Token>> getTokens(String coin) async {
-    if (_tokenMap.isNotEmpty && _tokenMap[this.httpService.getNetwork()].isNotEmpty) {
+    if (_tokenMap.isNotEmpty && _tokenMap.containsKey(this.httpService.getNetwork()) && _tokenMap[this.httpService.getNetwork()].isNotEmpty) {
       return _tokenMap[this.httpService.getNetwork()].values.toList();
     }
 

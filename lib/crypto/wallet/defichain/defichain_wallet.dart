@@ -343,23 +343,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         await moveAllTokensToUtxo(changeAddress);
       } else {
         var txHex = await prepareAccountToUtxosTransactions(changeAddress, amount, sendMax: sendMax, loadingStream: loadingStream);
-
-        if (txHex != null) {
-          needsToRefresh = true;
-          for (var txHexStr in txHex.item1) {
-            final tx = await createTxAndWaitInternal(txHexStr, loadingStream: loadingStream);
-
-            for (final unspentTx in tx.details.outputs) {
-              if (unspentTx.address == changeAddress) {
-                var address = await walletDatabase.getWalletAddress(unspentTx.address);
-                var walletAccount = await walletDatabase.getAccount(address.accountId);
-                await walletDatabase.addUnspentTransaction(unspentTx, walletAccount);
-              }
-            }
-          }
-          await walletDatabase.removeUnspentTransactions(txHex.item2);
-          amount -= txHex.item3;
-        }
+        amount -= txHex.item2;
       }
 
       if (sendMax) {
@@ -495,6 +479,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     var fees = await getTxFee(1, 2);
+    final minAmount = vaultCreateFees + fees;
+
+    await prepareAccountToUtxosTransactions(owner, minAmount, loadingStream: loadingStream);
+
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
     final keys = List<Tuple2<WalletAddress, ECPair>>.empty(growable: true);
@@ -504,8 +492,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     var keyPair = await getPrivateKey(address, walletAccount);
     keys.add(Tuple2(address, keyPair));
-
-    final minAmount = vaultCreateFees + fees;
 
     if (!unspentTxs.any((element) => element.address == owner && element.value >= minAmount)) {
       var inputTx = await createUtxoTransaction(minAmount - fees, owner, owner, loadingStream: loadingStream);
@@ -1076,12 +1062,12 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     return Tuple2<String, List<tx.Transaction>>(txHex, useInputs);
   }
 
-  Future<Tuple3<List<String>, List<tx.Transaction>, int>> prepareAccountToUtxosTransactions(String pubKey, int amount,
+  Future<Tuple2<List<tx.Transaction>, int>> prepareAccountToUtxosTransactions(String pubKey, int amount,
       {bool sendMax = false, StreamController<String> loadingStream, bool force = false}) async {
     var tokenBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiTokenSymbol);
 
     if (tokenBalance == null || tokenBalance.balance == 0) {
-      throw new ArgumentError("Token balance must be greater than 0 to create any tx!");
+      throw new InsufficientBalanceError("Token balance must be greater than 0 to create any tx!", "");
     }
 
     // we have currently enough utxo
@@ -1093,7 +1079,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var totalBalance = accountBalance.balance + tokenBalance.balance;
 
     if (totalBalance < amount) {
-      throw new ArgumentError("Balance $totalBalance is less than $amount");
+      throw new InsufficientBalanceError("Balance $totalBalance is less than $amount", "");
     }
 
     var neededUtxo = amount - tokenBalance.balance;
@@ -1167,7 +1153,18 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         }
       }, chain, network);
 
-      txs.add(txHex);
+      if (txHex != null) {
+        final tx = await createTxAndWaitInternal(txHex, loadingStream: loadingStream);
+
+        for (final unspentTx in tx.details.outputs) {
+          if (unspentTx.address == pubKey) {
+            var address = await walletDatabase.getWalletAddress(unspentTx.address);
+            var walletAccount = await walletDatabase.getAccount(address.accountId);
+            await walletDatabase.addUnspentTransaction(unspentTx, walletAccount);
+          }
+        }
+        await walletDatabase.removeUnspentTransactions(useInputs);
+      }
 
       if (accBalance >= neededUtxo) {
         break;
@@ -1178,7 +1175,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       throw new ArgumentError("should not happen at all now...");
     }
 
-    return Tuple3(txs, usedInputs, fees * txs.length);
+    return Tuple2(usedInputs, fees * txs.length);
   }
 
   Future<Tuple2<int, List<TransactionData>>> prepareAccount(String toAddress, int amount, {StreamController<String> loadingStream, bool force = false}) async {

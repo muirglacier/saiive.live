@@ -7,6 +7,7 @@ import 'package:saiive.live/network/model/transaction.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:uuid/uuid.dart';
+import '../mock/transaction_service_mock.dart';
 import '../wallet_test_base.dart';
 
 void main() async {
@@ -89,8 +90,9 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      final tx = await wallet.prepareAccountToUtxosTransactions("toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", 800 * 100000000);
-      expect(tx.item1[0],
+      final txController = sl.get<TransactionServiceMock>();
+      await wallet.prepareAccountToUtxosTransactions("toMR4jje52shBy5Mi5wEGWvAETLBCsZprw", 800 * 100000000);
+      expect(txController.lastTx,
           "04000000000101de18753cf229ecdb87dc07c282110607a894ea31ea656f5aa90afd66105887c0020000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff0300000000000000002d6a2b446654786217a9141084ef98bacfecbc9f140496b26516ae55d79bfa870100000000a32ecd0e030000000200a0fd02000000000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8700a32ecd0e0300000017a914bb7642fd3a9945fd75aff551d9a740768ac7ca7b8700024730440220711dd9cbdf768701ce9f7be4864f3a653228c90d0457902864f9ba75626adc0a022066f73bff3dc3de6699d7b7d7158de5dfab2cd4d4acb61bed0a0581be5f7fe5ef012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
       await destoryTest();
     });

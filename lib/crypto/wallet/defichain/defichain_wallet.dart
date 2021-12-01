@@ -343,7 +343,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         await moveAllTokensToUtxo(changeAddress);
       } else {
         var txHex = await prepareAccountToUtxosTransactions(changeAddress, amount, sendMax: sendMax, loadingStream: loadingStream);
-        amount -= txHex.item2;
+        if (txHex != null) {
+          amount -= txHex.item2;
+        }
       }
 
       if (sendMax) {

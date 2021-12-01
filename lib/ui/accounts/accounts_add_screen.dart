@@ -46,13 +46,13 @@ class _AccountsAddScreen extends State<AccountsAddScreen> {
     if (widget.isNewAddress) {
       setNextAccountIndex();
     } else {
-      _accountIndex = widget.walletAccount.id;
+      _accountIndex = widget.walletAccount.account;
     }
   }
 
   setNextAccountIndex() {
     var walletAccounts = _allAccounts.where((element) => element.derivationPathType == _pathDerivationType).toList();
-    walletAccounts.sort((a, b) => b.account.compareTo(a.account));
+    walletAccounts.sort((a, b) => a.account.compareTo(a.account));
 
     if (walletAccounts.isEmpty) {
       setState(() {

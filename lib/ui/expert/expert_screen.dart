@@ -11,7 +11,6 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
-import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';

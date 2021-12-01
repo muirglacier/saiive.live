@@ -176,7 +176,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_readonly" : MessageLookupByLibrary.simpleMessage("Readonly"),
     "wallet_accounts_saved" : MessageLookupByLibrary.simpleMessage("Account saved"),
     "wallet_accounts_select_type" : MessageLookupByLibrary.simpleMessage("Select type"),
-    "wallet_accounts_spentable" : MessageLookupByLibrary.simpleMessage("Spentable"),
+    "wallet_accounts_spentable" : MessageLookupByLibrary.simpleMessage("Spendable"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Tu billetera está vacía!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Red"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet se está sincronizando en este momento!"),

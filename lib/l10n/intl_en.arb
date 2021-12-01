@@ -128,7 +128,7 @@
   "wallet_accounts": "Accounts",
   "wallet_account_index": "Account index",
   "wallet_accounts_readonly": "Readonly",
-  "wallet_accounts_spentable": "Spentable",
+  "wallet_accounts_spentable": "Spendable",
   "wallet_accounts_delete": "Do you want to delete this account?",
   "wallet_accounts_detail": "Account details",
   "wallet_accounts_empty": "No address created yet...",

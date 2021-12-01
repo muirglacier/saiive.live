@@ -43,7 +43,11 @@ class _AccountsAddScreen extends State<AccountsAddScreen> {
     setState(() {
       _allAccounts = allAccounts;
     });
-    setNextAccountIndex();
+    if (widget.isNewAddress) {
+      setNextAccountIndex();
+    } else {
+      _accountIndex = widget.walletAccount.id;
+    }
   }
 
   setNextAccountIndex() {

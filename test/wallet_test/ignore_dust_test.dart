@@ -67,9 +67,10 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      var tx = await wallet.prepareAccountToUtxosTransactions("tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", 514, force: true);
+      final txController = sl.get<TransactionServiceMock>();
+      await wallet.prepareAccountToUtxosTransactions("tXmZ6X4xvZdUdXVhUKJbzkcN2MNuwVSEWv", 514, force: true);
 
-      expect(tx.item1.first,
+      expect(txController.lastTx,
           "0400000000010162ed76c00628d0a386125398130c1becf331b4d6a3a17dc1c5d38a16c7c82183010000001716001421cf7b9e2e17fa2879be2a442d8454219236bd3affffffff014a99e1110000000017a9141084ef98bacfecbc9f140496b26516ae55d79bfa8700024830450221008dd6a0006f3b13256bc89e1423dee70b253201184d409df0ca8f814d12ea7d2702200de083baf47f49c60cc059f484af4402671b8f3aea2a9a00605e91ec7eb32941012103352705381be729d234e692a6ee4bf9e2800b9fc1ef0ebc96b6cf35c38658c93c00000000");
 
       await destoryTest();

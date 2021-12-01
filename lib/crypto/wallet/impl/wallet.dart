@@ -219,9 +219,13 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<WalletAccount> addAccount(WalletAccount account) {
+  Future<WalletAccount> addAccount(WalletAccount account) async {
     isInitialzed();
-    return _walletDatabase.addOrUpdateAccount(account);
+    var ret = await _walletDatabase.addOrUpdateAccount(account);
+    _isInitialized = false;
+
+    await init();
+    return ret;
   }
 
   Future<bool> hasAccounts() async {

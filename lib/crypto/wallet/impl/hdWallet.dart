@@ -93,7 +93,7 @@ class HdWallet extends IHdWallet {
       return walletAddresses.first.publicKey;
     }
 
-    var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
+    var nextIndex = await sharedPrefs.getAddressIndex(_account.uniqueId, isChangeAddress);
 
     var address = await getNextFreePublicKey(database, nextIndex, sharedPrefs, isChangeAddress, addressType);
 
@@ -108,7 +108,7 @@ class HdWallet extends IHdWallet {
       return _createAddress(false, -1, walletAddress.publicKey, walletAddress.addressType);
     }
 
-    var nextIndex = await sharedPrefs.getAddressIndex(isChangeAddress);
+    var nextIndex = await sharedPrefs.getAddressIndex(_account.uniqueId, isChangeAddress);
     var address = await getNextFreePublicKey(database, nextIndex, sharedPrefs, isChangeAddress, addressType);
 
     return address;
@@ -130,7 +130,7 @@ class HdWallet extends IHdWallet {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
     }
 
-    await sharedPrefs.setAddressIndex(startIndex + 1, isChangeAddress);
+    await sharedPrefs.setAddressIndex(_account.uniqueId, startIndex + 1, isChangeAddress);
 
     return address;
   }

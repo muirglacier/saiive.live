@@ -1155,7 +1155,7 @@ class S {
     );
   }
 
-  /// `Spentable`
+  /// `Spendable`
   String get wallet_accounts_spentable {
     return Intl.message(
       'Spendable',

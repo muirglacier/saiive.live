@@ -109,6 +109,11 @@ dependencies:
 
   uuid: ^3.0.5
 
+  # push
+  firebase_core: ^1.10.0
+  firebase_messaging: ^11.1.0
+  overlay_support: ^1.2.1
+
   # TouchID/FaceID
   local_auth: ^1.1.2
   flutter_screen_lock: 

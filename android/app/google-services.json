@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "192592077529",
+    "project_id": "saiive-live-defi",
+    "storage_bucket": "saiive-live-defi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192592077529:android:eb4405b7211e801eedd4c8",
+        "android_client_info": {
+          "package_name": "at.saiive.live"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192592077529-itvie6aokq2ad4jsmc7oa7m3vp3g2soh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGPx7YaSYNpqKW89ILEg6R5c5EIgk2F5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192592077529-itvie6aokq2ad4jsmc7oa7m3vp3g2soh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192592077529:android:1a752300bea5193dedd4c8",
+        "android_client_info": {
+          "package_name": "at.saiive.live.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192592077529-itvie6aokq2ad4jsmc7oa7m3vp3g2soh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGPx7YaSYNpqKW89ILEg6R5c5EIgk2F5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192592077529-itvie6aokq2ad4jsmc7oa7m3vp3g2soh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

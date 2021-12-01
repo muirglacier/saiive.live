@@ -2,11 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:logger/logger.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/channel.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/navigation.helper.dart';
+import 'package:saiive.live/push/notification_badge_widget.dart';
+import 'package:saiive.live/push/push_notification_received_event.dart';
+import 'package:saiive.live/push/push_service.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
 import 'package:saiive.live/ui/splash.dart';
@@ -90,6 +94,23 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     });
 
     sl.get<ChannelConnection>().init();
+
+    EventTaxiImpl.singleton().registerTo<PushNotificationReceivedEvent>().listen((event) async {
+      StateContainer.of(context).logger.i("PushNotification " + event.toString() + " called...");
+
+      showSimpleNotification(
+        Text(event.notification.title),
+        leading: NotificationBadge(event.notification.title, event.notification.body),
+        subtitle: Text(event.notification.body),
+        background: Colors.cyan.shade700,
+        duration: Duration(seconds: 10),
+      );
+    });
+    final pushService = sl.get<IPushService>();
+    pushService.registerPushService().then((value) async {
+      await pushService.checkForInitialMessage();
+    });
+
     init();
   }
 
@@ -121,102 +142,104 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
 
     ThemeData theme = ThemeData();
 
-    return MaterialApp(
-        navigatorKey: NavigationHelper.navigatorKey,
-        navigatorObservers: [SaiiveRouteObserver()],
-        debugShowCheckedModeBanner: dotenv.env["ENV"] == "dev",
-        localizationsDelegates: [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [const Locale('en', ''), const Locale('de', ''), const Locale('es', '')],
-        locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
-            ? null
-            : StateContainer.of(context).curLanguage.getLocale(),
-        title: APP_TITLE,
-        theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              backgroundColor: appBarColor,
-              shadowColor: shadowColor,
-              iconTheme: IconThemeData(color: appBarActionColor),
-              foregroundColor: appBarTextColor,
-              actionsIconTheme: IconThemeData(color: appBarTextColor),
-              toolbarTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
-              titleTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
-              textTheme: theme.textTheme.copyWith(
-                headline6: theme.textTheme.headline6.copyWith(color: appBarTextColor, fontSize: 20.0),
-              ),
-            ),
-            brightness: StateContainer.of(context).curTheme.brightness,
-            primaryColor: StateContainer.of(context).curTheme.primary,
-            scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,
-            canvasColor: StateContainer.of(context).curTheme.backgroundColor,
-            textTheme: TextTheme(
-                headline3: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: StateContainer.of(context).curTheme.text,
+    return OverlaySupport(
+        child: MaterialApp(
+            navigatorKey: NavigationHelper.navigatorKey,
+            navigatorObservers: [SaiiveRouteObserver()],
+            debugShowCheckedModeBanner: dotenv.env["ENV"] == "dev",
+            localizationsDelegates: [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [const Locale('en', ''), const Locale('de', ''), const Locale('es', '')],
+            locale: StateContainer.of(context).curLanguage == null || StateContainer.of(context).curLanguage.language == AvailableLanguage.DEFAULT
+                ? null
+                : StateContainer.of(context).curLanguage.getLocale(),
+            title: APP_TITLE,
+            theme: ThemeData(
+                appBarTheme: AppBarTheme(
+                  backgroundColor: appBarColor,
+                  shadowColor: shadowColor,
+                  iconTheme: IconThemeData(color: appBarActionColor),
+                  foregroundColor: appBarTextColor,
+                  actionsIconTheme: IconThemeData(color: appBarTextColor),
+                  toolbarTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
+                  titleTextStyle: TextStyle(color: appBarTextColor, fontWeight: FontWeight.bold),
+                  textTheme: theme.textTheme.copyWith(
+                    headline6: theme.textTheme.headline6.copyWith(color: appBarTextColor, fontSize: 20.0),
+                  ),
                 ),
-                bodyText1: TextStyle(
-                  color: StateContainer.of(context).curTheme.text,
-                ),
-                bodyText2: TextStyle(
-                  color: StateContainer.of(context).curTheme.text,
-                )),
-            buttonColor: StateContainer.of(context).curTheme.primary,
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            tabBarTheme: TabBarTheme(labelColor: appBarTextColor),
-            elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
-            textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
-            textSelectionTheme: TextSelectionThemeData(cursorColor: StateContainer.of(context).curTheme.primary, selectionHandleColor: StateContainer.of(context).curTheme.primary),
-            inputDecorationTheme: InputDecorationTheme(
-                counterStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),
-                focusColor: StateContainer.of(context).curTheme.primary,
-                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.solid, color: StateContainer.of(context).curTheme.primary)))),
-        initialRoute: '/',
-        onGenerateRoute: (RouteSettings settings) {
-          switch (settings.name) {
-            case '/':
-              return NoTransitionRoute(
-                builder: (_) => SplashScreen(),
-                settings: settings,
-              );
-              break;
+                brightness: StateContainer.of(context).curTheme.brightness,
+                primaryColor: StateContainer.of(context).curTheme.primary,
+                scaffoldBackgroundColor: StateContainer.of(context).curTheme.backgroundColor,
+                canvasColor: StateContainer.of(context).curTheme.backgroundColor,
+                textTheme: TextTheme(
+                    headline3: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: StateContainer.of(context).curTheme.text,
+                    ),
+                    bodyText1: TextStyle(
+                      color: StateContainer.of(context).curTheme.text,
+                    ),
+                    bodyText2: TextStyle(
+                      color: StateContainer.of(context).curTheme.text,
+                    )),
+                buttonColor: StateContainer.of(context).curTheme.primary,
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                tabBarTheme: TabBarTheme(labelColor: appBarTextColor),
+                elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
+                textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(primary: StateContainer.of(context).curTheme.primary)),
+                textSelectionTheme:
+                    TextSelectionThemeData(cursorColor: StateContainer.of(context).curTheme.primary, selectionHandleColor: StateContainer.of(context).curTheme.primary),
+                inputDecorationTheme: InputDecorationTheme(
+                    counterStyle: TextStyle(color: StateContainer.of(context).curTheme.primary),
+                    focusColor: StateContainer.of(context).curTheme.primary,
+                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.solid, color: StateContainer.of(context).curTheme.primary)))),
+            initialRoute: '/',
+            onGenerateRoute: (RouteSettings settings) {
+              switch (settings.name) {
+                case '/':
+                  return NoTransitionRoute(
+                    builder: (_) => SplashScreen(),
+                    settings: settings,
+                  );
+                  break;
 
-            case '/home':
-              return NoTransitionRoute(
-                builder: (_) => HomeScreen(),
-                settings: settings,
-              );
-              break;
+                case '/home':
+                  return NoTransitionRoute(
+                    builder: (_) => HomeScreen(),
+                    settings: settings,
+                  );
+                  break;
 
-            case '/intro_welcome':
-              return NoTransitionRoute(
-                builder: (_) => IntroWelcomeScreen(),
-                settings: settings,
-              );
-              break;
+                case '/intro_welcome':
+                  return NoTransitionRoute(
+                    builder: (_) => IntroWelcomeScreen(),
+                    settings: settings,
+                  );
+                  break;
 
-            case '/intro_wallet_restore':
-              return NoTransitionRoute(
-                builder: (_) => IntroRestoreScreen(),
-                settings: settings,
-              );
-            case '/intro_accounts_restore':
-              return NoTransitionRoute(
-                builder: (_) => RestoreAccountsScreen(),
-                settings: settings,
-              );
-            case '/intro_wallet_new':
-              return NoTransitionRoute(
-                builder: (_) => IntroWalletNewScreen(),
-                settings: settings,
-              );
-            default:
-              return null;
-          }
-        });
+                case '/intro_wallet_restore':
+                  return NoTransitionRoute(
+                    builder: (_) => IntroRestoreScreen(),
+                    settings: settings,
+                  );
+                case '/intro_accounts_restore':
+                  return NoTransitionRoute(
+                    builder: (_) => RestoreAccountsScreen(),
+                    settings: settings,
+                  );
+                case '/intro_wallet_new':
+                  return NoTransitionRoute(
+                    builder: (_) => IntroWalletNewScreen(),
+                    settings: settings,
+                  );
+                default:
+                  return null;
+              }
+            }));
   }
 }

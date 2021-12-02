@@ -2905,10 +2905,10 @@ class S {
     );
   }
 
-  /// `Your collateral has to be at lea,st 50% DFI in order to get a loan.`
+  /// `Your collateral has to be at least 50% DFI in order to get a loan.`
   String get loan_collateral_dfi_ratio {
     return Intl.message(
-      'Your collateral has to be at lea,st 50% DFI in order to get a loan.',
+      'Your collateral has to be at least 50% DFI in order to get a loan.',
       name: 'loan_collateral_dfi_ratio',
       desc: '',
       args: [],

@@ -105,7 +105,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       }
 
       var amount = double.tryParse(element.amount);
-      var _loanTokenPriceUSD = element.activePrice != null ? element.activePrice.active.amount : 0;
+      var _loanTokenPriceUSD = element.activePrice != null ? element.activePrice.active.amount : 1.0;
 
       if (_loanToken.token.symbolKey == "DUSD") {
         _loanTokenPriceUSD = 1;
@@ -124,7 +124,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     _totalInterestAmount = (totalAmount * _totalInterest / 100);
     _totalTokenWithInterest = totalAmount + _totalInterestAmount;
 
-    var _loanTokenPriceUSD = _loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0;
+    var _loanTokenPriceUSD = _loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 1.0;
 
     if (_loanToken.token.symbolKey == "DUSD") {
       _loanTokenPriceUSD = 1;
@@ -201,7 +201,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         Row(children: [
                           Text(S.of(context).loan_current_amount_usd, style: Theme.of(context).textTheme.caption),
                           Spacer(),
-                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) +
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 1.0)) +
                               ' \$'),
                         ]),
                       Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanToken.interest + '%')])

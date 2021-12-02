@@ -207,7 +207,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   buildAmount() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0.0;
+    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 1.0;
 
     if (widget.loanAmount.symbolKey == "DUSD") {
       pricePerToken = 1.0;
@@ -250,7 +250,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   buildPayback() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 0.0;
+    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 1.0;
 
     if (widget.loanAmount.symbolKey == "DUSD") {
       pricePerToken = 1.0;

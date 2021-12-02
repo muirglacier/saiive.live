@@ -8,9 +8,9 @@ name: $(BuildID)
 variables:
 - group: saiive.live
 - name: AppVersion
-  value: 0.13
+  value: 0.14
 - name: AppVersion_Minor
-  value: 13
+  value: 14
 - name: AppVersion_Major
   value: 0
 - name: UseUseFlutterVersion

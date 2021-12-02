@@ -18,7 +18,7 @@ class PoolShareHelper {
   }
 
   Future<List<PoolShareLiquidity>> getMyPoolShares(String coin, String currency) async {
-    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys(onlyActive: true);
     var poolShares = await sl.get<IPoolShareService>().getMyPoolShare(coin, pubKeyList);
 
     return handleFetchPoolShares(coin, currency, poolShares);

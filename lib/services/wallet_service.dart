@@ -205,7 +205,7 @@ class WalletService implements IWalletService {
 
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards) async {
     if (chain == ChainType.DeFiChain) {
-      var pubKeyList = await _defiWallet.getPublicKeys();
+      var pubKeyList = await _defiWallet.getPublicKeys(onlyActive: true);
       return await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, token, !includeRewards);
     }
     return List<AccountHistory>.empty();

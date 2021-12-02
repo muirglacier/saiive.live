@@ -112,7 +112,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   Expanded(
                       flex: 10,
                       child: Text(
-                        liquidity.apy.toStringAsFixed(2) + '%',
+                        (liquidity.apr != null ? liquidity.apr.toStringAsFixed(2) : 0.0.toStringAsFixed(2)) + '%',
                         textAlign: TextAlign.right,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ))

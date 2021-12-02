@@ -81,7 +81,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       _vaults = null;
     });
 
-    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys(onlyActive: true);
     var vaults = await sl.get<IVaultsService>().getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
 
     setState(() {
@@ -378,37 +378,38 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                             SliverToBoxAdapter(child: buildVaultEntry()),
                           ];
                         },
-                        body: Container(child:
-                          (_loanVault != null && _loanToken != null) ?
-                            SingleChildScrollView(child:
-                            Column(children: [
-                              Container(height: 20),
-                              Text(S.of(context).loan_amount),
-                              TextField(
-                                  controller: _amountController,
-                                  decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-                                  keyboardType: TextInputType.numberWithOptions(decimal: true)),
-                              buildTXDetails(),
-                              Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
-                                  child: WalletReturnAddressWidget(
-                                    onChanged: (v) {
-                                      setState(() {
-                                        _returnAddress = v;
-                                      });
-                                    },
-                                  )),
-                              Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 20),
-                                  child: SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                          child: Text(S.of(context).loan_continue),
-                                          onPressed: () async {
-                                            await Navigator.of(context).push(MaterialPageRoute(
-                                                builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
-                                          })))
-                            ])) : Container(),
+                        body: Container(
+                          child: (_loanVault != null && _loanToken != null)
+                              ? SingleChildScrollView(
+                                  child: Column(children: [
+                                  Container(height: 20),
+                                  Text(S.of(context).loan_amount),
+                                  TextField(
+                                      controller: _amountController,
+                                      decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+                                      keyboardType: TextInputType.numberWithOptions(decimal: true)),
+                                  buildTXDetails(),
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
+                                      child: WalletReturnAddressWidget(
+                                        onChanged: (v) {
+                                          setState(() {
+                                            _returnAddress = v;
+                                          });
+                                        },
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 20),
+                                      child: SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                              child: Text(S.of(context).loan_continue),
+                                              onPressed: () async {
+                                                await Navigator.of(context).push(MaterialPageRoute(
+                                                    builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
+                                              })))
+                                ]))
+                              : Container(),
                         ))))));
   }
 }

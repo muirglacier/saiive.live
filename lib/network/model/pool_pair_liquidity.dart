@@ -7,7 +7,7 @@ class PoolPairLiquidity {
   final double totalLiquidityInUSDT;
   final double yearlyPoolReward;
   final double poolSharePercentage;
-  final double apy;
+  final double apr;
 
   PoolPairLiquidity({
     this.tokenA,
@@ -16,7 +16,7 @@ class PoolPairLiquidity {
     this.totalLiquidityInUSDT,
     this.yearlyPoolReward,
     this.poolSharePercentage,
-    this.apy,
+    this.apr,
   });
 
   Map<String, dynamic> toJson() => <String, dynamic>{
@@ -26,6 +26,6 @@ class PoolPairLiquidity {
         'totalLiquidityInUSDT': totalLiquidityInUSDT,
         'yearlyPoolReward': yearlyPoolReward,
         'poolSharePercentage': poolSharePercentage,
-        'apy': apy
+        'apr': apr
       };
 }

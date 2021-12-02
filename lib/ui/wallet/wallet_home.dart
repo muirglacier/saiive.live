@@ -128,8 +128,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
           _syncText = S.of(context).home_welcome_account_synced;
         });
 
-        var pubKeyListDFI = await sl.get<DeFiChainWallet>().getPublicKeys();
-        var pubKeyListBTC = await sl.get<BitcoinWallet>().getPublicKeys();
+        var pubKeyListDFI = await sl.get<DeFiChainWallet>().getPublicKeys(onlyActive: true);
+        var pubKeyListBTC = await sl.get<BitcoinWallet>().getPublicKeys(onlyActive: true);
 
         sl.get<ChannelConnection>().sendPublicKeysDFI(pubKeyListDFI);
         sl.get<ChannelConnection>().sendPublicKeysBTC(pubKeyListBTC);

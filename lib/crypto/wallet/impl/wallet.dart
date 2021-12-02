@@ -161,12 +161,12 @@ abstract class Wallet extends IWallet {
     return await _wallets[account.uniqueId].getPublicKeys(walletDatabase);
   }
 
-  Future<List<String>> getPublicKeys() async {
+  Future<List<String>> getPublicKeys({bool onlyActive}) async {
     isInitialzed();
     List<String> keys = [];
 
     for (var wallet in _wallets.values) {
-      final walletAddresses = await wallet.getPublicKeys(_walletDatabase);
+      final walletAddresses = await wallet.getPublicKeys(_walletDatabase, onlyActive: onlyActive);
       final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
 
       keys.addAll(allAddresses);

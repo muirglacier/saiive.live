@@ -122,8 +122,8 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
 
   _buildCollateralEntry(LoanVaultAmount amount, double collateralValue) {
     var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
-    double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
-    double factor = token != null ? double.tryParse(token.factor) : 0;
+    double price = amount.activePrice != null ? amount.activePrice.active.amount : 1.0;
+    double factor = token != null ? double.tryParse(token.factor) : 1.0;
 
     return Card(
         child: Padding(
@@ -200,7 +200,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                               return Card(
                                 child: ListTile(
                                   title: Text(key),
-                                  subtitle: Text(FundFormatter.format(amount)),
+                                  subtitle: Text((amount > 0 ? "+" : '') + FundFormatter.format(amount)),
                                 ),
                               );
                             }),

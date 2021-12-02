@@ -78,8 +78,8 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                           style: Theme.of(context).textTheme.caption)
                     ]),
                     TableRow(children: [
-                      Text(FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + '\$'),
-                      Text(widget.vault.collateralRatio ?? '')
+                      Text(FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + ' \$'),
+                      Text(widget.vault.collateralRatio + '%' ?? '')
                     ]),
                   ]),
                 ]))));

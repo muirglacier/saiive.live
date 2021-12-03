@@ -67,17 +67,16 @@ class WalletRestore {
     }
 
     try {
-      var fullNode = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
-      checkIfExistingAndAddToList(fullNode);
+      var fullNode = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
+      var jellyFish = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
+      var bip32 = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
+      var bip44 = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
 
-      var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
-      checkIfExistingAndAddToList(jellyFish);
+      var result = await Future.wait([fullNode, jellyFish, bip32, bip44]);
 
-      var bip32 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
-      checkIfExistingAndAddToList(bip32);
-
-      var bip44 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
-      checkIfExistingAndAddToList(bip44);
+      for (var res in result) {
+        checkIfExistingAndAddToList(res);
+      }
     } catch (error) {
       //ignore
     }
@@ -97,13 +96,18 @@ class WalletRestore {
         defaultAddressType: getDefaultAddressTypeForPathDerivation(pathDerivationType),
         selected: true);
 
-    final addresses = await _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit);
-    final addressesBech32 = await _restore(walletAccount, key, api, chain, network, AddressType.Bech32);
-    final legacy = await _restore(walletAccount, key, api, chain, network, AddressType.Legacy);
+    final p2sh = _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit);
+    final bech32 = _restore(walletAccount, key, api, chain, network, AddressType.Bech32);
+    final legacy = _restore(walletAccount, key, api, chain, network, AddressType.Legacy);
 
-    addresses.addAll(legacy);
-    addresses.addAll(addressesBech32);
-    return Tuple2(walletAccount, addresses);
+    var all = await Future.wait([p2sh, bech32, legacy]);
+    var ret = List<WalletAddress>.empty(growable: true);
+
+    for (var add in all) {
+      ret.addAll(add);
+    }
+
+    return Tuple2(walletAccount, ret);
   }
 
   static Future<List<WalletAddress>> _restore(WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType) async {

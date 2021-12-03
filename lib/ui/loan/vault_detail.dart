@@ -345,17 +345,17 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
             ])));
   }
 
-  _buildTabAuctions() {
-    return Container(
-      child: ListView.builder(
-        physics: const ClampingScrollPhysics(),
-        itemCount: 1,
-        itemBuilder: (BuildContext context, int index) {
-          return Text('disabled');
-        },
-      ),
-    );
-  }
+  // _buildTabAuctions() {
+  //   return Container(
+  //     child: ListView.builder(
+  //       physics: const ClampingScrollPhysics(),
+  //       itemCount: 1,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return Text('disabled');
+  //       },
+  //     ),
+  //   );
+  // }
 
   Widget _buildTopPart() {
     return Padding(

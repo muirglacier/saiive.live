@@ -10,7 +10,7 @@ class SharedPrefsMock extends ISharedPrefsUtil {
   Future<void> deleteAll() async {}
 
   @override
-  Future<int> getAddressIndex(bool isChangeAddress) {
+  Future<int> getAddressIndex(String walletId, bool isChangeAddress) {
     return Future.value(0);
   }
 
@@ -78,7 +78,7 @@ class SharedPrefsMock extends ISharedPrefsUtil {
   Future<void> resetInstanceId() async {}
 
   @override
-  Future<void> setAddressIndex(int index, bool isChangeAddress) async {}
+  Future<void> setAddressIndex(String walletId, int index, bool isChangeAddress) async {}
 
   @override
   Future<void> setFirstLaunch() async {}

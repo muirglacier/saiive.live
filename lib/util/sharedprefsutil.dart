@@ -26,8 +26,8 @@ abstract class ISharedPrefsUtil {
   Future<void> setFirstLaunch();
   Future<bool> getFirstLaunch();
 
-  Future<void> setAddressIndex(int index, bool isChangeAddress);
-  Future<int> getAddressIndex(bool isChangeAddress);
+  Future<void> setAddressIndex(String walletId, int index, bool isChangeAddress);
+  Future<int> getAddressIndex(String walletId, bool isChangeAddress);
 
   Future<void> resetInstanceId();
   Future<String> getInstanceId();
@@ -136,12 +136,19 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
     return await get(first_launch_key, defaultValue: true);
   }
 
-  Future<void> setAddressIndex(int index, bool isChangeAddress) async {
-    return await set(isChangeAddress ? change_address_index : address_index, index);
+  Future<void> setAddressIndex(String walletId, int index, bool isChangeAddress) async {
+    var key = isChangeAddress ? change_address_index : address_index;
+    key += "_$walletId";
+
+    return await set(key, index);
   }
 
-  Future<int> getAddressIndex(bool isChangeAddress) async {
-    var curIndex = await get(isChangeAddress ? change_address_index : address_index, defaultValue: 0);
+  Future<int> getAddressIndex(String walletId, bool isChangeAddress) async {
+    var key = isChangeAddress ? change_address_index : address_index;
+
+    key += "_$walletId";
+
+    var curIndex = await get(key, defaultValue: 0);
 
     return curIndex;
   }

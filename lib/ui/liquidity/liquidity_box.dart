@@ -34,7 +34,7 @@ class _LiquidityBoxWidget extends State<LiquidityBoxWidget> {
                       Expanded(
                           flex: 10,
                           child: Text(
-                            widget.liquidity.apy.toStringAsFixed(2) + '%',
+                            widget.liquidity.apr.toStringAsFixed(2) + '%',
                             textAlign: TextAlign.right,
                             textScaleFactor: 2.5,
                             style: TextStyle(fontWeight: FontWeight.bold),

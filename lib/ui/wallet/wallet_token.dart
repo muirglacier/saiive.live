@@ -162,7 +162,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                           child: InkWell(
                               child: new Text(S.of(context).wallet_token_show_in_explorer, style: TextStyle(color: Theme.of(context).primaryColor), textAlign: TextAlign.right),
                               onTap: () async {
-                                var uri = DefiChainConstants.getExplorerUrl(widget.chainType, _chainNet, history.id);
+                                var uri = DefiChainConstants.getExplorerUrl(widget.chainType, _chainNet, history.mintTxId ?? history.spentHeight);
                                 if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
                                   if (await canLaunch(uri)) {
                                     await launch(uri);
@@ -175,7 +175,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                   ],
                 ),
                 SizedBox(height: 5),
-                AutoSizeText(history.id, style: TextStyle(fontSize: 10)),
+                AutoSizeText(history.mintTxId ?? history.spentHeight, style: TextStyle(fontSize: 10)),
                 Divider()
               ]));
   }

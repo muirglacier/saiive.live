@@ -18,6 +18,7 @@ class WalletAddressesScreen extends StatefulWidget {
 
 class _WalletAddressesScreen extends State<WalletAddressesScreen> {
   List<String> _walletAddresses = [];
+  var _finalString = "";
 
   loadAddresses() async {
     final walletService = sl.get<IWalletService>();
@@ -34,7 +35,7 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
 
       for (var element in walletAddresses) {
         var path = HdWalletUtil.derivePath(element.account, element.isChangeAddress, element.index, acc.derivationPathType);
-        _walletAddresses.add("${element.publicKey} ($path)");
+        _walletAddresses.add("${element.publicKey} ($path) (${element.addressType} (${acc.derivationPathType}))");
       }
     }
 
@@ -52,7 +53,9 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
     }
     _walletAddresses.add("");
 
-    setState(() {});
+    setState(() {
+      _finalString = _walletAddresses.join("\r\n");
+    });
   }
 
   @override
@@ -71,18 +74,7 @@ class _WalletAddressesScreen extends State<WalletAddressesScreen> {
       return Padding(padding: EdgeInsets.all(30), child: Row(children: [LoadingWidget(text: S.of(context).loading)]));
     }
 
-    return Padding(
-        padding: EdgeInsets.all(0),
-        child: SingleChildScrollView(
-            child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _walletAddresses.length,
-                itemBuilder: (context, index) {
-                  final account = _walletAddresses.elementAt(index);
-                  return _buildAddressEntry(context, account);
-                })));
+    return Padding(padding: EdgeInsets.all(0), child: SingleChildScrollView(child: _buildAddressEntry(context, _finalString)));
   }
 
   @override

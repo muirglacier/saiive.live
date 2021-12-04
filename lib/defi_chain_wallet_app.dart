@@ -7,6 +7,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/channel.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/navigation.helper.dart';
+import 'package:saiive.live/services/background.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
 import 'package:saiive.live/ui/splash.dart';
@@ -90,6 +91,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
     });
 
     sl.get<ChannelConnection>().init();
+    sl.get<BackgroundService>().start();
     init();
   }
 

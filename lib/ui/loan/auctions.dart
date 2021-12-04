@@ -77,21 +77,6 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
 
     return CustomScrollView(
       slivers: <Widget>[
-        SliverStickyHeader(
-          header: Header(index: index),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-                  (context, i) =>
-                  ListTile(
-                    leading: CircleAvatar(
-                      child: Text('$index'),
-                    ),
-                    title: Text('List tile #$i'),
-                  ),
-              childCount: 6,
-            ),
-          ),
-        )
         SliverToBoxAdapter(child: Container(child: row))
       ],
     );

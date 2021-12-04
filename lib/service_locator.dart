@@ -19,6 +19,7 @@ import 'package:saiive.live/network/gov_service.dart';
 import 'package:saiive.live/network/healthcheck_service.dart';
 import 'package:saiive.live/network/http_service.dart';
 import 'package:saiive.live/network/ihttp_service.dart';
+import 'package:saiive.live/network/loans_auctions_service.dart';
 import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/pool_share_service.dart';
@@ -82,6 +83,7 @@ void setupServiceLocator() {
   sl.registerLazySingleton<ITestInfoService>(() => TestInfoService());
   sl.registerLazySingleton<ILoansService>(() => LoansService());
   sl.registerLazySingleton<IVaultsService>(() => VaultsService());
+  sl.registerLazySingleton<ILoansAuctionsService>(() => LoansAuctionsService());
 
   sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
 

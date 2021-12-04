@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class Stats {
   final StatsCount count;
 
@@ -19,7 +17,7 @@ class StatsCount {
 
   factory StatsCount.fromJson(Map<String, dynamic> json) {
     return StatsCount(
-        blocks: json['blocks'],
+      blocks: json['blocks'],
     );
   }
 }

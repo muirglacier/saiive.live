@@ -1,4 +1,3 @@
-import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/loans_auctions_service.dart';
@@ -45,7 +44,6 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
       _auctions = null;
     });
 
-
     var auctions = await sl.get<ILoansAuctionsService>().getAuctions(DeFiConstants.DefiAccountSymbol);
 
     setState(() {
@@ -76,9 +74,7 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
     var row = Responsive.buildResponsive<LoanVaultAuction>(context, _auctions, 500, (el) => new AuctionBoxWidget(el));
 
     return CustomScrollView(
-      slivers: <Widget>[
-        SliverToBoxAdapter(child: Container(child: row))
-      ],
+      slivers: <Widget>[SliverToBoxAdapter(child: Container(child: row))],
     );
   }
 

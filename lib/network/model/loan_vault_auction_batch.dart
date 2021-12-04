@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:saiive.live/network/model/loan_schema.dart';
-import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch_highest_bid.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 
@@ -10,13 +7,7 @@ class LoanVaultAuctionBatch {
   final LoanVaultAmount loan;
   final LoanVaultAuctionHighestBid highestBid;
 
-  LoanVaultAuctionBatch(
-      {
-        this.index,
-        this.collaterals,
-        this.loan,
-        this.highestBid
-      });
+  LoanVaultAuctionBatch({this.index, this.collaterals, this.loan, this.highestBid});
 
   double get collateralValueUSD {
     return collaterals.fold(0, (previous, e) {
@@ -29,7 +20,6 @@ class LoanVaultAuctionBatch {
         index: json['index'],
         collaterals: json['collaterals'] != null ? json['collaterals'].map<LoanVaultAmount>((data) => LoanVaultAmount.fromJson(data)).toList() : [],
         loan: LoanVaultAmount.fromJson(json['loan']),
-        highestBid: json['highestBid'] != null ? LoanVaultAuctionHighestBid.fromJson(json['highestBid']) : null
-    );
+        highestBid: json['highestBid'] != null ? LoanVaultAuctionHighestBid.fromJson(json['highestBid']) : null);
   }
 }

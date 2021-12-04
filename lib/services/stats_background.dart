@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/network/model/stats.dart';
 import 'package:saiive.live/network/stats.dart';

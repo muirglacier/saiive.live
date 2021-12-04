@@ -5,12 +5,13 @@ import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 
 class VaultAuctionBidScreen extends StatefulWidget {
   final LoanVaultAuction auction;
   final LoanVaultAuctionBatch batch;
   final AccountBalance balance;
-  final Function(double amount) onBid;
+  final Function(double amount, String from) onBid;
 
   VaultAuctionBidScreen(this.auction, this.batch, this.balance, this.onBid);
 
@@ -25,6 +26,8 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
   double _amount = 0;
   double _minBid = 0;
   bool _valid = true;
+
+  String _from;
 
   @override
   void initState() {
@@ -84,11 +87,20 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                       ),
                       keyboardType: TextInputType.numberWithOptions(decimal: true)),
                   Container(height: 10),
+                  WalletReturnAddressWidget(
+                    expanded: true,
+                    title: "From",
+                    checkBoxText: "Set from addresss",
+                    onChanged: (v) {
+                      setState(() {
+                        _from = v;
+                      });
+                    },
+                  ),
+                  Container(height: 10),
                   Row(children: [
                     Text('Available:'),
-                    Expanded(child:
-                      Text(widget.balance != null ? FundFormatter.format(widget.balance.balanceDisplay) : '0', textAlign: TextAlign.right)
-                    ),
+                    Expanded(child: Text(widget.balance != null ? FundFormatter.format(widget.balance.balanceDisplay) : '0', textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [
@@ -98,7 +110,10 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   Container(height: 5),
                   Row(children: [
                     Text('Highest Bid:'),
-                    Expanded(child: Text(widget.batch.highestBid != null ? FundFormatter.format(double.tryParse(widget.batch.highestBid.amount.amount)) + '@' + widget.batch.loan.symbol : 'N/A', textAlign: TextAlign.right)),
+                    Expanded(
+                        child: Text(
+                            widget.batch.highestBid != null ? FundFormatter.format(double.tryParse(widget.batch.highestBid.amount.amount)) + '@' + widget.batch.loan.symbol : 'N/A',
+                            textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [
@@ -115,12 +130,11 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                         onPressed: _amount == null || _amount == 0
                             ? null
                             : () {
-                          this.widget.onBid(_amount);
-                        },
+                                this.widget.onBid(_amount, _from);
+                              },
                       )),
                   Container(height: 10),
                   if (!_valid) Text(S.of(context).loan_add_collateral_insufficient_funds)
                 ]))));
   }
 }
-

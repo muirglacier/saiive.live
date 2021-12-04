@@ -8,7 +8,9 @@ class WalletReturnAddressWidget extends StatefulWidget {
   final String checkBoxText;
   final String title;
 
-  WalletReturnAddressWidget({@required this.onChanged, this.checkBoxText, this.title});
+  final bool expanded;
+
+  WalletReturnAddressWidget({@required this.onChanged, this.checkBoxText, this.title, this.expanded = false});
 
   _WalletReturnAddressWidgetState createState() => _WalletReturnAddressWidgetState();
 }
@@ -22,6 +24,7 @@ class _WalletReturnAddressWidgetState extends State<WalletReturnAddressWidget> {
 
   @override
   void initState() {
+    _isExpanded = widget.expanded;
     super.initState();
   }
 

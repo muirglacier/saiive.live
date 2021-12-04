@@ -100,14 +100,14 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     });
   }
 
-  doPlaceBid(String vaultId, int index, String from, String token, int amount) async {
+  doPlaceBid(String vaultId, int index, String token, int amount, {String from}) async {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
     var streamController = StreamController<String>();
 
     try {
-      var createVault = wallet.placeAuctionBid(vaultId, index, from, token, amount, loadingStream: streamController);
+      var createVault = wallet.placeAuctionBid(vaultId, index, token, amount, from: from, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(createVault);
@@ -134,8 +134,8 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     var balance = _accountBalance.firstWhere((element) => element.token == batch.loan.symbol, orElse: () => null);
 
     return Navigated(
-        child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount) async {
-      await doPlaceBid(widget.auction.vaultId, batch.index, widget.auction.ownerAddress, balance.token, (amount * 100000000).round());
+        child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount, from) async {
+      await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round());
     }));
   }
 

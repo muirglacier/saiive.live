@@ -1,26 +1,23 @@
+import 'dart:async';
+
+import 'package:event_taxi/event_taxi.dart';
+import 'package:intl/intl.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/bus/stats_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
-import 'package:saiive.live/network/model/loan_collateral.dart';
-import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
-import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
-import 'package:saiive.live/ui/loan/collateral/vault_add_collateral.dart';
-import 'package:saiive.live/ui/loan/collateral/vault_edit_collateral.dart';
+import 'package:saiive.live/network/model/stats.dart';
+import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/stats_background.dart';
 import 'package:saiive.live/ui/loan/loan_auction_batch_box.dart';
 import 'package:saiive.live/ui/loan/loan_auction_bid.dart';
-import 'package:saiive.live/ui/loan/vault_add_collateral_confirm.dart';
-import 'package:saiive.live/ui/utils/LoanHelper.dart';
-import 'package:saiive.live/ui/utils/fund_formatter.dart';
-import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/navigated.dart';
-import 'package:saiive.live/ui/widgets/alert_widget.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
-import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 // ignore: must_be_immutable
@@ -40,12 +37,51 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
   PanelController _panelController = PanelController();
   Widget _panel = Container();
   List<AccountBalance> _accountBalance;
+  StreamSubscription<StatsLoadedEvent> _statsLoadedEvent;
+  Stats _stats;
+
 
   @override
   void initState() {
     super.initState();
 
+    _stats = sl<StatsBackgroundService>().get();
+
+    if (_statsLoadedEvent == null) {
+      _statsLoadedEvent = EventTaxiImpl.singleton().registerTo<StatsLoadedEvent>().listen((event) async {
+        setState(() {
+          _stats = event.stats;
+        });
+      });
+    }
+
     _loadBalance();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+
+    if (_statsLoadedEvent != null) {
+      _statsLoadedEvent.cancel();
+      _statsLoadedEvent = null;
+    }
+  }
+
+  String calculateEndDate() {
+    if (null == _stats) {
+      return null;
+    }
+
+    if (_stats.count.blocks > widget.auction.liquidationHeight) {
+      return null;
+    }
+
+    var now = DateTime.now();
+    now.add(Duration(seconds: ((widget.auction.liquidationHeight - _stats.count.blocks) / 2).floor()));
+    final f = new DateFormat('dd.MM.yyyy hh:mm');
+
+    return f.format(now);
   }
 
   _loadBalance() async {
@@ -87,6 +123,10 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline6,
                           ),
+                          Wrap(children: [
+                            Text(widget.auction.liquidationHeight.toString()),
+                            if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())
+                          ])
                         ])),
                         Container(width: 10)
                       ],

@@ -69,7 +69,6 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
     });
   }
 
-
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(

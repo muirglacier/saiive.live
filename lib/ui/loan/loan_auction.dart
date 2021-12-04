@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/bus/stats_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
+import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
@@ -15,10 +17,14 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/stats_background.dart';
 import 'package:saiive.live/ui/loan/loan_auction_batch_box.dart';
 import 'package:saiive.live/ui/loan/loan_auction_bid.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
+import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/widgets/navigated.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:wakelock/wakelock.dart';
 
 // ignore: must_be_immutable
 class VaultAuctionScreen extends StatefulWidget {
@@ -39,7 +45,6 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
   List<AccountBalance> _accountBalance;
   StreamSubscription<StatsLoadedEvent> _statsLoadedEvent;
   Stats _stats;
-
 
   @override
   void initState() {
@@ -95,13 +100,43 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     });
   }
 
+  doPlaceBid(String vaultId, int index, String from, String token, int amount) async {
+    Wakelock.enable();
+
+    final wallet = sl.get<DeFiChainWallet>();
+    var streamController = StreamController<String>();
+
+    try {
+      var createVault = wallet.placeAuctionBid(vaultId, index, from, token, amount, loadingStream: streamController);
+
+      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+      var tx = await overlay.during(createVault);
+
+      EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
+
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_borrow_success),
+      ));
+
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    } catch (e) {
+      streamController.close();
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
+      ));
+    } finally {
+      Wakelock.disable();
+    }
+  }
+
   Widget _buildBidPanel(LoanVaultAuctionBatch batch) {
     var balance = _accountBalance.firstWhere((element) => element.token == batch.loan.symbol, orElse: () => null);
 
     return Navigated(
-        child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount) {
-
-        }));
+        child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount) async {
+      await doPlaceBid(widget.auction.vaultId, batch.index, widget.auction.ownerAddress, balance.token, (amount * 100000000).round());
+    }));
   }
 
   Widget _buildTopPart() {
@@ -123,10 +158,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          Wrap(children: [
-                            Text(widget.auction.liquidationHeight.toString()),
-                            if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())
-                          ])
+                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())])
                         ])),
                         Container(width: 10)
                       ],
@@ -145,9 +177,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
           _panelController.show();
           _panelController.open();
         },
-        child: Padding(
-        padding: EdgeInsets.all(10),
-    child: Card(child: AuctionBatchBoxWidget(batch))));
+        child: Padding(padding: EdgeInsets.all(10), child: Card(child: AuctionBatchBoxWidget(batch))));
   }
 
   @override
@@ -201,7 +231,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
               SliverToBoxAdapter(child: _buildTopPart()),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                     final batch = widget.auction.batches.elementAt(index);
                     return _buildBatchEntry(batch);
                   },

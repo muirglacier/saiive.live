@@ -203,7 +203,7 @@ packages:
       name: defichaindart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.8.0-prerelease.10"
+    version: "3.8.0-prerelease.12"
   device_info:
     dependency: "direct main"
     description:

@@ -115,7 +115,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
       EventTaxiImpl.singleton().fire(WalletSyncStartEvent());
 
       await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_borrow_success),
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, "Auction bid set..."),
       ));
 
       Navigator.of(context).pop();
@@ -135,7 +135,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
 
     return Navigated(
         child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount, from) async {
-      await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round());
+      await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round(), from: from);
     }));
   }
 

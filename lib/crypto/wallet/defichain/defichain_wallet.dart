@@ -847,7 +847,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       throw new InsufficientBalanceError("${fromTokenBalance.balance} is less than $amount", "");
     }
 
-    final fromAddress = from ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    from = from ?? await getPublicKey(true, AddressType.P2SHSegwit);
 
     final fromTok = await apiService.tokenService.getToken("DFI", token);
     final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(from, token);
@@ -861,7 +861,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     var txAuth = await getAuthInputsSmart(from, AuthTxMin, fees, loadingStream: loadingStream);
-    final txb = await createBaseTransaction(0, from, fromAddress, fees, (txb, inputTxs, nw) async {
+    final txb = await createBaseTransaction(0, from, from, fees, (txb, inputTxs, nw) async {
       var toSign = List<Tuple4<ECPair, WalletAddress, int, int>>.empty(growable: true);
 
       Future addAuthInput(tx.Transaction tx) async {
@@ -889,7 +889,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
       await addAuthInput(txAuth);
 
-      txb.addPlaceAuctionBid(vaultId, index, fromAddress, fromTok.id, amount);
+      txb.addPlaceAuctionBid(vaultId, index, from, fromTok.id, amount);
 
       for (var sign in toSign) {
         HdWalletUtil.signInput(txb, sign.item1, sign.item2, sign.item3, sign.item4);

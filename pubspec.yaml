@@ -38,7 +38,7 @@ dependencies:
   permission_handler: ^8.3.0
 
   #cryto libs
-  defichaindart: ^3.8.0-prerelease.12
+  defichaindart: ^3.8.0
   encrypt : ^5.0.0
   pointycastle: ^3.3.4
   aes_crypt: ^0.1.1

@@ -81,8 +81,11 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(body: LayoutBuilder(builder: (_, builder) {
-      return buildAuctionScreen(context);
-    }));
+    return Scaffold(
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: LayoutBuilder(builder: (_, builder) {
+              return buildAuctionScreen(context);
+            })));
   }
 }

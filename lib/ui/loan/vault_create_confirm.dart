@@ -198,6 +198,8 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_confirm_create_vault)), body: _buildView());
+    return Scaffold(
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_confirm_create_vault)),
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildView()));
   }
 }

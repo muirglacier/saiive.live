@@ -187,7 +187,8 @@ class SembastWalletDatabase extends IWalletDatabase {
     var dbStore = _transactionStoreInstance;
 
     var finder = Finder(filter: Filter.equals('address', address));
-    final accounts = await dbStore.find(await database, finder: finder);
+    var db = await database;
+    final accounts = await dbStore.find(db, finder: finder);
     return accounts.isNotEmpty;
   }
 

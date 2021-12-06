@@ -77,21 +77,20 @@ class _AddressBookScreen extends State<AddressBookScreen> {
 
     return Padding(
         padding: EdgeInsets.all(10),
-        child: Scrollbar(
-            child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: ListView(children: [
-                  ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: _addresses.length,
-                      itemBuilder: (context, index) {
-                        final wa = _addresses.elementAt(index);
+        child: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ListView(children: [
+              ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _addresses.length,
+                  itemBuilder: (context, index) {
+                    final wa = _addresses.elementAt(index);
 
-                        return _buildAdressEntry(context, wa);
-                      })
-                ]))));
+                    return _buildAdressEntry(context, wa);
+                  })
+            ])));
   }
 
   @override
@@ -125,6 +124,6 @@ class _AddressBookScreen extends State<AddressBookScreen> {
             //       )),
           ],
         ),
-        body: _buildAddressBookScreen(context));
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildAddressBookScreen(context)));
   }
 }

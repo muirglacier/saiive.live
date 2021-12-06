@@ -4,7 +4,6 @@ import 'package:saiive.live/network/coingecko_service.dart';
 import 'package:saiive.live/network/gov_service.dart';
 import 'package:saiive.live/network/model/pool_share.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
-import 'package:saiive.live/network/model/yield_farming.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/pool_share_service.dart';
 import 'package:saiive.live/network/token_service.dart';
@@ -28,7 +27,6 @@ class PoolShareHelper {
     var gov = await sl.get<IGovService>().getGov(coin);
     var lpDailyDfiReward = gov['LP_DAILY_DFI_REWARD'];
     var priceData = await sl.get<ICoingeckoService>().getCoins(coin, currency);
-    var poolPairs = await sl.get<IPoolPairService>().getPoolPairs(coin);
 
     var combinedPoolShares = new Map<String, PoolShare>();
 

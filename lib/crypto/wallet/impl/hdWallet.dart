@@ -75,6 +75,8 @@ class HdWallet extends IHdWallet {
 
   WalletAddress _createAddress(bool isChangeAddress, int index, String pubKey, AddressType addressType) {
     return WalletAddress(
+        name: "${ChainHelper.chainTypeString(this._chain)}_$index",
+        createdAt: DateTime.now(),
         accountId: _account.uniqueId,
         account: _account.id,
         isChangeAddress: isChangeAddress,
@@ -125,11 +127,11 @@ class HdWallet extends IHdWallet {
     }
     var addressUsed = await database.addressAlreadyUsed(address.publicKey);
 
-    if ((addressUsed || address.createdAt != null) && !isChangeAddress) {
+    if ((addressUsed) && !isChangeAddress) {
       return await getNextFreePublicKey(database, startIndex + 1, sharedPrefs, isChangeAddress, addressType);
+    } else if (addressUsed) {
+      await sharedPrefs.setAddressIndex(_account.uniqueId, startIndex, isChangeAddress);
     }
-
-    await sharedPrefs.setAddressIndex(_account.uniqueId, startIndex + 1, isChangeAddress);
 
     return address;
   }

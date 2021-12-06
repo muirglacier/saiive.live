@@ -840,9 +840,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var curAmount = 0;
     var lastTxId = "";
     for (final txs in accounts) {
-      if (txs.address == to) {
-        continue;
-      }
       final addressInfo = await walletDatabase.getWalletAddress(txs.address);
       final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 

@@ -5,9 +5,9 @@ import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 enum LoanVaultStatus {
   unknown,
   active,
-  inLiquidation,
+  in_liquidation,
   frozen,
-  mayLiquidate,
+  may_liquidate,
 }
 
 extension ParseToStringLoanVaultStatus on LoanVaultStatus {
@@ -145,12 +145,12 @@ class LoanVault {
           return LoanVaultHealthStatus.halted;
         }
 
-      case LoanVaultStatus.mayLiquidate:
+      case LoanVaultStatus.may_liquidate:
         {
           return LoanVaultHealthStatus.at_risk;
         }
 
-      case LoanVaultStatus.inLiquidation:
+      case LoanVaultStatus.in_liquidation:
         {
           return LoanVaultHealthStatus.liquidated;
         }

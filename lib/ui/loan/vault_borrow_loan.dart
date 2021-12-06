@@ -99,21 +99,6 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       return;
     }
 
-    var otherLoanValues = _loanVault.loanAmounts.fold(0.0, (previousValue, element) {
-      if (element.symbol == _loanToken.token.symbol) {
-        return previousValue;
-      }
-
-      var amount = double.tryParse(element.amount);
-      var _loanTokenPriceUSD = element.activePrice != null ? element.activePrice.active.amount : 1.0;
-
-      if (_loanToken.token.symbolKey == "DUSD") {
-        _loanTokenPriceUSD = 1;
-      }
-
-      return previousValue + (amount * _loanTokenPriceUSD);
-    });
-
     var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null);
 
     var _interestToken = double.tryParse(_loanToken.interest);
@@ -130,7 +115,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       _loanTokenPriceUSD = 1;
     }
 
-    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + otherLoanValues;
+    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + double.tryParse(widget.loanVault.loanValue);
 
     setState(() {
       _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);

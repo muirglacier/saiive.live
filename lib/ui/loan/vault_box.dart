@@ -29,31 +29,8 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
         child: Card(
             child: Padding(
                 padding: EdgeInsets.all(30),
-                child: Column(children: [
-                  Row(children: <Widget>[
-                    Container(
-                        decoration: BoxDecoration(color: Colors.transparent),
-                        child: Icon(Icons.shield, size: 40)),
-                    Container(width: 10),
-                    Expanded(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                          Text(
-                            widget.vault.vaultId,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          Row(children: [
-                            Text(S.of(context).loan_collaterals),
-                            TokenSetIcons(widget.vault.collateralAmounts, 3)
-                          ])
-                        ])),
-                    Container(width: 10),
-                    Container(
-                        decoration: BoxDecoration(color: Colors.transparent),
-                        child: VaultStatusWidget(widget.vault.healthStatus))
-                  ]),
+                child: widget.vault.state != LoanVaultStatus.in_liquidation ? Column(children: [
+                  vaultHead(),
                   Container(height: 10),
                   Table(border: TableBorder(), children: [
                     TableRow(children: [
@@ -82,6 +59,33 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                       Text(widget.vault.collateralRatio + '%' ?? '')
                     ]),
                   ]),
-                ]))));
+                ]) : Column(children: [vaultHead()]))));
+  }
+
+  Widget vaultHead() {
+    return Row(children: <Widget>[
+      Container(
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: Icon(Icons.shield, size: 40)),
+      Container(width: 10),
+      Expanded(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.vault.vaultId,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+                if (widget.vault.state != LoanVaultStatus.in_liquidation)  Row(children: [
+                  Text(S.of(context).loan_collaterals),
+                  TokenSetIcons(widget.vault.collateralAmounts, 3)
+                ])
+              ])),
+      Container(width: 10),
+      Container(
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: VaultStatusWidget(widget.vault.healthStatus))
+    ]);
   }
 }

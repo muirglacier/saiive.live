@@ -479,6 +479,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 ))
           ],
         ),
-        body: buildMultiWalletScreen(context));
+        body: PrimaryScrollController(controller: new ScrollController(), child: buildMultiWalletScreen(context)));
   }
 }

@@ -653,6 +653,7 @@ class _DexScreen extends State<DexScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Row(children: [Text(S.of(context).dex)])), body: _buildDexPage(context));
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Row(children: [Text(S.of(context).dex)])),
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildDexPage(context)));
   }
 }

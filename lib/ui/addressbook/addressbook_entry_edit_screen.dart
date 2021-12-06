@@ -103,6 +103,7 @@ class _AddressBookEntryEditScreen extends State<AddressBookEntryEditScreen> {
                     await widget.database.updateAddressBookEntry(address);
                   }
                   Navigator.pop(context);
+                  Navigator.pop(context);
                 }
               },
               child: Text(widget.isNewEntry ? S.of(context).add : S.of(context).save),

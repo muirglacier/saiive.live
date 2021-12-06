@@ -52,7 +52,7 @@ class _AccountsAddScreen extends State<AccountsAddScreen> {
 
   setNextAccountIndex() {
     var walletAccounts = _allAccounts.where((element) => element.derivationPathType == _pathDerivationType).toList();
-    walletAccounts.sort((a, b) => a.account.compareTo(a.account));
+    walletAccounts.sort((a, b) => a.account.compareTo(b.account));
 
     if (walletAccounts.isEmpty) {
       setState(() {

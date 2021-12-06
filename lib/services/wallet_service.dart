@@ -8,7 +8,7 @@ import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
-import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
+import 'package:saiive.live/crypto/wallet/wallet_restore.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
 import 'package:saiive.live/network/account_history_service.dart';
 import 'package:saiive.live/network/api_service.dart';
@@ -38,7 +38,7 @@ abstract class IWalletService {
       {bool waitForConfirmaton, StreamController<String> loadingStream, bool sendMax = false});
   Future<List<String>> getPublicKeys(ChainType chainType);
 
-  Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network);
+  Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network, {StreamController<String> loadingStream});
 
   Future close();
   Future destroy();
@@ -193,19 +193,19 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network) {
+  Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network, {StreamController<String> loadingStream}) {
     var bitcoinWallet = sl.get<BitcoinWallet>();
     var defiWallet = sl.get<DeFiChainWallet>();
 
-    var restoreBtc = _restoreWallet(ChainType.Bitcoin, network, bitcoinWallet);
-    var restoreDefi = _restoreWallet(ChainType.DeFiChain, network, defiWallet);
+    var restoreBtc = _restoreWallet(ChainType.Bitcoin, network, bitcoinWallet, loadingStream: loadingStream);
+    var restoreDefi = _restoreWallet(ChainType.DeFiChain, network, defiWallet, loadingStream: loadingStream);
 
-    return Future.wait([restoreBtc, restoreDefi]);
+    return Future.wait([restoreDefi, restoreBtc]);
   }
 
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards) async {
     if (chain == ChainType.DeFiChain) {
-      var pubKeyList = await _defiWallet.getPublicKeys();
+      var pubKeyList = await _defiWallet.getPublicKeys(onlyActive: true);
       return await sl.get<IAccountHistoryService>().getAddressesHistory('DFI', pubKeyList, token, !includeRewards);
     }
     return List<AccountHistory>.empty();
@@ -238,13 +238,14 @@ class WalletService implements IWalletService {
     }
   }
 
-  Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet) async {
+  Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet, {StreamController<String> loadingStream}) async {
     var dataMap = Map();
     dataMap["chain"] = chain;
     dataMap["network"] = network;
     dataMap["seed"] = await sl.get<IVault>().getSeed();
     dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
     dataMap["apiService"] = sl.get<ApiService>();
+
     var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
 
     await db.destroy();
@@ -278,6 +279,11 @@ class WalletService implements IWalletService {
       var walletAddress = await wallet.getNextWalletAddress(walletAccount, AddressType.P2SHSegwit, false);
       walletAddress.name = ChainHelper.chainTypeString(chain);
       await db.addAddress(walletAddress);
+
+      if (chain == ChainType.Bitcoin) {
+        walletAccount.selected = false;
+        await db.addOrUpdateAccount(walletAccount);
+      }
     } else {
       var i = 0;
       for (var address in result.item2) {
@@ -288,17 +294,12 @@ class WalletService implements IWalletService {
     }
 
     await wallet.close();
+    await wallet.init();
     return result;
   }
 
   static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _searchAccounts(Map dataMap) async {
-    final ret = await WalletRestore.restore(
-      dataMap["chain"],
-      dataMap["network"],
-      dataMap["seed"],
-      dataMap["password"],
-      dataMap["apiService"],
-    );
+    final ret = await WalletRestore.restore(dataMap["chain"], dataMap["network"], dataMap["seed"], dataMap["password"], dataMap["apiService"]);
 
     return ret;
   }

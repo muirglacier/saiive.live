@@ -61,6 +61,9 @@ class _WalletInitScreenScreen extends State<WalletInitScreen> {
       btcWalletAddress.name = ChainHelper.chainTypeString(ChainType.Bitcoin);
       await wallet.updateAddress(btcWalletAddress);
 
+      defaultBtcWalletAccount.selected = false;
+      await wallet.addAccount(defaultBtcWalletAccount);
+
       Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
     } finally {
       Wakelock.disable();

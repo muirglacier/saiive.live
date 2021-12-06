@@ -97,6 +97,10 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     }
 
     LogHelper.instance.e(_errorText);
+
+    setState(() {
+      _errorText = _errorText;
+    });
   }
 
   _init() async {

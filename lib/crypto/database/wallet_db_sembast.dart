@@ -142,7 +142,7 @@ class SembastWalletDatabase extends IWalletDatabase {
     return data;
   }
 
-  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account) async {
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account, {bool onlyActive}) async {
     var dbStore = _addressesStoreInstance;
 
     var db = await database;
@@ -151,7 +151,12 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     final accounts = await dbStore.find(db, finder: finder);
 
-    final data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+    var data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
+
+    if (onlyActive != null && onlyActive) {
+      final activeAddresses = await _getActiveAddresses(spentable: true);
+      data = data.where((element) => activeAddresses.contains(element.publicKey)).toList();
+    }
 
     return data;
   }
@@ -182,7 +187,8 @@ class SembastWalletDatabase extends IWalletDatabase {
     var dbStore = _transactionStoreInstance;
 
     var finder = Finder(filter: Filter.equals('address', address));
-    final accounts = await dbStore.find(await database, finder: finder);
+    var db = await database;
+    final accounts = await dbStore.find(db, finder: finder);
     return accounts.isNotEmpty;
   }
 
@@ -658,7 +664,7 @@ class SembastWalletDatabase extends IWalletDatabase {
 
   @override
   int getAddressCreationCount() {
-    return 2;
+    return 20;
   }
 
   @override

@@ -54,7 +54,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     _totalInterestAmount = (widget.amount * _totalInterest / 100);
     _totalTokenWithInterest = widget.amount + _totalInterestAmount;
 
-    _loanTokenPriceUSD = widget.loanToken.activePrice != null ? widget.loanToken.activePrice.active.amount : 0;
+    _loanTokenPriceUSD = widget.loanToken.activePrice != null ? widget.loanToken.activePrice.active.amount : 1.0;
 
     _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD + double.tryParse(widget.loanVault.loanValue);
     _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(widget.loanVault.collateralValue);
@@ -153,33 +153,35 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_confirm_title)),
-        body: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: CustomScrollView(slivers: [
-              SliverToBoxAdapter(child: buildTopPart()),
-              SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_details, style: Theme.of(context).textTheme.caption))),
-              SliverToBoxAdapter(child: buildTXDetails()),
-              SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
-              SliverToBoxAdapter(child: buildVaultDetails()),
-              SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_result, style: Theme.of(context).textTheme.caption))),
-              SliverToBoxAdapter(child: buildResultDetails()),
-              SliverToBoxAdapter(
-                  child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          child: Text(S.of(context).loan_borrow_confirm),
-                          onPressed: () async {
-                            await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                              await doBorrowLoan();
-                            });
-                          }))),
-              SliverToBoxAdapter(child: Container(height: 40)),
-            ])));
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: CustomScrollView(slivers: [
+                  SliverToBoxAdapter(child: buildTopPart()),
+                  SliverToBoxAdapter(child: Container(height: 5)),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_details, style: Theme.of(context).textTheme.caption))),
+                  SliverToBoxAdapter(child: buildTXDetails()),
+                  SliverToBoxAdapter(child: Container(height: 5)),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
+                  SliverToBoxAdapter(child: buildVaultDetails()),
+                  SliverToBoxAdapter(child: Container(height: 5)),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_result, style: Theme.of(context).textTheme.caption))),
+                  SliverToBoxAdapter(child: buildResultDetails()),
+                  SliverToBoxAdapter(
+                      child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              child: Text(S.of(context).loan_borrow_confirm),
+                              onPressed: () async {
+                                await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                  await doBorrowLoan();
+                                });
+                              }))),
+                  SliverToBoxAdapter(child: Container(height: 40)),
+                ]))));
   }
 }

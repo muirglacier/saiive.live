@@ -57,25 +57,24 @@ class _TokensScreen extends State<TokensScreen> {
 
     return Padding(
         padding: EdgeInsets.all(10),
-        child: Scrollbar(
-            child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: ListView(children: [
-                  ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: _tokens.length,
-                      itemBuilder: (context, index) {
-                        return _buildTokenEntry(_tokens.elementAt(index));
-                      })
-                ]))));
+        child: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ListView(children: [
+              ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _tokens.length,
+                  itemBuilder: (context, index) {
+                    return _buildTokenEntry(_tokens.elementAt(index));
+                  })
+            ])));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Row(children: [Text(S.of(context).home_tokens)])),
-        body: Scaffold(body: buildTokenScreen(context)));
+        body: Scaffold(body: PrimaryScrollController(controller: new ScrollController(), child: buildTokenScreen(context))));
   }
 }

@@ -165,21 +165,20 @@ class _AccountScreen extends State<AccountsScreen> {
 
     return Padding(
         padding: EdgeInsets.all(10),
-        child: Scrollbar(
-            child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: ListView(children: [
-                  ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: _walletAccounts.length,
-                      itemBuilder: (context, index) {
-                        final wa = _walletAccounts.elementAt(index);
+        child: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ListView(children: [
+              ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _walletAccounts.length,
+                  itemBuilder: (context, index) {
+                    final wa = _walletAccounts.elementAt(index);
 
-                        return _buildAccountEntry(context, wa);
-                      })
-                ]))));
+                    return _buildAccountEntry(context, wa);
+                  })
+            ])));
   }
 
   _buildFloatingActionButton(BuildContext context) {
@@ -250,6 +249,6 @@ class _AccountScreen extends State<AccountsScreen> {
           ],
         ),
         floatingActionButton: _buildFloatingActionButton(context),
-        body: _buildAccountPage(context));
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildAccountPage(context)));
   }
 }

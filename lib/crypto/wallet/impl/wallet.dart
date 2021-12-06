@@ -18,7 +18,7 @@ import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/impl/hdWallet.dart';
-import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
+import 'package:saiive.live/crypto/wallet/wallet_restore.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/api_service.dart';
@@ -161,12 +161,12 @@ abstract class Wallet extends IWallet {
     return await _wallets[account.uniqueId].getPublicKeys(walletDatabase);
   }
 
-  Future<List<String>> getPublicKeys() async {
+  Future<List<String>> getPublicKeys({bool onlyActive}) async {
     isInitialzed();
     List<String> keys = [];
 
     for (var wallet in _wallets.values) {
-      final walletAddresses = await wallet.getPublicKeys(_walletDatabase);
+      final walletAddresses = await wallet.getPublicKeys(_walletDatabase, onlyActive: onlyActive);
       final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
 
       keys.addAll(allAddresses);

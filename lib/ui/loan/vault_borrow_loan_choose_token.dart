@@ -35,7 +35,7 @@ class _VaultBorrowLoanChooseTokenScreen extends State<VaultBorrowLoanChooseToken
   }
 
   Widget _buildTokenEntry(LoanToken token) {
-    var loanTokenPriceUSD = token.activePrice != null ? token.activePrice.active.amount : 0.0;
+    var loanTokenPriceUSD = token.activePrice != null ? token.activePrice.active.amount : 1.0;
 
     if (token.token.symbolKey == "DUSD") {
       loanTokenPriceUSD = 1.0;

@@ -122,8 +122,8 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
 
   _buildCollateralEntry(LoanVaultAmount amount, double collateralValue) {
     var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
-    double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
-    double factor = token != null ? double.tryParse(token.factor) : 0;
+    double price = amount.activePrice != null ? amount.activePrice.active.amount : 1.0;
+    double factor = token != null ? double.tryParse(token.factor) : 1.0;
 
     return Card(
         child: Padding(
@@ -152,97 +152,99 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_add_collateral_confirm_title)),
-        body: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: CustomScrollView(slivers: [
-              SliverToBoxAdapter(child: _buildTopPart()),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_current_collateral, style: Theme.of(context).textTheme.caption))),
-              if (widget.currentAmounts.length == 0)
-                SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0, bottom: 10), child: Text(S.of(context).loan_no_collaterals))),
-              if (widget.currentAmounts.length > 0)
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: widget.currentAmounts.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final item = widget.currentAmounts[index];
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: CustomScrollView(slivers: [
+                  SliverToBoxAdapter(child: _buildTopPart()),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_current_collateral, style: Theme.of(context).textTheme.caption))),
+                  if (widget.currentAmounts.length == 0)
+                    SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0, bottom: 10), child: Text(S.of(context).loan_no_collaterals))),
+                  if (widget.currentAmounts.length > 0)
+                    SliverList(
+                        delegate: SliverChildListDelegate([
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Container(
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: widget.currentAmounts.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    final item = widget.currentAmounts[index];
 
-                                return _buildCollateralEntry(item, widget.originalCollateralValue);
-                              }),
+                                    return _buildCollateralEntry(item, widget.originalCollateralValue);
+                                  }),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
-                ])),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_changes, style: Theme.of(context).textTheme.caption))),
-              SliverList(
-                  delegate: SliverChildListDelegate([
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: widget.changes.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final key = widget.changes.keys.elementAt(index);
-                              final amount = widget.changes.values.elementAt(index);
-
-                              return Card(
-                                child: ListTile(
-                                  title: Text(key),
-                                  subtitle: Text(FundFormatter.format(amount)),
-                                ),
-                              );
-                            }),
-                      ),
-                    ],
-                  ),
-                )
-              ])),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_after_tx, style: Theme.of(context).textTheme.caption))),
-              if (widget.newAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0), child: Text(S.of(context).loan_no_collaterals))),
-              if (widget.newAmounts.length > 0)
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
+                      )
+                    ])),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_changes, style: Theme.of(context).textTheme.caption))),
+                  SliverList(
+                      delegate: SliverChildListDelegate([
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: widget.newAmounts.length,
+                                itemCount: widget.changes.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  final item = widget.newAmounts[index];
+                                  final key = widget.changes.keys.elementAt(index);
+                                  final amount = widget.changes.values.elementAt(index);
 
-                                  return _buildCollateralEntry(item, widget.collateralValue);
-                                })),
-                      ],
-                    ),
-                  )
-                ])),
-              SliverToBoxAdapter(
-                  child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          child: Text(S.of(context).loan_continue),
-                          onPressed: () async {
-                            await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                              await doAddCollaterals();
-                            });
-                          }))),
-              SliverToBoxAdapter(child: Container(height: 40)),
-            ])));
+                                  return Card(
+                                    child: ListTile(
+                                      title: Text(key),
+                                      subtitle: Text((amount > 0 ? "+" : '') + FundFormatter.format(amount)),
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ],
+                      ),
+                    )
+                  ])),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_collateral_after_tx, style: Theme.of(context).textTheme.caption))),
+                  if (widget.newAmounts.length == 0) SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 10.0), child: Text(S.of(context).loan_no_collaterals))),
+                  if (widget.newAmounts.length > 0)
+                    SliverList(
+                        delegate: SliverChildListDelegate([
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Container(
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: widget.newAmounts.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      final item = widget.newAmounts[index];
+
+                                      return _buildCollateralEntry(item, widget.collateralValue);
+                                    })),
+                          ],
+                        ),
+                      )
+                    ])),
+                  SliverToBoxAdapter(
+                      child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              child: Text(S.of(context).loan_continue),
+                              onPressed: () async {
+                                await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                  await doAddCollaterals();
+                                });
+                              }))),
+                  SliverToBoxAdapter(child: Container(height: 40)),
+                ]))));
   }
 }

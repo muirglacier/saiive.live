@@ -201,12 +201,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   }
 
   _buildLoanEntry(LoanVaultAmount amount) {
-    var pricePerToken = amount.activePrice != null ? amount.activePrice.active.amount : 0.0;
-
-    if (amount.symbolKey == "DUSD") {
-      pricePerToken = 1.0;
-    }
-
+    var pricePerToken = amount.activePrice != null ? amount.activePrice.active.amount : 1.0;
     var totalAmount = pricePerToken * double.tryParse(amount.amount);
     var token = _loanTokens.firstWhere((element) => element.token.symbol == amount.symbol, orElse: () => null);
     var interest = myVault.interestAmounts.firstWhere((element) => element.symbol == amount.symbol, orElse: () => null);
@@ -224,7 +219,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                 ]),
                 TableRow(children: [
                   Text(FundFormatter.format(double.tryParse(amount.amount))),
-                  Text(FundFormatter.format(double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100, fractions: 4) + '\$')
+                  Text(FundFormatter.format(double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100, fractions: 4) + ' \$')
                 ]),
               ]),
               Container(height: 10),
@@ -319,8 +314,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
 
   _buildCollateralEntry(LoanVaultAmount amount) {
     var token = _tokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
-    double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
-    double factor = token != null ? double.tryParse(token.factor) : 0;
+    double price = amount.activePrice != null ? amount.activePrice.active.amount : 1.0;
+    double factor = token != null ? double.tryParse(token.factor) : 1.0;
 
     return Card(
         child: Padding(
@@ -429,7 +424,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                         Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
                         Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption)
                       ]),
-                      TableRow(children: [Text(FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + '\$'), Text(myVault.collateralRatio + ' %')]),
+                      TableRow(children: [Text(FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'), Text(myVault.collateralRatio + ' %')]),
                     ]),
                     Container(height: 10),
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -488,38 +483,40 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
           actions: actions,
         ),
         body: NestedScrollView(
-          controller: _scrollController,
-          headerSliverBuilder: (context, value) {
-            return [
-              SliverToBoxAdapter(child: _buildTopPart()),
-              SliverToBoxAdapter(
-                child: TabBar(
-                  controller: _tabController,
-                  isScrollable: true,
-                  indicatorColor: StateContainer.of(context).curTheme.primary,
-                  labelColor: StateContainer.of(context).curTheme.darkColor,
-                  tabs: [
-                    Tab(text: S.of(context).loan_vault_details_tab_active_loan),
-                    Tab(text: S.of(context).loan_vault_details_tab_details),
-                    Tab(text: S.of(context).loan_vault_details_tab_collaterals),
-                    // Tab(text: S.of(context).loan_vault_details_tab_auctions),
-                  ],
+            controller: _scrollController,
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverToBoxAdapter(child: _buildTopPart()),
+                SliverToBoxAdapter(
+                  child: TabBar(
+                    controller: _tabController,
+                    isScrollable: true,
+                    indicatorColor: StateContainer.of(context).curTheme.primary,
+                    labelColor: StateContainer.of(context).curTheme.darkColor,
+                    tabs: [
+                      Tab(text: S.of(context).loan_vault_details_tab_active_loan),
+                      Tab(text: S.of(context).loan_vault_details_tab_details),
+                      Tab(text: S.of(context).loan_vault_details_tab_collaterals),
+                      // Tab(text: S.of(context).loan_vault_details_tab_auctions),
+                    ],
+                  ),
                 ),
+              ];
+            },
+            body: PrimaryScrollController(
+              controller: new ScrollController(),
+              child: Container(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildTabActiveLoans(),
+                        _buildTabDetails(),
+                        _buildTabCollaterals(), /*_buildTabAuctions()*/
+                      ],
+                    )),
               ),
-            ];
-          },
-          body: Container(
-            child: Padding(
-                padding: EdgeInsets.all(10),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildTabActiveLoans(),
-                    _buildTabDetails(),
-                    _buildTabCollaterals(), /*_buildTabAuctions()*/
-                  ],
-                )),
-          ),
-        ));
+            )));
   }
 }

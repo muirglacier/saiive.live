@@ -11,6 +11,7 @@ import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/push/notification_badge_widget.dart';
 import 'package:saiive.live/push/push_notification_received_event.dart';
 import 'package:saiive.live/push/push_service.dart';
+import 'package:saiive.live/services/background.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/intro/intro_wallet_new.dart';
 import 'package:saiive.live/ui/splash.dart';
@@ -111,6 +112,7 @@ class _SaiiveLiveAppState extends State<SaiiveLiveApp> {
       await pushService.checkForInitialMessage();
     });
 
+    sl.get<BackgroundService>().start();
     init();
   }
 

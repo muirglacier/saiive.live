@@ -49,7 +49,7 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
     });
 
     try {
-      var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+      var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys(onlyActive: true);
 
       var vaults = await sl.get<IVaultsService>().getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
 
@@ -123,8 +123,11 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(body: LayoutBuilder(builder: (_, builder) {
-      return buildVaultScreen(context);
-    }));
+    return Scaffold(
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: LayoutBuilder(builder: (_, builder) {
+              return buildVaultScreen(context);
+            })));
   }
 }

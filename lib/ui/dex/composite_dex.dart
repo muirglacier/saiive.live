@@ -163,21 +163,27 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   }
 
   handleChangeFrom() async {
-    double amount = double.tryParse(_amountFromController.text.replaceAll(',', '.'));
-
-    if (amount == null || amount == 0) {
+    if (_amountFromController.text == null || _amountFromController.text.isEmpty) {
       setState(() {
-        _amountFrom = null;
+        _price = null;
       });
-      return;
-    }
+    } else {
+      double amount = double.tryParse(_amountFromController.text.replaceAll(',', '.'));
 
-    setState(() {
-      _amountFrom = amount;
-    });
+      if (amount == null || amount == 0) {
+        setState(() {
+          _amountFrom = null;
+        });
+        return;
+      }
 
-    if (calculatePriceRates != null && _amountFrom > 0) {
-      calculatePriceRates();
+      setState(() {
+        _amountFrom = amount;
+      });
+
+      if (calculatePriceRates != null && _amountFrom > 0) {
+        calculatePriceRates();
+      }
     }
   }
 
@@ -548,16 +554,17 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                           },
                         )),
                     Container(height: 20),
-                    if (_price != null)
-                      Center(
-                          child: ElevatedButton(
-                        child: Text(S.of(context).dex_swap),
-                        onPressed: () async {
-                          await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                            await doSwap();
-                          });
-                        },
-                      ))
+                    Center(
+                        child: ElevatedButton(
+                      child: Text(S.of(context).dex_swap),
+                      onPressed: _price != null
+                          ? () async {
+                              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                await doSwap();
+                              });
+                            }
+                          : null,
+                    ))
                   ])
               ])));
     }
@@ -618,6 +625,6 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                     )),
               Text(S.of(context).dex_v2)
             ])),
-        body: _buildDexPage(context));
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildDexPage(context)));
   }
 }

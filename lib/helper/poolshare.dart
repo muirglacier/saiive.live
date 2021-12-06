@@ -4,7 +4,6 @@ import 'package:saiive.live/network/coingecko_service.dart';
 import 'package:saiive.live/network/gov_service.dart';
 import 'package:saiive.live/network/model/pool_share.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
-import 'package:saiive.live/network/model/yield_farming.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/pool_share_service.dart';
 import 'package:saiive.live/network/token_service.dart';
@@ -18,7 +17,7 @@ class PoolShareHelper {
   }
 
   Future<List<PoolShareLiquidity>> getMyPoolShares(String coin, String currency) async {
-    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys(onlyActive: true);
     var poolShares = await sl.get<IPoolShareService>().getMyPoolShare(coin, pubKeyList);
 
     return handleFetchPoolShares(coin, currency, poolShares);
@@ -27,7 +26,6 @@ class PoolShareHelper {
   Future<List<PoolShareLiquidity>> handleFetchPoolShares(String coin, String currency, List<PoolShare> poolShares) async {
     var gov = await sl.get<IGovService>().getGov(coin);
     var lpDailyDfiReward = gov['LP_DAILY_DFI_REWARD'];
-    var poolStats = new Map<String, YieldFarming>();
     var priceData = await sl.get<ICoingeckoService>().getCoins(coin, currency);
 
     var combinedPoolShares = new Map<String, PoolShare>();
@@ -103,7 +101,6 @@ class PoolShareHelper {
       var liquidityReserveidTokenA = poolPair.reserveA * (priceA != null ? priceA.fiat : 0.0);
       var liquidityReserveidTokenB = poolPair.reserveB * (priceB != null ? priceB.fiat : 0.0);
       var totalLiquidity = liquidityReserveidTokenA + liquidityReserveidTokenB;
-      var apy = poolStats.containsKey(idTokenA + '_' + idTokenB) ? poolStats[idTokenA + '_' + idTokenB].apy : 0.0;
 
       return new PoolShareLiquidity(
           tokenA: tokenA.symbol,
@@ -113,7 +110,7 @@ class PoolShareHelper {
           totalLiquidityInUSDT: totalLiquidity,
           yearlyPoolReward: yearlyPoolReward,
           poolSharePercentage: poolSharePercentage,
-          apy: apy,
+          apr: poolPair.apr,
           coin: dfiCoin,
           blockReward: rewardPerBlock,
           minuteReward: minuteReward,

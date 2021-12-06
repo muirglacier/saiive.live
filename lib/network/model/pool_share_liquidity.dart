@@ -10,7 +10,7 @@ class PoolShareLiquidity {
   final double totalLiquidityInUSDT;
   final double yearlyPoolReward;
   final double poolSharePercentage;
-  final double apy;
+  final double apr;
   final List<PoolShare> poolShares;
 
   final double blockReward;
@@ -35,7 +35,7 @@ class PoolShareLiquidity {
       this.totalLiquidityInUSDT,
       this.yearlyPoolReward,
       this.poolSharePercentage,
-      this.apy,
+      this.apr,
       this.coin,
       this.blockReward,
       this.minuteReward,
@@ -47,27 +47,26 @@ class PoolShareLiquidity {
       this.hourlyRewordFiat,
       this.dailyRewardFiat,
       this.yearlyRewardFiat,
-      this.poolShares
-    });
+      this.poolShares});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-    'tokenA': tokenA,
-    'tokenB': tokenB,
-    'poolPair': poolPair.toJson(),
-    'totalLiquidityInUSDT': totalLiquidityInUSDT,
-    'yearlyPoolReward': yearlyPoolReward,
-    'poolSharePercentage': poolSharePercentage,
-    'apy': apy,
-    'coin': coin.toJson(),
-    'blockReward': blockReward,
-    'minuteReward': minuteReward,
-    'hourlyReword': hourlyReword,
-    'dailyReward': dailyReward,
-    'yearlyReward': yearlyReward,
-    'blockRewardFiat': blockRewardFiat,
-    'minuteRewardFiat': minuteRewardFiat,
-    'hourlyRewordFiat': hourlyRewordFiat,
-    'dailyRewardFiat': dailyRewardFiat,
-    'yearlyRewardFiat': yearlyRewardFiat
-  };
+        'tokenA': tokenA,
+        'tokenB': tokenB,
+        'poolPair': poolPair.toJson(),
+        'totalLiquidityInUSDT': totalLiquidityInUSDT,
+        'yearlyPoolReward': yearlyPoolReward,
+        'poolSharePercentage': poolSharePercentage,
+        'apr': apr,
+        'coin': coin.toJson(),
+        'blockReward': blockReward,
+        'minuteReward': minuteReward,
+        'hourlyReword': hourlyReword,
+        'dailyReward': dailyReward,
+        'yearlyReward': yearlyReward,
+        'blockRewardFiat': blockRewardFiat,
+        'minuteRewardFiat': minuteRewardFiat,
+        'hourlyRewordFiat': hourlyRewordFiat,
+        'dailyRewardFiat': dailyRewardFiat,
+        'yearlyRewardFiat': yearlyRewardFiat
+      };
 }

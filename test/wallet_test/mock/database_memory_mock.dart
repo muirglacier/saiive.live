@@ -252,7 +252,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account) {
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account, {bool onlyActive}) {
     var ret = _addresses.where((element) => element.accountId == account.uniqueId).toList();
     return Future.value(ret);
   }

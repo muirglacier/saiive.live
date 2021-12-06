@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
 import 'package:intl/intl.dart';
@@ -83,7 +84,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     }
 
     var now = DateTime.now();
-    now.add(Duration(seconds: ((widget.auction.liquidationHeight - _stats.count.blocks) / 2).floor()));
+    now.add(Duration(seconds: (max(widget.auction.liquidationHeight - _stats.count.blocks, 0)*30).floor()));
     final f = new DateFormat('dd.MM.yyyy hh:mm');
 
     return f.format(now);

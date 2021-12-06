@@ -33,7 +33,7 @@ class WalletDatabaseFactory implements IWalletDatabaseFactory {
   }
 
   Future<IWalletDatabase> createInstance(ChainType chain, ChainNet network) async {
-    final path = await _getPath(3, chain, network);
+    final path = await _getPath(4, chain, network);
     var db = SembastWalletDatabase(path, chain);
     await db.open();
     return db;

@@ -483,38 +483,40 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
           actions: actions,
         ),
         body: NestedScrollView(
-          controller: _scrollController,
-          headerSliverBuilder: (context, value) {
-            return [
-              SliverToBoxAdapter(child: _buildTopPart()),
-              SliverToBoxAdapter(
-                child: TabBar(
-                  controller: _tabController,
-                  isScrollable: true,
-                  indicatorColor: StateContainer.of(context).curTheme.primary,
-                  labelColor: StateContainer.of(context).curTheme.darkColor,
-                  tabs: [
-                    Tab(text: S.of(context).loan_vault_details_tab_active_loan),
-                    Tab(text: S.of(context).loan_vault_details_tab_details),
-                    Tab(text: S.of(context).loan_vault_details_tab_collaterals),
-                    // Tab(text: S.of(context).loan_vault_details_tab_auctions),
-                  ],
+            controller: _scrollController,
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverToBoxAdapter(child: _buildTopPart()),
+                SliverToBoxAdapter(
+                  child: TabBar(
+                    controller: _tabController,
+                    isScrollable: true,
+                    indicatorColor: StateContainer.of(context).curTheme.primary,
+                    labelColor: StateContainer.of(context).curTheme.darkColor,
+                    tabs: [
+                      Tab(text: S.of(context).loan_vault_details_tab_active_loan),
+                      Tab(text: S.of(context).loan_vault_details_tab_details),
+                      Tab(text: S.of(context).loan_vault_details_tab_collaterals),
+                      // Tab(text: S.of(context).loan_vault_details_tab_auctions),
+                    ],
+                  ),
                 ),
+              ];
+            },
+            body: PrimaryScrollController(
+              controller: new ScrollController(),
+              child: Container(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildTabActiveLoans(),
+                        _buildTabDetails(),
+                        _buildTabCollaterals(), /*_buildTabAuctions()*/
+                      ],
+                    )),
               ),
-            ];
-          },
-          body: Container(
-            child: Padding(
-                padding: EdgeInsets.all(10),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildTabActiveLoans(),
-                    _buildTabDetails(),
-                    _buildTabCollaterals(), /*_buildTabAuctions()*/
-                  ],
-                )),
-          ),
-        ));
+            )));
   }
 }

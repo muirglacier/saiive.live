@@ -210,8 +210,10 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                 )),
           ],
         ),
-        body: LayoutBuilder(builder: (_, builder) {
-          return buildAllLiquidityScreen(context);
-        }));
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: LayoutBuilder(builder: (_, builder) {
+              return buildAllLiquidityScreen(context);
+            })));
   }
 }

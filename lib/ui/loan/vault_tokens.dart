@@ -85,8 +85,11 @@ class _VaultTokensScreen extends State<VaultTokensScreen> with AutomaticKeepAliv
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(body: LayoutBuilder(builder: (_, builder) {
-      return buildVaultScreen(context);
-    }));
+    return Scaffold(
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: LayoutBuilder(builder: (_, builder) {
+              return buildVaultScreen(context);
+            })));
   }
 }

@@ -326,90 +326,94 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
 
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_title)),
-        body: SlidingUpPanel(
-            controller: _panelController,
-            backdropEnabled: true,
-            defaultPanelState: PanelState.CLOSED,
-            minHeight: 0,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
-            color: StateContainer.of(context).curTheme.cardBackgroundColor,
-            onPanelClosed: () {
-              if (key != null && key.currentState != null && key.currentState.canPop()) {
-                key.currentState.pop();
-              }
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: SlidingUpPanel(
+                controller: _panelController,
+                backdropEnabled: true,
+                defaultPanelState: PanelState.CLOSED,
+                minHeight: 0,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+                color: StateContainer.of(context).curTheme.cardBackgroundColor,
+                onPanelClosed: () {
+                  if (key != null && key.currentState != null && key.currentState.canPop()) {
+                    key.currentState.pop();
+                  }
 
-              setState(() {
-                _panel = Container();
-              });
-            },
-            panel: LayoutBuilder(builder: (_, builder) {
-              return Column(children: [
-                SizedBox(
-                  height: 12.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: 30,
-                      height: 5,
-                      decoration: BoxDecoration(color: StateContainer.of(context).curTheme.backgroundColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  setState(() {
+                    _panel = Container();
+                  });
+                },
+                panel: LayoutBuilder(builder: (_, builder) {
+                  return Column(children: [
+                    SizedBox(
+                      height: 12.0,
                     ),
-                  ],
-                ),
-                Expanded(child: _panel)
-              ]);
-            }),
-            body: Padding(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onPanDown: (_) {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                    child: NestedScrollView(
-                        headerSliverBuilder: (context, value) {
-                          return [
-                            SliverToBoxAdapter(
-                                child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
-                            SliverToBoxAdapter(child: buildTokenEntry()),
-                            SliverToBoxAdapter(
-                                child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
-                            SliverToBoxAdapter(child: buildVaultEntry()),
-                          ];
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: 30,
+                          height: 5,
+                          decoration: BoxDecoration(color: StateContainer.of(context).curTheme.backgroundColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                        ),
+                      ],
+                    ),
+                    Expanded(child: _panel)
+                  ]);
+                }),
+                body: Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onPanDown: (_) {
+                          FocusScope.of(context).requestFocus(FocusNode());
                         },
-                        body: Container(
-                          child: (_loanVault != null && _loanToken != null)
-                              ? SingleChildScrollView(
-                                  child: Column(children: [
-                                  Container(height: 20),
-                                  Text(S.of(context).loan_amount),
-                                  TextField(
-                                      controller: _amountController,
-                                      decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-                                      keyboardType: TextInputType.numberWithOptions(decimal: true)),
-                                  buildTXDetails(),
-                                  Padding(
-                                      padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
-                                      child: WalletReturnAddressWidget(
-                                        onChanged: (v) {
-                                          setState(() {
-                                            _returnAddress = v;
-                                          });
-                                        },
-                                      )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 20),
-                                      child: SizedBox(
-                                          width: double.infinity,
-                                          child: ElevatedButton(
-                                              child: Text(S.of(context).loan_continue),
-                                              onPressed: () async {
-                                                await Navigator.of(context).push(MaterialPageRoute(
-                                                    builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
-                                              })))
-                                ]))
-                              : Container(),
-                        ))))));
+                        child: NestedScrollView(
+                            controller: new ScrollController(),
+                            headerSliverBuilder: (context, value) {
+                              return [
+                                SliverToBoxAdapter(
+                                    child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
+                                SliverToBoxAdapter(child: buildTokenEntry()),
+                                SliverToBoxAdapter(
+                                    child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
+                                SliverToBoxAdapter(child: buildVaultEntry()),
+                              ];
+                            },
+                            body: Container(
+                              child: (_loanVault != null && _loanToken != null)
+                                  ? SingleChildScrollView(
+                                      child: Column(children: [
+                                      Container(height: 20),
+                                      Text(S.of(context).loan_amount),
+                                      TextField(
+                                          controller: _amountController,
+                                          decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+                                          keyboardType: TextInputType.numberWithOptions(decimal: true)),
+                                      buildTXDetails(),
+                                      Padding(
+                                          padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
+                                          child: WalletReturnAddressWidget(
+                                            onChanged: (v) {
+                                              setState(() {
+                                                _returnAddress = v;
+                                              });
+                                            },
+                                          )),
+                                      Padding(
+                                          padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 20),
+                                          child: SizedBox(
+                                              width: double.infinity,
+                                              child: ElevatedButton(
+                                                  child: Text(S.of(context).loan_continue),
+                                                  onPressed: () async {
+                                                    await Navigator.of(context).push(MaterialPageRoute(
+                                                        builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
+                                                  }))),
+                                      SizedBox(height: 100)
+                                    ]))
+                                  : Container(),
+                            )))))));
   }
 }

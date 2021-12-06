@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:intl/intl.dart';
 import 'package:saiive.live/bus/stats_loaded_event.dart';
+import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/stats.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -61,8 +62,10 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
     }
 
     var now = DateTime.now();
-    now.add(Duration(seconds: ((widget.auction.liquidationHeight - _stats.count.blocks) / 2).floor()));
-    final f = new DateFormat('dd.MM.yyyy hh:mm');
+    var blockDif = widget.auction.liquidationHeight - _stats.count.blocks;
+    var time = ((blockDif) * DefiChainConstants.BLOCK_TIME_S).floor();
+    now = now.add(Duration(seconds: time));
+    final f = new DateFormat('dd.MM.yyyy HH:mm');
 
     return f.format(now);
   }
@@ -73,36 +76,27 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
 
     return InkWell(
         onTap: () async {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  VaultAuctionScreen(widget.auction)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAuctionScreen(widget.auction)));
         },
         child: Card(
             child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(children: [
                   Row(children: <Widget>[
-                    Container(
-                        decoration: BoxDecoration(color: Colors.transparent),
-                        child: Icon(Icons.shield, size: 40)),
+                    Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                     Container(width: 10),
                     Expanded(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                          Text(
-                            widget.auction.vaultId,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          Wrap(children: [
-                            Text(widget.auction.liquidationHeight.toString()),
-                            if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())
-                          ])
-                        ])),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(
+                        widget.auction.vaultId,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())])
+                    ])),
                     Container(width: 10),
                     Container(
-                        decoration: BoxDecoration(color: Colors.transparent),
+                      decoration: BoxDecoration(color: Colors.transparent),
                     )
                   ]),
                   Container(height: 10),

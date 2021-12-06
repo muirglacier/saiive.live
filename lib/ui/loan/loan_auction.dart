@@ -9,6 +9,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
+import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
@@ -84,8 +85,9 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     }
 
     var now = DateTime.now();
-    now.add(Duration(seconds: (max(widget.auction.liquidationHeight - _stats.count.blocks, 0)*30).floor()));
-    final f = new DateFormat('dd.MM.yyyy hh:mm');
+    var time = (max(widget.auction.liquidationHeight - _stats.count.blocks, 0) * DefiChainConstants.BLOCK_TIME_S).floor();
+    now = now.add(Duration(seconds: time));
+    final f = new DateFormat('dd.MM.yyyy HH:mm');
 
     return f.format(now);
   }

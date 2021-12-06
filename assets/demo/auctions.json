@@ -1,0 +1,2445 @@
+[
+    {
+      "vaultId": "c6d85cfa6a42b22aecdd838116d33a85b45d0858c72e33ce1d7292b04b2d9c01",
+      "loanScheme": {
+        "id": "MIN350",
+        "minColRatio": "350",
+        "interestRate": "1.5"
+      },
+      "ownerAddress": "df1q7pk9skujjyymwwtgx04fpzqzpp06m25ynmm2vk",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 2,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1505.16912000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            },
+            {
+              "id": "2",
+              "amount": "0.08853936",
+              "symbol": "BTC",
+              "symbolKey": "BTC",
+              "name": "Bitcoin",
+              "displaySymbol": "dBTC",
+              "activePrice": {
+                "id": "BTC-USD-1421040",
+                "key": "BTC-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "46459.21943766",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "47684.89451095",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "26",
+            "amount": "6.55229628",
+            "symbol": "SPY",
+            "symbolKey": "SPY",
+            "name": "dSPY",
+            "displaySymbol": "dSPY",
+            "activePrice": {
+              "id": "SPY-USD-1421040",
+              "key": "SPY-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "453.18000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "453.18000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          },
+          "highestBid": {
+            "owner": "dUBxTqEV8SXg19eLRjo3KGjCtWbxzAzusD",
+            "amount": {
+              "id": "26",
+              "amount": "6.87991109",
+              "symbol": "SPY",
+              "symbolKey": "SPY",
+              "name": "dSPY",
+              "displaySymbol": "dSPY",
+              "activePrice": {
+                "id": "SPY-USD-1421040",
+                "key": "SPY-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "453.18000000",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 7
+                  }
+                },
+                "next": {
+                  "amount": "453.18000000",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 7
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          }
+        },
+        {
+          "index": 1,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "194.83088000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            },
+            {
+              "id": "2",
+              "amount": "0.01146064",
+              "symbol": "BTC",
+              "symbolKey": "BTC",
+              "name": "Bitcoin",
+              "displaySymbol": "dBTC",
+              "activePrice": {
+                "id": "BTC-USD-1421040",
+                "key": "BTC-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "46459.21943766",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "47684.89451095",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "26",
+            "amount": "0.84813702",
+            "symbol": "SPY",
+            "symbolKey": "SPY",
+            "name": "dSPY",
+            "displaySymbol": "dSPY",
+            "activePrice": {
+              "id": "SPY-USD-1421040",
+              "key": "SPY-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "453.18000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "453.18000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "bfdef7310147dad8085eda2473d7170acceadcf36e31b79e2dd36131a284bc16",
+      "loanScheme": {
+        "id": "MIN350",
+        "minColRatio": "350",
+        "interestRate": "1.5"
+      },
+      "ownerAddress": "df1q7wzs7jjafsk58x4xhwn0ljg4mgshep76yp4pua",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 1,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "50.00000000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "15",
+            "amount": "56.90312903",
+            "symbol": "DUSD",
+            "symbolKey": "DUSD",
+            "name": "Decentralized USD",
+            "displaySymbol": "DUSD"
+          },
+          "highestBid": {
+            "owner": "dWyqCP5PNzRSac8w5hcVTMe8B6McPpXcnC",
+            "amount": {
+              "id": "15",
+              "amount": "61.00000000",
+              "symbol": "DUSD",
+              "symbolKey": "DUSD",
+              "name": "Decentralized USD",
+              "displaySymbol": "DUSD"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "3e83e103caaaef0ee4667e0faff26a25b3e2029ab886fafe3d97d38aae5ce016",
+      "loanScheme": {
+        "id": "MIN200",
+        "minColRatio": "200",
+        "interestRate": "2"
+      },
+      "ownerAddress": "df1quwcljksd64tqdstlq6xvnl0fq5wwedvehpg4q5",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 18,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2556.97163237",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "16",
+            "amount": "5.14269100",
+            "symbol": "TSLA",
+            "symbolKey": "TSLA",
+            "name": "dTSLA",
+            "displaySymbol": "dTSLA",
+            "activePrice": {
+              "id": "TSLA-USD-1421040",
+              "key": "TSLA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 1,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2556.97163237",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "16",
+            "amount": "5.14269100",
+            "symbol": "TSLA",
+            "symbolKey": "TSLA",
+            "name": "dTSLA",
+            "displaySymbol": "dTSLA",
+            "activePrice": {
+              "id": "TSLA-USD-1421040",
+              "key": "TSLA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 2,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2556.97163237",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "16",
+            "amount": "5.14269100",
+            "symbol": "TSLA",
+            "symbolKey": "TSLA",
+            "name": "dTSLA",
+            "displaySymbol": "dTSLA",
+            "activePrice": {
+              "id": "TSLA-USD-1421040",
+              "key": "TSLA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 3,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "764.00077784",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "16",
+            "amount": "1.53659108",
+            "symbol": "TSLA",
+            "symbolKey": "TSLA",
+            "name": "dTSLA",
+            "displaySymbol": "dTSLA",
+            "activePrice": {
+              "id": "TSLA-USD-1421040",
+              "key": "TSLA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 4,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2556.97163236",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "19",
+            "amount": "46.45591654",
+            "symbol": "BABA",
+            "symbolKey": "BABA",
+            "name": "dBABA",
+            "displaySymbol": "dBABA",
+            "activePrice": {
+              "id": "BABA-USD-1421040",
+              "key": "BABA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "112.02333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "112.02333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 5,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1686.83807978",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "19",
+            "amount": "30.64703948",
+            "symbol": "BABA",
+            "symbolKey": "BABA",
+            "name": "dBABA",
+            "displaySymbol": "dBABA",
+            "activePrice": {
+              "id": "BABA-USD-1421040",
+              "key": "BABA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "112.02333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "112.02333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 6,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1534.42849827",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "20",
+            "amount": "17.00128536",
+            "symbol": "GME",
+            "symbolKey": "GME",
+            "name": "dGME",
+            "displaySymbol": "dGME",
+            "activePrice": {
+              "id": "GME-USD-1421040",
+              "key": "GME-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "183.69125000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "183.69125000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 7,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1911.84558099",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "21",
+            "amount": "205.08447848",
+            "symbol": "PLTR",
+            "symbolKey": "PLTR",
+            "name": "dPLTR",
+            "displaySymbol": "dPLTR",
+            "activePrice": {
+              "id": "PLTR-USD-1421040",
+              "key": "PLTR-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "18.97333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "18.97333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 8,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2556.97163236",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "22",
+            "amount": "32.20437419",
+            "symbol": "AAPL",
+            "symbolKey": "AAPL",
+            "name": "dAAPL",
+            "displaySymbol": "dAAPL",
+            "activePrice": {
+              "id": "AAPL-USD-1421040",
+              "key": "AAPL-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 9,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2556.97163236",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "22",
+            "amount": "32.20437419",
+            "symbol": "AAPL",
+            "symbolKey": "AAPL",
+            "name": "dAAPL",
+            "displaySymbol": "dAAPL",
+            "activePrice": {
+              "id": "AAPL-USD-1421040",
+              "key": "AAPL-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 10,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "682.70416575",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "22",
+            "amount": "8.59847543",
+            "symbol": "AAPL",
+            "symbolKey": "AAPL",
+            "name": "dAAPL",
+            "displaySymbol": "dAAPL",
+            "activePrice": {
+              "id": "AAPL-USD-1421040",
+              "key": "AAPL-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 11,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2093.37160583",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "23",
+            "amount": "1.50006571",
+            "symbol": "GOOGL",
+            "symbolKey": "GOOGL",
+            "name": "dGOOGL",
+            "displaySymbol": "dGOOGL",
+            "activePrice": {
+              "id": "GOOGL-USD-1421040",
+              "key": "GOOGL-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "2840.27000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "2840.27000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 12,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1781.42133812",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "26",
+            "amount": "8.00054419",
+            "symbol": "SPY",
+            "symbolKey": "SPY",
+            "name": "dSPY",
+            "displaySymbol": "dSPY",
+            "activePrice": {
+              "id": "SPY-USD-1421040",
+              "key": "SPY-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "453.18000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "453.18000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 13,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2556.97163236",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "27",
+            "amount": "13.59175330",
+            "symbol": "QQQ",
+            "symbolKey": "QQQ",
+            "name": "dQQQ",
+            "displaySymbol": "dQQQ",
+            "activePrice": {
+              "id": "QQQ-USD-1421040",
+              "key": "QQQ-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "382.89000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "382.89000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 14,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "849.94874120",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "27",
+            "amount": "4.51795932",
+            "symbol": "QQQ",
+            "symbolKey": "QQQ",
+            "name": "dQQQ",
+            "displaySymbol": "dQQQ",
+            "activePrice": {
+              "id": "QQQ-USD-1421040",
+              "key": "QQQ-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "382.89000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "382.89000000",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 15,
+          "collaterals": [
+            
+          ],
+          "loan": {
+            "id": "29",
+            "amount": "0.00001140",
+            "symbol": "SLV",
+            "symbolKey": "SLV",
+            "name": "dSLV",
+            "displaySymbol": "dSLV",
+            "activePrice": {
+              "id": "SLV-USD-1421040",
+              "key": "SLV-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "20.85166667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "20.85166667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 16,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1248.49135490",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "30",
+            "amount": "170.00620806",
+            "symbol": "PDBC",
+            "symbolKey": "PDBC",
+            "name": "dPDBC",
+            "displaySymbol": "dPDBC",
+            "activePrice": {
+              "id": "PDBC-USD-1421040",
+              "key": "PDBC-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "14.94666667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "14.94666667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 17,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1089.14843077",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "34",
+            "amount": "17.00111552",
+            "symbol": "URTH",
+            "symbolKey": "URTH",
+            "name": "dURTH",
+            "displaySymbol": "dURTH",
+            "activePrice": {
+              "id": "URTH-USD-1421040",
+              "key": "URTH-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "130.38666667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "130.38666667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "8ea11aa91d59d555c38bedf55f5a5f4dab3a9238a87b2e5b9d6706e11bd31c54",
+      "loanScheme": {
+        "id": "MIN200",
+        "minColRatio": "200",
+        "interestRate": "2"
+      },
+      "ownerAddress": "df1qd6azt84w4dzcfrqxeraceqtwuy9jry8zytq27v",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 1,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "98.00000000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "15",
+            "amount": "200.00457520",
+            "symbol": "DUSD",
+            "symbolKey": "DUSD",
+            "name": "Decentralized USD",
+            "displaySymbol": "DUSD"
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "7e199cee6661117869a8088f7e5890d7351c282918aec6f68dcfe0b653d08f57",
+      "loanScheme": {
+        "id": "MIN350",
+        "minColRatio": "350",
+        "interestRate": "1.5"
+      },
+      "ownerAddress": "df1q7pk9skujjyymwwtgx04fpzqzpp06m25ynmm2vk",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 2,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "2134.38207000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            },
+            {
+              "id": "2",
+              "amount": "0.03557304",
+              "symbol": "BTC",
+              "symbolKey": "BTC",
+              "name": "Bitcoin",
+              "displaySymbol": "dBTC",
+              "activePrice": {
+                "id": "BTC-USD-1421040",
+                "key": "BTC-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "46459.21943766",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "47684.89451095",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "16",
+            "amount": "3.05939727",
+            "symbol": "TSLA",
+            "symbolKey": "TSLA",
+            "name": "dTSLA",
+            "displaySymbol": "dTSLA",
+            "activePrice": {
+              "id": "TSLA-USD-1421040",
+              "key": "TSLA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        },
+        {
+          "index": 1,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "865.61793000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            },
+            {
+              "id": "2",
+              "amount": "0.01442696",
+              "symbol": "BTC",
+              "symbolKey": "BTC",
+              "name": "Bitcoin",
+              "displaySymbol": "dBTC",
+              "activePrice": {
+                "id": "BTC-USD-1421040",
+                "key": "BTC-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "46459.21943766",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "47684.89451095",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "16",
+            "amount": "1.24076621",
+            "symbol": "TSLA",
+            "symbolKey": "TSLA",
+            "name": "dTSLA",
+            "displaySymbol": "dTSLA",
+            "activePrice": {
+              "id": "TSLA-USD-1421040",
+              "key": "TSLA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "ee84412a3645bd46764924f7e68e621f60e327ad6bc11e0cebf4cd6ab4e12769",
+      "loanScheme": {
+        "id": "MIN200",
+        "minColRatio": "200",
+        "interestRate": "2"
+      },
+      "ownerAddress": "df1qlgunjd4hk2mx6glkr5ghmma6p39rldpz5w9ap3",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 1,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "27.00000000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "34",
+            "amount": "0.44310000",
+            "symbol": "URTH",
+            "symbolKey": "URTH",
+            "name": "dURTH",
+            "displaySymbol": "dURTH",
+            "activePrice": {
+              "id": "URTH-USD-1421040",
+              "key": "URTH-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "130.38666667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "130.38666667",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "250ac7ee62a37c4846737857ea108e672cd4b95f1fd5a0015a3f028344cefb6d",
+      "loanScheme": {
+        "id": "MIN350",
+        "minColRatio": "350",
+        "interestRate": "1.5"
+      },
+      "ownerAddress": "df1qmhcqesnadp7h7mvm5hfuzhmfk4al6raex3spl4",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 1,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "1005.00000000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "22",
+            "amount": "7.00018108",
+            "symbol": "AAPL",
+            "symbolKey": "AAPL",
+            "name": "dAAPL",
+            "displaySymbol": "dAAPL",
+            "activePrice": {
+              "id": "AAPL-USD-1421040",
+              "key": "AAPL-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "161.59750000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "110ca79ab5241096fe51008309111411c783e3dca5956a6cfc51bab1ebada994",
+      "loanScheme": {
+        "id": "MIN1000",
+        "minColRatio": "1000",
+        "interestRate": "0.5"
+      },
+      "ownerAddress": "df1qsdmpp9tq7es34hc5fxhln0vqdke4m494ng3dxy",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 1,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "0.50000000",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "19",
+            "amount": "0.00190000",
+            "symbol": "BABA",
+            "symbolKey": "BABA",
+            "name": "dBABA",
+            "displaySymbol": "dBABA",
+            "activePrice": {
+              "id": "BABA-USD-1421040",
+              "key": "BABA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "112.02333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "next": {
+                "amount": "112.02333333",
+                "weightage": 30,
+                "oracles": {
+                  "active": 3,
+                  "total": 7
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "vaultId": "328ba675d874bdbb9d9267538889d8bedffe262aef067ab1a5b067dc066df2c6",
+      "loanScheme": {
+        "id": "MIN350",
+        "minColRatio": "350",
+        "interestRate": "1.5"
+      },
+      "ownerAddress": "dP32LEmFwJPRhWBNW9jB2ykCDXgUtXYzYh",
+      "state": "IN_LIQUIDATION",
+      "batchCount": 2,
+      "liquidationHeight": 1421760,
+      "liquidationPenalty": 5,
+      "batches": [
+        {
+          "index": 0,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "16.99838730",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "15",
+            "amount": "20.00101472",
+            "symbol": "DUSD",
+            "symbolKey": "DUSD",
+            "name": "Decentralized USD",
+            "displaySymbol": "DUSD"
+          }
+        },
+        {
+          "index": 1,
+          "collaterals": [
+            {
+              "id": "0",
+              "amount": "43.00161270",
+              "symbol": "DFI",
+              "symbolKey": "DFI",
+              "name": "Default Defi token",
+              "displaySymbol": "DFI",
+              "activePrice": {
+                "id": "DFI-USD-1421040",
+                "key": "DFI-USD",
+                "isLive": true,
+                "block": {
+                  "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                  "height": 1421040,
+                  "medianTime": 1638601220,
+                  "time": 1638601240
+                },
+                "active": {
+                  "amount": "3.91087644",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "next": {
+                  "amount": "4.06579102",
+                  "weightage": 30,
+                  "oracles": {
+                    "active": 3,
+                    "total": 3
+                  }
+                },
+                "sort": "0015aef0"
+              }
+            }
+          ],
+          "loan": {
+            "id": "16",
+            "amount": "0.05000000",
+            "symbol": "TSLA",
+            "symbolKey": "TSLA",
+            "name": "dTSLA",
+            "displaySymbol": "dTSLA",
+            "activePrice": {
+              "id": "TSLA-USD-1421040",
+              "key": "TSLA-USD",
+              "isLive": true,
+              "block": {
+                "hash": "75a4597cec543df01eab1b854bfcc54c967680193b39654a804562b60e9ae8d1",
+                "height": 1421040,
+                "medianTime": 1638601220,
+                "time": 1638601240
+              },
+              "active": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "next": {
+                "amount": "1011.95000000",
+                "weightage": 40,
+                "oracles": {
+                  "active": 4,
+                  "total": 10
+                }
+              },
+              "sort": "0015aef0"
+            }
+          }
+        }
+      ]
+    }
+  ]

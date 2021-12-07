@@ -1,6 +1,8 @@
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/loans_auctions_service.dart';
+import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/loan_auction_box.dart';
@@ -28,22 +30,42 @@ class AuctionsScreen extends RefreshableWidget implements SearchableWidget {
   void search(String text) {
     _state._filter(text);
   }
+
+  void toggleFilterBuyable(bool buyable) {
+    _state.toggleFilterBuyable(buyable);
+  }
 }
 
 class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClientMixin<AuctionsScreen> {
   List<LoanVaultAuction> _auctions;
   List<LoanVaultAuction> _filteredAuctions;
+  List<AccountBalance> _accountBalance;
+  bool _loadedBalance = false;
+  bool _loadedAuctions = false;
+  bool _filterBuyable = false;
+  String _filterText = "";
 
   @override
   void initState() {
     super.initState();
 
     _initAuctions();
+    _loadBalance();
   }
 
   @override
   bool get wantKeepAlive {
     return true;
+  }
+
+  _loadBalance() async {
+    var balanceHelper = BalanceHelper();
+    var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
+
+    setState(() {
+      _accountBalance = accountBalance;
+      _loadedBalance = true;
+    });
   }
 
   _initAuctions() async {
@@ -55,24 +77,48 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
 
     setState(() {
       _auctions = auctions;
+      _loadedAuctions = true;
       _filteredAuctions = _auctions;
     });
   }
 
+  void toggleFilterBuyable(bool buyable) {
+    _filterBuyable = buyable;
+
+    _filter(_filterText);
+  }
+
   _filter(String text) {
     var filtered = _auctions.where((element) {
-      var batches = element.batches.where((batch) => batch.loan.symbol.contains(text));
+      return element.batches.where((batch) {
+        if (_filterBuyable) {
+          var balance = _accountBalance.firstWhere((element) => element.token == batch.loan.symbol, orElse: () => null);
 
-      return batches.length > 0;
+          if (null == balance) {
+            return false;
+          }
+
+          if (balance.balanceDisplay < batch.minBid) {
+            return false;
+          }
+
+          if (text == "") {
+            return true;
+          }
+        }
+
+        return batch.loan.symbol.toLowerCase().contains(text);
+      }).length > 0;
     }).toList();
 
     setState(() {
       _filteredAuctions = filtered;
+      _filterText = text;
     });
   }
 
   buildAuctionScreen(BuildContext context) {
-    if (_filteredAuctions == null) {
+    if (!_loadedBalance || !_loadedAuctions) {
       return LoadingWidget(text: S.of(context).loading);
     }
 

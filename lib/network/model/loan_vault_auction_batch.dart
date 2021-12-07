@@ -7,6 +7,16 @@ class LoanVaultAuctionBatch {
   final LoanVaultAmount loan;
   final LoanVaultAuctionHighestBid highestBid;
 
+  double get minBid {
+    var minBid = double.tryParse(this.loan.amount) * 1.05;
+
+    if (this.highestBid != null) {
+      minBid = double.tryParse(this.highestBid.amount.amount) * 1.01;
+    }
+
+    return minBid;
+  }
+
   LoanVaultAuctionBatch({this.index, this.collaterals, this.loan, this.highestBid});
 
   double get collateralValueUSD {

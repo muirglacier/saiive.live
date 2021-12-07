@@ -27,6 +27,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
   FocusNode _searchFocusNode;
   int _selectedIndex = 0;
   bool _search = false;
+  bool _auctionFilterBuyable = false;
 
   var _tabs = [VaultsScreen(), VaultTokensScreen(), AuctionsScreen()];
 
@@ -125,6 +126,18 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                 Text(S.of(context).loan_vaults)
               ]),
             actions: [
+              if (_selectedIndex == 2) Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        _auctionFilterBuyable = !_auctionFilterBuyable;
+                      });
+
+                      (_tabs[_selectedIndex] as AuctionsScreen).toggleFilterBuyable(_auctionFilterBuyable);
+                    },
+                    child: Icon(_auctionFilterBuyable ? Icons.money_off_csred :  Icons.attach_money, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
               if (_selectedIndex == 2) Padding(
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(

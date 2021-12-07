@@ -8,8 +8,9 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
 import 'package:saiive.live/util/refresh_able_widget.dart';
+import 'package:saiive.live/util/search_able_widget.dart';
 
-class AuctionsScreen extends RefreshableWidget {
+class AuctionsScreen extends RefreshableWidget implements SearchableWidget {
   final _state = _AuctionsScreen();
   AuctionsScreen({Key key}) : super(key: key);
 
@@ -22,10 +23,16 @@ class AuctionsScreen extends RefreshableWidget {
   void refresh() {
     _state._initAuctions();
   }
+
+  @override
+  void search(String text) {
+    _state._filter(text);
+  }
 }
 
 class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClientMixin<AuctionsScreen> {
   List<LoanVaultAuction> _auctions;
+  List<LoanVaultAuction> _filteredAuctions;
 
   @override
   void initState() {
@@ -48,15 +55,28 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
 
     setState(() {
       _auctions = auctions;
+      _filteredAuctions = _auctions;
+    });
+  }
+
+  _filter(String text) {
+    var filtered = _auctions.where((element) {
+      var batches = element.batches.where((batch) => batch.loan.symbol.contains(text));
+
+      return batches.length > 0;
+    }).toList();
+
+    setState(() {
+      _filteredAuctions = filtered;
     });
   }
 
   buildAuctionScreen(BuildContext context) {
-    if (_auctions == null) {
+    if (_filteredAuctions == null) {
       return LoadingWidget(text: S.of(context).loading);
     }
 
-    if (_auctions.length == 0) {
+    if (_filteredAuctions.length == 0) {
       return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Expanded(
             child: Container(
@@ -71,7 +91,7 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
       ]);
     }
 
-    var row = Responsive.buildResponsive<LoanVaultAuction>(context, _auctions, 500, (el) => new AuctionBoxWidget(el));
+    var row = Responsive.buildResponsive<LoanVaultAuction>(context, _filteredAuctions, 500, (el) => new AuctionBoxWidget(el));
 
     return CustomScrollView(
       slivers: <Widget>[SliverToBoxAdapter(child: Container(child: row))],

@@ -182,6 +182,12 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
       return Center(child: LoadingWidget(text: S.of(context).loading));
     }
     return Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(height: 10),
+      Text(
+        "ONLY OPERATE IN THIS SCREEN WHEN YOU KNOW WHAT YOU DO!",
+        style: TextStyle(color: Colors.red, fontSize: 25),
+      ),
+      SizedBox(height: 10),
       _buildSelectWalletAccount(context),
       SizedBox(height: 10),
       _buildIsReturnAddress(context),

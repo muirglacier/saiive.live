@@ -19,7 +19,8 @@ class WalletAddress {
   DateTime createdAt;
   final String publicKey;
 
-  String get uniqueId => accountId + "_" + chain.index.toString() + "_" + account.toString() + "_" + (isChangeAddress ? "1" : "0") + "_" + index.toString();
+  String get uniqueId =>
+      accountId + "_" + chain.index.toString() + "_" + account.toString() + "_" + (isChangeAddress ? "1" : "0") + "_" + index.toString() + "_" + addressType.index.toString();
 
   String path(WalletAccount account) => HdWalletUtil.derivePath(account.account, isChangeAddress, index, account.derivationPathType);
 

@@ -60,15 +60,19 @@ class HdWallet extends IHdWallet {
     }
   }
 
-  Future _checkAndCreateIfExists(
-      IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress, AddressType addressType, PathDerivationType derivationPathType) async {
+  Future _checkAndCreateIfExists(IWalletDatabase walletDatabase, Uint8List seed, int index, bool isChangeAddress, AddressType addressType, PathDerivationType derivationPathType,
+      {bool previewOnly = false}) async {
     final alreadyExists = await walletDatabase.addressExists(_account, _account.account, isChangeAddress, index, addressType);
 
     if (!alreadyExists) {
       final pubKey = await HdWalletUtil.derivePublicKey(seed, _account.id, isChangeAddress, index, _chain, _network, addressType, derivationPathType);
       final walletType = ChainHelper.chainTypeString(_chain);
       LogHelper.instance.d("Create address for $walletType: $pubKey");
-      return await walletDatabase.addAddress(_createAddress(isChangeAddress, index, pubKey, addressType));
+      var address = _createAddress(isChangeAddress, index, pubKey, addressType);
+      if (previewOnly) {
+        return address;
+      }
+      return await walletDatabase.addAddress(address);
     }
     return await walletDatabase.getWalletAddressById(_account, _account.account, isChangeAddress, index, addressType);
   }
@@ -113,6 +117,12 @@ class HdWallet extends IHdWallet {
     var address = await getNextFreePublicKey(database, nextIndex, sharedPrefs, isChangeAddress, addressType);
 
     return address;
+  }
+
+  @override
+  Future<WalletAddress> generateAddress(IWalletDatabase database, WalletAccount account, bool isChangeAddress, int index, AddressType addressType,
+      {bool previewOnly = false}) async {
+    return await _checkAndCreateIfExists(database, _seed, index, isChangeAddress, addressType, _account.derivationPathType);
   }
 
   Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {

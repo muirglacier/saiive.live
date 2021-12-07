@@ -82,6 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dfx_buy_address" : MessageLookupByLibrary.simpleMessage("Buy address"),
     "dfx_buy_title" : MessageLookupByLibrary.simpleMessage("Buy/Sell DFI"),
     "expert" : MessageLookupByLibrary.simpleMessage("Expert"),
+    "expert_address_title" : MessageLookupByLibrary.simpleMessage("Expert address mode"),
     "expert_title" : MessageLookupByLibrary.simpleMessage("Expert mode"),
     "helloWorld" : MessageLookupByLibrary.simpleMessage("Hello World!"),
     "home_dex" : MessageLookupByLibrary.simpleMessage("DEX"),

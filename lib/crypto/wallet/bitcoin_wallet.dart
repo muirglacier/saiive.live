@@ -22,6 +22,6 @@ class BitcoinWallet extends Wallet {
 
   @override
   Future<bool> refreshBefore() {
-    return Future.value(false);
+    return Future.value(true);
   }
 }

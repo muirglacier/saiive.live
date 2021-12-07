@@ -19,6 +19,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/stats_background.dart';
 import 'package:saiive.live/ui/loan/loan_auction_batch_box.dart';
 import 'package:saiive.live/ui/loan/loan_auction_bid.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
@@ -121,7 +122,9 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
 
     return Navigated(
         child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount, from) async {
-      await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round(), from: from);
+      sl.get<AuthenticationHelper>().forceAuth(context, () async {
+        await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round(), from: from);
+      });
     }));
   }
 

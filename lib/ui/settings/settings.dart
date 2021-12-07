@@ -14,6 +14,7 @@ import 'package:saiive.live/network/ihttp_service.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/expert/expert_generate_address.dart';
 import 'package:saiive.live/ui/expert/expert_screen.dart';
 import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import 'package:saiive.live/ui/model/available_themes.dart';
@@ -279,6 +280,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           CardItemWidget(S.of(context).expert, null, backgroundColor: Colors.transparent),
                           CardItemWidget(S.of(context).expert_title, () async {
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertScreen()));
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).expert_address_title, () async {
+                            sl.get<AuthenticationHelper>().forceAuth(context, () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertAddressScreen()));
+                            });
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                         ],
                       )),

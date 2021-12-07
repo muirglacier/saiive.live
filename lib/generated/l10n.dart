@@ -2435,6 +2435,16 @@ class S {
     );
   }
 
+  /// `Expert address mode`
+  String get expert_address_title {
+    return Intl.message(
+      'Expert address mode',
+      name: 'expert_address_title',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Expert`
   String get expert {
     return Intl.message(

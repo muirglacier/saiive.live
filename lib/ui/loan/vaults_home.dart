@@ -27,7 +27,11 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
   FocusNode _searchFocusNode;
   int _selectedIndex = 0;
   bool _search = false;
-  bool _auctionFilterBuyable = false;
+
+  Map<String, bool> filters = {
+    'buyable': false,
+    'mine': false,
+  };
 
   var _tabs = [VaultsScreen(), VaultTokensScreen(), AuctionsScreen()];
 
@@ -74,6 +78,44 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
       _vaultSyncStartEvent.cancel();
       _vaultSyncStartEvent = null;
     }
+  }
+
+  void showAuctionFilterPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return StatefulBuilder(
+          builder: (context, StateSetter setInnerState) {
+            return AlertDialog(
+              title: Text('Filter'),
+              content: Container(
+                  width: double.maxFinite,
+                  child: ListView(
+                    children: filters.keys.map((String key) {
+                      return CheckboxListTile(
+                        title: Text(key == 'buyable' ? 'Buyable Vaults' : 'Your Vaults'),
+                        value: filters[key],
+                        onChanged: (bool value) {
+                          setInnerState(() {
+                            filters[key] = value;
+                          });
+                        },
+                      );
+                    }).toList(),
+                  )),
+              actions: [
+                TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    (_tabs[_selectedIndex] as AuctionsScreen).filter(filters);
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            );
+          });
+      },
+    );
   }
 
   @override
@@ -130,13 +172,9 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () async {
-                      setState(() {
-                        _auctionFilterBuyable = !_auctionFilterBuyable;
-                      });
-
-                      (_tabs[_selectedIndex] as AuctionsScreen).toggleFilterBuyable(_auctionFilterBuyable);
+                      showAuctionFilterPopup(context);
                     },
-                    child: Icon(_auctionFilterBuyable ? Icons.money_off_csred :  Icons.attach_money, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                    child: Icon(Icons.filter_list, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   )),
               if (_selectedIndex == 2) Padding(
                   padding: EdgeInsets.only(right: 20.0),
@@ -150,7 +188,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                     },
                     child: Icon(Icons.filter_alt, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
                   )),
-              Padding(
+              if (_selectedIndex == 0 || _selectedIndex == 1) Padding(
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () async {

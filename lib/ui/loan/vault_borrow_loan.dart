@@ -99,11 +99,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       return;
     }
 
-    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null);
-
     var _interestToken = double.tryParse(_loanToken.interest);
     var _interestVault = double.tryParse(_loanVault.schema.interestRate);
-    var totalAmount = (currentLoanAmount != null ? double.tryParse(currentLoanAmount.amount) : 0.0) + amount;
+    var totalAmount = amount;
 
     _totalInterest = _interestVault + _interestToken;
     _totalInterestAmount = (totalAmount * _totalInterest / 100);

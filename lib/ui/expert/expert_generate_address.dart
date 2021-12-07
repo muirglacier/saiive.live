@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saiive.live/crypto/chain.dart';
+import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
@@ -193,6 +194,11 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
       SizedBox(height: 10),
       Container(child: Text("Preview address:")),
       Container(child: Text(_currentAddress != null ? _currentAddress.publicKey : "no address generated")),
+      Container(child: Text("Preview path:")),
+      Container(
+          child: Text(_currentAddress != null
+              ? HdWalletUtil.derivePath(_selectedWalletAccount.account, _isChangeAddress, _index, _selectedWalletAccount.derivationPathType)
+              : "no address generated")),
       SizedBox(height: 10),
       ElevatedButton(
           child: Text("Generate"),

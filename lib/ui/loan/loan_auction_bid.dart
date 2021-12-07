@@ -69,15 +69,15 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   TextField(
                       controller: _amountController,
                       decoration: InputDecoration(
-                        hintText: 'How much you want to bid?',
+                        hintText: S.of(context).loan_auction_bid_how_much,
                         contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                       ),
                       keyboardType: TextInputType.numberWithOptions(decimal: true)),
                   Container(height: 10),
                   WalletReturnAddressWidget(
-                    expanded: true,
-                    title: "From",
-                    checkBoxText: "Set from addresss",
+                    expanded: false,
+                    title: S.of(context).loan_auction_bid_from,
+                    checkBoxText: S.of(context).loan_auction_bid_from_text,
                     onChanged: (v) {
                       setState(() {
                         _from = v;
@@ -86,17 +86,17 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   ),
                   Container(height: 10),
                   Row(children: [
-                    Text('Available:'),
+                    Text(S.of(context).loan_auction_bid_available_balance),
                     Expanded(child: Text(widget.balance != null ? FundFormatter.format(widget.balance.balanceDisplay) : '0', textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [
-                    Text('Bid has to be min:'),
+                    Text(S.of(context).loan_auction_min_bid_has_to_be),
                     Expanded(child: Text(FundFormatter.format(widget.batch.minBid) + '@' + widget.batch.loan.symbol, textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [
-                    Text('Highest Bid:'),
+                    Text(S.of(context).loan_auction_highest_bid),
                     Expanded(
                         child: Text(
                             widget.batch.highestBid != null ? FundFormatter.format(double.tryParse(widget.batch.highestBid.amount.amount)) + '@' + widget.batch.loan.symbol : 'N/A',
@@ -104,7 +104,7 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   ]),
                   Container(height: 5),
                   Row(children: [
-                    Text('Min Bid:'),
+                    Text(S.of(context).loan_auction_min_bid),
                     Expanded(child: Text(FundFormatter.format(double.tryParse(widget.batch.loan.amount)) + '@' + widget.batch.loan.symbol, textAlign: TextAlign.right)),
                   ]),
                   SizedBox(
@@ -113,7 +113,7 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        child: Text('Create Bid'),
+                        child: Text(S.of(context).loan_auction_create_bid),
                         onPressed: _amount == null || _amount == 0
                             ? null
                             : () {

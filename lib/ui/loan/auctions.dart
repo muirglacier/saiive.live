@@ -13,6 +13,33 @@ import 'package:saiive.live/ui/widgets/responsive.dart';
 import 'package:saiive.live/util/refresh_able_widget.dart';
 import 'package:saiive.live/util/search_able_widget.dart';
 
+
+enum LoanVaultFilter { mine, buyable, bidder }
+
+extension ParseToStringLoanVaultHealthStatus on LoanVaultFilter {
+  String toText(BuildContext context) {
+    switch (this) {
+      case LoanVaultFilter.mine:
+        {
+          return S.of(context).loan_auction_filter_mine;
+        }
+
+      case LoanVaultFilter.buyable:
+        {
+          return S.of(context).loan_auction_filter_buyable;
+        }
+
+      case LoanVaultFilter.bidder:
+        {
+          return S.of(context).loan_auction_filter_highest_bidder;
+        }
+    }
+
+    return '';
+  }
+}
+
+
 class AuctionsScreen extends RefreshableWidget implements SearchableWidget {
   final _state = _AuctionsScreen();
   AuctionsScreen({Key key}) : super(key: key);
@@ -24,7 +51,7 @@ class AuctionsScreen extends RefreshableWidget implements SearchableWidget {
 
   @override
   void refresh() {
-    _state._initAuctions();
+    _state.refresh();
   }
 
   @override
@@ -33,7 +60,7 @@ class AuctionsScreen extends RefreshableWidget implements SearchableWidget {
     _state.filter();
   }
 
-  void filter(Map<String, bool> filters) {
+  void filter(Map<LoanVaultFilter, bool> filters) {
     _state._filters = filters;
 
     _state.filter();
@@ -48,7 +75,7 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
   bool _loadedBalance = false;
   bool _loadedAuctions = false;
   String _filterText = "";
-  Map<String, bool> _filters;
+  Map<LoanVaultFilter, bool> _filters;
 
   @override
   void initState() {
@@ -79,6 +106,7 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
   _initAuctions() async {
     setState(() {
       _auctions = null;
+      _loadedAuctions = false;
     });
 
     var auctions = await sl.get<ILoansAuctionsService>().getAuctions(DeFiConstants.DefiAccountSymbol);
@@ -90,16 +118,21 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
     });
   }
 
+  refresh() async {
+    await _initAuctions();
+    filter();
+  }
+
   filter() {
     var filtered = _auctions.where((element) {
-      if (_filters.containsKey('mine') && _filters['mine']) {
+      if (_filters != null && _filters.containsKey(LoanVaultFilter.mine) && _filters[LoanVaultFilter.mine]) {
         if (!_publicKeys.contains(element.ownerAddress)) {
           return false;
         }
       }
 
       return element.batches.where((batch) {
-        if (_filters.containsKey('buyable') && _filters['buyable']) {
+        if (_filters != null && _filters.containsKey(LoanVaultFilter.buyable) && _filters[LoanVaultFilter.buyable]) {
           var balance = _accountBalance.firstWhere((element) => element.token == batch.loan.symbol, orElse: () => null);
 
           if (null == balance) {
@@ -107,6 +140,12 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
           }
 
           if (balance.balanceDisplay < batch.minBid) {
+            return false;
+          }
+        }
+
+        if (_filters != null && _filters.containsKey(LoanVaultFilter.bidder) && _filters[LoanVaultFilter.bidder]) {
+          if (null == batch.highestBid || !_publicKeys.contains(batch.highestBid.owner)) {
             return false;
           }
         }
@@ -138,13 +177,13 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Icon(Icons.account_balance, size: 64),
-                    Container(child: Text('No Auctions currently', style: Theme.of(context).textTheme.headline3), padding: new EdgeInsets.only(top: 5)),
+                    Container(child: Text(S.of(context).loan_no_auctions, style: Theme.of(context).textTheme.headline3), padding: new EdgeInsets.only(top: 5)),
                   ],
                 )))
       ]);
     }
 
-    var row = Responsive.buildResponsive<LoanVaultAuction>(context, _filteredAuctions, 500, (el) => new AuctionBoxWidget(el));
+    var row = Responsive.buildResponsive<LoanVaultAuction>(context, _filteredAuctions, 500, (el) => new AuctionBoxWidget(el, publicKeys: _publicKeys));
 
     return CustomScrollView(
       slivers: <Widget>[SliverToBoxAdapter(child: Container(child: row))],

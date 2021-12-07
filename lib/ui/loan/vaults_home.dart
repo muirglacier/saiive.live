@@ -28,9 +28,10 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
   int _selectedIndex = 0;
   bool _search = false;
 
-  Map<String, bool> filters = {
-    'buyable': false,
-    'mine': false,
+  Map<LoanVaultFilter, bool> filters = {
+    LoanVaultFilter.buyable: false,
+    LoanVaultFilter.mine: false,
+    LoanVaultFilter.bidder: false,
   };
 
   var _tabs = [VaultsScreen(), VaultTokensScreen(), AuctionsScreen()];
@@ -87,13 +88,13 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
         return StatefulBuilder(
           builder: (context, StateSetter setInnerState) {
             return AlertDialog(
-              title: Text('Filter'),
+              title: Text(S.of(context).loan_auction_filter),
               content: Container(
                   width: double.maxFinite,
                   child: ListView(
-                    children: filters.keys.map((String key) {
+                    children: filters.keys.map((LoanVaultFilter key) {
                       return CheckboxListTile(
-                        title: Text(key == 'buyable' ? 'Buyable Vaults' : 'Your Vaults'),
+                        title: Text(key.toText(context)),
                         value: filters[key],
                         onChanged: (bool value) {
                           setInnerState(() {
@@ -105,7 +106,7 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                   )),
               actions: [
                 TextButton(
-                  child: Text('Okay'),
+                  child: Text(S.of(context).loan_auction_filter_ok),
                   onPressed: () {
                     (_tabs[_selectedIndex] as AuctionsScreen).filter(filters);
                     Navigator.of(context, rootNavigator: true).pop();

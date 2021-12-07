@@ -1,30 +1,13 @@
-import 'dart:async';
-
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
-import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
-import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
-import 'package:saiive.live/helper/balance.dart';
-import 'package:saiive.live/helper/constants.dart';
-import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
-import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
-import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
 import 'package:saiive.live/ui/accounts/accounts_address_add_screen.dart';
-import 'package:saiive.live/ui/utils/authentication_helper.dart';
-import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
-import 'package:saiive.live/ui/utils/transaction_fail.dart';
-import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
-import 'package:saiive.live/ui/widgets/loading_overlay.dart';
-import 'package:wakelock/wakelock.dart';
 
 class ExpertAddressScreen extends StatefulWidget {
   @override

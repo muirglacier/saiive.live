@@ -22,8 +22,10 @@ class WalletRestore {
     assert(password != null);
     assert(apiService != null);
 
+    var startDate = DateTime.now();
+
     int i = 0;
-    int max = IWallet.MaxUnusedAccountScan;
+    int max = chain == ChainType.DeFiChain ? IWallet.MaxUnusedAccountScan : IWallet.MaxUnusedAccountScanBitcoin;
     final api = apiService;
 
     final ret = List<WalletAccount>.empty(growable: true);
@@ -52,6 +54,8 @@ class WalletRestore {
       i++;
     } while (max > 0);
 
+    var diff = DateTime.now().millisecondsSinceEpoch - startDate.millisecondsSinceEpoch;
+    print("complete restore took ${diff / 1000} seconds");
     return Tuple2(ret, walletAddresses);
   }
 
@@ -67,16 +71,15 @@ class WalletRestore {
     }
 
     try {
-      var fullNode = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
-      var jellyFish = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
-      var bip32 = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
-      var bip44 = _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
+      var fullNode = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
+      var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
+      var bip32 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
+      var bip44 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
 
-      var result = await Future.wait([fullNode, jellyFish, bip32, bip44]);
-
-      for (var res in result) {
-        checkIfExistingAndAddToList(res);
-      }
+      checkIfExistingAndAddToList(fullNode);
+      checkIfExistingAndAddToList(jellyFish);
+      checkIfExistingAndAddToList(bip32);
+      checkIfExistingAndAddToList(bip44);
     } catch (error) {
       //ignore
     }
@@ -96,31 +99,39 @@ class WalletRestore {
         defaultAddressType: getDefaultAddressTypeForPathDerivation(pathDerivationType),
         selected: true);
 
-    final p2sh = _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit);
-    final bech32 = _restore(walletAccount, key, api, chain, network, AddressType.Bech32);
-    final legacy = _restore(walletAccount, key, api, chain, network, AddressType.Legacy);
+    var startDate = DateTime.now();
 
-    var all = await Future.wait([p2sh, bech32, legacy]);
+    final p2sh = await _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit, pathDerivationType);
+    final bech32 = await _restore(walletAccount, key, api, chain, network, AddressType.Bech32, pathDerivationType);
+    final legacy = await _restore(walletAccount, key, api, chain, network, AddressType.Legacy, pathDerivationType);
     var ret = List<WalletAddress>.empty(growable: true);
 
-    for (var add in all) {
-      ret.addAll(add);
-    }
+    ret.addAll(p2sh);
+    ret.addAll(bech32);
+    ret.addAll(legacy);
+
+    var endDate = DateTime.now();
+
+    var diff = endDate.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch;
+
+    print("restore took ${pathDerivationTypeString(pathDerivationType)}  ${diff / 1000} seconds");
 
     return Tuple2(walletAccount, ret);
   }
 
-  static Future<List<WalletAddress>> _restore(WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType) async {
+  static Future<List<WalletAddress>> _restore(
+      WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType, PathDerivationType pathDerivationType) async {
     int i = 0;
-    int maxEmpty = IWallet.MaxUnusedIndexScan;
+    int maxEmpty = chain == ChainType.DeFiChain ? IWallet.MaxUnusedIndexScan : IWallet.MaxUnusedIndexScanBitcoin;
+
+    var keysPerQuery = chain == ChainType.DeFiChain ? IWallet.KeysPerQuery : IWallet.KeysPerQueryBitcoin;
     var startDate = DateTime.now();
     var addresses = List<WalletAddress>.empty(growable: true);
 
     do {
       try {
-        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(
-            key, account.account, IWallet.KeysPerQuery * i, chain, net, addressType, account.derivationPathType, IWallet.KeysPerQuery);
-        var path = HdWalletUtil.derivePathsWithChange(account.account, IWallet.KeysPerQuery * i, account.derivationPathType, IWallet.KeysPerQuery);
+        var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account.account, keysPerQuery * i, chain, net, addressType, account.derivationPathType, keysPerQuery);
+        var path = HdWalletUtil.derivePathsWithChange(account.account, keysPerQuery * i, account.derivationPathType, keysPerQuery);
 
         var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
         LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
@@ -144,32 +155,32 @@ class WalletRestore {
           }
         }
 
-        var accounts = await api.accountService.getAccounts(ChainHelper.chainTypeString(chain), publicKeys);
-        LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${accounts.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
+        // var accounts = await api.accountService.getAccounts(ChainHelper.chainTypeString(chain), publicKeys);
+        // LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${accounts.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
-        for (final accountBalance in accounts) {
-          final keyIndex = publicKeys.indexWhere((item) => item == accountBalance.address);
-          var pathString = path[keyIndex];
+        // for (final accountBalance in accounts) {
+        //   final keyIndex = publicKeys.indexWhere((item) => item == accountBalance.address);
+        //   var pathString = path[keyIndex];
 
-          if (!addresses.any((element) => element.publicKey == accountBalance.address)) {
-            final walletAddress = WalletAddress(
-                account: account.account,
-                accountId: account.uniqueId,
-                index: HdWalletUtil.getIndexFromPath(pathString),
-                isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
-                chain: chain,
-                network: net,
-                publicKey: publicKeys[keyIndex],
-                addressType: addressType);
+        //   if (!addresses.any((element) => element.publicKey == accountBalance.address)) {
+        //     final walletAddress = WalletAddress(
+        //         account: account.account,
+        //         accountId: account.uniqueId,
+        //         index: HdWalletUtil.getIndexFromPath(pathString),
+        //         isChangeAddress: HdWalletUtil.isPathChangeAddress(pathString),
+        //         chain: chain,
+        //         network: net,
+        //         publicKey: publicKeys[keyIndex],
+        //         addressType: addressType);
 
-            addresses.add(walletAddress);
-          }
-        }
+        //     addresses.add(walletAddress);
+        //   }
+        // }
 
         if (transactions.length == 0) {
           maxEmpty--;
         } else {
-          maxEmpty = IWallet.MaxUnusedIndexScan;
+          maxEmpty = chain == ChainType.DeFiChain ? IWallet.MaxUnusedIndexScan : IWallet.MaxUnusedIndexScanBitcoin;
         }
       } catch (e) {
         LogHelper.instance.e(e);
@@ -184,7 +195,7 @@ class WalletRestore {
 
     var diff = endDate.millisecondsSinceEpoch - startDate.millisecondsSinceEpoch;
 
-    print("restore took ${diff / 1000} seconds");
+    print("restore took ${pathDerivationTypeString(pathDerivationType)} ${addressTypeToString(addressType)} ${diff / 1000} seconds");
 
     return addresses;
   }

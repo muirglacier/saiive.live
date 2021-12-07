@@ -153,6 +153,13 @@ abstract class Wallet extends IWallet {
     throw UnimplementedError();
   }
 
+  @override
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, adressType.AddressType addressType) async {
+    assert(_wallets.containsKey(account.uniqueId));
+
+    return await _wallets[account.uniqueId].generateAddress(_walletDatabase, account, isChangeAddress, index, addressType);
+  }
+
   Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) async {
     if (!_wallets.containsKey(account.uniqueId)) {
       return List<WalletAddress>.empty();

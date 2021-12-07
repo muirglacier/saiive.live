@@ -115,6 +115,11 @@ class HdWallet extends IHdWallet {
     return address;
   }
 
+  @override
+  Future<WalletAddress> generateAddress(IWalletDatabase database, WalletAccount account, bool isChangeAddress, int index, AddressType addressType) async {
+    return await _checkAndCreateIfExists(database, _seed, index, isChangeAddress, addressType, _account.derivationPathType);
+  }
+
   Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
     var address = await database.getWalletAddressById(_account, _account.account, isChangeAddress, startIndex, addressType);
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:intl/intl.dart';
 import 'package:saiive.live/bus/stats_loaded_event.dart';
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/stats.dart';
@@ -14,8 +15,9 @@ import 'package:flutter/material.dart';
 
 class AuctionBoxWidget extends StatefulWidget {
   final LoanVaultAuction auction;
+  final List<String> publicKeys;
 
-  AuctionBoxWidget(this.auction);
+  AuctionBoxWidget(this.auction, {this.publicKeys});
 
   @override
   State<StatefulWidget> createState() {
@@ -52,27 +54,9 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
     }
   }
 
-  String calculateEndDate() {
-    if (null == _stats) {
-      return null;
-    }
-
-    if (_stats.count.blocks > widget.auction.liquidationHeight) {
-      return null;
-    }
-
-    var now = DateTime.now();
-    var blockDif = widget.auction.liquidationHeight - _stats.count.blocks;
-    var time = ((blockDif) * DefiChainConstants.BLOCK_TIME_S).floor();
-    now = now.add(Duration(seconds: time));
-    final f = new DateFormat('dd.MM.yyyy HH:mm');
-
-    return f.format(now);
-  }
-
   @override
   Widget build(Object context) {
-    List<AuctionBatchBoxWidget> batches = widget.auction.batches.map((e) => AuctionBatchBoxWidget(e)).toList();
+    List<AuctionBatchBoxWidget> batches = widget.auction.batches.map((e) => AuctionBatchBoxWidget(e, publicKeys: widget.publicKeys)).toList();
 
     return InkWell(
         onTap: () async {
@@ -81,7 +65,7 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
         child: Card(
             child: Padding(
                 padding: EdgeInsets.all(20),
-                child: Column(children: [
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: <Widget>[
                     Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
                     Container(width: 10),
@@ -92,12 +76,13 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.headline6,
                       ),
-                      Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())])
+                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks)) Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))])
                     ])),
-                    Container(width: 10),
-                    Container(
-                      decoration: BoxDecoration(color: Colors.transparent),
-                    )
+                    if (widget.publicKeys.contains(widget.auction.ownerAddress)) Container(width: 5),
+                    if (widget.publicKeys.contains(widget.auction.ownerAddress)) Container(child: Chip(
+                      label: Text(S.of(context).loan_auction_your_vault),
+                      backgroundColor: Colors.red,
+                    )),
                   ]),
                   Container(height: 10),
                   ...batches

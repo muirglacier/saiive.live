@@ -3545,6 +3545,16 @@ class S {
     );
   }
 
+  /// `Loan Value`
+  String get loan_value {
+    return Intl.message(
+      'Loan Value',
+      name: 'loan_value',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `FAQ`
   String get loan_faq {
     return Intl.message(
@@ -3650,6 +3660,176 @@ class S {
     return Intl.message(
       'The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, \$100 worth of the token would contribute to \$70 of collateral value in a vault.',
       name: 'loan_faq_vault_factor_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Vaults`
+  String get loan_auction_filter_mine {
+    return Intl.message(
+      'My Vaults',
+      name: 'loan_auction_filter_mine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buyable Vaults`
+  String get loan_auction_filter_buyable {
+    return Intl.message(
+      'Buyable Vaults',
+      name: 'loan_auction_filter_buyable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Highest Bidder`
+  String get loan_auction_filter_highest_bidder {
+    return Intl.message(
+      'Highest Bidder',
+      name: 'loan_auction_filter_highest_bidder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Auctions currently`
+  String get loan_no_auctions {
+    return Intl.message(
+      'No Auctions currently',
+      name: 'loan_no_auctions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auction`
+  String get loan_auction {
+    return Intl.message(
+      'Auction',
+      name: 'loan_auction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Bid`
+  String get loan_auction_your_bid {
+    return Intl.message(
+      'Your Bid',
+      name: 'loan_auction_your_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Highest Bid`
+  String get loan_auction_highest_bid {
+    return Intl.message(
+      'Highest Bid',
+      name: 'loan_auction_highest_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min Bid Value`
+  String get loan_auction_min_bid {
+    return Intl.message(
+      'Min Bid Value',
+      name: 'loan_auction_min_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available Balance`
+  String get loan_auction_bid_available_balance {
+    return Intl.message(
+      'Available Balance',
+      name: 'loan_auction_bid_available_balance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bid has to be min`
+  String get loan_auction_min_bid_has_to_be {
+    return Intl.message(
+      'Bid has to be min',
+      name: 'loan_auction_min_bid_has_to_be',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Bid`
+  String get loan_auction_create_bid {
+    return Intl.message(
+      'Create Bid',
+      name: 'loan_auction_create_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How much you want to bid?`
+  String get loan_auction_bid_how_much {
+    return Intl.message(
+      'How much you want to bid?',
+      name: 'loan_auction_bid_how_much',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From`
+  String get loan_auction_bid_from {
+    return Intl.message(
+      'From',
+      name: 'loan_auction_bid_from',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set from address`
+  String get loan_auction_bid_from_text {
+    return Intl.message(
+      'Set from address',
+      name: 'loan_auction_bid_from_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Vault`
+  String get loan_auction_your_vault {
+    return Intl.message(
+      'Your Vault',
+      name: 'loan_auction_your_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter`
+  String get loan_auction_filter {
+    return Intl.message(
+      'Filter',
+      name: 'loan_auction_filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get loan_auction_filter_ok {
+    return Intl.message(
+      'OK',
+      name: 'loan_auction_filter_ok',
       desc: '',
       args: [],
     );

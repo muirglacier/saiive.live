@@ -388,6 +388,7 @@
   "loan_tokens_to_pay_back": "Tokens to pay back",
   "loan_payback_value": "Value",
   "loan_collateral_edit": "Edit",
+  "loan_value": "Loan Value",
 
   "loan_faq": "FAQ",
   "loan_faq_collateral": "How is the collateralization ratio calculated?",
@@ -399,5 +400,23 @@
   "loan_faq_vault_interests": "How are interests calculated for loan?",
   "loan_faq_vault_interests_answer": "There are 2 types of interests that applies for loans, namely vault interest rate and token interest rate.\n\nThe vault interest rate is determined when the vault owner selects the vault scheme, where the higher the minimum collateralization ratio, the lower the vault interest rate.\n\nThe token interest rate is applied on specific loan tokens, and can differ from token to token.\n\nThe total interest rate applied on a loan is derived by taking the vault interest rate + token interest rate, and is calculated on a per annum basis.",
   "loan_faq_vault_factor": "What is collateral factor?",
-  "loan_faq_vault_factor_answer": "The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, $100 worth of the token would contribute to $70 of collateral value in a vault."
+  "loan_faq_vault_factor_answer": "The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, $100 worth of the token would contribute to $70 of collateral value in a vault.",
+
+  "loan_auction_filter_mine": "My Vaults",
+  "loan_auction_filter_buyable": "Buyable Vaults",
+  "loan_auction_filter_highest_bidder": "Highest Bidder",
+  "loan_no_auctions": "No Auctions currently",
+  "loan_auction": "Auction",
+  "loan_auction_your_bid": "Your Bid",
+  "loan_auction_highest_bid": "Highest Bid",
+  "loan_auction_min_bid": "Min Bid Value",
+  "loan_auction_bid_available_balance": "Available Balance",
+  "loan_auction_min_bid_has_to_be": "Bid has to be min",
+  "loan_auction_create_bid": "Create Bid",
+  "loan_auction_bid_how_much": "How much you want to bid?",
+  "loan_auction_bid_from": "From",
+  "loan_auction_bid_from_text": "Set from address",
+  "loan_auction_your_vault": "Your Vault",
+  "loan_auction_filter": "Filter",
+  "loan_auction_filter_ok": "OK"
 }

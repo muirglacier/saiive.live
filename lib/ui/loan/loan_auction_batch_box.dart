@@ -1,3 +1,4 @@
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -5,8 +6,9 @@ import 'package:saiive.live/ui/utils/token_icon.dart';
 
 class AuctionBatchBoxWidget extends StatefulWidget {
   final LoanVaultAuctionBatch batch;
+  final List<String> publicKeys;
 
-  AuctionBatchBoxWidget(this.batch);
+  AuctionBatchBoxWidget(this.batch, {this.publicKeys});
 
   @override
   State<StatefulWidget> createState() {
@@ -32,14 +34,15 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
               ),
               Row(children: [])
             ])),
-            Container(width: 10),
-            Container(
-              decoration: BoxDecoration(color: Colors.transparent),
-            )
+            if (widget.batch.highestBid != null && widget.publicKeys.contains(widget.batch.highestBid.owner)) Container(width: 5),
+            if (widget.batch.highestBid != null && widget.publicKeys.contains(widget.batch.highestBid.owner)) Container(child: Chip(
+              label: Text(S.of(context).loan_auction_your_bid),
+              backgroundColor: Colors.green,
+            )),
           ]),
           Container(height: 10),
           Table(border: TableBorder(), children: [
-            TableRow(children: [Text('Collateral Value', style: Theme.of(context).textTheme.caption), Text('Highest bid', style: Theme.of(context).textTheme.caption)]),
+            TableRow(children: [Text(S.of(context).loan_collateral_value, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_auction_highest_bid, style: Theme.of(context).textTheme.caption)]),
           ]),
           Container(height: 10),
           Table(border: TableBorder(), children: [
@@ -51,8 +54,8 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
           Container(height: 10),
           Table(border: TableBorder(), children: [
             TableRow(children: [
-              Text('Loan Value', style: Theme.of(context).textTheme.caption),
-              Text('Min Bid Value', style: Theme.of(context).textTheme.caption),
+              Text(S.of(context).loan_value, style: Theme.of(context).textTheme.caption),
+              Text(S.of(context).loan_auction_min_bid, style: Theme.of(context).textTheme.caption),
             ]),
           ]),
           Container(height: 10),

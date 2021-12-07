@@ -75,23 +75,6 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     }
   }
 
-  String calculateEndDate() {
-    if (null == _stats) {
-      return null;
-    }
-
-    if (_stats.count.blocks > widget.auction.liquidationHeight) {
-      return null;
-    }
-
-    var now = DateTime.now();
-    var time = (max(widget.auction.liquidationHeight - _stats.count.blocks, 0) * DefiChainConstants.BLOCK_TIME_S).floor();
-    now = now.add(Duration(seconds: time));
-    final f = new DateFormat('dd.MM.yyyy HH:mm');
-
-    return f.format(now);
-  }
-
   _loadBalance() async {
     var balanceHelper = BalanceHelper();
     var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
@@ -161,7 +144,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())])
+                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks)) Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))])
                         ])),
                         Container(width: 10)
                       ],
@@ -194,7 +177,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     GlobalKey<NavigatorState> key = GlobalKey();
 
     return Scaffold(
-      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Auction')),
+      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_auction)),
       body: SlidingUpPanel(
           controller: _panelController,
           backdropEnabled: true,

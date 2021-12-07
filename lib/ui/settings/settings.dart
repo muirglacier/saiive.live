@@ -282,7 +282,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertScreen()));
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                           CardItemWidget(S.of(context).expert_address_title, () async {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertAddressScreen()));
+                            sl.get<AuthenticationHelper>().forceAuth(context, () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertAddressScreen()));
+                            });
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                         ],
                       )),

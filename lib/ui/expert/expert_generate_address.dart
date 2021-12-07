@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
+import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/accounts/accounts_address_add_screen.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/ui/widgets/numeric_step_button_widget.dart';
 
 class ExpertAddressScreen extends StatefulWidget {
   @override
@@ -15,7 +18,6 @@ class ExpertAddressScreen extends StatefulWidget {
 }
 
 class _ExpertAddressScreen extends State<ExpertAddressScreen> {
-  TextEditingController _addressController = TextEditingController(text: "0");
   List<WalletAccount> _walletAccounts = List<WalletAccount>.empty();
   IWalletService _walletService;
 
@@ -26,6 +28,8 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
   int _index = 0;
   AddressType _addressType = AddressType.P2SHSegwit;
 
+  WalletAddress _currentAddress;
+
   _init() async {
     _walletService = sl.get<IWalletService>();
     var accounts = await _walletService.getAccounts();
@@ -35,18 +39,18 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
       _selectedWalletAccount = accounts.first;
       _isLoading = false;
     });
+    await _createPreviewAddress();
+  }
+
+  _createPreviewAddress() async {
+    _currentAddress = await _walletService.generateAddress(_selectedWalletAccount, _isChangeAddress, _index, _addressType);
+
+    setState(() {});
   }
 
   @override
   initState() {
     super.initState();
-
-    _addressController.addListener(() {
-      final index = int.parse(_addressController.text.replaceAll(',', '.'));
-      setState(() {
-        _index = index;
-      });
-    });
 
     _init();
   }
@@ -79,8 +83,10 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
       hint: Text(S.of(context).dex_from_token),
       value: _selectedWalletAccount,
       onChanged: (WalletAccount newValue) {
-        setState(() {
+        setState(() async {
           _selectedWalletAccount = newValue;
+
+          await _createPreviewAddress();
         });
       },
       items: _walletAccounts.map((e) {
@@ -100,10 +106,12 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
           leading: Radio<AddressType>(
             value: AddressType.P2SHSegwit,
             groupValue: _addressType,
-            onChanged: (AddressType value) {
+            onChanged: (AddressType value) async {
               setState(() {
                 _addressType = value;
               });
+
+              await _createPreviewAddress();
             },
           ),
         ),
@@ -112,10 +120,12 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
           leading: Radio<AddressType>(
             value: AddressType.Legacy,
             groupValue: _addressType,
-            onChanged: (AddressType value) {
+            onChanged: (AddressType value) async {
               setState(() {
                 _addressType = value;
               });
+
+              await _createPreviewAddress();
             },
           ),
         ),
@@ -124,10 +134,12 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
           leading: Radio<AddressType>(
             value: AddressType.Bech32,
             groupValue: _addressType,
-            onChanged: (AddressType value) {
+            onChanged: (AddressType value) async {
               setState(() {
                 _addressType = value;
               });
+
+              await _createPreviewAddress();
             },
           ),
         ),
@@ -136,17 +148,28 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
   }
 
   _buildIndex(BuildContext context) {
-    return TextField(controller: _addressController, keyboardType: TextInputType.number);
+    return NumericStepButton(
+        onChanged: (v) async {
+          setState(() {
+            _index = v;
+          });
+          await _createPreviewAddress();
+        },
+        value: _index,
+        minValue: 0,
+        maxValue: 1000);
   }
 
   _buildIsReturnAddress(BuildContext context) {
     return Row(children: [
       Checkbox(
         value: _isChangeAddress,
-        onChanged: (v) {
+        onChanged: (v) async {
           setState(() {
             _isChangeAddress = v;
           });
+
+          await _createPreviewAddress();
         },
       ),
       Text("IsChangeAddress")
@@ -168,11 +191,16 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
       Container(child: Text("Address type:")),
       _buildAddressType(context),
       SizedBox(height: 10),
+      Container(child: Text("Preview address:")),
+      Container(child: Text(_currentAddress != null ? _currentAddress.publicKey : "no address generated")),
+      SizedBox(height: 10),
       ElevatedButton(
           child: Text("Generate"),
           onPressed: () async {
-            await _doGenerateAddress();
-          })
+            sl.get<AuthenticationHelper>().forceAuth(context, () async {
+              await _doGenerateAddress();
+            });
+          }),
     ]);
   }
 

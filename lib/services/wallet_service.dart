@@ -32,7 +32,7 @@ abstract class IWalletService {
   Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account);
   Future<List<WalletAddress>> getPublicKeysFromAccount(WalletAccount account);
   Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, bool isChangeAddress, AddressType addressType);
-  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType);
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType, {bool previewOnly = false});
 
   Future<String> getPublicKey(ChainType chainType, AddressType addressType);
   Future<String> createAndSend(ChainType chainType, int amount, String token, String to, String retAddress,
@@ -133,7 +133,7 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType) {
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType, {bool previewOnly = false}) {
     if (account.chain == ChainType.DeFiChain) {
       return _defiWallet.generateAddress(account, isChangeAddress, index, addressType);
     }

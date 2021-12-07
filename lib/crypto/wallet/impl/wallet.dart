@@ -154,7 +154,7 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, adressType.AddressType addressType) async {
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, adressType.AddressType addressType, {bool previewOnly = false}) async {
     assert(_wallets.containsKey(account.uniqueId));
 
     return await _wallets[account.uniqueId].generateAddress(_walletDatabase, account, isChangeAddress, index, addressType);

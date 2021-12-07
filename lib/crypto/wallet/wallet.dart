@@ -37,7 +37,7 @@ abstract class IWallet {
 
   Future<WalletAddress> updateAddress(WalletAddress address);
   Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress);
-  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType);
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType, {bool previewOnly = false});
 
   Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount);
 

@@ -24,7 +24,6 @@ class VaultAuctionBidScreen extends StatefulWidget {
 class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
   var _amountController = TextEditingController(text: '');
   double _amount = 0;
-  double _minBid = 0;
   bool _valid = true;
 
   String _from;
@@ -33,20 +32,8 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
   void initState() {
     super.initState();
 
-    _minBid = getMinBid();
-
     _amountController.addListener(handleChange);
-    _amountController.text = _minBid.toString();
-  }
-
-  getMinBid() {
-    var minBid = double.tryParse(widget.batch.loan.amount) * 1.05;
-
-    if (widget.batch.highestBid != null) {
-      minBid = double.tryParse(widget.batch.highestBid.amount.amount) * 1.01;
-    }
-
-    return minBid;
+    _amountController.text = widget.batch.minBid.toString();
   }
 
   handleChange() async {
@@ -105,7 +92,7 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   Container(height: 5),
                   Row(children: [
                     Text('Bid has to be min:'),
-                    Expanded(child: Text(FundFormatter.format(_minBid) + '@' + widget.batch.loan.symbol, textAlign: TextAlign.right)),
+                    Expanded(child: Text(FundFormatter.format(widget.batch.minBid) + '@' + widget.batch.loan.symbol, textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [

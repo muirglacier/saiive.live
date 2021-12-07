@@ -1,5 +1,6 @@
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +34,11 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
   }
 
   handleChange() async {
+    double currentAmount = double.tryParse(widget.current.amount);
     double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     double loanAmount = double.tryParse(widget.current.amount);
+    double availableBalance = currentAmount + widget.balance.balance / DefiChainConstants.COIN;
+
     bool valid = true;
 
     if (null == amount) {
@@ -47,7 +51,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
         valid = false;
       }
     } else {
-      if (amount + widget.changes > widget.balance.balanceDisplay) {
+      if (amount + widget.changes > availableBalance) {
         valid = false;
       }
     }

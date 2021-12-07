@@ -152,8 +152,14 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
   handleRemoveCollateral(LoanVaultAmount loanAmount) {
     var existingCollateral = widget._collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
+    var existingOriginalCollateral = widget.vault.collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
 
-    this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
+    if (existingOriginalCollateral != null) {
+      this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
+    }
+    else {
+      this.changes.removeWhere((key, value) => key == loanAmount.symbolKey);
+    }
 
     if (existingCollateral != null) {
       setState(() {

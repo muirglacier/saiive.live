@@ -1,15 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
-import 'package:intl/intl.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/bus/stats_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
-import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
@@ -32,9 +29,10 @@ import 'package:wakelock/wakelock.dart';
 // ignore: must_be_immutable
 class VaultAuctionScreen extends StatefulWidget {
   final LoanVaultAuction auction;
+  final List<String> publicKeys;
   final key = GlobalKey();
 
-  VaultAuctionScreen(this.auction);
+  VaultAuctionScreen(this.auction, {this.publicKeys});
 
   @override
   State<StatefulWidget> createState() {
@@ -166,7 +164,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
           _panelController.show();
           _panelController.open();
         },
-        child: Padding(padding: EdgeInsets.all(10), child: Card(child: AuctionBatchBoxWidget(batch))));
+        child: Padding(padding: EdgeInsets.all(10), child: Card(child: AuctionBatchBoxWidget(batch, publicKeys: widget.publicKeys))));
   }
 
   @override

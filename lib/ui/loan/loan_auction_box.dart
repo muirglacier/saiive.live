@@ -60,7 +60,7 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
 
     return InkWell(
         onTap: () async {
-          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAuctionScreen(widget.auction)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAuctionScreen(widget.auction, publicKeys: widget.publicKeys)));
         },
         child: Card(
             child: Padding(

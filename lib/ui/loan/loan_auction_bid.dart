@@ -91,8 +91,16 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   ]),
                   Container(height: 5),
                   Row(children: [
+                    Expanded(child: Text((widget.balance != null ? FundFormatter.format(widget.balance.balanceDisplay * (widget.batch.loan.activePrice != null ? widget.batch.loan.activePrice.active.amount : 1), fractions: 2) : '0') + ' \$', textAlign: TextAlign.right)),
+                  ]),
+                  Container(height: 5),
+                  Row(children: [
                     Text(S.of(context).loan_auction_min_bid_has_to_be),
                     Expanded(child: Text(FundFormatter.format(widget.batch.minBid) + '@' + widget.batch.loan.symbol, textAlign: TextAlign.right)),
+                  ]),
+                  Container(height: 5),
+                  Row(children: [
+                    Expanded(child: Text(FundFormatter.format(widget.batch.minBidUSD, fractions: 2) + ' \$', textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [
@@ -104,8 +112,19 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   ]),
                   Container(height: 5),
                   Row(children: [
+                    Expanded(
+                        child: Text(
+                            widget.batch.highestBid != null ? (FundFormatter.format(widget.batch.highestBid.amount.valueUSD, fractions: 2) + ' \$') : 'N/A',
+                            textAlign: TextAlign.right)),
+                  ]),
+                  Container(height: 5),
+                  Row(children: [
                     Text(S.of(context).loan_auction_min_bid),
                     Expanded(child: Text(FundFormatter.format(double.tryParse(widget.batch.loan.amount)) + '@' + widget.batch.loan.symbol, textAlign: TextAlign.right)),
+                  ]),
+                  Container(height: 5),
+                  Row(children: [
+                    Expanded(child: Text(FundFormatter.format(widget.batch.loan.valueUSD, fractions: 2) + ' \$', textAlign: TextAlign.right)),
                   ]),
                   SizedBox(
                     height: 20,

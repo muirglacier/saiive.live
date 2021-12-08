@@ -104,7 +104,6 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
       ));
 
       Navigator.of(context).pop();
-      Navigator.of(context).pop();
     } catch (e) {
       streamController.close();
       await Navigator.of(context).push(MaterialPageRoute(

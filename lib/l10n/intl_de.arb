@@ -293,6 +293,7 @@
   "loan_total_loan_amount": "Gesamtes Darlehen",
   "loan_collateral_amount": "Gesamtes Kollateral",
   "loan_collateral_ratio": "Besicherungsquote",
+  "loan_next_collateral_ratio": "Nächste Besicherungsquote",
   "loan_no_active_loans": "Keine Aktiven Darlehen",
   "loan_close_vault_success": "Vault wurde erfolgreich beendet",
   "loan_update_vault_success": "Vault wurde erfolgreich geändert",

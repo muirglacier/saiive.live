@@ -206,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_min_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Min. collateral ratio"),
     "loan_new_min_collateral_ratio" : MessageLookupByLibrary.simpleMessage("New Min. collateral ratio"),
     "loan_new_vault_interest" : MessageLookupByLibrary.simpleMessage("New. Vault Interest"),
+    "loan_next_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Next Collateral Ratio"),
     "loan_no_active_loans" : MessageLookupByLibrary.simpleMessage("No active Loans"),
     "loan_no_auctions" : MessageLookupByLibrary.simpleMessage("No Auctions currently"),
     "loan_no_collateral_amounts" : MessageLookupByLibrary.simpleMessage("No Collateral"),

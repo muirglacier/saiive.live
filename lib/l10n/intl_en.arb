@@ -298,6 +298,7 @@
   "loan_total_loan_amount": "Total Loan Amount",
   "loan_collateral_amount": "Collateral Amount",
   "loan_collateral_ratio": "Collateral Ratio",
+  "loan_next_collateral_ratio": "Next Collateral Ratio",
   "loan_no_active_loans": "No active Loans",
   "loan_close_vault_success": "Vault was successfully closed",
   "loan_update_vault_success": "Vault was successfully update",

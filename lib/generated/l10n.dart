@@ -2645,6 +2645,16 @@ class S {
     );
   }
 
+  /// `Next Collateral Ratio`
+  String get loan_next_collateral_ratio {
+    return Intl.message(
+      'Next Collateral Ratio',
+      name: 'loan_next_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No active Loans`
   String get loan_no_active_loans {
     return Intl.message(

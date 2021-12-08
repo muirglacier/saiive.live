@@ -164,6 +164,32 @@ class LoanVault {
     return LoanVaultHealthStatus.unknown;
   }
 
+  double get nextCollateralRatioDouble {
+    var collaterals = collateralAmounts.map((e) => e.valueUSDNext);
+    var loans = loanAmounts.map((e) => e.valueUSDNext);
+
+    if (collaterals.length == 0 || loans.length == 0) {
+      return -1;
+    }
+
+    return collaterals.fold(0, (previousValue, element) => 0 + element) / loans.fold(0, (previousValue, element) => 0 + element) * 100;
+  }
+
+  double get calcCollateralRatioDouble {
+    var collaterals = collateralAmounts.map((e) => e.valueUSD);
+    var loans = loanAmounts.map((e) => e.valueUSD);
+
+    if (collaterals.length == 0 || loans.length == 0) {
+      return -1;
+    }
+
+    return collaterals.fold(0, (previousValue, element) => 0 + element) / loans.fold(0, (previousValue, element) => 0 + element) * 100;
+  }
+
+  double get collateralRatioDouble {
+    return double.tryParse(collateralRatio);
+  }
+
   factory LoanVault.fromJson(Map<String, dynamic> json) {
     return LoanVault(
         vaultId: json['vaultId'],

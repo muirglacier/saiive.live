@@ -56,7 +56,7 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
                     ]),
                     TableRow(children: [
                       Text(FundFormatter.format(double.tryParse(widget.vault.collateralValue), fractions: 2) + ' \$'),
-                      Text(widget.vault.collateralRatio + '%' ?? '')
+                      Text((widget.vault.collateralRatioDouble.toStringAsFixed(2) + '%' ?? '-') + ' / ' +  (widget.vault.nextCollateralRatioDouble.toStringAsFixed(2) + '%' ?? '-'))
                     ]),
                   ]),
                 ]) : Column(children: [vaultHead()]))));

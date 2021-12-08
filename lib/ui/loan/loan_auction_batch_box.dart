@@ -42,13 +42,25 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
           ]),
           Container(height: 10),
           Table(border: TableBorder(), children: [
-            TableRow(children: [Text(S.of(context).loan_collateral_value, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_auction_highest_bid, style: Theme.of(context).textTheme.caption)]),
+            TableRow(children: [
+              Text(S.of(context).loan_collateral_value, style: Theme.of(context).textTheme.caption),
+              Text(S.of(context).loan_auction_highest_bid, style: Theme.of(context).textTheme.caption)
+            ]),
           ]),
           Container(height: 10),
           Table(border: TableBorder(), children: [
             TableRow(children: [
-              Text(FundFormatter.format(widget.batch.collateralValueUSD, fractions: 2) + ' \$'),
-              Text(widget.batch.highestBid != null ? FundFormatter.format(widget.batch.highestBid.amount.valueUSD, fractions: 2) + ' \$' : 'N/A')
+              Text(
+                  widget.batch.collaterals.fold('', (previousValue, element) {
+                    return (previousValue == '' ? '' : ' / ') + FundFormatter.format(element.amountDouble) + ' ' + element.symbol;
+                  }) + ' / ' +
+                  FundFormatter.format(widget.batch.collateralValueUSD, fractions: 2) + ' \$'
+              ),
+              Text(widget.batch.highestBid != null ?
+                FundFormatter.format(widget.batch.highestBid.amount.amountDouble) + ' ' + widget.batch.loan.symbol +  ' / ' +
+                FundFormatter.format(widget.batch.highestBid.amount.valueUSD, fractions: 2) + ' \$'
+                  :
+                'N/A')
             ])
           ]),
           Container(height: 10),
@@ -61,8 +73,14 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
           Container(height: 10),
           Table(border: TableBorder(), children: [
             TableRow(children: [
-              Text(FundFormatter.format(widget.batch.loan.valueUSD, fractions: 2) + ' \$'),
-              Text(FundFormatter.format(widget.batch.loan.valueUSD * 1.05, fractions: 2) + ' \$'),
+              Text(
+                  FundFormatter.format(widget.batch.loan.amountDouble) + ' ' + widget.batch.loan.symbol +  ' / ' +
+                  FundFormatter.format(widget.batch.loan.valueUSD, fractions: 2) + ' \$'
+              ),
+              Text(
+                  FundFormatter.format(widget.batch.loan.amountDouble * 1.05) + ' ' + widget.batch.loan.symbol +  ' / ' +
+                  FundFormatter.format(widget.batch.loan.valueUSD * 1.05, fractions: 2) + ' \$'
+              ),
             ]),
           ])
         ]));

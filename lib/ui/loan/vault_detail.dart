@@ -313,7 +313,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
 
     if (widget.vault.state != LoanVaultStatus.in_liquidation) {
       itemsVault = [
-        [S.of(context).loan_collateral_ratio, myVault.collateralRatio + '%'],
+        [S.of(context).loan_collateral_ratio, myVault.collateralRatioDouble.toStringAsFixed(2) + '%'],
+        [S.of(context).loan_next_collateral_ratio, myVault.nextCollateralRatioDouble.toStringAsFixed(2) + '%'],
         [S.of(context).loan_active_loans, myVault.loanAmounts.length.toString()],
         [S.of(context).loan_total_loan_amount, myVault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
         [S.of(context).loan_collateral_value, FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'],
@@ -479,7 +480,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                         Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
                         Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption)
                       ]),
-                      TableRow(children: [Text(FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'), Text(myVault.collateralRatio + ' %')]),
+                      TableRow(children: [
+                        Text(FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'),
+                        Text(myVault.collateralRatioDouble.toStringAsFixed(2) + ' %' + ' / ' + myVault.nextCollateralRatioDouble.toStringAsFixed(2) + ' %')
+                      ]),
                     ]),
                     if (widget.vault.state != LoanVaultStatus.in_liquidation) Container(height: 10),
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

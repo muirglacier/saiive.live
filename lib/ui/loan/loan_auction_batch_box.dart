@@ -50,17 +50,17 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
           Container(height: 10),
           Table(border: TableBorder(), children: [
             TableRow(children: [
-              Text(
-                  widget.batch.collaterals.fold('', (previousValue, element) {
-                    return (previousValue == '' ? '' : ' / ') + FundFormatter.format(element.amountDouble) + ' ' + element.symbol;
-                  }) + ' / ' +
-                  FundFormatter.format(widget.batch.collateralValueUSD, fractions: 2) + ' \$'
-              ),
-              Text(widget.batch.highestBid != null ?
-                FundFormatter.format(widget.batch.highestBid.amount.amountDouble) + ' ' + widget.batch.loan.symbol +  ' / ' +
-                FundFormatter.format(widget.batch.highestBid.amount.valueUSD, fractions: 2) + ' \$'
-                  :
-                'N/A')
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(widget.batch.collaterals.map((element) {
+                    return FundFormatter.format(element.amountDouble) + ' ' + element.symbol;
+                  }).join(' / ')),
+                  Text(FundFormatter.format(widget.batch.collateralValueUSD, fractions: 2) + ' \$')
+              ]),
+              widget.batch.highestBid != null ?
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(FundFormatter.format(widget.batch.highestBid.amount.amountDouble) + ' ' + widget.batch.loan.symbol),
+                Text(FundFormatter.format(widget.batch.highestBid.amount.valueUSD, fractions: 2) + ' \$')
+                ]) : Text('N/A')
             ])
           ]),
           Container(height: 10),
@@ -73,14 +73,14 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
           Container(height: 10),
           Table(border: TableBorder(), children: [
             TableRow(children: [
-              Text(
-                  FundFormatter.format(widget.batch.loan.amountDouble) + ' ' + widget.batch.loan.symbol +  ' / ' +
-                  FundFormatter.format(widget.batch.loan.valueUSD, fractions: 2) + ' \$'
-              ),
-              Text(
-                  FundFormatter.format(widget.batch.loan.amountDouble * 1.05) + ' ' + widget.batch.loan.symbol +  ' / ' +
-                  FundFormatter.format(widget.batch.loan.valueUSD * 1.05, fractions: 2) + ' \$'
-              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(FundFormatter.format(widget.batch.loan.amountDouble) + ' ' + widget.batch.loan.symbol),
+                Text(FundFormatter.format(widget.batch.loan.valueUSD, fractions: 2) + ' \$'),
+              ]),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(FundFormatter.format(widget.batch.loan.amountDouble * 1.05) + ' ' + widget.batch.loan.symbol),
+                Text(FundFormatter.format(widget.batch.loan.valueUSD * 1.05, fractions: 2) + ' \$'),
+              ]),
             ]),
           ])
         ]));

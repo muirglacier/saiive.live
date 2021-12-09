@@ -44,9 +44,11 @@ class _ExpertAddressScreen extends State<ExpertAddressScreen> {
   }
 
   _createPreviewAddress() async {
-    _currentAddress = await _walletService.generateAddress(_selectedWalletAccount, _isChangeAddress, _index, _addressType);
+    var currentAddress = await _walletService.generateAddress(_selectedWalletAccount, _isChangeAddress, _index, _addressType);
 
-    setState(() {});
+    setState(() {
+      _currentAddress = currentAddress;
+    });
   }
 
   @override

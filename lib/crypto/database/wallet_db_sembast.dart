@@ -646,14 +646,4 @@ class SembastWalletDatabase extends IWalletDatabase {
     balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol, spentable: spentable));
     return balances;
   }
-
-  @override
-  int getAddressCreationCount() {
-    return 20;
-  }
-
-  @override
-  int getReturnAddressCreationCount() {
-    return 20;
-  }
 }

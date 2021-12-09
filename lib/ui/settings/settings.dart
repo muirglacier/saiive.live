@@ -41,6 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _theme;
 
   ChainNet _curNet;
+  bool _useSingleAddressMode = false;
 
   @override
   void initState() {
@@ -55,12 +56,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     var version = await new VersionHelper().getVersion();
     var theme = await sl.get<ISharedPrefsUtil>().getTheme();
     var chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
+    var singleAddressMode = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
       _version = version;
       _theme = theme.getIndex();
       _curNet = chainNet;
+      _useSingleAddressMode = singleAddressMode;
     });
   }
 
@@ -108,6 +111,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(S.of(context).settings_network_changed),
     ));
+  }
+
+  Future doChangeSingleAddressMode(bool mode) async {
+    Widget okButton = TextButton(
+        child: Text(S.of(context).ok),
+        onPressed: () async {
+          await sl.get<ISharedPrefsUtil>().setUseSingleAddressWallet(mode);
+          _useSingleAddressMode = mode;
+          setState(() {});
+          Navigator.of(context, rootNavigator: true).pop();
+        });
+    Widget cancelButton = TextButton(
+      child: Text(S.of(context).cancel),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(S.of(context).wallet_use_single_address_mode),
+      content: Text(S.of(context).wallet_single_address_mode_switch),
+      actions: [okButton, cancelButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Future doChangeChainNet(ChainNet net) async {
@@ -220,6 +255,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   return new DropdownMenuItem<ChainNet>(
                                     value: e,
                                     child: Text(ChainHelper.chainNetworkString(e)),
+                                  );
+                                }).toList(),
+                              ))),
+                          CardItemWidget(S.of(context).wallet_use_single_address_mode, null, backgroundColor: Colors.transparent),
+                          Padding(
+                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
+                              child: Container(
+                                  child: DropdownButton<bool>(
+                                isExpanded: true,
+                                disabledHint: Text(S.of(context).yes),
+                                value: _useSingleAddressMode,
+                                onChanged: (e) async {
+                                  await doChangeSingleAddressMode(e);
+                                },
+                                items: [true, false].map((e) {
+                                  return new DropdownMenuItem<bool>(
+                                    value: e,
+                                    child: Text(e ? S.of(context).yes : S.of(context).no),
                                   );
                                 }).toList(),
                               ))),

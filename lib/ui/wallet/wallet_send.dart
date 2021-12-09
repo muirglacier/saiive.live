@@ -44,7 +44,7 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _amountController = TextEditingController(text: '1');
   EnvironmentType _currentEnvironment;
 
-  var _sendAmount = 0;
+  var _sendAmount = 1 * DefiChainConstants.COIN;
 
   String _toAddress;
 

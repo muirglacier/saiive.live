@@ -103,4 +103,20 @@ class SharedPrefsMock extends ISharedPrefsUtil {
 
   @override
   Future setUseAuthentiaction(AuthMethod method) async {}
+
+  @override
+  Future<int> getMaxAddressCount() {
+    return Future.value(40);
+  }
+
+  @override
+  Future<bool> getUseSingleAddressWallet() {
+    return Future.value(false);
+  }
+
+  @override
+  Future setMaxAddressCount(int value) async {}
+
+  @override
+  Future setUseSingleAddressWallet(bool value) async {}
 }

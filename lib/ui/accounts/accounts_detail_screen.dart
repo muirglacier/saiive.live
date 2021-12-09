@@ -27,10 +27,13 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
   bool _isLoading = true;
 
   IWalletService _walletService;
+  bool _isSingleAddressWallet = false;
 
   Future _init() async {
     _isLoading = true;
     _walletService = sl.get<IWalletService>();
+
+    _isSingleAddressWallet = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
 
     var accounts = await _walletService.getPublicKeysFromAccount(this.widget.walletAccount);
 
@@ -110,7 +113,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
             },
             child: Icon(Icons.edit, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
           )),
-      if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount)
+      if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount && !_isSingleAddressWallet)
         Padding(
             padding: EdgeInsets.only(right: 15.0),
             child: GestureDetector(

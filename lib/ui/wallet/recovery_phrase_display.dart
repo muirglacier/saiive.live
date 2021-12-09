@@ -62,9 +62,10 @@ class _RecoveryPhraseDisplayScreen extends State<RecoveryPhraseDisplayScreen> {
                           child: MnemonicSeedWidget(
                 words: split,
                 readOnly: true,
+                showUseSingleAddressFeature: true,
                 showNextButton: widget.showNextButton,
-                onNext: (seed, pathType) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split, pathType)));
+                onNext: (seed, pathType, singleWalletMode) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => RecoveryPhraseTestScreen(split, pathType, singleWalletMode)));
                 },
               )))),
             ]))));

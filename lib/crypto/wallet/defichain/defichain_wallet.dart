@@ -341,6 +341,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
     final changeAddress = returnAddress ?? await this.getPublicKey(true, AddressType.P2SHSegwit);
 
+    if (amount == 0) {
+      throw new ArgumentError("a send of 0 does not make sense!");
+    }
+
     if (DeFiConstants.isDfiToken(token)) {
       var needsToRefresh = false;
       if (sendMax) {

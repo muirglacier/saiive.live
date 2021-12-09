@@ -257,6 +257,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_you_are_borrowing" : MessageLookupByLibrary.simpleMessage("Du leihst dir aus"),
     "loan_your_loans" : MessageLookupByLibrary.simpleMessage("Deine Darlehen"),
     "next" : MessageLookupByLibrary.simpleMessage("Weiter"),
+    "no" : MessageLookupByLibrary.simpleMessage("Nein"),
     "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
     "pin_confirm" : MessageLookupByLibrary.simpleMessage("PIN bestätigen"),
     "pin_enter" : MessageLookupByLibrary.simpleMessage("PIN Eingabe"),
@@ -396,11 +397,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_send_address" : MessageLookupByLibrary.simpleMessage("Adresse"),
     "wallet_send_address_scan" : MessageLookupByLibrary.simpleMessage("Scan"),
     "wallet_send_amount" : MessageLookupByLibrary.simpleMessage("Menge"),
+    "wallet_single_address_mode_switch" : MessageLookupByLibrary.simpleMessage("Änderungen dieser Einstellung ändert das Verhalten der Adressgeneriung!"),
     "wallet_token_available_balance" : MessageLookupByLibrary.simpleMessage("Verfügbar"),
     "wallet_token_show_in_explorer" : MessageLookupByLibrary.simpleMessage("Im Explorer anzeigen"),
     "wallet_token_transactions" : MessageLookupByLibrary.simpleMessage("Transaktionen"),
     "wallet_uptime_stats" : MessageLookupByLibrary.simpleMessage("Status anzeigen"),
     "wallet_use_custom_return_address" : MessageLookupByLibrary.simpleMessage("Verwende Rücksende Adresse"),
+    "wallet_use_single_address_mode" : MessageLookupByLibrary.simpleMessage("Nur eine Adresse verwenden"),
+    "wallet_use_single_address_mode_info" : MessageLookupByLibrary.simpleMessage("Wenn ja wird nur eine Adresse zum Senden/Empfangen generiert!"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Willkommen"),
     "welcome_accept_terms_and_privacy" : MessageLookupByLibrary.simpleMessage("Ich habe die Nutzungsbedingungen und Datenschutzerklärung gelesen und akzeptiert"),
     "welcome_legal" : MessageLookupByLibrary.simpleMessage("Legal"),
@@ -413,6 +417,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome_wallet_info" : MessageLookupByLibrary.simpleMessage("Erstelle dein DeFiChain Wallet und behalte die Kontrolle deiner Privaten Schlüssel!"),
     "welcome_wallet_privacy" : MessageLookupByLibrary.simpleMessage("Deine Privaten Schlüssel werden lokal verschlüsselt abgelegt und verwaltet, geschützt durch deine Biometrie/PIN."),
     "welcome_wallet_restore" : MessageLookupByLibrary.simpleMessage("Wallet importieren"),
-    "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Sicher")
+    "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Sicher"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Ja")
   };
 }

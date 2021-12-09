@@ -27,6 +27,9 @@
   "copy": "Kopieren",
 
   "show_in_explorer": "Im Explorer anzeigen",
+
+  "yes": "Ja",
+  "no": "Nein",
   
   "test_info": "Danke fürs Testen!",
   "test_info_test": "Danke für deine Hilfe das saiive.live für alle verfügbar zu machen. Dein Feedback hilft uns sehr!",
@@ -100,6 +103,10 @@
   "wallet_send_address_scan": "Scan",
   "wallet_send_amount": "Menge",
   "wallet_locked": "Wallet synchronisiert gerade!",
+
+  "wallet_use_single_address_mode": "Nur eine Adresse verwenden",
+  "wallet_use_single_address_mode_info": "Wenn ja wird nur eine Adresse zum Senden/Empfangen generiert!",
+  "wallet_single_address_mode_switch": "Änderungen dieser Einstellung ändert das Verhalten der Adressgeneriung!",
 
   "wallet_operation_share": "Teilen...",
   "wallet_operation_failed": "Transaktionsfehler :(",

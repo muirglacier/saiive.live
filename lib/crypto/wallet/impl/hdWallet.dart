@@ -131,17 +131,25 @@ class HdWallet extends IHdWallet {
   }
 
   Future<WalletAddress> getNextFreePublicKey(IWalletDatabase database, int startIndex, ISharedPrefsUtil sharedPrefs, bool isChangeAddress, AddressType addressType) async {
-    var address = await database.getWalletAddressById(_account, _account.account, isChangeAddress, startIndex, addressType);
-    var maxAddressCount = await sharedPrefs.getMaxAddressCount();
-
-    if (startIndex > maxAddressCount) {
-      startIndex = 0;
-    }
-
     var useSingleAddressMode = await sharedPrefs.getUseSingleAddressWallet();
     if (useSingleAddressMode) {
       startIndex = 0;
       isChangeAddress = false;
+    }
+
+    var address = await database.getWalletAddressById(_account, _account.account, isChangeAddress, startIndex, addressType);
+
+    if (useSingleAddressMode) {
+      if (address == null) {
+        address = await _checkAndCreateIfExists(database, _seed, startIndex, isChangeAddress, addressType, _account.derivationPathType);
+      }
+      return address;
+    }
+
+    var maxAddressCount = await sharedPrefs.getMaxAddressCount();
+
+    if (startIndex > maxAddressCount) {
+      startIndex = 0;
     }
 
     if (address == null) {

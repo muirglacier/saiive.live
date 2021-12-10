@@ -27,6 +27,7 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
   List<WalletAddress> _walletAddresses = List<WalletAddress>.empty(growable: true);
 
   WalletAddress _selectedWalletAddress;
+  bool _isSingleAddressWallet = false;
 
   bool _isLoading = true;
   _reset() {
@@ -42,6 +43,7 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
     _reset();
     final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     final database = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, currentNet);
+    _isSingleAddressWallet = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
 
     final accounts = await database.getAccounts();
 
@@ -148,6 +150,9 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isSingleAddressWallet) {
+      return Container();
+    }
     return _buildWidget(context);
   }
 }

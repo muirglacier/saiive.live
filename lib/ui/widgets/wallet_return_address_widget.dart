@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 class WalletReturnAddressWidget extends StatefulWidget {
   final ValueChanged<String> onChanged;
@@ -21,15 +23,28 @@ class _WalletReturnAddressWidgetState extends State<WalletReturnAddressWidget> {
 
   WalletAddress _toAddress;
   String _checkBoxText;
+  bool _isSingleAddressWallet = false;
+
+  init() async {
+    _isSingleAddressWallet = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
+
+    setState(() {});
+  }
 
   @override
   void initState() {
     _isExpanded = widget.expanded;
     super.initState();
+
+    init();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isSingleAddressWallet) {
+      return Container();
+    }
+
     if (widget.checkBoxText == null || widget.checkBoxText.isEmpty) {
       _checkBoxText = S.of(context).wallet_use_custom_return_address;
     } else {

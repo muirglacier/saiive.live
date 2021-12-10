@@ -126,51 +126,49 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         child: TextField(
                             controller: _addressController,
                             keyboardType: TextInputType.text,
-                            decoration: (Platform.isMacOS || Platform.isWindows)
-                                ? InputDecoration(hintText: S.of(context).wallet_send_address)
-                                : InputDecoration(
-                                    hintText: S.of(context).wallet_send_address,
-                                    suffixIcon: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          if (Platform.isAndroid || Platform.isIOS)
-                                            IconButton(
-                                              onPressed: () async {
-                                                var status = await Permission.camera.status;
-                                                if (!status.isGranted) {
-                                                  final permission = await Permission.camera.request();
+                            decoration: InputDecoration(
+                                hintText: S.of(context).wallet_send_address,
+                                suffixIcon: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (Platform.isAndroid || Platform.isIOS)
+                                        IconButton(
+                                          onPressed: () async {
+                                            var status = await Permission.camera.status;
+                                            if (!status.isGranted) {
+                                              final permission = await Permission.camera.request();
 
-                                                  if (!permission.isGranted) {
-                                                    return;
-                                                  }
-                                                }
-                                                final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
-                                                _addressController.text = address;
-                                              },
-                                              icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
-                                            ),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                            onPressed: () async {
-                                              AddressBookEntry usedAddress;
-                                              await Navigator.of(context).push(MaterialPageRoute(
-                                                  builder: (BuildContext context) => AddressBookScreen(
-                                                      selectOnlyMode: true,
-                                                      chainFilter: widget.chainType,
-                                                      onAddressSelected: (a) {
-                                                        usedAddress = a;
-                                                      })));
-
-                                              if (usedAddress != null) {
-                                                setState(() {
-                                                  _addressController.text = usedAddress.publicKey;
-                                                });
+                                              if (!permission.isGranted) {
+                                                return;
                                               }
-                                            },
-                                            icon: Icon(Icons.import_contacts, color: StateContainer.of(context).curTheme.primary),
-                                          ),
-                                        ])))))
+                                            }
+                                            final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
+                                            _addressController.text = address;
+                                          },
+                                          icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
+                                        ),
+                                      SizedBox(width: 10),
+                                      IconButton(
+                                        onPressed: () async {
+                                          AddressBookEntry usedAddress;
+                                          await Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (BuildContext context) => AddressBookScreen(
+                                                  selectOnlyMode: true,
+                                                  chainFilter: widget.chainType,
+                                                  onAddressSelected: (a) {
+                                                    usedAddress = a;
+                                                  })));
+
+                                          if (usedAddress != null) {
+                                            setState(() {
+                                              _addressController.text = usedAddress.publicKey;
+                                            });
+                                          }
+                                        },
+                                        icon: Icon(Icons.import_contacts, color: StateContainer.of(context).curTheme.primary),
+                                      ),
+                                    ])))))
               ]),
               Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 Expanded(

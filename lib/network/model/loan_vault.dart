@@ -172,7 +172,7 @@ class LoanVault {
       return -1;
     }
 
-    return collaterals.fold(0, (previousValue, element) => 0 + element) / loans.fold(0, (previousValue, element) => 0 + element) * 100;
+    return collaterals.fold(0, (previousValue, element) => previousValue + element) / loans.fold(0, (previousValue, element) => previousValue + element) * 100;
   }
 
   double get calcCollateralRatioDouble {
@@ -183,7 +183,7 @@ class LoanVault {
       return -1;
     }
 
-    return collaterals.fold(0, (previousValue, element) => 0 + element) / loans.fold(0, (previousValue, element) => 0 + element) * 100;
+    return collaterals.fold(0, (previousValue, element) => previousValue + element) / loans.fold(0, (previousValue, element) => previousValue + element) * 100;
   }
 
   double get collateralRatioDouble {

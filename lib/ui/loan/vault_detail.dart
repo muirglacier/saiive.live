@@ -65,13 +65,11 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
       _loading = true;
     });
 
-    var vaults = await sl.get<IVaultsService>().getMyVault(DeFiConstants.DefiAccountSymbol, widget.vault.ownerAddress);
+    var vault = await sl.get<IVaultsService>().getVault(DeFiConstants.DefiAccountSymbol, widget.vault.vaultId);
 
-    var myNewVault = vaults.firstWhere((element) => element.vaultId == myVault.vaultId);
-
-    if (myNewVault != null) {
+    if (vault != null) {
       setState(() {
-        myVault = myNewVault;
+        myVault = vault;
       });
     }
 

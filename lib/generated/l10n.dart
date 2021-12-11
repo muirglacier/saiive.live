@@ -245,6 +245,16 @@ class S {
     );
   }
 
+  /// `Price`
+  String get price {
+    return Intl.message(
+      'Price',
+      name: 'price',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Open in explorer`
   String get show_in_explorer {
     return Intl.message(

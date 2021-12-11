@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:group_list_view/group_list_view.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/bus/prices_loaded_event.dart';
 import 'package:saiive.live/channel.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
@@ -13,8 +14,10 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/events.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/network/model/price.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/prices_background.dart';
 import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -40,6 +43,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   StreamSubscription<WalletSyncDoneEvent> _walletSyncDoneSubscription;
   StreamSubscription<BlockTipUpdatedEvent> _blockTipUpdatedEvent;
   StreamSubscription<WalletSyncStartEvent> _walletSyncStartEvent;
+
+  StreamSubscription<PricesLoadedEvent> _pricesLoadedEvent;
+  List<Price> _prices;
 
   AnimationController _controller;
 
@@ -96,6 +102,16 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
         });
 
         _initSyncText();
+      });
+    }
+
+    _prices = sl<PricesBackgroundService>().prices;
+
+    if (_pricesLoadedEvent == null) {
+      _pricesLoadedEvent = EventTaxiImpl.singleton().registerTo<PricesLoadedEvent>().listen((event) async {
+        setState(() {
+          _prices = event.prices;
+        });
       });
     }
 
@@ -240,6 +256,13 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   Widget _buildAccountEntry(AccountBalance balance) {
+    var price = _prices != null ? _prices.firstWhere((element) => element.token == balance.token, orElse: () => null) : null;
+    var priceUsd = price != null ? price.aggregated.amount : null;
+
+    if (balance.token.toLowerCase() == 'dusd') {
+      priceUsd = 1;
+    }
+
     if (balance is MixedAccountBalance) {
       return Card(
           child: ListTile(
@@ -285,6 +308,19 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
               maxLines: 1,
             )),
           ]),
+          if (priceUsd != null) Row(children: [
+            Text(
+              S.of(context).price,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            Expanded(
+                child: AutoSizeText(
+                  FundFormatter.format(balance.balanceDisplay * priceUsd, fractions: 2) + ' \$',
+                  style: Theme.of(context).textTheme.bodyText1,
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                )),
+          ]),
         ]),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain, balance.tokenDisplay, balance)));
@@ -309,13 +345,25 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 ),
                 backgroundColor: Theme.of(context).primaryColor)
         ]),
-        Expanded(
-            child: AutoSizeText(
-          FundFormatter.format(balance.balanceDisplay),
-          style: Theme.of(context).textTheme.headline3,
-          textAlign: TextAlign.right,
-          maxLines: 1,
-        )),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Expanded(child: AutoSizeText(
+              FundFormatter.format(balance.balanceDisplay),
+              style: Theme.of(context).textTheme.headline3,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+            )),
+          ]),
+          if (priceUsd != null) Row(children: [
+            Expanded(
+                child: AutoSizeText(
+                  FundFormatter.format(balance.balanceDisplay * priceUsd, fractions: 2) + ' \$',
+                  style: Theme.of(context).textTheme.bodyText1,
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                )),
+          ]),
+        ])),
       ]),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain, balance.tokenDisplay, balance)));
@@ -359,14 +407,38 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                   var noAccSelected = S.of(context).wallet_account_nothing_selected;
                   text += " ($noAccSelected)";
                 }
+                var balances = items.values.toList()[section].toList();
+
+                var totalUSD = balances.fold(0, (previousValue, balance) {
+                  if (null == balance) {
+                    return previousValue;
+                  }
+
+                  var price = _prices != null ? _prices.firstWhere((element) => element.token == balance.token, orElse: () => null) : null;
+                  var priceUsd = price != null ? price.aggregated.amount : null;
+
+                  if (balance.token.toLowerCase() == 'dusd') {
+                    priceUsd = 1;
+                  }
+
+                  if (null == priceUsd) {
+                    return previousValue;
+                  }
+
+                  return previousValue + (priceUsd * balance.balanceDisplay);
+                });
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                  child: Text(
+                  child: Row(children: [Text(
                     text,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                );
+                  ), Expanded(child: Text(
+                    FundFormatter.format(totalUSD, fractions: 2) + ' \$',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.right,
+                  ))],
+                ));
               },
               dragStartBehavior: DragStartBehavior.down,
               separatorBuilder: (context, index) => SizedBox(height: 5),

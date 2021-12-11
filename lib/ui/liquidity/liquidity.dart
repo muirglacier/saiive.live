@@ -3,9 +3,13 @@ import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/bus/stats_loaded_event.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/poolpair.dart';
 import 'package:saiive.live/helper/poolshare.dart';
+import 'package:saiive.live/network/model/stats.dart';
+import 'package:saiive.live/network/stats.dart';
 import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
 import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
@@ -36,6 +40,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
   final formatCurrency = new NumberFormat.simpleCurrency();
   bool showEstimatedRewards = false;
   bool _isLoading = false;
+  Stats _stats;
 
   StreamSubscription<WalletSyncLiquidityData> _refreshPoolDataSubscription;
 
@@ -55,13 +60,14 @@ class _LiquidityScreen extends State<LiquidityScreen> {
 
     sl.get<AppCenterWrapper>().trackEvent("openLiquidityPage", <String, String>{});
     sl.get<IHealthService>().checkHealth(context);
-    _init();
 
     if (_refreshPoolDataSubscription == null) {
       _refreshPoolDataSubscription = EventTaxiImpl.singleton().registerTo<WalletSyncLiquidityData>().listen((event) async {
         await _refresh();
       });
     }
+
+    _init();
   }
 
   _init() async {
@@ -72,6 +78,9 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     if (_isLoading) {
       return;
     }
+
+    _stats = await sl<IStatsService>().getStats(DeFiConstants.DefiAccountSymbol);
+
     sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadStart", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
 
     setState(() {
@@ -79,8 +88,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     });
 
     try {
-      var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
-      var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
+      var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD', _stats);
+      var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD', );
 
       if (!this.mounted) {
         return;

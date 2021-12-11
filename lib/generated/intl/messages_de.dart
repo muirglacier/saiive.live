@@ -262,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pin_confirm" : MessageLookupByLibrary.simpleMessage("PIN bestätigen"),
     "pin_enter" : MessageLookupByLibrary.simpleMessage("PIN Eingabe"),
     "pin_return" : MessageLookupByLibrary.simpleMessage("Zurück zum ersten Schritt"),
+    "price" : MessageLookupByLibrary.simpleMessage("Preis"),
     "receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Adresse wurde in die Zwischenablage übernommen"),
     "resync_wallet_from_seed" : MessageLookupByLibrary.simpleMessage("Wallet synchronisieren"),

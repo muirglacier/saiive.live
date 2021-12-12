@@ -30,6 +30,10 @@
 
   "save": "Save",
   "add": "Add",
+
+  
+  "yes": "Yes",
+  "no": "No",
   
   "dark_mode": "Dark",
   "light_mode": "Light",
@@ -106,6 +110,11 @@
   "wallet_receive": "Receive",
   "wallet_receive_warning": "Send only {coin} to this address. Sending coin or token other than {coin} to this address may result in the loss of your deposit!",
   "wallet_locked": "Wallet is synchronising right now!",
+
+
+  "wallet_use_single_address_mode": "Only use one address",
+  "wallet_use_single_address_mode_info": "If yes, the wallet will only create 1 address!",
+  "wallet_single_address_mode_switch": "Changing this settings, changes the behaviour of the address generation/usage!",
 
   "wallet_operation_refresh_utxo": "Refreshing utxo...",
   "wallet_operation_refresh_utxo_done": "Refreshing utxo...done",

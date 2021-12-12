@@ -11,7 +11,7 @@ import 'address_type.dart';
 abstract class IHdWallet {
   WalletAccount get walletAccount;
 
-  Future init(IWalletDatabase walletDatabase);
+  Future init(IWalletDatabase walletDatabase, ISharedPrefsUtil sharedPrefs);
 
   Future<List<WalletAddress>> getPublicKeys(IWalletDatabase walletDatabase, {bool onlyActive});
   @deprecated

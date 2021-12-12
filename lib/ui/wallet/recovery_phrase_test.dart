@@ -12,8 +12,9 @@ import 'dart:math';
 class RecoveryPhraseTestScreen extends StatefulWidget {
   final List<String> mnemonic;
   final PathDerivationType pathDerivationType;
+  final bool useSingleAddressMode;
 
-  RecoveryPhraseTestScreen(this.mnemonic, this.pathDerivationType);
+  RecoveryPhraseTestScreen(this.mnemonic, this.pathDerivationType, this.useSingleAddressMode);
 
   @override
   State<StatefulWidget> createState() {
@@ -79,8 +80,10 @@ class _RecoveryPhraseTestScreen extends State<RecoveryPhraseTestScreen> {
     setState(() {
       _isLoading = true;
     });
-    await sl.get<ISharedPrefsUtil>().setSeedBackedUp(seedIsBackedUp);
+    var prefs = sl.get<ISharedPrefsUtil>();
+    await prefs.setSeedBackedUp(seedIsBackedUp);
     await sl.get<IVault>().setSeed(widget.mnemonic.join(" "));
+    await prefs.setUseSingleAddressWallet(widget.useSingleAddressMode);
 
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => WalletInitScreen(widget.pathDerivationType)), (route) => false);
   }

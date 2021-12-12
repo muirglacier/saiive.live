@@ -285,6 +285,26 @@ class S {
     );
   }
 
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Dark`
   String get dark_mode {
     return Intl.message(
@@ -970,6 +990,36 @@ class S {
     return Intl.message(
       'Wallet is synchronising right now!',
       name: 'wallet_locked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only use one address`
+  String get wallet_use_single_address_mode {
+    return Intl.message(
+      'Only use one address',
+      name: 'wallet_use_single_address_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If yes, the wallet will only create 1 address!`
+  String get wallet_use_single_address_mode_info {
+    return Intl.message(
+      'If yes, the wallet will only create 1 address!',
+      name: 'wallet_use_single_address_mode_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Changing this settings, changes the behaviour of the address generation/usage!`
+  String get wallet_single_address_mode_switch {
+    return Intl.message(
+      'Changing this settings, changes the behaviour of the address generation/usage!',
+      name: 'wallet_single_address_mode_switch',
       desc: '',
       args: [],
     );

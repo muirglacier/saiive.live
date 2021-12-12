@@ -48,6 +48,12 @@ abstract class ISharedPrefsUtil {
   Future<void> setNetwork(ChainNet network);
   Future<ChainNet> getChainNetwork();
 
+  Future<bool> getUseSingleAddressWallet();
+  Future setUseSingleAddressWallet(bool value);
+
+  Future<int> getMaxAddressCount();
+  Future setMaxAddressCount(int value);
+
   Future<void> deleteAll();
 }
 
@@ -67,6 +73,8 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
   static const String address_index = 'addr_index';
   static const String use_auth = 'saiive_use_auth';
   static const String pw_hash = 'saiive_pw_hash';
+  static const String single_address_wallet = 'saiive_single_address_wallet';
+  static const String max_address_count = 'saiive_max_address_count';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -206,6 +214,28 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
 
   Future<void> setNetwork(ChainNet network) async {
     return await set(cur_net, network.index);
+  }
+
+  Future<bool> getUseSingleAddressWallet() async {
+    return await get(single_address_wallet, defaultValue: false);
+  }
+
+  Future setUseSingleAddressWallet(bool value) async {
+    return await set(single_address_wallet, value);
+  }
+
+  Future<int> getMaxAddressCount() async {
+    var useSingleAddressWallet = await getUseSingleAddressWallet();
+
+    if (useSingleAddressWallet) {
+      return 1;
+    }
+
+    return await get(max_address_count, defaultValue: 20);
+  }
+
+  Future setMaxAddressCount(int value) async {
+    return await set(max_address_count, value);
   }
 
   Future<ThemeSetting> getTheme() async {

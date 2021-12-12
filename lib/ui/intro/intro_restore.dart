@@ -18,8 +18,9 @@ class IntroRestoreScreen extends StatefulWidget {
 class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
   List<String> _phrase = [];
 
-  Future saveSeed(String seed) async {
-    await sl.get<ISharedPrefsUtil>().setSeedBackedUp(true);
+  Future saveSeed(String seed, bool singleWalletMode) async {
+    var prefs = sl.get<ISharedPrefsUtil>();
+    await prefs.setSeedBackedUp(true);
     await sl.get<IVault>().setSeed(seed);
   }
 
@@ -56,8 +57,8 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
         body: MnemonicSeedWidget(
           words: _phrase,
-          onNext: (seed, pathType) async {
-            await saveSeed(seed);
+          onNext: (seed, pathType, singleWalletMode) async {
+            await saveSeed(seed, singleWalletMode);
             Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
           },
         ));

@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 
 class MnemonicSeedWidget extends StatefulWidget {
   final List<String> words;
-  final Function(String, PathDerivationType pathDerivationType) onNext;
+  final Function(String, PathDerivationType pathDerivationType, bool singleWalletMode) onNext;
   final bool readOnly;
   final bool showNextButton;
+  final bool showUseSingleAddressFeature;
 
-  MnemonicSeedWidget({this.words = const [], @required this.onNext, this.readOnly = false, this.showNextButton = true});
+  MnemonicSeedWidget({this.words = const [], @required this.onNext, this.readOnly = false, this.showNextButton = true, this.showUseSingleAddressFeature = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -24,6 +25,8 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
   Map<int, TextFormField> _textFields = new Map<int, TextFormField>();
   Map<int, TextEditingController> _textControllers = new Map<int, TextEditingController>();
   final _formKey = GlobalKey<FormState>();
+
+  bool _useSingleAddressMode = true;
 
   PathDerivationType _pathDerivationType = PathDerivationType.FullNodeWallet;
 
@@ -42,7 +45,7 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
         return;
       }
 
-      widget.onNext(phrase, _pathDerivationType);
+      widget.onNext(phrase, _pathDerivationType, _useSingleAddressMode);
     }
   }
 
@@ -62,6 +65,25 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
         this._pathDerivationType = v;
       });
     });
+  }
+
+  Widget buildUseSingleAddressMode(BuildContext context) {
+    return Row(children: [
+      Checkbox(
+        value: _useSingleAddressMode,
+        onChanged: (v) async {
+          setState(() {
+            _useSingleAddressMode = v;
+          });
+        },
+      ),
+      Text(S.of(context).wallet_use_single_address_mode),
+      Container(width: 10),
+      Text(
+        S.of(context).wallet_use_single_address_mode_info,
+        style: TextStyle(fontSize: 10),
+      )
+    ]);
   }
 
   @override
@@ -113,6 +135,8 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
                       child: Column(children: [
                         row,
                         Padding(padding: EdgeInsets.only(top: 30)),
+                        if (widget.readOnly) buildUseSingleAddressMode(context),
+                        if (widget.readOnly) SizedBox(height: 10),
                         if (widget.readOnly) buildDerivationPathType(context),
                         if (widget.readOnly) SizedBox(height: 10),
                         if (widget.showNextButton)

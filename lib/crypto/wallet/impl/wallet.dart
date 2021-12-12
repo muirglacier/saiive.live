@@ -109,7 +109,7 @@ abstract class Wallet extends IWallet {
     for (var account in accounts) {
       final wallet = new HdWallet(_password, account, _chain, _network, seedList, _apiService);
 
-      await wallet.init(_walletDatabase);
+      await wallet.init(_walletDatabase, _sharedPrefsUtil);
 
       _wallets.putIfAbsent(account.uniqueId, () => wallet);
     }

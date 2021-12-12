@@ -259,6 +259,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_you_are_borrowing" : MessageLookupByLibrary.simpleMessage("You are borrowing"),
     "loan_your_loans" : MessageLookupByLibrary.simpleMessage("Your Loans"),
     "next" : MessageLookupByLibrary.simpleMessage("Next"),
+    "no" : MessageLookupByLibrary.simpleMessage("No"),
     "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
     "pin_confirm" : MessageLookupByLibrary.simpleMessage("Confirm PIN"),
     "pin_enter" : MessageLookupByLibrary.simpleMessage("Enter your PIN"),
@@ -400,11 +401,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_send_address" : MessageLookupByLibrary.simpleMessage("Address"),
     "wallet_send_address_scan" : MessageLookupByLibrary.simpleMessage("Scan"),
     "wallet_send_amount" : MessageLookupByLibrary.simpleMessage("Amount"),
+    "wallet_single_address_mode_switch" : MessageLookupByLibrary.simpleMessage("Changing this settings, changes the behaviour of the address generation/usage!"),
     "wallet_token_available_balance" : MessageLookupByLibrary.simpleMessage("Available balance"),
     "wallet_token_show_in_explorer" : MessageLookupByLibrary.simpleMessage("Open in explorer"),
     "wallet_token_transactions" : MessageLookupByLibrary.simpleMessage("Transactions"),
     "wallet_uptime_stats" : MessageLookupByLibrary.simpleMessage("Show state"),
     "wallet_use_custom_return_address" : MessageLookupByLibrary.simpleMessage("Use custom change address"),
+    "wallet_use_single_address_mode" : MessageLookupByLibrary.simpleMessage("Only use one address"),
+    "wallet_use_single_address_mode_info" : MessageLookupByLibrary.simpleMessage("If yes, the wallet will only create 1 address!"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Welcome"),
     "welcome_accept_terms_and_privacy" : MessageLookupByLibrary.simpleMessage("I\'ve read and accepted the Termns of Service and Privacy Notice"),
     "welcome_legal" : MessageLookupByLibrary.simpleMessage("Legal"),
@@ -417,6 +421,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome_wallet_info" : MessageLookupByLibrary.simpleMessage("Create your DeFiChain wallet and keep full control of your private keys!"),
     "welcome_wallet_privacy" : MessageLookupByLibrary.simpleMessage("We care about your privacy! We do not store any data unencrypted. All your private keys are encrypted locally and protected by your biometrics."),
     "welcome_wallet_restore" : MessageLookupByLibrary.simpleMessage("Import existing wallet"),
-    "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Secure")
+    "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Secure"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Yes")
   };
 }

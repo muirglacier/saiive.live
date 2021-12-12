@@ -226,7 +226,7 @@
   "dex_v2": "DEX V2",
   "dex_v2_add_max": "max",
   "dex_v2_from_token": "From Token",
-  "dex_v2_to_token": "From Token",
+  "dex_v2_to_token": "To Token",
   "dex_v2_from_amount": "From Amount",
   "dex_v2_max": "Max.",
   "dex_v2_50": "50%",

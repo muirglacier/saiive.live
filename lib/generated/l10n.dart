@@ -2005,10 +2005,10 @@ class S {
     );
   }
 
-  /// `From Token`
+  /// `To Token`
   String get dex_v2_to_token {
     return Intl.message(
-      'From Token',
+      'To Token',
       name: 'dex_v2_to_token',
       desc: '',
       args: [],

@@ -77,7 +77,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_v2_swap_amount" : MessageLookupByLibrary.simpleMessage("How much from you wanna swap?"),
     "dex_v2_swap_details" : MessageLookupByLibrary.simpleMessage("Swap Details"),
     "dex_v2_swap_successful" : MessageLookupByLibrary.simpleMessage("Swap was successful!"),
-    "dex_v2_to_token" : MessageLookupByLibrary.simpleMessage("From Token"),
+    "dex_v2_to_token" : MessageLookupByLibrary.simpleMessage("To Token"),
     "dex_v2_tx_details" : MessageLookupByLibrary.simpleMessage("Transaction Details"),
     "dfx_buy_address" : MessageLookupByLibrary.simpleMessage("Buy address"),
     "dfx_buy_title" : MessageLookupByLibrary.simpleMessage("Buy/Sell DFI"),

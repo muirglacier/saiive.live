@@ -274,11 +274,6 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  int getAddressCreationCount() {
-    return 20;
-  }
-
-  @override
   Future<WalletAddress> getWalletAddressById(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType) async {
     for (final address in _addresses) {
       if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index && address.addressType == addressType) {
@@ -307,10 +302,5 @@ class MemoryDatabaseMock extends IWalletDatabase {
   @override
   Future<List<Transaction>> getAllTransactions() async {
     return _transactions;
-  }
-
-  @override
-  int getReturnAddressCreationCount() {
-    return 10;
   }
 }

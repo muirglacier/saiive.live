@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'impl/wallet.dart';
 
 class BitcoinWallet extends Wallet {
@@ -10,7 +9,7 @@ class BitcoinWallet extends Wallet {
   @override
   Future<String> createSendTransaction(int amount, String token, String to,
       {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = returnAddress ?? await this.getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await this.getPublicKey(true);
     return await createUtxoTransaction(amount, to, changeAddress, version: 2);
   }
 

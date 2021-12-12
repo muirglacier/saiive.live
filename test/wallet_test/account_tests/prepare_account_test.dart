@@ -1,6 +1,5 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -66,7 +65,7 @@ void main() async {
 
       await wallet.init();
       final txController = sl.get<TransactionServiceMock>();
-      final to = await wallet.getPublicKey(true, AddressType.P2SHSegwit);
+      final to = await wallet.getPublicKey(true);
       final tx = await wallet.prepareUtxoToAccountTransaction(to, 240 * 100000000);
       expect(tx.item1, 240 * 100000000);
       expect(txController.lastTx, null);
@@ -79,7 +78,7 @@ void main() async {
       final wallet = sl.get<DeFiChainWallet>();
 
       await wallet.init();
-      final to = await wallet.getPublicKey(true, AddressType.P2SHSegwit);
+      final to = await wallet.getPublicKey(true);
       await wallet.prepareUtxoToAccountTransaction(to, 243 * 100000000);
       final txController = sl.get<TransactionServiceMock>();
       expect(txController.lastTx,

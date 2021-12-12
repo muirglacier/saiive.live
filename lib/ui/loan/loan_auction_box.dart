@@ -74,13 +74,19 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.headline6,
                       ),
-                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks)) Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))])
+                      Wrap(children: [
+                        Text(widget.auction.liquidationHeight.toString()),
+                        if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks))
+                          Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))
+                      ])
                     ])),
                     if (widget.publicKeys.contains(widget.auction.ownerAddress)) Container(width: 5),
-                    if (widget.publicKeys.contains(widget.auction.ownerAddress)) Container(child: Chip(
-                      label: Text(S.of(context).loan_auction_your_vault),
-                      backgroundColor: Colors.red,
-                    )),
+                    if (widget.publicKeys.contains(widget.auction.ownerAddress))
+                      Container(
+                          child: Chip(
+                        label: Text(S.of(context).loan_auction_your_vault),
+                        backgroundColor: Colors.red,
+                      )),
                   ]),
                   Container(height: 10),
                   ...batches

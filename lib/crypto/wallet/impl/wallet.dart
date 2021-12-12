@@ -182,7 +182,7 @@ abstract class Wallet extends IWallet {
     return keys;
   }
 
-  Future<String> getPublicKey(bool isChangeAddress, adressType.AddressType addressType) async {
+  Future<String> getPublicKey(bool isChangeAddress) async {
     var accounts = await _walletDatabase.getAccounts();
     accounts = accounts.where((element) => element.chain == _chain).toList();
     accounts = accounts.where((element) => element.selected).toList();
@@ -192,7 +192,7 @@ abstract class Wallet extends IWallet {
     }
     if (accounts.length == 1) {
       final acc = accounts.single;
-      final walletAddr = await _wallets[acc.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+      final walletAddr = await _wallets[acc.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, acc.defaultAddressType);
       return walletAddr.publicKey;
     }
 
@@ -205,7 +205,7 @@ abstract class Wallet extends IWallet {
           continue;
         }
 
-        final walletAddr = await _wallets[walletId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+        final walletAddr = await _wallets[walletId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, wallet.defaultAddressType);
         return walletAddr.publicKey;
       }
     }

@@ -144,7 +144,11 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks)) Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))])
+                          Wrap(children: [
+                            Text(widget.auction.liquidationHeight.toString()),
+                            if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks))
+                              Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))
+                          ])
                         ])),
                         Container(width: 10)
                       ],

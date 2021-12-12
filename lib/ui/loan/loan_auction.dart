@@ -119,9 +119,10 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
 
     return Navigated(
         child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount, from) async {
-      sl.get<AuthenticationHelper>().forceAuth(context, () async {
+      await sl.get<AuthenticationHelper>().forceAuth(context, () async {
         await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round(), from: from);
       });
+      Navigator.of(context).pop();
     }));
   }
 

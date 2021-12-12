@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/ui/model/authentication_method.dart';
@@ -55,6 +56,9 @@ abstract class ISharedPrefsUtil {
   Future setMaxAddressCount(int value);
 
   Future<void> deleteAll();
+
+  Future<void> setCurrency(CurrencyEnum currency);
+  Future<CurrencyEnum> getCurrency();
 }
 
 class SharedPrefsUtil extends ISharedPrefsUtil {
@@ -75,6 +79,7 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
   static const String pw_hash = 'saiive_pw_hash';
   static const String single_address_wallet = 'saiive_single_address_wallet';
   static const String max_address_count = 'saiive_max_address_count';
+  static const String saiive_currency = 'saiive_selected_currency';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -252,6 +257,16 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
     }
 
     return ChainNet.values[await get(cur_net, defaultValue: defaultNetwork.index)];
+  }
+
+  Future<void> setCurrency(CurrencyEnum currency) async {
+    await set(saiive_currency, currency.index);
+  }
+
+  Future<CurrencyEnum> getCurrency() async {
+    var cur = await get(saiive_currency, defaultValue: CurrencyEnum.EUR.index);
+
+    return CurrencyEnum.values[cur];
   }
 
   // For logging out

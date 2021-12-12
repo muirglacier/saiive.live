@@ -14,6 +14,7 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/events.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/price.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
@@ -46,6 +47,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
   StreamSubscription<PricesLoadedEvent> _pricesLoadedEvent;
   List<Price> _prices;
+  double _tetherPrice = 1.0;
+  CurrencyEnum _currency = CurrencyEnum.USD;
 
   AnimationController _controller;
 
@@ -105,12 +108,16 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       });
     }
 
-    _prices = sl<PricesBackgroundService>().prices;
+    _prices = sl<PricesBackgroundService>().get();
+    _tetherPrice = sl<PricesBackgroundService>().tetherPrice().fiat;
+    _currency = await sl<ISharedPrefsUtil>().getCurrency();
 
     if (_pricesLoadedEvent == null) {
       _pricesLoadedEvent = EventTaxiImpl.singleton().registerTo<PricesLoadedEvent>().listen((event) async {
         setState(() {
           _prices = event.prices;
+          _tetherPrice = event.tetherPrice.fiat;
+          _currency = event.currency;
         });
       });
     }
@@ -253,14 +260,26 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       _walletSyncStartEvent.cancel();
       _walletSyncStartEvent = null;
     }
+
+    if (_pricesLoadedEvent != null) {
+      _pricesLoadedEvent.cancel();
+      _pricesLoadedEvent = null;
+    }
   }
 
   Widget _buildAccountEntry(AccountBalance balance) {
     var price = _prices != null ? _prices.firstWhere((element) => element.token == balance.token, orElse: () => null) : null;
     var priceUsd = price != null ? price.aggregated.amount : null;
+    var finalPrice = 1.0;
 
+    if (priceUsd != null) {
+      finalPrice = priceUsd * _tetherPrice;
+    } else {
+      finalPrice = null;
+    }
     if (balance.token.toLowerCase() == 'dusd') {
       priceUsd = 1;
+      finalPrice = 1;
     }
 
     if (balance is MixedAccountBalance) {
@@ -308,19 +327,20 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
               maxLines: 1,
             )),
           ]),
-          if (priceUsd != null) Row(children: [
-            Text(
-              S.of(context).price,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            Expanded(
-                child: AutoSizeText(
-                  FundFormatter.format(balance.balanceDisplay * priceUsd, fractions: 2) + ' \$',
-                  style: Theme.of(context).textTheme.bodyText1,
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                )),
-          ]),
+          if (priceUsd != null)
+            Row(children: [
+              Text(
+                S.of(context).price,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+              Expanded(
+                  child: AutoSizeText(
+                FundFormatter.format(balance.balanceDisplay * finalPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.right,
+                maxLines: 1,
+              )),
+            ]),
         ]),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain, balance.tokenDisplay, balance)));
@@ -345,24 +365,27 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 ),
                 backgroundColor: Theme.of(context).primaryColor)
         ]),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Expanded(child: AutoSizeText(
+            Expanded(
+                child: AutoSizeText(
               FundFormatter.format(balance.balanceDisplay),
               style: Theme.of(context).textTheme.headline3,
               textAlign: TextAlign.right,
               maxLines: 1,
             )),
           ]),
-          if (priceUsd != null) Row(children: [
-            Expanded(
-                child: AutoSizeText(
-                  FundFormatter.format(balance.balanceDisplay * priceUsd, fractions: 2) + ' \$',
-                  style: Theme.of(context).textTheme.bodyText1,
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                )),
-          ]),
+          if (priceUsd != null)
+            Row(children: [
+              Expanded(
+                  child: AutoSizeText(
+                FundFormatter.format(balance.balanceDisplay * finalPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.right,
+                maxLines: 1,
+              )),
+            ]),
         ])),
       ]),
       onTap: () {
@@ -410,7 +433,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 var balances = items.values.toList()[section].toList();
 
                 var totalUSD = balances.fold(0, (previousValue, balance) {
-                  if (null == balance) {
+                  if (balance == null) {
                     return previousValue;
                   }
 
@@ -425,20 +448,25 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                     return previousValue;
                   }
 
-                  return previousValue + (priceUsd * balance.balanceDisplay);
+                  return previousValue + (priceUsd * balance.balanceDisplay) * _tetherPrice;
                 });
 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                  child: Row(children: [Text(
-                    text,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ), Expanded(child: Text(
-                    FundFormatter.format(totalUSD, fractions: 2) + ' \$',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.right,
-                  ))],
-                ));
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          text,
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        Expanded(
+                            child: Text(
+                          FundFormatter.format(totalUSD, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.right,
+                        ))
+                      ],
+                    ));
               },
               dragStartBehavior: DragStartBehavior.down,
               separatorBuilder: (context, index) => SizedBox(height: 5),

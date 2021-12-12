@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:saiive.live/bus/prices_loaded_event.dart';
 import 'package:saiive.live/network/model/price.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/network/response/error_response.dart';

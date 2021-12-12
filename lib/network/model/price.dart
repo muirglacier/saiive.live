@@ -1,7 +1,4 @@
-import 'package:saiive.live/crypto/chain.dart';
-
-class PriceBlock
-{
+class PriceBlock {
   final String hash;
   final int height;
   final int medianTime;
@@ -25,9 +22,7 @@ class PriceValue {
   PriceValue({this.amount});
 
   factory PriceValue.fromJson(Map<String, dynamic> json) {
-    return PriceValue(
-      amount: double.tryParse(json['amount'])
-    );
+    return PriceValue(amount: double.tryParse(json['amount']));
   }
 }
 
@@ -42,11 +37,10 @@ class Price {
 
   factory Price.fromJson(Map<String, dynamic> json) {
     return Price(
-      id: json['id'],
-      block: PriceBlock.fromJson(json['price']['block']),
-      aggregated: PriceValue.fromJson(json['price']['aggregated']),
-      currency: json['price']['currency'],
-      token: json['price']['token']
-    );
+        id: json['id'],
+        block: PriceBlock.fromJson(json['price']['block']),
+        aggregated: PriceValue.fromJson(json['price']['aggregated']),
+        currency: json['price']['currency'],
+        token: json['price']['token']);
   }
 }

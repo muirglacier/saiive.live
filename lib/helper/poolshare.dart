@@ -1,7 +1,6 @@
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/network/coingecko_service.dart';
-import 'package:saiive.live/network/gov_service.dart';
 import 'package:saiive.live/network/model/pool_share.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
 import 'package:saiive.live/network/model/stats.dart';

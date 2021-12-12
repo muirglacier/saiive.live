@@ -68,6 +68,10 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     sl.get<IHealthService>().checkHealth(context);
 
+    _prices = sl<PricesBackgroundService>().get();
+    _tetherPrice = sl<PricesBackgroundService>().tetherPrice().fiat;
+    _currency = await sl<ISharedPrefsUtil>().getCurrency();
+
     setState(() {
       _isSyncing = true;
     });
@@ -107,10 +111,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
         _initSyncText();
       });
     }
-
-    _prices = sl<PricesBackgroundService>().get();
-    _tetherPrice = sl<PricesBackgroundService>().tetherPrice().fiat;
-    _currency = await sl<ISharedPrefsUtil>().getCurrency();
 
     if (_pricesLoadedEvent == null) {
       _pricesLoadedEvent = EventTaxiImpl.singleton().registerTo<PricesLoadedEvent>().listen((event) async {

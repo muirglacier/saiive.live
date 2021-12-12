@@ -7,8 +7,8 @@ import 'package:saiive.live/services/stats_background.dart';
 import 'package:saiive.live/services/prices_background.dart';
 
 class BackgroundService {
-  Timer _statsTimer = null;
-  Timer _priceTimer = null;
+  Timer _statsTimer;
+  Timer _priceTimer;
 
   void start() {
     startBackgroundStatsTimer();

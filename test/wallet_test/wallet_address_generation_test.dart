@@ -1,6 +1,5 @@
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -49,8 +48,8 @@ void main() async {
           name: "acc",
           selected: true);
 
-      var address = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
-      var address2 = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
+      var address = await wallet.getPublicKey(false);
+      var address2 = await wallet.getPublicKey(false);
 
       expect(address, address2);
 
@@ -68,7 +67,7 @@ void main() async {
               confirmations: -1),
           walletAccount);
 
-      var address3 = await wallet.getPublicKey(false, AddressType.P2SHSegwit);
+      var address3 = await wallet.getPublicKey(false);
 
       expect(address, isNot(equals(address3)));
 

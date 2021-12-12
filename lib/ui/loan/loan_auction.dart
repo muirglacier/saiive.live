@@ -1,15 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
-import 'package:intl/intl.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/bus/stats_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
-import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
@@ -147,7 +144,11 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks)) Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))])
+                          Wrap(children: [
+                            Text(widget.auction.liquidationHeight.toString()),
+                            if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks))
+                              Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))
+                          ])
                         ])),
                         Container(width: 10)
                       ],

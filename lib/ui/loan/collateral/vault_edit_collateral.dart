@@ -96,7 +96,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
                       ),
                       keyboardType: TextInputType.numberWithOptions(decimal: true)),
                   Container(height: 10),
-                  Text(S.of(context).loan_add_collateral_available + ': ' + FundFormatter.format(widget.balance != null ? widget.balance.balanceDisplay - widget.changes : '0')),
+                  Text(S.of(context).loan_add_collateral_available + ': ' + FundFormatter.format(widget.balance != null ? widget.balance.balanceDisplay - widget.changes : 0.0)),
                   SizedBox(
                     height: 20,
                   ),

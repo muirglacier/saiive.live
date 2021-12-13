@@ -46,6 +46,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   StreamSubscription<WalletSyncStartEvent> _walletSyncStartEvent;
 
   StreamSubscription<PricesLoadedEvent> _pricesLoadedEvent;
+  StreamSubscription<PriceLoadingStarted> _pricesLoadingEvent;
+
+  bool _pricesLoading = true;
   List<Price> _prices;
   double _tetherPrice = 1.0;
   CurrencyEnum _currency = CurrencyEnum.USD;
@@ -69,7 +72,9 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
     sl.get<IHealthService>().checkHealth(context);
 
     _prices = sl<PricesBackgroundService>().get();
-    _tetherPrice = sl<PricesBackgroundService>().tetherPrice().fiat;
+    var tetherPrice = sl<PricesBackgroundService>().tetherPrice();
+
+    if (tetherPrice != null) _tetherPrice = tetherPrice.fiat;
     _currency = await sl<ISharedPrefsUtil>().getCurrency();
 
     setState(() {
@@ -112,9 +117,18 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       });
     }
 
+    if (_pricesLoadingEvent == null) {
+      _pricesLoadingEvent = EventTaxiImpl.singleton().registerTo<PriceLoadingStarted>().listen((event) async {
+        setState(() {
+          _pricesLoading = true;
+        });
+      });
+    }
+
     if (_pricesLoadedEvent == null) {
       _pricesLoadedEvent = EventTaxiImpl.singleton().registerTo<PricesLoadedEvent>().listen((event) async {
         setState(() {
+          _pricesLoading = false;
           _prices = event.prices;
           _tetherPrice = event.tetherPrice.fiat;
           _currency = event.currency;
@@ -265,6 +279,11 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       _pricesLoadedEvent.cancel();
       _pricesLoadedEvent = null;
     }
+
+    if (_pricesLoadingEvent != null) {
+      _pricesLoadingEvent.cancel();
+      _pricesLoadingEvent = null;
+    }
   }
 
   Widget _buildAccountEntry(AccountBalance balance) {
@@ -376,11 +395,21 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
               maxLines: 1,
             )),
           ]),
-          if (priceUsd != null)
+          if (priceUsd != null && !_pricesLoading)
             Row(children: [
               Expanded(
                   child: AutoSizeText(
                 FundFormatter.format(balance.balanceDisplay * finalPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.right,
+                maxLines: 1,
+              )),
+            ]),
+          if (priceUsd != null && _pricesLoading)
+            Row(children: [
+              Expanded(
+                  child: AutoSizeText(
+                S.of(context).loading,
                 style: Theme.of(context).textTheme.bodyText1,
                 textAlign: TextAlign.right,
                 maxLines: 1,
@@ -451,6 +480,22 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                   return previousValue + (priceUsd * balance.balanceDisplay) * _tetherPrice;
                 });
 
+                var priceWidget;
+
+                if (_pricesLoading) {
+                  priceWidget = Text(
+                    S.of(context).loading,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.right,
+                  );
+                } else {
+                  priceWidget = Text(
+                    FundFormatter.format(totalUSD, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.right,
+                  );
+                }
+
                 return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                     child: Row(
@@ -459,12 +504,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                           text,
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
-                        Expanded(
-                            child: Text(
-                          FundFormatter.format(totalUSD, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.right,
-                        ))
+                        Expanded(child: priceWidget)
                       ],
                     ));
               },

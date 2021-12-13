@@ -11,4 +11,6 @@ class PricesLoadedEvent implements Event {
   PricesLoadedEvent({this.prices, this.tetherPrice, this.currency});
 }
 
+class PriceLoadingStarted implements Event {}
+
 class PricesStartLoadEvent implements Event {}

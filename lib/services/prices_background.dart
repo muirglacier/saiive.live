@@ -15,13 +15,15 @@ class PricesBackgroundService {
   Coin _tether;
 
   void update() async {
+    EventTaxiImpl.singleton().fire(PriceLoadingStarted());
     _prices = await sl<IPricesService>().getPrices(DeFiConstants.DefiAccountSymbol);
 
     var currency = await sl<ISharedPrefsUtil>().getCurrency();
-    _coins = await sl.get<ICoingeckoService>().getCoins(DeFiConstants.DefiAccountSymbol, Currency.getCurrencyShortage(currency));
-    _tether = _coins.firstWhere((element) => element.coin == "tether");
+    var coins = await sl.get<ICoingeckoService>().getCoins(DeFiConstants.DefiAccountSymbol, Currency.getCurrencyShortage(currency));
+    _tether = coins.firstWhere((element) => element.coin == "tether");
 
-    EventTaxiImpl.singleton().fire(new PricesLoadedEvent(prices: get(), tetherPrice: _tether, currency: currency));
+    _coins = coins;
+    EventTaxiImpl.singleton().fire(PricesLoadedEvent(prices: get(), tetherPrice: _tether, currency: currency));
   }
 
   Coin tetherPrice() {

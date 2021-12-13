@@ -1,4 +1,4 @@
-enum CurrencyEnum { USD, EUR, SGD, AUD, JPY, GBP }
+enum CurrencyEnum { USD, EUR, SGD, AUD, JPY, GBP, BTC, ETH }
 
 class Currency {
   static String getCurrencySymbol(CurrencyEnum currency) {
@@ -15,6 +15,10 @@ class Currency {
         return "¥";
       case CurrencyEnum.GBP:
         return "£";
+      case CurrencyEnum.BTC:
+        return "₿";
+      case CurrencyEnum.ETH:
+        return "Ξ";
     }
 
     return "UNDEFINED CURRENCY";
@@ -34,6 +38,10 @@ class Currency {
         return "JPY";
       case CurrencyEnum.GBP:
         return "GBP";
+      case CurrencyEnum.BTC:
+        return "BTC";
+      case CurrencyEnum.ETH:
+        return "ETH";
     }
     return "USD";
   }
@@ -52,6 +60,10 @@ class Currency {
         return "Japanese Yen";
       case CurrencyEnum.GBP:
         return "British Pound";
+      case CurrencyEnum.BTC:
+        return "Bitcoin";
+      case CurrencyEnum.ETH:
+        return "Ethereum";
     }
     return "US Dollar";
   }

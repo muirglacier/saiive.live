@@ -79,6 +79,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     setState(() {
       _isSyncing = true;
+      _pricesLoading = false;
     });
   }
 

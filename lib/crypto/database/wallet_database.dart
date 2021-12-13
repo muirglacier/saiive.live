@@ -52,9 +52,6 @@ abstract class IWalletDatabase {
 
   Future<List<WalletAddress>> getWalletAddressesById(String uniqueId);
 
-  int getAddressCreationCount();
-  int getReturnAddressCreationCount();
-
   Future open();
   Future close();
   Future destroy();

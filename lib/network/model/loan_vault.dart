@@ -5,9 +5,9 @@ import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 enum LoanVaultStatus {
   unknown,
   active,
-  inLiquidation,
+  in_liquidation,
   frozen,
-  mayLiquidate,
+  may_liquidate,
 }
 
 extension ParseToStringLoanVaultStatus on LoanVaultStatus {
@@ -145,12 +145,12 @@ class LoanVault {
           return LoanVaultHealthStatus.halted;
         }
 
-      case LoanVaultStatus.mayLiquidate:
+      case LoanVaultStatus.may_liquidate:
         {
           return LoanVaultHealthStatus.at_risk;
         }
 
-      case LoanVaultStatus.inLiquidation:
+      case LoanVaultStatus.in_liquidation:
         {
           return LoanVaultHealthStatus.liquidated;
         }
@@ -162,6 +162,32 @@ class LoanVault {
     }
 
     return LoanVaultHealthStatus.unknown;
+  }
+
+  double get nextCollateralRatioDouble {
+    var collaterals = collateralAmounts.map((e) => e.valueUSDNext);
+    var loans = loanAmounts.map((e) => e.valueUSDNext);
+
+    if (collaterals.length == 0 || loans.length == 0) {
+      return -1;
+    }
+
+    return collaterals.fold(0, (previousValue, element) => previousValue + element) / loans.fold(0, (previousValue, element) => previousValue + element) * 100;
+  }
+
+  double get calcCollateralRatioDouble {
+    var collaterals = collateralAmounts.map((e) => e.valueUSD);
+    var loans = loanAmounts.map((e) => e.valueUSD);
+
+    if (collaterals.length == 0 || loans.length == 0) {
+      return -1;
+    }
+
+    return collaterals.fold(0, (previousValue, element) => previousValue + element) / loans.fold(0, (previousValue, element) => previousValue + element) * 100;
+  }
+
+  double get collateralRatioDouble {
+    return double.tryParse(collateralRatio);
   }
 
   factory LoanVault.fromJson(Map<String, dynamic> json) {

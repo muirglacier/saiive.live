@@ -19,19 +19,25 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
-  static m0(appName) => "Eine neue Version von ${appName} ist verfügbar!";
+  static m0(currency) => "Aktuelle Wert (${currency})";
 
-  static m1(pubKey) => "Möchtest du den PrivateKey für das ReadOnly Konto ${pubKey} hinzufügen?";
+  static m1(currency) => "Preis (${currency})";
 
-  static m2(chains) => "Es scheint gerade Probleme mit dem Supernode zu geben (${chains}). Am besten du schaust später nochmal rein!";
+  static m2(currency) => "Gesamt Darlehen ${currency}";
 
-  static m3(from, to) => "Aktualisiere Adressen (${from}/${to})";
+  static m3(appName) => "Eine neue Version von ${appName} ist verfügbar!";
 
-  static m4(from, to) => "Aktualisiere Transaktionen (${from}/${to})";
+  static m4(pubKey) => "Möchtest du den PrivateKey für das ReadOnly Konto ${pubKey} hinzufügen?";
 
-  static m5(txId) => "Warte auf Bestätigung ${txId}...";
+  static m5(chains) => "Es scheint gerade Probleme mit dem Supernode zu geben (${chains}). Am besten du schaust später nochmal rein!";
 
-  static m6(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
+  static m6(from, to) => "Aktualisiere Adressen (${from}/${to})";
+
+  static m7(from, to) => "Aktualisiere Transaktionen (${from}/${to})";
+
+  static m8(txId) => "Warte auf Bestätigung ${txId}...";
+
+  static m9(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -82,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dfx_buy_address" : MessageLookupByLibrary.simpleMessage("Kaufadresse"),
     "dfx_buy_title" : MessageLookupByLibrary.simpleMessage("DFI Kaufen/Verkaufen"),
     "expert" : MessageLookupByLibrary.simpleMessage("Experte"),
+    "expert_address_title" : MessageLookupByLibrary.simpleMessage("Experten Adressen Modus"),
     "expert_title" : MessageLookupByLibrary.simpleMessage("Experten Modus"),
     "helloWorld" : MessageLookupByLibrary.simpleMessage("Hallo Welt!"),
     "home_dex" : MessageLookupByLibrary.simpleMessage("DEX"),
@@ -128,6 +135,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_add_token_as_collateral" : MessageLookupByLibrary.simpleMessage("Füge Token als Kollateral hinzu"),
     "loan_amount" : MessageLookupByLibrary.simpleMessage("Menge"),
     "loan_amount_payable" : MessageLookupByLibrary.simpleMessage("Zahlbarer Betrag"),
+    "loan_auction" : MessageLookupByLibrary.simpleMessage("Auktion"),
+    "loan_auction_bid_available_balance" : MessageLookupByLibrary.simpleMessage("Verfügbar"),
+    "loan_auction_bid_from" : MessageLookupByLibrary.simpleMessage("Von"),
+    "loan_auction_bid_from_text" : MessageLookupByLibrary.simpleMessage("Ändere von Adresse"),
+    "loan_auction_bid_how_much" : MessageLookupByLibrary.simpleMessage("Wie viel willst du bieten?"),
+    "loan_auction_create_bid" : MessageLookupByLibrary.simpleMessage("Gebot abgeben"),
+    "loan_auction_filter" : MessageLookupByLibrary.simpleMessage("Filter"),
+    "loan_auction_filter_buyable" : MessageLookupByLibrary.simpleMessage("Leistbare Vaults"),
+    "loan_auction_filter_highest_bidder" : MessageLookupByLibrary.simpleMessage("Höchstes Gebot"),
+    "loan_auction_filter_mine" : MessageLookupByLibrary.simpleMessage("Meine Vaults"),
+    "loan_auction_filter_ok" : MessageLookupByLibrary.simpleMessage("OK"),
+    "loan_auction_highest_bid" : MessageLookupByLibrary.simpleMessage("Höchstes Gebot"),
+    "loan_auction_min_bid" : MessageLookupByLibrary.simpleMessage("Mindest Gebot Wert"),
+    "loan_auction_min_bid_has_to_be" : MessageLookupByLibrary.simpleMessage("Mindestgebot muss sein"),
+    "loan_auction_your_bid" : MessageLookupByLibrary.simpleMessage("Dein Gebot"),
+    "loan_auction_your_vault" : MessageLookupByLibrary.simpleMessage("Dein Vault"),
     "loan_borrow" : MessageLookupByLibrary.simpleMessage("Darlehen erstellen"),
     "loan_borrow_amount" : MessageLookupByLibrary.simpleMessage("Wie viel willst du hinzufügen?"),
     "loan_borrow_choose_token" : MessageLookupByLibrary.simpleMessage("Wähle einen Darlehen Token"),
@@ -168,7 +191,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_create_vault_info" : MessageLookupByLibrary.simpleMessage("Du erstellt einen neuen Vault"),
     "loan_create_vault_success" : MessageLookupByLibrary.simpleMessage("Vault wurde erfolgreich erstellt"),
     "loan_current_amount" : MessageLookupByLibrary.simpleMessage("Aktuelle Menge"),
-    "loan_current_amount_usd" : MessageLookupByLibrary.simpleMessage("Aktuelle Wert (USD)"),
+    "loan_current_amount_usd" : m0,
     "loan_current_collateral" : MessageLookupByLibrary.simpleMessage("Aktuelles Kollateral"),
     "loan_edit_est_fee" : MessageLookupByLibrary.simpleMessage("Geschätzte Gebühr"),
     "loan_edit_scheme" : MessageLookupByLibrary.simpleMessage("Schema ändern"),
@@ -189,7 +212,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_min_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Min. Besicherungsquote"),
     "loan_new_min_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Neue Min. Besicherungsquote"),
     "loan_new_vault_interest" : MessageLookupByLibrary.simpleMessage("Neue Vault Zinsen"),
+    "loan_next_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Nächste Besicherungsquote"),
     "loan_no_active_loans" : MessageLookupByLibrary.simpleMessage("Keine Aktiven Darlehen"),
+    "loan_no_auctions" : MessageLookupByLibrary.simpleMessage("Keine Auktionen gefunden"),
     "loan_no_collateral_amounts" : MessageLookupByLibrary.simpleMessage("Kein Kollateral vorhanden"),
     "loan_no_collaterals" : MessageLookupByLibrary.simpleMessage("Kein Kollateral"),
     "loan_no_vault_created" : MessageLookupByLibrary.simpleMessage("Kein Vault erstellt"),
@@ -203,7 +228,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_prev_min_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Alte Min. Besicherungsquote"),
     "loan_prev_vault_interest" : MessageLookupByLibrary.simpleMessage("Alte Vault Zinsen"),
     "loan_price_per_token" : MessageLookupByLibrary.simpleMessage("Preis pro Token"),
-    "loan_price_usd" : MessageLookupByLibrary.simpleMessage("Preis (USD)"),
+    "loan_price_usd" : m1,
     "loan_resulting_collateral" : MessageLookupByLibrary.simpleMessage("Ergebnis Besicherungsquote"),
     "loan_return_address" : MessageLookupByLibrary.simpleMessage("Rücksende Adresse"),
     "loan_token" : MessageLookupByLibrary.simpleMessage("Darlehen Token"),
@@ -215,14 +240,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_tokens_to_pay_back" : MessageLookupByLibrary.simpleMessage("Tokens zum Zurückzahlen"),
     "loan_total_collateral" : MessageLookupByLibrary.simpleMessage("Gesamt Kollateral"),
     "loan_total_loan_amount" : MessageLookupByLibrary.simpleMessage("Gesamtes Darlehen"),
-    "loan_total_loan_usd" : MessageLookupByLibrary.simpleMessage("Gesamt Darlehen USD"),
+    "loan_total_loan_usd" : m2,
     "loan_transaction_details" : MessageLookupByLibrary.simpleMessage("Transaktion Details"),
     "loan_transaction_result" : MessageLookupByLibrary.simpleMessage("Transaktion Ergebnis"),
     "loan_transaction_type" : MessageLookupByLibrary.simpleMessage("Transaction Typ"),
     "loan_update_vault_success" : MessageLookupByLibrary.simpleMessage("Vault wurde erfolgreich geändert"),
     "loan_vault" : MessageLookupByLibrary.simpleMessage("Vault"),
     "loan_vault_creation_info" : MessageLookupByLibrary.simpleMessage("Erstelle einen Vault und fürge DFI und andere Token als Kollateral ein."),
-    "loan_vault_customer_owner_address" : MessageLookupByLibrary.simpleMessage("Benutze eigeene Tressor Besitzer Adresse"),
+    "loan_vault_customer_owner_address" : MessageLookupByLibrary.simpleMessage("Benutze eigeene Vault Besitzer Adresse"),
     "loan_vault_details" : MessageLookupByLibrary.simpleMessage("Vault Details"),
     "loan_vault_details_tab_active_loan" : MessageLookupByLibrary.simpleMessage("Darlehen"),
     "loan_vault_details_tab_auctions" : MessageLookupByLibrary.simpleMessage("Versteigerungen"),
@@ -239,10 +264,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_you_are_borrowing" : MessageLookupByLibrary.simpleMessage("Du leihst dir aus"),
     "loan_your_loans" : MessageLookupByLibrary.simpleMessage("Deine Darlehen"),
     "next" : MessageLookupByLibrary.simpleMessage("Weiter"),
+    "no" : MessageLookupByLibrary.simpleMessage("Nein"),
     "ok" : MessageLookupByLibrary.simpleMessage("Ok"),
     "pin_confirm" : MessageLookupByLibrary.simpleMessage("PIN bestätigen"),
     "pin_enter" : MessageLookupByLibrary.simpleMessage("PIN Eingabe"),
     "pin_return" : MessageLookupByLibrary.simpleMessage("Zurück zum ersten Schritt"),
+    "price" : MessageLookupByLibrary.simpleMessage("Preis"),
     "receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
     "receive_address_copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Adresse wurde in die Zwischenablage übernommen"),
     "resync_wallet_from_seed" : MessageLookupByLibrary.simpleMessage("Wallet synchronisieren"),
@@ -285,7 +312,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "title" : MessageLookupByLibrary.simpleMessage("saiive.live"),
     "update_cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "update_start" : MessageLookupByLibrary.simpleMessage("Installieren"),
-    "update_text" : m0,
+    "update_text" : m3,
     "update_title" : MessageLookupByLibrary.simpleMessage("Update"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "visibility" : MessageLookupByLibrary.simpleMessage("Sichtbarkeit"),
@@ -306,7 +333,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("Der Inhalt ist ungültig!"),
     "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("Der Private Key ist ungültig!"),
     "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("Der Public Key ist ungültig!"),
-    "wallet_accounts_import_priv_key_for_pub_key" : m1,
+    "wallet_accounts_import_priv_key_for_pub_key" : m4,
     "wallet_accounts_import_unsupported_key" : MessageLookupByLibrary.simpleMessage("Der Public Key wird nicht unterstützt!"),
     "wallet_accounts_key_already_imported" : MessageLookupByLibrary.simpleMessage("Der Schlüssel ist bereits importiert!"),
     "wallet_accounts_readonly" : MessageLookupByLibrary.simpleMessage("Nur Lesen"),
@@ -336,7 +363,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Schreibe das #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" Wort hier"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" Wort"),
-    "wallet_offline" : m2,
+    "wallet_offline" : m5,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird erstellt"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Erstelle Auth TX"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Konto wird vorbereitet"),
@@ -347,18 +374,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Dein Wallet ist nicht mehr synchronisiert. Bitte versuche die Transaktion erneut."),
     "wallet_operation_no_utxo" : MessageLookupByLibrary.simpleMessage("Keine UTXO vorhanden. Um eine Transaktionen erstellen zu können, musst du UTXO in deinem Wallet haben."),
     "wallet_operation_price_higher_than_indicated" : MessageLookupByLibrary.simpleMessage("Der Preis ist höher als angegeben. Um die Transaktion erfolgreich auszuführen musst du das Slippage erhöhen!"),
-    "wallet_operation_refresh_addresses" : m3,
-    "wallet_operation_refresh_tx" : m4,
+    "wallet_operation_refresh_addresses" : m6,
+    "wallet_operation_refresh_tx" : m7,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("UTXO aktualisieren..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("UTXO aktualisieren...fertig"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Transaktion wird gesendet"),
     "wallet_operation_share" : MessageLookupByLibrary.simpleMessage("Teilen..."),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Transaktion im Explorer anzeigen..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaktion war erfolgreich :)"),
-    "wallet_operation_tx_wait_for_confirmation" : m5,
+    "wallet_operation_tx_wait_for_confirmation" : m8,
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Warte auf Bestätigung..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Empfangen"),
-    "wallet_receive_warning" : m6,
+    "wallet_receive_warning" : m9,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter Test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("Wir haben die Kontos in deinem lokalen Datestore hinzugefügt! Deine Konten werden im Hintergrund aktualisiert!"),
@@ -378,11 +405,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_send_address" : MessageLookupByLibrary.simpleMessage("Adresse"),
     "wallet_send_address_scan" : MessageLookupByLibrary.simpleMessage("Scan"),
     "wallet_send_amount" : MessageLookupByLibrary.simpleMessage("Menge"),
+    "wallet_single_address_mode_switch" : MessageLookupByLibrary.simpleMessage("Änderungen dieser Einstellung ändert das Verhalten der Adressgeneriung!"),
     "wallet_token_available_balance" : MessageLookupByLibrary.simpleMessage("Verfügbar"),
     "wallet_token_show_in_explorer" : MessageLookupByLibrary.simpleMessage("Im Explorer anzeigen"),
     "wallet_token_transactions" : MessageLookupByLibrary.simpleMessage("Transaktionen"),
     "wallet_uptime_stats" : MessageLookupByLibrary.simpleMessage("Status anzeigen"),
     "wallet_use_custom_return_address" : MessageLookupByLibrary.simpleMessage("Verwende Rücksende Adresse"),
+    "wallet_use_single_address_mode" : MessageLookupByLibrary.simpleMessage("Nur eine Adresse verwenden"),
+    "wallet_use_single_address_mode_info" : MessageLookupByLibrary.simpleMessage("Wenn ja wird nur eine Adresse zum Senden/Empfangen generiert!"),
     "welcome" : MessageLookupByLibrary.simpleMessage("Willkommen"),
     "welcome_accept_terms_and_privacy" : MessageLookupByLibrary.simpleMessage("Ich habe die Nutzungsbedingungen und Datenschutzerklärung gelesen und akzeptiert"),
     "welcome_legal" : MessageLookupByLibrary.simpleMessage("Legal"),
@@ -395,6 +425,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "welcome_wallet_info" : MessageLookupByLibrary.simpleMessage("Erstelle dein DeFiChain Wallet und behalte die Kontrolle deiner Privaten Schlüssel!"),
     "welcome_wallet_privacy" : MessageLookupByLibrary.simpleMessage("Deine Privaten Schlüssel werden lokal verschlüsselt abgelegt und verwaltet, geschützt durch deine Biometrie/PIN."),
     "welcome_wallet_restore" : MessageLookupByLibrary.simpleMessage("Wallet importieren"),
-    "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Sicher")
+    "welcome_wallet_secure" : MessageLookupByLibrary.simpleMessage("Sicher"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Ja")
   };
 }

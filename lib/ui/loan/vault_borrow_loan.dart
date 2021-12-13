@@ -3,6 +3,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/loans_service.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/vaults_service.dart';
@@ -22,9 +23,13 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class VaultBorrowLoan extends StatefulWidget {
   final LoanToken loanToken;
   final LoanVault loanVault;
+
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
   final key = GlobalKey();
 
-  VaultBorrowLoan({this.loanToken, this.loanVault});
+  VaultBorrowLoan({this.loanToken, this.loanVault, this.currency = CurrencyEnum.USD, this.tetherPrice = 1.0});
 
   @override
   State<StatefulWidget> createState() {
@@ -99,26 +104,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       return;
     }
 
-    var otherLoanValues = _loanVault.loanAmounts.fold(0.0, (previousValue, element) {
-      if (element.symbol == _loanToken.token.symbol) {
-        return previousValue;
-      }
-
-      var amount = double.tryParse(element.amount);
-      var _loanTokenPriceUSD = element.activePrice != null ? element.activePrice.active.amount : 1.0;
-
-      if (_loanToken.token.symbolKey == "DUSD") {
-        _loanTokenPriceUSD = 1;
-      }
-
-      return previousValue + (amount * _loanTokenPriceUSD);
-    });
-
-    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null);
-
     var _interestToken = double.tryParse(_loanToken.interest);
     var _interestVault = double.tryParse(_loanVault.schema.interestRate);
-    var totalAmount = (currentLoanAmount != null ? double.tryParse(currentLoanAmount.amount) : 0.0) + amount;
+    var totalAmount = amount;
 
     _totalInterest = _interestVault + _interestToken;
     _totalInterestAmount = (totalAmount * _totalInterest / 100);
@@ -130,7 +118,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       _loanTokenPriceUSD = 1;
     }
 
-    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + otherLoanValues;
+    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + double.tryParse(widget.loanVault.loanValue);
 
     setState(() {
       _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
@@ -187,9 +175,11 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         ],
                       ),
                       Row(children: [
-                        Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
+                        Text(S.of(context).loan_price_usd(Currency.getCurrencyShortage(widget.currency)), style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(_loanToken.activePrice != null ? FundFormatter.format(_loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
+                        Text(_loanToken.activePrice != null
+                            ? FundFormatter.format(_loanToken.activePrice.active.amount * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+                            : '-'),
                       ]),
                       if (currentLoanAmount != null)
                         Row(children: [
@@ -199,10 +189,12 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         ]),
                       if (currentLoanAmount != null)
                         Row(children: [
-                          Text(S.of(context).loan_current_amount_usd, style: Theme.of(context).textTheme.caption),
+                          Text(S.of(context).loan_current_amount_usd(Currency.getCurrencyShortage(widget.currency)), style: Theme.of(context).textTheme.caption),
                           Spacer(),
-                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 1.0)) +
-                              ' \$'),
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) *
+                                  (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount * widget.tetherPrice : 1.0 * widget.tetherPrice)) +
+                              ' ' +
+                              Currency.getCurrencySymbol(widget.currency)),
                         ]),
                       Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanToken.interest + '%')])
                     ]))));
@@ -293,12 +285,14 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                       Row(children: [
                         Text(S.of(context).loan_total_collateral, style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue), fractions: 2) + ' \$'),
+                        Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue) * widget.tetherPrice, fractions: 2) +
+                            ' ' +
+                            Currency.getCurrencySymbol(widget.currency)),
                       ]),
                       Row(children: [
                         Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(FundFormatter.format(double.tryParse(_loanVault.loanValue), fractions: 2) + ' \$'),
+                        Text(FundFormatter.format(double.tryParse(_loanVault.loanValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
                       ]),
                       Row(children: [
                         Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption),
@@ -409,7 +403,8 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                                                   child: Text(S.of(context).loan_continue),
                                                   onPressed: () async {
                                                     await Navigator.of(context).push(MaterialPageRoute(
-                                                        builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
+                                                        builder: (BuildContext context) =>
+                                                            VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress, widget.currency, widget.tetherPrice)));
                                                   }))),
                                       SizedBox(height: 100)
                                     ]))

@@ -109,7 +109,7 @@ abstract class Wallet extends IWallet {
     for (var account in accounts) {
       final wallet = new HdWallet(_password, account, _chain, _network, seedList, _apiService);
 
-      await wallet.init(_walletDatabase);
+      await wallet.init(_walletDatabase, _sharedPrefsUtil);
 
       _wallets.putIfAbsent(account.uniqueId, () => wallet);
     }
@@ -153,6 +153,13 @@ abstract class Wallet extends IWallet {
     throw UnimplementedError();
   }
 
+  @override
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, adressType.AddressType addressType, {bool previewOnly = false}) async {
+    assert(_wallets.containsKey(account.uniqueId));
+
+    return await _wallets[account.uniqueId].generateAddress(_walletDatabase, account, isChangeAddress, index, addressType);
+  }
+
   Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) async {
     if (!_wallets.containsKey(account.uniqueId)) {
       return List<WalletAddress>.empty();
@@ -175,7 +182,7 @@ abstract class Wallet extends IWallet {
     return keys;
   }
 
-  Future<String> getPublicKey(bool isChangeAddress, adressType.AddressType addressType) async {
+  Future<String> getPublicKey(bool isChangeAddress) async {
     var accounts = await _walletDatabase.getAccounts();
     accounts = accounts.where((element) => element.chain == _chain).toList();
     accounts = accounts.where((element) => element.selected).toList();
@@ -185,7 +192,7 @@ abstract class Wallet extends IWallet {
     }
     if (accounts.length == 1) {
       final acc = accounts.single;
-      final walletAddr = await _wallets[acc.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+      final walletAddr = await _wallets[acc.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, acc.defaultAddressType);
       return walletAddr.publicKey;
     }
 
@@ -198,7 +205,7 @@ abstract class Wallet extends IWallet {
           continue;
         }
 
-        final walletAddr = await _wallets[walletId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+        final walletAddr = await _wallets[walletId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, wallet.defaultAddressType);
         return walletAddr.publicKey;
       }
     }

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
-import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
@@ -236,7 +235,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
                   child: FloatingActionButton.extended(
                     onPressed: () async {
                       var wallet = sl.get<IWalletService>();
-                      var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
+                      var pubKey = await wallet.getPublicKey(widget.chainType);
                       await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
                     },
                     heroTag: null,
@@ -276,7 +275,7 @@ class _WalletTokenScreen extends State<WalletTokenScreen> with TickerProviderSta
               })),
           AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).receive, icon: Icons.arrow_downward, width: width / 2 - 10, onPressed: () async {
             var wallet = sl.get<IWalletService>();
-            var pubKey = await wallet.getPublicKey(widget.chainType, AddressType.P2SHSegwit);
+            var pubKey = await wallet.getPublicKey(widget.chainType);
             await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletReceiveScreen(pubKey: pubKey, chain: widget.chainType)));
           })
         ],

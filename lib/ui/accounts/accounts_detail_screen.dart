@@ -3,6 +3,7 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
+import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
@@ -26,10 +27,13 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
   bool _isLoading = true;
 
   IWalletService _walletService;
+  bool _isSingleAddressWallet = false;
 
   Future _init() async {
     _isLoading = true;
     _walletService = sl.get<IWalletService>();
+
+    _isSingleAddressWallet = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
 
     var accounts = await _walletService.getPublicKeysFromAccount(this.widget.walletAccount);
 
@@ -60,7 +64,13 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
               if (address.name != null) Text(address.name, style: Theme.of(context).textTheme.headline3),
               SizedBox(width: 10),
               AutoSizeText(address.publicKey, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline3, maxLines: 1),
-              AutoSizeText(address.path(widget.walletAccount), overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.caption, maxLines: 1),
+              Row(
+                children: [
+                  AutoSizeText(address.path(widget.walletAccount), overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.caption, maxLines: 1),
+                  SizedBox(width: 10),
+                  AutoSizeText(addressTypeToString(address.addressType), overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.caption, maxLines: 1),
+                ],
+              )
             ]),
             onTap: () async {
               await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AccountsAddressAddScreen(widget.walletAccount, false, walletAddress: address)));
@@ -79,17 +89,16 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
 
     return Padding(
         padding: EdgeInsets.all(10),
-        child: Scrollbar(
-            child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: _walletAddresses.length,
-                    itemBuilder: (context, index) {
-                      return _buildWalletAddressWidget(context, _walletAddresses.elementAt(index));
-                    }))));
+        child: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _walletAddresses.length,
+                itemBuilder: (context, index) {
+                  return _buildWalletAddressWidget(context, _walletAddresses.elementAt(index));
+                })));
   }
 
   List<Widget> _buildActionsButton(BuildContext context) {
@@ -104,7 +113,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
             },
             child: Icon(Icons.edit, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
           )),
-      if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount)
+      if (widget.walletAccount.walletAccountType == WalletAccountType.HdAccount && !_isSingleAddressWallet)
         Padding(
             padding: EdgeInsets.only(right: 15.0),
             child: GestureDetector(

@@ -11,11 +11,20 @@ class LoanVaultAmount {
 
   LoanVaultAmount({this.id, this.amount, this.symbol, this.symbolKey, this.name, this.displaySymbol, this.activePrice});
 
+  double get amountDouble {
+    return double.tryParse(this.amount);
+  }
+
   double get valueUSD {
     var price = this.activePrice != null ? this.activePrice.active.amount : 1;
-    var amount = double.tryParse(this.amount);
 
-    return amount * price;
+    return amountDouble * price;
+  }
+
+  double get valueUSDNext {
+    var price = this.activePrice != null ? this.activePrice.next.amount : 1;
+
+    return amountDouble * price;
   }
 
   factory LoanVaultAmount.fromJson(Map<String, dynamic> json) {

@@ -2,11 +2,13 @@ import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/loans_service.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_schema.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/loan/vault_edit_scheme_confirm.dart';
+import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/table_widget.dart';
@@ -15,7 +17,10 @@ import 'package:saiive.live/ui/widgets/vault_status.dart';
 class VaultEditSchemeScreen extends StatefulWidget {
   final LoanVault vault;
 
-  VaultEditSchemeScreen(this.vault);
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
+  VaultEditSchemeScreen(this.vault, this.currency, this.tetherPrice);
 
   @override
   State<StatefulWidget> createState() {
@@ -50,8 +55,14 @@ class _VaultEditSchemeScreen extends State<VaultEditSchemeScreen> {
 
   Widget _buildTopPart() {
     List<List<String>> items = [
-      [S.of(context).loan_total_collateral, widget.vault.collateralValue + ' \$'],
-      [S.of(context).loan_total_loan_usd, widget.vault.loanValue + ' \$'],
+      [
+        S.of(context).loan_total_collateral,
+        FundFormatter.format(double.parse(widget.vault.collateralValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+      ],
+      [
+        S.of(context).loan_total_loan_usd(Currency.getCurrencyShortage(widget.currency)),
+        FundFormatter.format(double.parse(widget.vault.loanValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+      ],
       [S.of(context).loan_collateral_ratio, widget.vault.collateralRatio + '%'],
       [S.of(context).loan_min_collateral_ratio, widget.vault.schema.minColRatio + '%'],
     ];

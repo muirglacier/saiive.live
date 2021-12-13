@@ -7,6 +7,26 @@ class LoanVaultAuctionBatch {
   final LoanVaultAmount loan;
   final LoanVaultAuctionHighestBid highestBid;
 
+  double get minBid {
+    var minBid = double.tryParse(this.loan.amount) * 1.05;
+
+    if (this.highestBid != null) {
+      minBid = double.tryParse(this.highestBid.amount.amount) * 1.01;
+    }
+
+    return minBid;
+  }
+
+  double get minBidUSD {
+    var minBid = double.tryParse(this.loan.amount) * 1.05;
+
+    if (this.highestBid != null) {
+      minBid = double.tryParse(this.highestBid.amount.amount) * 1.01;
+    }
+
+    return minBid * (this.loan.activePrice != null ? this.loan.activePrice.active.amount : 1);
+  }
+
   LoanVaultAuctionBatch({this.index, this.collaterals, this.loan, this.highestBid});
 
   double get collateralValueUSD {

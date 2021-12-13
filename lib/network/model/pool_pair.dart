@@ -9,6 +9,7 @@ class PoolPair {
   final double reserveB;
   final double commission;
   final double totalLiquidity;
+  final double totalLiquidityUsd;
   final double reserveADivReserveB;
   final double reserveBDivReserveA;
   final bool tradeEnabled;
@@ -32,6 +33,7 @@ class PoolPair {
       this.reserveB,
       this.commission,
       this.totalLiquidity,
+      this.totalLiquidityUsd,
       this.reserveADivReserveB,
       this.reserveBDivReserveA,
       this.tradeEnabled,
@@ -56,6 +58,7 @@ class PoolPair {
         reserveB: double.tryParse(json['reserveB'].toString()),
         commission: double.tryParse(json['commission'].toString()),
         totalLiquidity: double.tryParse(json['totalLiquidity'].toString()),
+        totalLiquidityUsd: double.tryParse(json['totalLiquidityUsd'].toString()),
         reserveADivReserveB: double.tryParse(json['reserveADivReserveB'].toString()),
         reserveBDivReserveA: double.tryParse(json['reserveBDivReserveA'].toString()),
         tradeEnabled: json['tradeEnabled'],
@@ -80,6 +83,7 @@ class PoolPair {
         'reserveB': reserveB,
         'commission': commission,
         'totalLiquidity': totalLiquidity,
+        'totalLiquidityUsd': totalLiquidityUsd,
         'reserveADivReserveB': reserveADivReserveB,
         'reserveBDivReserveA': reserveBDivReserveA,
         'tradeEnabled': tradeEnabled,

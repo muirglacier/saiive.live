@@ -11,6 +11,7 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,10 @@ class VaultPaybackLoanScreen extends StatefulWidget {
   final LoanVault loanVault;
   final LoanVaultAmount loanInterest;
 
-  VaultPaybackLoanScreen(this.loanAmount, this.loanToken, this.loanVault, this.loanInterest);
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
+  VaultPaybackLoanScreen(this.loanAmount, this.loanToken, this.loanVault, this.loanInterest, this.currency, this.tetherPrice);
 
   @override
   State<StatefulWidget> createState() {
@@ -209,7 +213,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   buildAmount() {
     var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 1.0;
 
-    if (widget.loanAmount.symbolKey == "DUSD") {
+    if (widget.loanAmount.symbolKey.toUpperCase() == "DUSD") {
       pricePerToken = 1.0;
     }
 
@@ -237,7 +241,10 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
                   Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption),
                   Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)
                 ]),
-                TableRow(children: [Text(FundFormatter.format(totalAmount, fractions: 2) + ' \$'), Text(FundFormatter.format(pricePerToken, fractions: 2) + ' \$')]),
+                TableRow(children: [
+                  Text(FundFormatter.format(totalAmount * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
+                  Text(FundFormatter.format(pricePerToken * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency))
+                ]),
               ]),
               Container(height: 10),
               Table(border: TableBorder(), children: [
@@ -264,7 +271,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
                 TableRow(children: [Text(S.of(context).loan_tokens_to_pay_back, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_payback_value)]),
                 TableRow(children: [
                   Text(FundFormatter.format(amountToRemoveDouble)),
-                  Text(FundFormatter.format((amountToRemoveDouble) * pricePerToken, fractions: 2) + " \$"),
+                  Text(FundFormatter.format((amountToRemoveDouble) * pricePerToken * widget.tetherPrice, fractions: 2) + " " + Currency.getCurrencySymbol(widget.currency)),
                 ]),
               ])
             ])));

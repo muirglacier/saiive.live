@@ -1,3 +1,4 @@
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/ui/model/available_themes.dart';
 import 'package:saiive.live/ui/model/available_language.dart';
 import 'package:saiive.live/ui/model/authentication_method.dart';
@@ -103,4 +104,28 @@ class SharedPrefsMock extends ISharedPrefsUtil {
 
   @override
   Future setUseAuthentiaction(AuthMethod method) async {}
+
+  @override
+  Future<int> getMaxAddressCount() {
+    return Future.value(40);
+  }
+
+  @override
+  Future<bool> getUseSingleAddressWallet() {
+    return Future.value(false);
+  }
+
+  @override
+  Future setMaxAddressCount(int value) async {}
+
+  @override
+  Future setUseSingleAddressWallet(bool value) async {}
+
+  @override
+  Future<CurrencyEnum> getCurrency() {
+    return Future.value(CurrencyEnum.USD);
+  }
+
+  @override
+  Future<void> setCurrency(CurrencyEnum currency) async {}
 }

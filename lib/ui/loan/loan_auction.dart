@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
-import 'package:intl/intl.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/bus/stats_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
@@ -11,6 +9,7 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
 import 'package:saiive.live/network/model/stats.dart';
@@ -18,6 +17,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/stats_background.dart';
 import 'package:saiive.live/ui/loan/loan_auction_batch_box.dart';
 import 'package:saiive.live/ui/loan/loan_auction_bid.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/transaction_fail.dart';
 import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
@@ -30,9 +30,14 @@ import 'package:wakelock/wakelock.dart';
 // ignore: must_be_immutable
 class VaultAuctionScreen extends StatefulWidget {
   final LoanVaultAuction auction;
+  final List<String> publicKeys;
+
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
   final key = GlobalKey();
 
-  VaultAuctionScreen(this.auction);
+  VaultAuctionScreen(this.auction, this.currency, this.tetherPrice, {this.publicKeys});
 
   @override
   State<StatefulWidget> createState() {
@@ -74,22 +79,6 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     }
   }
 
-  String calculateEndDate() {
-    if (null == _stats) {
-      return null;
-    }
-
-    if (_stats.count.blocks > widget.auction.liquidationHeight) {
-      return null;
-    }
-
-    var now = DateTime.now();
-    now.add(Duration(seconds: (max(widget.auction.liquidationHeight - _stats.count.blocks, 0)*30).floor()));
-    final f = new DateFormat('dd.MM.yyyy hh:mm');
-
-    return f.format(now);
-  }
-
   _loadBalance() async {
     var balanceHelper = BalanceHelper();
     var accountBalance = await balanceHelper.getDisplayAccountBalance(spentable: true);
@@ -120,7 +109,6 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
       ));
 
       Navigator.of(context).pop();
-      Navigator.of(context).pop();
     } catch (e) {
       streamController.close();
       await Navigator.of(context).push(MaterialPageRoute(
@@ -136,8 +124,11 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
 
     return Navigated(
         child: VaultAuctionBidScreen(widget.auction, batch, balance, (amount, from) async {
-      await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round(), from: from);
-    }));
+      await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+        await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round(), from: from);
+      });
+      Navigator.of(context).pop();
+    }, widget.currency, widget.tetherPrice));
   }
 
   Widget _buildTopPart() {
@@ -159,7 +150,11 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          Wrap(children: [Text(widget.auction.liquidationHeight.toString()), if (_stats != null && null != calculateEndDate()) Text(' / ' + calculateEndDate())])
+                          Wrap(children: [
+                            Text(widget.auction.liquidationHeight.toString()),
+                            if (_stats != null && null != widget.auction.calculateEndDate(_stats.count.blocks))
+                              Text(' / ' + widget.auction.calculateRemainingBlocks(_stats.count.blocks).toString() + ' - ' + widget.auction.calculateEndDate(_stats.count.blocks))
+                          ])
                         ])),
                         Container(width: 10)
                       ],
@@ -178,7 +173,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
           _panelController.show();
           _panelController.open();
         },
-        child: Padding(padding: EdgeInsets.all(10), child: Card(child: AuctionBatchBoxWidget(batch))));
+        child: Padding(padding: EdgeInsets.all(10), child: Card(child: AuctionBatchBoxWidget(batch, widget.currency, widget.tetherPrice, publicKeys: widget.publicKeys))));
   }
 
   @override
@@ -192,7 +187,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
     GlobalKey<NavigatorState> key = GlobalKey();
 
     return Scaffold(
-      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text('Auction')),
+      appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_auction)),
       body: SlidingUpPanel(
           controller: _panelController,
           backdropEnabled: true,

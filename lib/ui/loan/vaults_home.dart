@@ -10,6 +10,7 @@ import 'package:saiive.live/ui/loan/vault_create.dart';
 import 'package:saiive.live/ui/loan/vault_tokens.dart';
 import 'package:saiive.live/ui/loan/vaults.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/util/search_able_widget.dart';
 
 class VaultsHomeScreen extends StatefulWidget {
   const VaultsHomeScreen({Key key}) : super(key: key);
@@ -22,7 +23,16 @@ class VaultsHomeScreen extends StatefulWidget {
 
 class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProviderStateMixin {
   TabController _tabController;
+  var _searchController = TextEditingController(text: '');
+  FocusNode _searchFocusNode;
   int _selectedIndex = 0;
+  bool _search = false;
+
+  Map<LoanVaultFilter, bool> filters = {
+    LoanVaultFilter.buyable: false,
+    LoanVaultFilter.mine: false,
+    LoanVaultFilter.bidder: false,
+  };
 
   var _tabs = [VaultsScreen(), VaultTokensScreen(), AuctionsScreen()];
 
@@ -31,10 +41,15 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
-
     _tabController.addListener(() {
-      _selectedIndex = _tabController.index;
+      setState(() {
+        _selectedIndex = _tabController.index;
+        _search = false;
+      });
     });
+
+    _searchFocusNode = new FocusNode();
+    _searchController.addListener(handleSearch);
 
     if (_vaultSyncStartEvent == null) {
       _vaultSyncStartEvent = EventTaxiImpl.singleton().registerTo<VaultSyncStartEvent>().listen((event) async {
@@ -47,6 +62,15 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
     super.initState();
   }
 
+  handleSearch() async {
+    String text = _searchController.text;
+    var tab = _tabs[_selectedIndex];
+
+    if (tab is SearchableWidget) {
+      (tab as SearchableWidget).search(text);
+    }
+  }
+  
   @override
   void deactivate() {
     super.deactivate();
@@ -55,6 +79,44 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
       _vaultSyncStartEvent.cancel();
       _vaultSyncStartEvent = null;
     }
+  }
+
+  void showAuctionFilterPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return StatefulBuilder(
+          builder: (context, StateSetter setInnerState) {
+            return AlertDialog(
+              title: Text(S.of(context).loan_auction_filter),
+              content: Container(
+                  width: double.maxFinite,
+                  child: ListView(
+                    children: filters.keys.map((LoanVaultFilter key) {
+                      return CheckboxListTile(
+                        title: Text(key.toText(context)),
+                        value: filters[key],
+                        onChanged: (bool value) {
+                          setInnerState(() {
+                            filters[key] = value;
+                          });
+                        },
+                      );
+                    }).toList(),
+                  )),
+              actions: [
+                TextButton(
+                  child: Text(S.of(context).loan_auction_filter_ok),
+                  onPressed: () {
+                    (_tabs[_selectedIndex] as AuctionsScreen).filter(filters);
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            );
+          });
+      },
+    );
   }
 
   @override
@@ -73,21 +135,61 @@ class _VaultsHomeScreen extends State<VaultsHomeScreen> with SingleTickerProvide
                 Tab(text: 'Auctions'),
               ],
             ),
-            title: Row(children: [
-              if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
-                Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: GestureDetector(
-                      onTap: () {
-                        var key = StateContainer.of(context).scaffoldKey;
-                        key.currentState.openDrawer();
-                      },
-                      child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                    )),
-              Text(S.of(context).loan_vaults)
-            ]),
+              title: (_selectedIndex == 2 && _search) ? Container(
+                width: double.infinity,
+                height: 40,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                child: Center(
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _searchFocusNode,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                          },
+                        ),
+                        hintText: 'Search...',
+                        border: InputBorder.none),
+                  ),
+                ),
+              ) : Row(children: [
+                if (Platform.isAndroid || Platform.isIOS || Platform.isFuchsia)
+                  Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          var key = StateContainer.of(context).scaffoldKey;
+                          key.currentState.openDrawer();
+                        },
+                        child: Icon(Icons.view_headline, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                      )),
+                Text(S.of(context).loan_vaults)
+              ]),
             actions: [
-              Padding(
+              if (_selectedIndex == 2) Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      showAuctionFilterPopup(context);
+                    },
+                    child: Icon(Icons.filter_list, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
+              if (_selectedIndex == 2) Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        _search = !_search;
+                      });
+
+                      _searchFocusNode.requestFocus();
+                    },
+                    child: Icon(Icons.filter_alt, size: 26.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
+              if (_selectedIndex == 0 || _selectedIndex == 1) Padding(
                   padding: EdgeInsets.only(right: 20.0),
                   child: GestureDetector(
                     onTap: () async {

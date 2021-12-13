@@ -245,6 +245,16 @@ class S {
     );
   }
 
+  /// `Price`
+  String get price {
+    return Intl.message(
+      'Price',
+      name: 'price',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Open in explorer`
   String get show_in_explorer {
     return Intl.message(
@@ -270,6 +280,26 @@ class S {
     return Intl.message(
       'Add',
       name: 'add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
       desc: '',
       args: [],
     );
@@ -960,6 +990,36 @@ class S {
     return Intl.message(
       'Wallet is synchronising right now!',
       name: 'wallet_locked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only use one address`
+  String get wallet_use_single_address_mode {
+    return Intl.message(
+      'Only use one address',
+      name: 'wallet_use_single_address_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If yes, the wallet will only create 1 address!`
+  String get wallet_use_single_address_mode_info {
+    return Intl.message(
+      'If yes, the wallet will only create 1 address!',
+      name: 'wallet_use_single_address_mode_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Changing this settings, changes the behaviour of the address generation/usage!`
+  String get wallet_single_address_mode_switch {
+    return Intl.message(
+      'Changing this settings, changes the behaviour of the address generation/usage!',
+      name: 'wallet_single_address_mode_switch',
       desc: '',
       args: [],
     );
@@ -1945,10 +2005,10 @@ class S {
     );
   }
 
-  /// `From Token`
+  /// `To Token`
   String get dex_v2_to_token {
     return Intl.message(
-      'From Token',
+      'To Token',
       name: 'dex_v2_to_token',
       desc: '',
       args: [],
@@ -2435,6 +2495,16 @@ class S {
     );
   }
 
+  /// `Expert address mode`
+  String get expert_address_title {
+    return Intl.message(
+      'Expert address mode',
+      name: 'expert_address_title',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Expert`
   String get expert {
     return Intl.message(
@@ -2505,13 +2575,13 @@ class S {
     );
   }
 
-  /// `Current Value (USD)`
-  String get loan_current_amount_usd {
+  /// `Current Value ({currency})`
+  String loan_current_amount_usd(Object currency) {
     return Intl.message(
-      'Current Value (USD)',
+      'Current Value ($currency)',
       name: 'loan_current_amount_usd',
       desc: '',
-      args: [],
+      args: [currency],
     );
   }
 
@@ -2575,13 +2645,13 @@ class S {
     );
   }
 
-  /// `Price (USD)`
-  String get loan_price_usd {
+  /// `Price ({currency})`
+  String loan_price_usd(Object currency) {
     return Intl.message(
-      'Price (USD)',
+      'Price ($currency)',
       name: 'loan_price_usd',
       desc: '',
-      args: [],
+      args: [currency],
     );
   }
 
@@ -2630,6 +2700,16 @@ class S {
     return Intl.message(
       'Collateral Ratio',
       name: 'loan_collateral_ratio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next Collateral Ratio`
+  String get loan_next_collateral_ratio {
+    return Intl.message(
+      'Next Collateral Ratio',
+      name: 'loan_next_collateral_ratio',
       desc: '',
       args: [],
     );
@@ -3245,13 +3325,13 @@ class S {
     );
   }
 
-  /// `Total Loan USD`
-  String get loan_total_loan_usd {
+  /// `Total Loan {currency}`
+  String loan_total_loan_usd(Object currency) {
     return Intl.message(
-      'Total Loan USD',
+      'Total Loan $currency',
       name: 'loan_total_loan_usd',
       desc: '',
-      args: [],
+      args: [currency],
     );
   }
 
@@ -3545,6 +3625,16 @@ class S {
     );
   }
 
+  /// `Loan Value`
+  String get loan_value {
+    return Intl.message(
+      'Loan Value',
+      name: 'loan_value',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `FAQ`
   String get loan_faq {
     return Intl.message(
@@ -3650,6 +3740,176 @@ class S {
     return Intl.message(
       'The collateral factor determines the degree of contribution of each collateral token. For example, if a token is accepted at 70% collateral factor, \$100 worth of the token would contribute to \$70 of collateral value in a vault.',
       name: 'loan_faq_vault_factor_answer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Vaults`
+  String get loan_auction_filter_mine {
+    return Intl.message(
+      'My Vaults',
+      name: 'loan_auction_filter_mine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buyable Vaults`
+  String get loan_auction_filter_buyable {
+    return Intl.message(
+      'Buyable Vaults',
+      name: 'loan_auction_filter_buyable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Highest Bidder`
+  String get loan_auction_filter_highest_bidder {
+    return Intl.message(
+      'Highest Bidder',
+      name: 'loan_auction_filter_highest_bidder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Auctions currently`
+  String get loan_no_auctions {
+    return Intl.message(
+      'No Auctions currently',
+      name: 'loan_no_auctions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auction`
+  String get loan_auction {
+    return Intl.message(
+      'Auction',
+      name: 'loan_auction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Bid`
+  String get loan_auction_your_bid {
+    return Intl.message(
+      'Your Bid',
+      name: 'loan_auction_your_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Highest Bid`
+  String get loan_auction_highest_bid {
+    return Intl.message(
+      'Highest Bid',
+      name: 'loan_auction_highest_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Min Bid Value`
+  String get loan_auction_min_bid {
+    return Intl.message(
+      'Min Bid Value',
+      name: 'loan_auction_min_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available Balance`
+  String get loan_auction_bid_available_balance {
+    return Intl.message(
+      'Available Balance',
+      name: 'loan_auction_bid_available_balance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bid has to be min`
+  String get loan_auction_min_bid_has_to_be {
+    return Intl.message(
+      'Bid has to be min',
+      name: 'loan_auction_min_bid_has_to_be',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Bid`
+  String get loan_auction_create_bid {
+    return Intl.message(
+      'Create Bid',
+      name: 'loan_auction_create_bid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How much you want to bid?`
+  String get loan_auction_bid_how_much {
+    return Intl.message(
+      'How much you want to bid?',
+      name: 'loan_auction_bid_how_much',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From`
+  String get loan_auction_bid_from {
+    return Intl.message(
+      'From',
+      name: 'loan_auction_bid_from',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set from address`
+  String get loan_auction_bid_from_text {
+    return Intl.message(
+      'Set from address',
+      name: 'loan_auction_bid_from_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Vault`
+  String get loan_auction_your_vault {
+    return Intl.message(
+      'Your Vault',
+      name: 'loan_auction_your_vault',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Filter`
+  String get loan_auction_filter {
+    return Intl.message(
+      'Filter',
+      name: 'loan_auction_filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OK`
+  String get loan_auction_filter_ok {
+    return Intl.message(
+      'OK',
+      name: 'loan_auction_filter_ok',
       desc: '',
       args: [],
     );

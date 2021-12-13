@@ -13,6 +13,7 @@ import 'package:saiive.live/ui/accounts/accounts_detail_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_select_action_screen.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 import 'accounts_import_screen.dart';
 
@@ -32,6 +33,7 @@ class AccountsScreen extends StatefulWidget {
 class _AccountScreen extends State<AccountsScreen> {
   List<WalletAccount> _walletAccounts = List<WalletAccount>.empty();
   bool _isLoading = false;
+  bool _isSingleAddressWallet = false;
 
   IWalletService _walletService;
 
@@ -64,6 +66,7 @@ class _AccountScreen extends State<AccountsScreen> {
 
     var accounts = await _walletService.getAccounts();
 
+    _isSingleAddressWallet = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
     if (widget.useOnlyFilter) {
       accounts = accounts.where((element) => element.chain == widget.chainType).toList();
     }
@@ -209,20 +212,21 @@ class _AccountScreen extends State<AccountsScreen> {
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           title: Row(children: [Text(S.of(context).wallet_accounts)]),
           actions: [
-            Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => AccountsSelectActionScreen((chainType) async {
-                              await Navigator.of(context).push(MaterialPageRoute(
-                                  settings: RouteSettings(name: "/accountsAddScreen"), builder: (BuildContext context) => AccountsAddScreen(chainType, null, true)));
-                              await _init();
-                            })));
-                  },
-                  child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                )),
-            if (!_isLoading && widget.allowImport)
+            if (!_isSingleAddressWallet)
+              Padding(
+                  padding: EdgeInsets.only(right: 15.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => AccountsSelectActionScreen((chainType) async {
+                                await Navigator.of(context).push(MaterialPageRoute(
+                                    settings: RouteSettings(name: "/accountsAddScreen"), builder: (BuildContext context) => AccountsAddScreen(chainType, null, true)));
+                                await _init();
+                              })));
+                    },
+                    child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
+            if (!_isLoading && widget.allowImport && !_isSingleAddressWallet)
               Padding(
                   padding: EdgeInsets.only(right: 15.0),
                   child: GestureDetector(

@@ -205,16 +205,6 @@ class SembastWalletDatabase extends IWalletDatabase {
 
     var accounts = await dbStore.find(await database, finder: finder);
 
-    if (accounts.isEmpty && addressType == AddressType.P2SHSegwit) {
-      finder = Finder(
-          filter: Filter.equals('account', account) &
-              Filter.equals('isChangeAddress', isChangeAddress) &
-              Filter.equals('index', index) &
-              Filter.equals('accountId', walletAccount.uniqueId));
-
-      accounts = await dbStore.find(await database, finder: finder);
-    }
-
     return accounts.isNotEmpty;
   }
 
@@ -230,11 +220,6 @@ class SembastWalletDatabase extends IWalletDatabase {
             Filter.equals('accountId', walletAccount.uniqueId));
 
     var accounts = await dbStore.find(await database, finder: finder);
-    if (accounts.isEmpty && addressType == AddressType.P2SHSegwit) {
-      finder = Finder(filter: Filter.equals('account', account) & Filter.equals('isChangeAddress', isChangeAddress) & Filter.equals('index', index));
-
-      accounts = await dbStore.find(await database, finder: finder);
-    }
     var data = accounts.map((e) => e == null ? null : WalletAddress.fromJson(e.value))?.toList();
 
     final activeAddresses = await _getActiveAddresses(spentable: true);
@@ -660,15 +645,5 @@ class SembastWalletDatabase extends IWalletDatabase {
     List<AccountBalance> balances = sumMap.entries.map((entry) => AccountBalance(token: entry.key, balance: entry.value, chain: this._chain)).toList();
     balances.add(await getAccountBalance(DeFiConstants.DefiTokenSymbol, spentable: spentable));
     return balances;
-  }
-
-  @override
-  int getAddressCreationCount() {
-    return 20;
-  }
-
-  @override
-  int getReturnAddressCreationCount() {
-    return 20;
   }
 }

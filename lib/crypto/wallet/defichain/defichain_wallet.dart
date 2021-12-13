@@ -16,7 +16,6 @@ import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/network/model/token.dart';
 import 'package:saiive.live/network/model/transaction_data.dart';
 import 'package:tuple/tuple.dart';
-import '../address_type.dart';
 import '../impl/wallet.dart' as wallet;
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 
@@ -68,7 +67,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var fees = await getTxFee(0, 0);
     await prepareAccount(shareAddress, fees, loadingStream: loadingStream);
 
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true);
     var tx = await getAuthInputsSmart(shareAddress, AuthTxMin, fees, loadingStream: loadingStream);
 
     final txb = await createBaseTransaction(0, shareAddress, changeAddress, fees, (txb, inputTxs, nw) async {
@@ -124,7 +123,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     } else if (DeFiConstants.isDfiToken(tokenB)) {
       amountB = useAmount;
     }
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true);
     await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     final tokenAType = await apiService.tokenService.getToken("DFI", tokenA);
@@ -204,7 +203,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       fromAmount = prep.item1;
     }
 
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true);
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTok = await apiService.tokenService.getToken("DFI", fromToken);
@@ -288,7 +287,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       fromAmount = prep.item1;
     }
 
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true);
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTok = await apiService.tokenService.getToken("DFI", fromToken);
@@ -339,7 +338,11 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   @override
   Future<String> createSendTransaction(int amount, String token, String to,
       {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false}) async {
-    final changeAddress = returnAddress ?? await this.getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await this.getPublicKey(true);
+
+    if (amount == 0) {
+      throw new ArgumentError("a send of 0 does not make sense!");
+    }
 
     if (DeFiConstants.isDfiToken(token)) {
       var needsToRefresh = false;
@@ -389,7 +392,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final address = await walletDatabase.getWalletAddress(ownerAddress);
     final walletAccount = await walletDatabase.getAccount(address.accountId);
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true);
     await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     var keyPair = await getPrivateKey(address, walletAccount);
@@ -435,7 +438,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final address = await walletDatabase.getWalletAddress(ownerAddress);
     final walletAccount = await walletDatabase.getAccount(address.accountId);
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true);
     await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     var keyPair = await getPrivateKey(address, walletAccount);
@@ -478,10 +481,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     var owner = ownerAddress;
 
     if (owner == null || owner == "") {
-      owner = await getPublicKey(false, AddressType.P2SHSegwit);
+      owner = await getPublicKey(false);
     }
 
-    final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = returnAddress ?? await getPublicKey(true);
     await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
     var fees = await getTxFee(1, 2);
@@ -520,7 +523,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     await walletMutex.acquire();
 
     try {
-      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      final changeAddress = returnAddress ?? await getPublicKey(true);
 
       loadingStream?.add(S.current.wallet_operation_build_tx);
       var swap = await _borrowLoan(vaultId, to, token, amount, changeAddress, loadingStream: loadingStream);
@@ -588,7 +591,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     await walletMutex.acquire();
 
     try {
-      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      final changeAddress = returnAddress ?? await getPublicKey(true);
       loadingStream?.add(S.current.wallet_operation_build_tx);
       var swap = await _paybackLoan(vaultId, to, token, amount, changeAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
@@ -668,10 +671,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     try {
       if (to == null || to.isEmpty) {
-        to = await getPublicKey(false, AddressType.P2SHSegwit);
+        to = await getPublicKey(false);
       }
 
-      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      final changeAddress = returnAddress ?? await getPublicKey(true);
       loadingStream?.add(S.current.wallet_operation_build_tx);
       var swap = await _withdrawFromVault(vaultId, to, token, amount, changeAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
@@ -737,10 +740,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     try {
       if (from == null || from.isEmpty) {
-        from = await getPublicKey(false, AddressType.P2SHSegwit);
+        from = await getPublicKey(false);
       }
 
-      final changeAddress = returnAddress ?? await getPublicKey(true, AddressType.P2SHSegwit);
+      final changeAddress = returnAddress ?? await getPublicKey(true);
       loadingStream?.add(S.current.wallet_operation_build_tx);
       var swap = await _depositToVault(vaultId, from, token, amount, changeAddress, loadingStream: loadingStream);
       loadingStream?.add(S.current.wallet_operation_send_tx);
@@ -847,7 +850,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       throw new InsufficientBalanceError("${fromTokenBalance.balance} is less than $amount", "");
     }
 
-    from = from ?? await getPublicKey(true, AddressType.P2SHSegwit);
+    from = from ?? await getPublicKey(true);
 
     final fromTok = await apiService.tokenService.getToken("DFI", token);
     final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(from, token);
@@ -928,7 +931,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       final addressInfo = await walletDatabase.getWalletAddress(txs.address);
       final walletAccount = await walletDatabase.getAccount(addressInfo.accountId);
 
-      final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
+      final changeAddress = await getPublicKey(true);
       await checkIfWeCanSpendTheChangeAddress(changeAddress);
 
       if (walletAccount.walletAccountType == WalletAccountType.PublicKey) {
@@ -1049,7 +1052,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
         break;
       }
     }
-    final changeAddress = await getPublicKey(true, AddressType.P2SHSegwit);
+    final changeAddress = await getPublicKey(true);
 
     final tokenType = await apiService.tokenService.getToken("DFI", DeFiConstants.DefiAccountSymbol);
     var txData = List<TransactionData>.empty(growable: true);

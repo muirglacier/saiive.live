@@ -13,6 +13,10 @@ abstract class IWallet {
   static const int MaxUnusedIndexScan = 2;
   static const int KeysPerQuery = 50;
 
+  static const int MaxUnusedAccountScanBitcoin = 0;
+  static const int MaxUnusedIndexScanBitcoin = 1;
+  static const int KeysPerQueryBitcoin = 10;
+
   String get walletType;
 
   Future init();
@@ -33,6 +37,7 @@ abstract class IWallet {
 
   Future<WalletAddress> updateAddress(WalletAddress address);
   Future<WalletAddress> getNextWalletAddress(WalletAccount walletAccount, AddressType addressType, bool isChangeAddress);
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType, {bool previewOnly = false});
 
   Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount);
 

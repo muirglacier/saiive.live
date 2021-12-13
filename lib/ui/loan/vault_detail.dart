@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
@@ -8,6 +9,7 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/loans_service.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
@@ -36,8 +38,10 @@ import 'package:wakelock/wakelock.dart';
 
 class VaultDetailScreen extends StatefulWidget {
   final LoanVault vault;
+  final CurrencyEnum currency;
+  final double tetherPrice;
 
-  VaultDetailScreen(this.vault);
+  VaultDetailScreen(this.vault, this.currency, this.tetherPrice);
 
   @override
   State<StatefulWidget> createState() {
@@ -45,7 +49,7 @@ class VaultDetailScreen extends StatefulWidget {
   }
 }
 
-class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProviderStateMixin {
+class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderStateMixin {
   final bodyGlobalKey = GlobalKey();
   TabController _tabController;
   ScrollController _scrollController;
@@ -55,6 +59,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   List<LoanToken> _loanTokens;
   bool _loading = false;
   bool _canEditCollateral = true;
+  int _length = 0;
 
   LoanVault myVault;
 
@@ -63,13 +68,13 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
       _loading = true;
     });
 
-    var vaults = await sl.get<IVaultsService>().getMyVault(DeFiConstants.DefiAccountSymbol, widget.vault.ownerAddress);
+    var vault = await sl.get<IVaultsService>().getVault(DeFiConstants.DefiAccountSymbol, widget.vault.vaultId);
 
-    var myNewVault = vaults.firstWhere((element) => element.vaultId == myVault.vaultId);
+    if (vault != null) {
+      _calculateDFIPercentage();
 
-    if (myNewVault != null) {
       setState(() {
-        myVault = myNewVault;
+        myVault = vault;
       });
     }
 
@@ -81,16 +86,64 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
   @override
   void initState() {
     _scrollController = ScrollController();
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(_smoothScrollToTop);
 
     myVault = widget.vault;
 
+    super.initState();
+
     _initTokens();
 
-    _canEditCollateral = widget.vault.state != LoanVaultStatus.inLiquidation && widget.vault.state != LoanVaultStatus.unknown && widget.vault.state != LoanVaultStatus.frozen;
+    _canEditCollateral = widget.vault.state != LoanVaultStatus.in_liquidation && widget.vault.state != LoanVaultStatus.unknown && widget.vault.state != LoanVaultStatus.frozen;
+    _length = widget.vault.state != LoanVaultStatus.in_liquidation ? 3 : 1;
 
-    super.initState();
+    _tabController = TabController(length: _length, vsync: this);
+    _tabController.addListener(_smoothScrollToTop);
+  }
+
+  void didUpdateWidget(covariant VaultDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.vault.state != oldWidget.vault.state) {
+      _length = widget.vault.state != LoanVaultStatus.in_liquidation ? 3 : 1;
+
+      final oldIndex = _tabController.index;
+      _tabController.dispose();
+      _tabController = TabController(
+        length: _length,
+        initialIndex: max(0, min(oldIndex, _length - 1)),
+        vsync: this,
+      );
+      _tabController.addListener(_smoothScrollToTop);
+    }
+  }
+
+  List<Widget> buildChilds() {
+    if (widget.vault.state != LoanVaultStatus.in_liquidation) {
+      return [
+        _buildTabActiveLoans(),
+        _buildTabDetails(),
+        _buildTabCollaterals(),
+        /*_buildTabAuctions()*/
+      ];
+    }
+    return [
+      _buildTabDetails(),
+      /*_buildTabAuctions()*/
+    ];
+  }
+
+  List<Widget> buildChildsTabs() {
+    if (widget.vault.state != LoanVaultStatus.in_liquidation) {
+      return [
+        Tab(text: S.of(context).loan_vault_details_tab_active_loan),
+        Tab(text: S.of(context).loan_vault_details_tab_details),
+        Tab(text: S.of(context).loan_vault_details_tab_collaterals),
+        // Tab(text: S.of(context).loan_vault_details_tab_auctions),
+      ];
+    }
+    return [
+      Tab(text: S.of(context).loan_vault_details_tab_details),
+      // Tab(text: S.of(context).loan_vault_details_tab_auctions),
+    ];
   }
 
   _initTokens() async {
@@ -125,7 +178,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
     }
 
     setState(() {
-      isDFILessThan50 = percentage < 50.0;
+      isDFILessThan50 = myVault.state != LoanVaultStatus.in_liquidation && percentage < 50.0;
     });
   }
 
@@ -152,7 +205,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
         ElevatedButton(
           child: Text(S.of(context).loan_borrow),
           onPressed: () async {
-            await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
+            await Navigator.of(context)
+                .push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault, currency: widget.currency, tetherPrice: widget.tetherPrice)));
             await refreshVault();
           },
         )
@@ -218,8 +272,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                   Text(S.of(context).loan_interest_amount + ' (${myVault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
                 ]),
                 TableRow(children: [
-                  Text(FundFormatter.format(double.tryParse(amount.amount))),
-                  Text(FundFormatter.format(double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100, fractions: 4) + ' \$')
+                  Text(FundFormatter.format(double.tryParse(amount.amount) * widget.tetherPrice)),
+                  Text(FundFormatter.format((double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100) * widget.tetherPrice, fractions: 4) +
+                      ' ' +
+                      Currency.getCurrencySymbol(widget.currency))
                 ]),
               ]),
               Container(height: 10),
@@ -228,14 +284,18 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                   Text(S.of(context).loan_amount_payable, style: Theme.of(context).textTheme.caption),
                   Text(S.of(context).loan_price_per_token, style: Theme.of(context).textTheme.caption)
                 ]),
-                TableRow(children: [Text(FundFormatter.format(totalAmount, fractions: 2) + ' \$'), Text(FundFormatter.format(pricePerToken, fractions: 2) + ' \$')]),
+                TableRow(children: [
+                  Text(FundFormatter.format(totalAmount * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
+                  Text(FundFormatter.format(pricePerToken * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency))
+                ]),
               ]),
               Container(height: 10),
               Wrap(crossAxisAlignment: WrapCrossAlignment.start, children: [
                 ElevatedButton(
                   child: Text(S.of(context).loan_payback_loan),
                   onPressed: () async {
-                    await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultPaybackLoanScreen(amount, token, myVault, interest)));
+                    await Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (BuildContext context) => VaultPaybackLoanScreen(amount, token, myVault, interest, widget.currency, widget.tetherPrice)));
                     await refreshVault();
                   },
                 ),
@@ -245,7 +305,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                   onPressed: token == null
                       ? null
                       : () async {
-                          await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanToken: token, loanVault: myVault)));
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  VaultBorrowLoan(loanToken: token, loanVault: myVault, currency: widget.currency, tetherPrice: widget.tetherPrice)));
                           await refreshVault();
                         },
                 )
@@ -259,13 +321,21 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
       [S.of(context).loan_vault_interest, myVault.schema.interestRate + '%'],
     ];
 
-    List<List<String>> itemsVault = [
-      [S.of(context).loan_collateral_ratio, myVault.collateralRatio + '%'],
-      [S.of(context).loan_active_loans, myVault.loanAmounts.length.toString()],
-      [S.of(context).loan_total_loan_amount, myVault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
-      [S.of(context).loan_collateral_value, FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'],
-      [S.of(context).loan_vault_health, myVault.healthStatus.toString()],
-    ];
+    List<List<String>> itemsVault = [];
+
+    if (widget.vault.state != LoanVaultStatus.in_liquidation) {
+      itemsVault = [
+        [S.of(context).loan_collateral_ratio, myVault.collateralRatioDouble.toStringAsFixed(2) + '%'],
+        [S.of(context).loan_next_collateral_ratio, myVault.nextCollateralRatioDouble.toStringAsFixed(2) + '%'],
+        [S.of(context).loan_active_loans, myVault.loanAmounts.length.toString()],
+        [S.of(context).loan_total_loan_amount, myVault.loanAmounts.fold("0", (sum, next) => (double.tryParse(sum) + double.tryParse(next.amount)).toString())],
+        [
+          S.of(context).loan_collateral_value,
+          FundFormatter.format(double.tryParse(myVault.collateralValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+        ],
+        [S.of(context).loan_vault_health, myVault.healthStatus.toString()],
+      ];
+    }
 
     return CustomScrollView(slivers: [
       SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_loan_scheme, style: Theme.of(context).textTheme.caption))),
@@ -279,19 +349,21 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
           ),
         )
       ])),
-      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
-      SliverList(
-          delegate: SliverChildListDelegate([
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                child: CustomTableWidget(itemsVault),
-              ),
-            ],
-          ),
-        )
-      ]))
+      if (itemsVault.length > 0)
+        SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
+      if (itemsVault.length > 0)
+        SliverList(
+            delegate: SliverChildListDelegate([
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  child: CustomTableWidget(itemsVault),
+                ),
+              ],
+            ),
+          )
+        ]))
     ]);
   }
 
@@ -337,7 +409,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                 TableRow(children: [
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(FundFormatter.format(double.tryParse(amount.amount))),
-                    Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + " \$", style: Theme.of(context).textTheme.caption)
+                    Text(FundFormatter.format(price * double.tryParse(amount.amount) * widget.tetherPrice, fractions: 2) + " " + Currency.getCurrencySymbol(widget.currency),
+                        style: Theme.of(context).textTheme.caption)
                   ]),
                   Text(LoanHelper.calculateCollateralShare(double.tryParse(myVault.collateralValue), amount, token).toStringAsFixed(2) + '%')
                 ]),
@@ -370,23 +443,28 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                       Row(
                         children: [
                           IconButton(
-                              onPressed: () async {
-                                await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultEditSchemeScreen(myVault)));
-                                await refreshVault();
-                              },
+                              onPressed: !_canEditCollateral
+                                  ? null
+                                  : () async {
+                                      await Navigator.of(context)
+                                          .push(MaterialPageRoute(builder: (BuildContext context) => VaultEditSchemeScreen(myVault, widget.currency, widget.tetherPrice)));
+                                      await refreshVault();
+                                    },
                               icon: Icon(Icons.edit)),
                           SizedBox(width: 10),
                           IconButton(
-                              onPressed: () async {
-                                if (myVault.loanAmounts.length > 0) {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).loan_close_vault_not_possible_due_loans)));
-                                  return;
-                                }
+                              onPressed: !_canEditCollateral
+                                  ? null
+                                  : () async {
+                                      if (myVault.loanAmounts.length > 0) {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).loan_close_vault_not_possible_due_loans)));
+                                        return;
+                                      }
 
-                                await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                                  await _doCloseVault();
-                                });
-                              },
+                                      await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                        await _doCloseVault();
+                                      });
+                                    },
                               icon: Icon(Icons.close))
                         ],
                       )
@@ -405,28 +483,35 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                     ]),
                     if (isDFILessThan50) Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red)),
                     Row(children: [Expanded(child: LoanCollateralsWidget(myVault, _tokens, myVault.collateralAmounts))]),
-                    Container(height: 5),
-                    Table(border: TableBorder(), children: [
-                      TableRow(children: [
-                        Text(S.of(context).loan_active_loans, style: Theme.of(context).textTheme.caption),
-                        Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption)
+                    if (widget.vault.state != LoanVaultStatus.in_liquidation) Container(height: 5),
+                    if (widget.vault.state != LoanVaultStatus.in_liquidation)
+                      Table(border: TableBorder(), children: [
+                        TableRow(children: [
+                          Text(S.of(context).loan_active_loans, style: Theme.of(context).textTheme.caption),
+                          Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption)
+                        ]),
+                        TableRow(children: [
+                          myVault.loanAmounts.length > 0
+                              ? Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(myVault.loanAmounts, 3))
+                              : Text(S.of(context).loan_no_active_loans),
+                          Text(FundFormatter.format(double.tryParse(myVault.loanValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency))
+                        ]),
                       ]),
-                      TableRow(children: [
-                        myVault.loanAmounts.length > 0
-                            ? Container(padding: new EdgeInsets.only(left: 5), child: TokenSetIcons(myVault.loanAmounts, 3))
-                            : Text(S.of(context).loan_no_active_loans),
-                        Text(FundFormatter.format(double.tryParse(myVault.loanValue), fractions: 2) + ' \$')
+                    if (widget.vault.state != LoanVaultStatus.in_liquidation) Container(height: 10),
+                    if (widget.vault.state != LoanVaultStatus.in_liquidation)
+                      Table(border: TableBorder(), children: [
+                        TableRow(children: [
+                          Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
+                          Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption)
+                        ]),
+                        TableRow(children: [
+                          Text(FundFormatter.format(double.tryParse(myVault.collateralValue) * widget.tetherPrice, fractions: 2) +
+                              ' ' +
+                              Currency.getCurrencySymbol(widget.currency)),
+                          Text(myVault.collateralRatioDouble.toStringAsFixed(2) + ' %' + ' / ' + myVault.nextCollateralRatioDouble.toStringAsFixed(2) + ' %')
+                        ]),
                       ]),
-                    ]),
-                    Container(height: 10),
-                    Table(border: TableBorder(), children: [
-                      TableRow(children: [
-                        Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
-                        Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption)
-                      ]),
-                      TableRow(children: [Text(FundFormatter.format(double.tryParse(myVault.collateralValue), fractions: 2) + ' \$'), Text(myVault.collateralRatio + ' %')]),
-                    ]),
-                    Container(height: 10),
+                    if (widget.vault.state != LoanVaultStatus.in_liquidation) Container(height: 10),
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       SizedBox(
                           width: double.infinity,
@@ -434,7 +519,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                             child: Text(S.of(context).loan_change_collateral),
                             onPressed: _canEditCollateral
                                 ? () async {
-                                    await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(myVault, _tokens)));
+                                    await Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (BuildContext context) => VaultAddCollateral(myVault, _tokens, widget.currency, widget.tetherPrice)));
                                     await refreshVault();
                                   }
                                 : null,
@@ -444,10 +530,13 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                           width: double.infinity,
                           child: ElevatedButton(
                             child: Text(S.of(context).loan_borrow),
-                            onPressed: () async {
-                              await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault)));
-                              await refreshVault();
-                            },
+                            onPressed: widget.vault.state != LoanVaultStatus.in_liquidation
+                                ? () async {
+                                    await Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault, currency: widget.currency, tetherPrice: widget.tetherPrice)));
+                                    await refreshVault();
+                                  }
+                                : null,
                           ))
                     ])
                   ])))
@@ -493,12 +582,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                     isScrollable: true,
                     indicatorColor: StateContainer.of(context).curTheme.primary,
                     labelColor: StateContainer.of(context).curTheme.darkColor,
-                    tabs: [
-                      Tab(text: S.of(context).loan_vault_details_tab_active_loan),
-                      Tab(text: S.of(context).loan_vault_details_tab_details),
-                      Tab(text: S.of(context).loan_vault_details_tab_collaterals),
-                      // Tab(text: S.of(context).loan_vault_details_tab_auctions),
-                    ],
+                    tabs: buildChildsTabs(),
                   ),
                 ),
               ];
@@ -510,11 +594,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with SingleTickerProvi
                     padding: EdgeInsets.all(10),
                     child: TabBarView(
                       controller: _tabController,
-                      children: [
-                        _buildTabActiveLoans(),
-                        _buildTabDetails(),
-                        _buildTabCollaterals(), /*_buildTabAuctions()*/
-                      ],
+                      children: buildChilds(),
                     )),
               ),
             )));

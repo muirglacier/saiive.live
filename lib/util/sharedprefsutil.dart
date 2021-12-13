@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/ui/model/authentication_method.dart';
@@ -48,7 +49,16 @@ abstract class ISharedPrefsUtil {
   Future<void> setNetwork(ChainNet network);
   Future<ChainNet> getChainNetwork();
 
+  Future<bool> getUseSingleAddressWallet();
+  Future setUseSingleAddressWallet(bool value);
+
+  Future<int> getMaxAddressCount();
+  Future setMaxAddressCount(int value);
+
   Future<void> deleteAll();
+
+  Future<void> setCurrency(CurrencyEnum currency);
+  Future<CurrencyEnum> getCurrency();
 }
 
 class SharedPrefsUtil extends ISharedPrefsUtil {
@@ -67,6 +77,9 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
   static const String address_index = 'addr_index';
   static const String use_auth = 'saiive_use_auth';
   static const String pw_hash = 'saiive_pw_hash';
+  static const String single_address_wallet = 'saiive_single_address_wallet';
+  static const String max_address_count = 'saiive_max_address_count';
+  static const String saiive_currency = 'saiive_selected_currency';
 
   // For plain-text data
   Future<void> set(String key, value) async {
@@ -208,6 +221,28 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
     return await set(cur_net, network.index);
   }
 
+  Future<bool> getUseSingleAddressWallet() async {
+    return await get(single_address_wallet, defaultValue: false);
+  }
+
+  Future setUseSingleAddressWallet(bool value) async {
+    return await set(single_address_wallet, value);
+  }
+
+  Future<int> getMaxAddressCount() async {
+    var useSingleAddressWallet = await getUseSingleAddressWallet();
+
+    if (useSingleAddressWallet) {
+      return 1;
+    }
+
+    return await get(max_address_count, defaultValue: 20);
+  }
+
+  Future setMaxAddressCount(int value) async {
+    return await set(max_address_count, value);
+  }
+
   Future<ThemeSetting> getTheme() async {
     return ThemeSetting(ThemeOptions.values[await get(cur_theme, defaultValue: ThemeOptions.DEFI_LIGHT.index)]);
   }
@@ -222,6 +257,16 @@ class SharedPrefsUtil extends ISharedPrefsUtil {
     }
 
     return ChainNet.values[await get(cur_net, defaultValue: defaultNetwork.index)];
+  }
+
+  Future<void> setCurrency(CurrencyEnum currency) async {
+    await set(saiive_currency, currency.index);
+  }
+
+  Future<CurrencyEnum> getCurrency() async {
+    var cur = await get(saiive_currency, defaultValue: CurrencyEnum.EUR.index);
+
+    return CurrencyEnum.values[cur];
   }
 
   // For logging out

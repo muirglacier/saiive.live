@@ -11,7 +11,7 @@ abstract class IPricesService {
 
 class PricesService extends NetworkService implements IPricesService {
   Future<List<Price>> getPrices(String coin) async {
-    dynamic response = await this.httpService.makeDynamicHttpGetRequest('/prices', coin);
+    dynamic response = await this.httpService.makeDynamicHttpGetRequest('/prices', coin, cached: true);
 
     if (response is ErrorResponse) {
       this.handleError(response);

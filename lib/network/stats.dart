@@ -13,7 +13,7 @@ class StatsService extends NetworkService implements IStatsService {
   Future<Stats> getStats(String coin) async {
     dynamic response = await this
         .httpService
-        .makeHttpGetRequest('/stats', coin);
+        .makeHttpGetRequest('/stats', coin, cached: true);
 
     if (response is ErrorResponse) {
       this.handleError(response);

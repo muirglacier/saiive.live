@@ -34,10 +34,10 @@ class BackgroundService {
     });
   }
 
-  void startPriceTimer() {
+  Future startPriceTimer() async {
     sl<PricesBackgroundService>().update();
 
-    EventTaxiImpl.singleton().registerTo<PricesStartLoadEvent>().listen((a) async {
+    EventTaxiImpl.singleton().registerTo<PricesStartLoadEvent>().listen((a) {
       sl<PricesBackgroundService>().update();
     });
 

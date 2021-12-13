@@ -68,8 +68,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
       _loading = true;
     });
 
-    //var vault = await sl.get<IVaultsService>().getVault(DeFiConstants.DefiAccountSymbol, widget.vault.vaultId);
-    var vault = await sl.get<IVaultsService>().getVault(DeFiConstants.DefiAccountSymbol, 'd2ae078c9e3751b93af00dcbb972e94738baef8907fa48d65a7b7d7c924380ab');
+    var vault = await sl.get<IVaultsService>().getVault(DeFiConstants.DefiAccountSymbol, widget.vault.vaultId);
 
     if (vault != null) {
       _calculateDFIPercentage();

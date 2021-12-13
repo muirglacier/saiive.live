@@ -52,7 +52,8 @@ class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
                     TableRow(children: [
                       Text(widget.token.interest),
                       Text(widget.token.activePrice != null
-                          ? FundFormatter.format(widget.token.token.symbolKey == "DUSD" ? 1.0 * widget.tetherPrice : widget.token.activePrice.active.amount * widget.tetherPrice,
+                          ? FundFormatter.format(
+                                  widget.token.token.symbolKey == "DUSD" ? (1.0 * widget.tetherPrice) : (widget.token.activePrice.active.amount * widget.tetherPrice),
                                   fractions: 2) +
                               ' ' +
                               Currency.getCurrencySymbol(widget.currency)

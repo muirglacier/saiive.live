@@ -1,18 +1,24 @@
+import 'dart:async';
+
+import 'package:event_taxi/event_taxi.dart';
+import 'package:saiive.live/bus/prices_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/loans_auctions_service.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/prices_background.dart';
 import 'package:saiive.live/ui/loan/loan_auction_box.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
 import 'package:saiive.live/util/refresh_able_widget.dart';
 import 'package:saiive.live/util/search_able_widget.dart';
-
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 enum LoanVaultFilter { mine, buyable, bidder }
 
@@ -38,7 +44,6 @@ extension ParseToStringLoanVaultHealthStatus on LoanVaultFilter {
     return '';
   }
 }
-
 
 class AuctionsScreen extends RefreshableWidget implements SearchableWidget {
   final _state = _AuctionsScreen();
@@ -77,12 +82,27 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
   String _filterText = "";
   Map<LoanVaultFilter, bool> _filters;
 
+  double _tetherPrice = 1.0;
+  CurrencyEnum _currency = CurrencyEnum.USD;
+
+  StreamSubscription<PricesLoadedEvent> _pricesLoadedEvent;
+
   @override
   void initState() {
     super.initState();
 
     _initAuctions();
     _loadBalance();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+
+    if (_pricesLoadedEvent != null) {
+      _pricesLoadedEvent.cancel();
+      _pricesLoadedEvent = null;
+    }
   }
 
   @override
@@ -116,6 +136,18 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
       _loadedAuctions = true;
       _filteredAuctions = _auctions;
     });
+
+    _tetherPrice = sl<PricesBackgroundService>().tetherPrice().fiat;
+    _currency = await sl<ISharedPrefsUtil>().getCurrency();
+
+    if (_pricesLoadedEvent == null) {
+      _pricesLoadedEvent = EventTaxiImpl.singleton().registerTo<PricesLoadedEvent>().listen((event) async {
+        setState(() {
+          _tetherPrice = event.tetherPrice.fiat;
+          _currency = event.currency;
+        });
+      });
+    }
   }
 
   refresh() async {
@@ -132,30 +164,31 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
       }
 
       return element.batches.where((batch) {
-        if (_filters != null && _filters.containsKey(LoanVaultFilter.buyable) && _filters[LoanVaultFilter.buyable]) {
-          var balance = _accountBalance.firstWhere((element) => element.token == batch.loan.symbol, orElse: () => null);
+            if (_filters != null && _filters.containsKey(LoanVaultFilter.buyable) && _filters[LoanVaultFilter.buyable]) {
+              var balance = _accountBalance.firstWhere((element) => element.token == batch.loan.symbol, orElse: () => null);
 
-          if (null == balance) {
-            return false;
-          }
+              if (null == balance) {
+                return false;
+              }
 
-          if (balance.balanceDisplay < batch.minBid) {
-            return false;
-          }
-        }
+              if (balance.balanceDisplay < batch.minBid) {
+                return false;
+              }
+            }
 
-        if (_filters != null && _filters.containsKey(LoanVaultFilter.bidder) && _filters[LoanVaultFilter.bidder]) {
-          if (null == batch.highestBid || !_publicKeys.contains(batch.highestBid.owner)) {
-            return false;
-          }
-        }
+            if (_filters != null && _filters.containsKey(LoanVaultFilter.bidder) && _filters[LoanVaultFilter.bidder]) {
+              if (null == batch.highestBid || !_publicKeys.contains(batch.highestBid.owner)) {
+                return false;
+              }
+            }
 
-        if (_filterText == "") {
-          return true;
-        }
+            if (_filterText == "") {
+              return true;
+            }
 
-        return batch.loan.symbol.toLowerCase().contains(_filterText);
-      }).length > 0;
+            return batch.loan.symbol.toLowerCase().contains(_filterText);
+          }).length >
+          0;
     }).toList();
 
     setState(() {
@@ -183,7 +216,7 @@ class _AuctionsScreen extends State<AuctionsScreen> with AutomaticKeepAliveClien
       ]);
     }
 
-    var row = Responsive.buildResponsive<LoanVaultAuction>(context, _filteredAuctions, 500, (el) => new AuctionBoxWidget(el, publicKeys: _publicKeys));
+    var row = Responsive.buildResponsive<LoanVaultAuction>(context, _filteredAuctions, 500, (el) => new AuctionBoxWidget(el, _currency, _tetherPrice, publicKeys: _publicKeys));
 
     return CustomScrollView(
       slivers: <Widget>[SliverToBoxAdapter(child: Container(child: row))],

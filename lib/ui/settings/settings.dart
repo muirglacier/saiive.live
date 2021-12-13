@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:clipboard_manager/clipboard_manager.dart';
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/services.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/bus/prices_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -11,6 +13,7 @@ import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/network/ihttp_service.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
@@ -42,6 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   ChainNet _curNet;
   bool _useSingleAddressMode = false;
+  CurrencyEnum _currency;
 
   @override
   void initState() {
@@ -57,6 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     var theme = await sl.get<ISharedPrefsUtil>().getTheme();
     var chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
     var singleAddressMode = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
+    var currency = await sl.get<ISharedPrefsUtil>().getCurrency();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
@@ -64,6 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _theme = theme.getIndex();
       _curNet = chainNet;
       _useSingleAddressMode = singleAddressMode;
+      _currency = currency;
     });
   }
 
@@ -238,6 +244,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     });
                                   });
                                 },
+                              ))),
+                          SizedBox(height: 5),
+                          Padding(
+                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
+                              child: Container(
+                                  child: DropdownButton<CurrencyEnum>(
+                                isExpanded: true,
+                                value: _currency,
+                                onChanged: (e) async {
+                                  await sl.get<ISharedPrefsUtil>().setCurrency(e);
+                                  EventTaxiImpl.singleton().fire(new PricesStartLoadEvent());
+                                  _currency = e;
+                                  setState(() {});
+                                },
+                                items: CurrencyEnum.values.map((e) {
+                                  return new DropdownMenuItem<CurrencyEnum>(
+                                    value: e,
+                                    child: Text(Currency.getCurrencyName(e)),
+                                  );
+                                }).toList(),
                               ))),
                           SizedBox(height: 5),
                           CardItemWidget(S.of(context).settings_network, null, backgroundColor: Colors.transparent),

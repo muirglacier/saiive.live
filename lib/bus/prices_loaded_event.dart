@@ -1,9 +1,14 @@
 import 'package:event_taxi/event_taxi.dart';
+import 'package:saiive.live/network/model/coin.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/price.dart';
-import 'package:saiive.live/network/model/stats.dart';
 
 class PricesLoadedEvent implements Event {
   final List<Price> prices;
+  final Coin tetherPrice;
+  final CurrencyEnum currency;
 
-  PricesLoadedEvent({this.prices});
+  PricesLoadedEvent({this.prices, this.tetherPrice, this.currency});
 }
+
+class PricesStartLoadEvent implements Event {}

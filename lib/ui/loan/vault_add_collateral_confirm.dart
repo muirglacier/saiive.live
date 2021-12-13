@@ -7,6 +7,7 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
@@ -31,8 +32,11 @@ class VaultAddCollateralConfirmScreen extends StatefulWidget {
   final Map<String, double> changes;
   final String returnAddress;
 
-  VaultAddCollateralConfirmScreen(
-      this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.originalCollateralValue, this.changes, this.returnAddress);
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
+  VaultAddCollateralConfirmScreen(this.vault, this.collateralTokens, this.currentAmounts, this.newAmounts, this.collateralValue, this.originalCollateralValue, this.changes,
+      this.returnAddress, this.currency, this.tetherPrice);
 
   @override
   State<StatefulWidget> createState() {
@@ -143,7 +147,10 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
                   Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)
                 ]),
                 TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(collateralValue, amount, token).toStringAsFixed(2) + '%')]),
-                TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
+                TableRow(children: [
+                  Text(FundFormatter.format(price * double.tryParse(amount.amount) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
+                  Text('')
+                ]),
               ])
             ])));
   }

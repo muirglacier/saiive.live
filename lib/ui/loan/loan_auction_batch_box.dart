@@ -1,4 +1,5 @@
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -8,7 +9,10 @@ class AuctionBatchBoxWidget extends StatefulWidget {
   final LoanVaultAuctionBatch batch;
   final List<String> publicKeys;
 
-  AuctionBatchBoxWidget(this.batch, {this.publicKeys});
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
+  AuctionBatchBoxWidget(this.batch, this.currency, this.tetherPrice, {this.publicKeys});
 
   @override
   State<StatefulWidget> createState() {
@@ -35,10 +39,12 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
               Row(children: [])
             ])),
             if (widget.batch.highestBid != null && widget.publicKeys.contains(widget.batch.highestBid.owner)) Container(width: 5),
-            if (widget.batch.highestBid != null && widget.publicKeys.contains(widget.batch.highestBid.owner)) Container(child: Chip(
-              label: Text(S.of(context).loan_auction_your_bid),
-              backgroundColor: Colors.green,
-            )),
+            if (widget.batch.highestBid != null && widget.publicKeys.contains(widget.batch.highestBid.owner))
+              Container(
+                  child: Chip(
+                label: Text(S.of(context).loan_auction_your_bid),
+                backgroundColor: Colors.green,
+              )),
           ]),
           Container(height: 10),
           Table(border: TableBorder(), children: [
@@ -51,16 +57,17 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
           Table(border: TableBorder(), children: [
             TableRow(children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(widget.batch.collaterals.map((element) {
-                    return FundFormatter.format(element.amountDouble) + ' ' + element.symbol;
-                  }).join(' / ')),
-                  Text(FundFormatter.format(widget.batch.collateralValueUSD, fractions: 2) + ' \$')
+                Text(widget.batch.collaterals.map((element) {
+                  return FundFormatter.format(element.amountDouble) + ' ' + element.symbol;
+                }).join(' / ')),
+                Text(FundFormatter.format(widget.batch.collateralValueUSD * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency))
               ]),
-              widget.batch.highestBid != null ?
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(FundFormatter.format(widget.batch.highestBid.amount.amountDouble) + ' ' + widget.batch.loan.symbol),
-                Text(FundFormatter.format(widget.batch.highestBid.amount.valueUSD, fractions: 2) + ' \$')
-                ]) : Text('N/A')
+              widget.batch.highestBid != null
+                  ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(FundFormatter.format(widget.batch.highestBid.amount.amountDouble) + ' ' + widget.batch.loan.symbol),
+                      Text(FundFormatter.format(widget.batch.highestBid.amount.valueUSD * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency))
+                    ])
+                  : Text('N/A')
             ])
           ]),
           Container(height: 10),
@@ -75,11 +82,11 @@ class _AuctionBatchBoxWidget extends State<AuctionBatchBoxWidget> {
             TableRow(children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(FundFormatter.format(widget.batch.loan.amountDouble) + ' ' + widget.batch.loan.symbol),
-                Text(FundFormatter.format(widget.batch.loan.valueUSD, fractions: 2) + ' \$'),
+                Text(FundFormatter.format(widget.batch.loan.valueUSD * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
               ]),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(FundFormatter.format(widget.batch.loan.amountDouble * 1.05) + ' ' + widget.batch.loan.symbol),
-                Text(FundFormatter.format(widget.batch.loan.valueUSD * 1.05, fractions: 2) + ' \$'),
+                Text(FundFormatter.format(widget.batch.loan.valueUSD * widget.tetherPrice * 1.05, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
               ]),
             ]),
           ])

@@ -44,6 +44,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
       return ret;
     } finally {
       Wakelock.disable();
+      _streamController.close();
     }
   }
 

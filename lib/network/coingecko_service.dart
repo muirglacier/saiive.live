@@ -10,7 +10,7 @@ abstract class ICoingeckoService {
 
 class CoingeckoService extends NetworkService implements ICoingeckoService {
   Future<List<Coin>> getCoins(String coin, String currency) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/coin-price/$currency', coin, cached: true);
+    dynamic response = await this.httpService.makeHttpGetRequest('/coin-price/$currency', coin, cached: false);
 
     if (response is ErrorResponse) {
       this.handleError(response);

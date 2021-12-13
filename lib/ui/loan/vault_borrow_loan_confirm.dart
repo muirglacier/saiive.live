@@ -7,6 +7,7 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -24,8 +25,10 @@ class VaultBorrowLoanConfirmScreen extends StatefulWidget {
   final LoanToken loanToken;
   final double amount;
   final String returnAddress;
+  final CurrencyEnum currency;
+  final double tetherPrice;
 
-  VaultBorrowLoanConfirmScreen(this.loanVault, this.loanToken, this.amount, this.returnAddress);
+  VaultBorrowLoanConfirmScreen(this.loanVault, this.loanToken, this.amount, this.returnAddress, this.currency, this.tetherPrice);
 
   @override
   State<StatefulWidget> createState() {
@@ -93,7 +96,10 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
       [S.of(context).loan_vault_interest, _interestVault.toStringAsFixed(2) + '%'],
       [S.of(context).loan_token_interest_amount, FundFormatter.format(_totalInterestAmount) + ' ' + widget.loanToken.token.symbol],
       [S.of(context).loan_token_total_interest, FundFormatter.format(_totalTokenWithInterest) + ' ' + widget.loanToken.token.symbol],
-      [S.of(context).loan_total_loan_usd, FundFormatter.format(_totalUSDValue, fractions: 2) + ' \$'],
+      [
+        S.of(context).loan_total_loan_usd(Currency.getCurrencyShortage(widget.currency)),
+        FundFormatter.format(_totalUSDValue, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+      ],
     ];
 
     return CustomTableWidget(items);
@@ -102,7 +108,10 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
   buildVaultDetails() {
     List<List<String>> items = [
       [S.of(context).loan_vault_id, widget.loanVault.vaultId],
-      [S.of(context).loan_collateral_amount, FundFormatter.format(double.tryParse(widget.loanVault.collateralValue), fractions: 2) + ' \$'],
+      [
+        S.of(context).loan_collateral_amount,
+        FundFormatter.format(double.tryParse(widget.loanVault.collateralValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+      ],
       [S.of(context).loan_collateral_ratio, widget.loanVault.collateralRatio + '%'],
     ];
 

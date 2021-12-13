@@ -2575,13 +2575,13 @@ class S {
     );
   }
 
-  /// `Current Value (USD)`
-  String get loan_current_amount_usd {
+  /// `Current Value ({currency})`
+  String loan_current_amount_usd(Object currency) {
     return Intl.message(
-      'Current Value (USD)',
+      'Current Value ($currency)',
       name: 'loan_current_amount_usd',
       desc: '',
-      args: [],
+      args: [currency],
     );
   }
 
@@ -2645,13 +2645,13 @@ class S {
     );
   }
 
-  /// `Price (USD)`
-  String get loan_price_usd {
+  /// `Price ({currency})`
+  String loan_price_usd(Object currency) {
     return Intl.message(
-      'Price (USD)',
+      'Price ($currency)',
       name: 'loan_price_usd',
       desc: '',
-      args: [],
+      args: [currency],
     );
   }
 
@@ -3325,13 +3325,13 @@ class S {
     );
   }
 
-  /// `Total Loan USD`
-  String get loan_total_loan_usd {
+  /// `Total Loan {currency}`
+  String loan_total_loan_usd(Object currency) {
     return Intl.message(
-      'Total Loan USD',
+      'Total Loan $currency',
       name: 'loan_total_loan_usd',
       desc: '',
-      args: [],
+      args: [currency],
     );
   }
 

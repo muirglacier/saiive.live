@@ -1,6 +1,7 @@
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -11,9 +12,13 @@ class VaultAuctionBidScreen extends StatefulWidget {
   final LoanVaultAuction auction;
   final LoanVaultAuctionBatch batch;
   final AccountBalance balance;
+
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
   final Function(double amount, String from) onBid;
 
-  VaultAuctionBidScreen(this.auction, this.batch, this.balance, this.onBid);
+  VaultAuctionBidScreen(this.auction, this.batch, this.balance, this.onBid, this.currency, this.tetherPrice);
 
   @override
   State<StatefulWidget> createState() {
@@ -91,7 +96,18 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   ]),
                   Container(height: 5),
                   Row(children: [
-                    Expanded(child: Text((widget.balance != null ? FundFormatter.format(widget.balance.balanceDisplay * (widget.batch.loan.activePrice != null ? widget.batch.loan.activePrice.active.amount : 1), fractions: 2) : '0') + ' \$', textAlign: TextAlign.right)),
+                    Expanded(
+                        child: Text(
+                            (widget.balance != null
+                                    ? FundFormatter.format(
+                                        widget.balance.balanceDisplay *
+                                            (widget.batch.loan.activePrice != null ? widget.batch.loan.activePrice.active.amount : 1) *
+                                            widget.tetherPrice,
+                                        fractions: 2)
+                                    : '0') +
+                                ' ' +
+                                Currency.getCurrencySymbol(widget.currency),
+                            textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [
@@ -100,7 +116,9 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   ]),
                   Container(height: 5),
                   Row(children: [
-                    Expanded(child: Text(FundFormatter.format(widget.batch.minBidUSD, fractions: 2) + ' \$', textAlign: TextAlign.right)),
+                    Expanded(
+                        child: Text(FundFormatter.format(widget.batch.minBidUSD * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency),
+                            textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
                   Row(children: [
@@ -114,7 +132,11 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   Row(children: [
                     Expanded(
                         child: Text(
-                            widget.batch.highestBid != null ? (FundFormatter.format(widget.batch.highestBid.amount.valueUSD, fractions: 2) + ' \$') : 'N/A',
+                            widget.batch.highestBid != null
+                                ? (FundFormatter.format(widget.batch.highestBid.amount.valueUSD * widget.tetherPrice, fractions: 2) +
+                                    ' ' +
+                                    Currency.getCurrencySymbol(widget.currency))
+                                : 'N/A',
                             textAlign: TextAlign.right)),
                   ]),
                   Container(height: 5),
@@ -124,7 +146,9 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                   ]),
                   Container(height: 5),
                   Row(children: [
-                    Expanded(child: Text(FundFormatter.format(widget.batch.loan.valueUSD, fractions: 2) + ' \$', textAlign: TextAlign.right)),
+                    Expanded(
+                        child: Text(FundFormatter.format(widget.batch.loan.valueUSD * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency),
+                            textAlign: TextAlign.right)),
                   ]),
                   SizedBox(
                     height: 20,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/bus/stats_loaded_event.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/stats.dart';
 import 'package:saiive.live/service_locator.dart';
@@ -15,7 +16,10 @@ class AuctionBoxWidget extends StatefulWidget {
   final LoanVaultAuction auction;
   final List<String> publicKeys;
 
-  AuctionBoxWidget(this.auction, {this.publicKeys});
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
+  AuctionBoxWidget(this.auction, this.currency, this.tetherPrice, {this.publicKeys});
 
   @override
   State<StatefulWidget> createState() {
@@ -54,11 +58,12 @@ class _AuctionBoxWidget extends State<AuctionBoxWidget> {
 
   @override
   Widget build(Object context) {
-    List<AuctionBatchBoxWidget> batches = widget.auction.batches.map((e) => AuctionBatchBoxWidget(e, publicKeys: widget.publicKeys)).toList();
+    List<AuctionBatchBoxWidget> batches = widget.auction.batches.map((e) => AuctionBatchBoxWidget(e, widget.currency, widget.tetherPrice, publicKeys: widget.publicKeys)).toList();
 
     return InkWell(
         onTap: () async {
-          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VaultAuctionScreen(widget.auction, publicKeys: widget.publicKeys)));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (BuildContext context) => VaultAuctionScreen(widget.auction, widget.currency, widget.tetherPrice, publicKeys: widget.publicKeys)));
         },
         child: Card(
             child: Padding(

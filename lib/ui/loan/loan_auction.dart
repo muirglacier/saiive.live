@@ -9,6 +9,7 @@ import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
 import 'package:saiive.live/network/model/stats.dart';
@@ -30,9 +31,13 @@ import 'package:wakelock/wakelock.dart';
 class VaultAuctionScreen extends StatefulWidget {
   final LoanVaultAuction auction;
   final List<String> publicKeys;
+
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
   final key = GlobalKey();
 
-  VaultAuctionScreen(this.auction, {this.publicKeys});
+  VaultAuctionScreen(this.auction, this.currency, this.tetherPrice, {this.publicKeys});
 
   @override
   State<StatefulWidget> createState() {
@@ -123,7 +128,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
         await doPlaceBid(widget.auction.vaultId, batch.index, balance.token, (amount * 100000000).round(), from: from);
       });
       Navigator.of(context).pop();
-    }));
+    }, widget.currency, widget.tetherPrice));
   }
 
   Widget _buildTopPart() {
@@ -168,7 +173,7 @@ class _VaultAuctionScreen extends State<VaultAuctionScreen> {
           _panelController.show();
           _panelController.open();
         },
-        child: Padding(padding: EdgeInsets.all(10), child: Card(child: AuctionBatchBoxWidget(batch, publicKeys: widget.publicKeys))));
+        child: Padding(padding: EdgeInsets.all(10), child: Card(child: AuctionBatchBoxWidget(batch, widget.currency, widget.tetherPrice, publicKeys: widget.publicKeys))));
   }
 
   @override

@@ -19,19 +19,25 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(appName) => "A new version of ${appName} is available!";
+  static m0(currency) => "Current Value (${currency})";
 
-  static m1(pubKey) => "Do you want to import the Private Key for the existing account? (${pubKey})";
+  static m1(currency) => "Price (${currency})";
 
-  static m2(chains) => "It seems we are having some problems with the supernode (${chains}), we are working hard to restore our services. Check back later...";
+  static m2(currency) => "Total Loan ${currency}";
 
-  static m3(from, to) => "Refreshing addresses (${from}/${to})";
+  static m3(appName) => "A new version of ${appName} is available!";
 
-  static m4(from, to) => "Refreshing transactions (${from}/${to})";
+  static m4(pubKey) => "Do you want to import the Private Key for the existing account? (${pubKey})";
 
-  static m5(txId) => "Wait for confirmation ${txId}...";
+  static m5(chains) => "It seems we are having some problems with the supernode (${chains}), we are working hard to restore our services. Check back later...";
 
-  static m6(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
+  static m6(from, to) => "Refreshing addresses (${from}/${to})";
+
+  static m7(from, to) => "Refreshing transactions (${from}/${to})";
+
+  static m8(txId) => "Wait for confirmation ${txId}...";
+
+  static m9(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -185,7 +191,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_create_vault_info" : MessageLookupByLibrary.simpleMessage("You are creating a vault"),
     "loan_create_vault_success" : MessageLookupByLibrary.simpleMessage("Vault was successfully created"),
     "loan_current_amount" : MessageLookupByLibrary.simpleMessage("Current Amount"),
-    "loan_current_amount_usd" : MessageLookupByLibrary.simpleMessage("Current Value (USD)"),
+    "loan_current_amount_usd" : m0,
     "loan_current_collateral" : MessageLookupByLibrary.simpleMessage("Current Collaterals"),
     "loan_edit_est_fee" : MessageLookupByLibrary.simpleMessage("Estimated Fee"),
     "loan_edit_scheme" : MessageLookupByLibrary.simpleMessage("Edit Scheme"),
@@ -222,7 +228,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_prev_min_collateral_ratio" : MessageLookupByLibrary.simpleMessage("Prev. Min. collateral ratio"),
     "loan_prev_vault_interest" : MessageLookupByLibrary.simpleMessage("Prev. Vault Interest"),
     "loan_price_per_token" : MessageLookupByLibrary.simpleMessage("Price per Token"),
-    "loan_price_usd" : MessageLookupByLibrary.simpleMessage("Price (USD)"),
+    "loan_price_usd" : m1,
     "loan_resulting_collateral" : MessageLookupByLibrary.simpleMessage("Resulting collateral Ratio"),
     "loan_return_address" : MessageLookupByLibrary.simpleMessage("Change address"),
     "loan_token" : MessageLookupByLibrary.simpleMessage("Loan Token"),
@@ -234,7 +240,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_tokens_to_pay_back" : MessageLookupByLibrary.simpleMessage("Tokens to pay back"),
     "loan_total_collateral" : MessageLookupByLibrary.simpleMessage("Total Collateral"),
     "loan_total_loan_amount" : MessageLookupByLibrary.simpleMessage("Total Loan Amount"),
-    "loan_total_loan_usd" : MessageLookupByLibrary.simpleMessage("Total Loan USD"),
+    "loan_total_loan_usd" : m2,
     "loan_transaction_details" : MessageLookupByLibrary.simpleMessage("Transaction Details"),
     "loan_transaction_result" : MessageLookupByLibrary.simpleMessage("Transaction Results"),
     "loan_transaction_type" : MessageLookupByLibrary.simpleMessage("Transaction Type"),
@@ -307,7 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "title" : MessageLookupByLibrary.simpleMessage("saiive.live"),
     "update_cancel" : MessageLookupByLibrary.simpleMessage("Abort"),
     "update_start" : MessageLookupByLibrary.simpleMessage("Install"),
-    "update_text" : m0,
+    "update_text" : m3,
     "update_title" : MessageLookupByLibrary.simpleMessage("Update"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "visibility" : MessageLookupByLibrary.simpleMessage("Visibility"),
@@ -328,7 +334,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),
     "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("The private key is invalid!"),
     "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("The public key is invalid!"),
-    "wallet_accounts_import_priv_key_for_pub_key" : m1,
+    "wallet_accounts_import_priv_key_for_pub_key" : m4,
     "wallet_accounts_import_unsupported_key" : MessageLookupByLibrary.simpleMessage("The public key is not supported!"),
     "wallet_accounts_key_already_imported" : MessageLookupByLibrary.simpleMessage("The key is already imported!"),
     "wallet_accounts_readonly" : MessageLookupByLibrary.simpleMessage("Readonly"),
@@ -359,7 +365,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Put the #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" word here"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" word"),
-    "wallet_offline" : m2,
+    "wallet_offline" : m5,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Building transaction"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creating auth tx"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparing account balance"),
@@ -370,18 +376,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Wallet is not synced. Please retry your transaction."),
     "wallet_operation_no_utxo" : MessageLookupByLibrary.simpleMessage("No UTXO existing. To create a transaction your wallet needs to have some UTXO!"),
     "wallet_operation_price_higher_than_indicated" : MessageLookupByLibrary.simpleMessage("Price is higher than indicated. Increase the slippage to commit the transaction to the blockchain!"),
-    "wallet_operation_refresh_addresses" : m3,
-    "wallet_operation_refresh_tx" : m4,
+    "wallet_operation_refresh_addresses" : m6,
+    "wallet_operation_refresh_tx" : m7,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refreshing utxo..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("Refreshing utxo...done"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Sending transaction"),
     "wallet_operation_share" : MessageLookupByLibrary.simpleMessage("Share..."),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Show transaction in the explorer..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transaction was successful :)"),
-    "wallet_operation_tx_wait_for_confirmation" : m5,
+    "wallet_operation_tx_wait_for_confirmation" : m8,
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Wait for confirmation..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Receive"),
-    "wallet_receive_warning" : m6,
+    "wallet_receive_warning" : m9,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase test"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Recovery phrase"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("The accounts have been added to your local datastore! Your acounts will be synced in the background!"),

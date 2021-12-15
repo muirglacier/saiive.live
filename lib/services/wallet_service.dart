@@ -256,12 +256,7 @@ class WalletService implements IWalletService {
   }
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet, {StreamController<String> loadingStream}) async {
-    var dataMap = Map();
-    dataMap["chain"] = chain;
-    dataMap["network"] = network;
-    dataMap["seed"] = await sl.get<IVault>().getSeed();
-    dataMap["password"] = ""; //await sl.get<Vault>().getSecret();
-    dataMap["apiService"] = sl.get<ApiService>();
+    var startSyncMsg = StartSyncMessage(chain, network, await sl.get<IVault>().getSeed(), "", sl.get<ApiService>());
 
     var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
 
@@ -276,21 +271,22 @@ class WalletService implements IWalletService {
     Tuple2<List<WalletAccount>, List<WalletAddress>> result;
     await worker.init(
         (data, isolateSendPort) {
-          isolateSendPort.send(dataMap);
           if (data is Tuple2<List<WalletAccount>, List<WalletAddress>>) {
             result = data;
             mutex.release();
           } else if (data is WalletRestoreMessage) {
             if (!loadingStream.isClosed)
-              loadingStream?.add(S.current.wallet_restore_for(ChainHelper.chainTypeString(data.chainType), data.pathType, data.addressType, data.account.id));
+              loadingStream?.add(S.current.wallet_restore_for(
+                  ChainHelper.chainTypeString(data.chainType), pathDerivationTypeString(data.pathType), addressTypeToString(data.addressType), data.account.id));
           }
         },
         _searchAccounts,
-        initialMessage: dataMap,
         queueMode: true,
         exitHandler: (data) {
           mutex.release();
         });
+
+    worker.sendMessage(startSyncMsg);
 
     // var result = await compute(_searchAccounts, dataMap);
 
@@ -342,9 +338,14 @@ class WalletService implements IWalletService {
     return result;
   }
 
-  static _searchAccounts(dynamic dataMap, SendPort mainSendPort, SendErrorFunction onSendError) async {
-    final ret = await WalletRestore.restore(mainSendPort, dataMap["chain"], dataMap["network"], dataMap["seed"], dataMap["password"], dataMap["apiService"]);
-    mainSendPort.send(ret);
+  static _searchAccounts(dynamic data, SendPort mainSendPort, SendErrorFunction onSendError) async {
+    if (data is StartSyncMessage) {
+      final ret = await WalletRestore.startRestore(mainSendPort, data);
+      mainSendPort.send(ret);
+    } else {
+      final ret = await WalletRestore.restore(mainSendPort, data["chain"], data["network"], data["seed"], data["password"], data["apiService"]);
+      mainSendPort.send(ret);
+    }
   }
 
   @override

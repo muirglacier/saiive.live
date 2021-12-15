@@ -14,6 +14,16 @@ import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 
+class StartSyncMessage {
+  final ChainType chain;
+  final ChainNet network;
+  final String seed;
+  final String password;
+  final ApiService apiService;
+
+  StartSyncMessage(this.chain, this.network, this.seed, this.password, this.apiService);
+}
+
 class WalletRestoreMessage {
   final String message;
   final ChainType chainType;
@@ -26,6 +36,10 @@ class WalletRestoreMessage {
 }
 
 class WalletRestore {
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> startRestore(SendPort sendPort, StartSyncMessage message) {
+    return restore(sendPort, message.chain, message.network, message.seed, message.password, message.apiService);
+  }
+
   static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(SendPort sendPort, ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
       {List<int> existingAccounts}) async {
     assert(chain != null);

@@ -281,6 +281,9 @@ class WalletService implements IWalletService {
         },
         WalletRestore.startRestore,
         queueMode: true,
+        errorHandler: (error) {
+          print(error);
+        },
         exitHandler: (data) {
           mutex.release();
         });

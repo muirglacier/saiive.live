@@ -82,7 +82,11 @@
   "wallet_recovery_phrase_title": "Wiederherstellungswörter",
   "wallet_recovery_phrase_test_title": "Wiederherstellungswörter Test",
   "wallet_restore_noAccountFound": "Wir konnten kein Konto finden, wir haben eines für dich angelegt!",
+
   "wallet_restore_for": "Wiederherstellen von {chain} (Pfadtyp: {pathDerivation}, Adresstyp: {addressType}, Konto Index: {account})",
+  "wallet_restore_prepare_restore": "{chain}: Wiederherstellung wird vorbereitet...",
+  "wallet_restore_prepare_addresses": "{chain}: Adressen werden abgespeichert...",
+
   "wallet_restore_accountsFound": "Wir haben die folgenden Kontos gefunden:",
   "wallet_restore_accountsAdded": "Wir haben die Kontos in deinem lokalen Datestore hinzugefügt! Deine Konten werden im Hintergrund aktualisiert!",
   "wallet_restore_loading": "Wallet wiederherstellung, dies kann einige Zeit dauern!",

@@ -259,6 +259,7 @@ class WalletService implements IWalletService {
 
     var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
 
+    loadingStream?.add(S.current.wallet_restore_prepare_restore(ChainHelper.chainTypeString(chain)));
     await db.destroy();
     var mutex = Mutex();
 
@@ -290,10 +291,10 @@ class WalletService implements IWalletService {
 
     worker.sendMessage(startSyncMsg);
 
-    // var result = await compute(_searchAccounts, dataMap);
-
     await mutex.acquire();
     worker.dispose(immediate: true);
+
+    loadingStream?.add(S.current.wallet_restore_prepare_addresses(ChainHelper.chainTypeString(chain)));
 
     for (var element in result.item1) {
       element.selected = true;

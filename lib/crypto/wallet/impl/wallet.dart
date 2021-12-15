@@ -18,11 +18,9 @@ import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/impl/hdWallet.dart';
-import 'package:saiive.live/crypto/wallet/wallet_restore.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/api_service.dart';
-import 'package:saiive.live/network/enclosure_account_service.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/network/model/transaction_data.dart';
@@ -36,7 +34,6 @@ import 'package:retry/retry.dart';
 
 import 'package:tuple/tuple.dart';
 import 'package:mutex/mutex.dart';
-import 'package:uuid/uuid.dart';
 
 abstract class Wallet extends IWallet {
   Map<String, IHdWallet> _wallets = Map<String, IHdWallet>();
@@ -246,40 +243,6 @@ abstract class Wallet extends IWallet {
   Future<List<WalletAccount>> getAccounts() {
     isInitialzed();
     return _walletDatabase.getAccounts();
-  }
-
-  @override
-  Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts() async {
-    isInitialzed();
-
-    var accounts = await getAccounts();
-    accounts.sort((a, b) => a.id.compareTo(b.id));
-
-    var accountIdList = accounts.map((e) => e.id).toList();
-    var enclosureService = new EnclosureAccountService(_apiService.accountService.getServerAddress(), _apiService.accountService.getNetwork());
-    var unusedAccounts = await WalletRestore.restore(null, _chain, _network, _seed, _password, enclosureService, existingAccounts: accountIdList);
-    unusedAccounts.item1.sort((a, b) => a.id.compareTo(b.id));
-
-    if (unusedAccounts.item1.isEmpty) {
-      var lastItem = accounts.last;
-      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
-          account: lastItem.account + 1,
-          id: lastItem.account + 1,
-          chain: _chain,
-          name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
-          derivationPathType: PathDerivationType.FullNodeWallet,
-          walletAccountType: WalletAccountType.HdAccount));
-    } else {
-      var lastItem = unusedAccounts.item1.last;
-      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
-          account: lastItem.account + 1,
-          id: lastItem.account + 1,
-          chain: _chain,
-          name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
-          derivationPathType: PathDerivationType.FullNodeWallet,
-          walletAccountType: WalletAccountType.HdAccount));
-    }
-    return unusedAccounts;
   }
 
   @override

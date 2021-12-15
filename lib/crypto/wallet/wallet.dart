@@ -4,7 +4,6 @@ import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/network/model/transaction.dart';
-import 'package:tuple/tuple.dart';
 
 import 'address_type.dart';
 
@@ -40,8 +39,6 @@ abstract class IWallet {
   Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, AddressType addressType, {bool previewOnly = false});
 
   Future<List<WalletAddress>> getPublicKeysFromAccounts(WalletAccount walletAccount);
-
-  Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts();
 
   Future<String> createSendTransaction(int amount, String token, String to,
       {bool waitForConfirmation, String returnAddress, StreamController<String> loadingStream, bool sendMax = false});

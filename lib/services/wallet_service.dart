@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:defichaindart/defichaindart.dart';
+import 'package:easy_isolate/easy_isolate.dart';
+import 'package:mutex/mutex.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
@@ -10,6 +13,7 @@ import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/crypto/wallet/wallet_restore.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
+import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/account_history_service.dart';
 import 'package:saiive.live/network/api_service.dart';
 import 'package:saiive.live/network/model/account_history.dart';
@@ -202,14 +206,18 @@ class WalletService implements IWalletService {
   }
 
   @override
-  Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network, {StreamController<String> loadingStream}) {
+  Future<List<Tuple2<List<WalletAccount>, List<WalletAddress>>>> restore(ChainNet network, {StreamController<String> loadingStream}) async {
     var bitcoinWallet = sl.get<BitcoinWallet>();
     var defiWallet = sl.get<DeFiChainWallet>();
 
-    var restoreBtc = _restoreWallet(ChainType.Bitcoin, network, bitcoinWallet, loadingStream: loadingStream);
-    var restoreDefi = _restoreWallet(ChainType.DeFiChain, network, defiWallet, loadingStream: loadingStream);
+    var restoreDefi = await _restoreWallet(ChainType.DeFiChain, network, defiWallet, loadingStream: loadingStream);
+    var restoreBtc = await _restoreWallet(ChainType.Bitcoin, network, bitcoinWallet, loadingStream: loadingStream);
 
-    return Future.wait([restoreDefi, restoreBtc]);
+    var ret = List<Tuple2<List<WalletAccount>, List<WalletAddress>>>.empty(growable: true);
+
+    ret.add(restoreBtc);
+    ret.add(restoreDefi);
+    return ret;
   }
 
   Future<List<AccountHistory>> getAccountHistory(ChainType chain, String token, bool includeRewards) async {
@@ -258,9 +266,36 @@ class WalletService implements IWalletService {
     var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
 
     await db.destroy();
-    db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
+    var mutex = Mutex();
 
-    var result = await compute(_searchAccounts, dataMap);
+    db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
+    final worker = Worker();
+
+    await mutex.acquire();
+
+    Tuple2<List<WalletAccount>, List<WalletAddress>> result;
+    await worker.init(
+        (data, isolateSendPort) {
+          isolateSendPort.send(dataMap);
+          if (data is Tuple2<List<WalletAccount>, List<WalletAddress>>) {
+            result = data;
+            mutex.release();
+          } else if (data is WalletRestoreMessage) {
+            if (!loadingStream.isClosed)
+              loadingStream?.add(S.current.wallet_restore_for(ChainHelper.chainTypeString(data.chainType), data.pathType, data.addressType, data.account.id));
+          }
+        },
+        _searchAccounts,
+        initialMessage: dataMap,
+        queueMode: true,
+        exitHandler: (data) {
+          mutex.release();
+        });
+
+    // var result = await compute(_searchAccounts, dataMap);
+
+    await mutex.acquire();
+    worker.dispose(immediate: true);
 
     for (var element in result.item1) {
       element.selected = true;
@@ -307,10 +342,9 @@ class WalletService implements IWalletService {
     return result;
   }
 
-  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _searchAccounts(Map dataMap) async {
-    final ret = await WalletRestore.restore(dataMap["chain"], dataMap["network"], dataMap["seed"], dataMap["password"], dataMap["apiService"]);
-
-    return ret;
+  static _searchAccounts(dynamic dataMap, SendPort mainSendPort, SendErrorFunction onSendError) async {
+    final ret = await WalletRestore.restore(mainSendPort, dataMap["chain"], dataMap["network"], dataMap["seed"], dataMap["password"], dataMap["apiService"]);
+    mainSendPort.send(ret);
   }
 
   @override

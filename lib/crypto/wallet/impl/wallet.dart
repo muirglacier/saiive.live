@@ -255,7 +255,7 @@ abstract class Wallet extends IWallet {
     accounts.sort((a, b) => a.id.compareTo(b.id));
 
     var accountIdList = accounts.map((e) => e.id).toList();
-    var unusedAccounts = await WalletRestore.restore(_chain, _network, _seed, _password, _apiService, existingAccounts: accountIdList);
+    var unusedAccounts = await WalletRestore.restore(null, _chain, _network, _seed, _password, _apiService, existingAccounts: accountIdList);
     unusedAccounts.item1.sort((a, b) => a.id.compareTo(b.id));
 
     if (unusedAccounts.item1.isEmpty) {

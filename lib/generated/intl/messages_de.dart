@@ -39,6 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m9(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
 
+  static m10(chain, pathDerivation, addressType, account) => "Wiederherstellen von ${chain}\n(${pathDerivation}, ${addressType}, ${account})";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "add" : MessageLookupByLibrary.simpleMessage("Hinzufügen"),
@@ -392,6 +394,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_restore_accountsFound" : MessageLookupByLibrary.simpleMessage("Wir haben die folgenden Kontos gefunden:"),
     "wallet_restore_enterMnemonic" : MessageLookupByLibrary.simpleMessage("Gib deinen Wiederherstellungssatz ein!"),
     "wallet_restore_enterWords" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter eingeben"),
+    "wallet_restore_for" : m10,
     "wallet_restore_invalidMnemonic" : MessageLookupByLibrary.simpleMessage("Der Wiederherstellungsastz ist ungültig."),
     "wallet_restore_loading" : MessageLookupByLibrary.simpleMessage("Wallet wiederherstellung, dies kann einige Zeit dauern!"),
     "wallet_restore_noAccountFound" : MessageLookupByLibrary.simpleMessage("Wir konnten kein Konto finden, wir haben eines für dich angelegt!"),

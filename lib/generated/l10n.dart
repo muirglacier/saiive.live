@@ -845,6 +845,16 @@ class S {
     );
   }
 
+  /// `Restore for {chain}\n({pathDerivation}, {addressType}, {account})`
+  String wallet_restore_for(Object chain, Object pathDerivation, Object addressType, Object account) {
+    return Intl.message(
+      'Restore for $chain\n($pathDerivation, $addressType, $account)',
+      name: 'wallet_restore_for',
+      desc: '',
+      args: [chain, pathDerivation, addressType, account],
+    );
+  }
+
   /// `We have found the following accounts:`
   String get wallet_restore_accountsFound {
     return Intl.message(

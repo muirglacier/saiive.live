@@ -19,7 +19,6 @@ import 'package:saiive.live/network/api_service.dart';
 import 'package:saiive.live/network/model/account_history.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:uuid/uuid.dart';
@@ -280,7 +279,7 @@ class WalletService implements IWalletService {
                   ChainHelper.chainTypeString(data.chainType), pathDerivationTypeString(data.pathType), addressTypeToString(data.addressType), data.account.id));
           }
         },
-        _searchAccounts,
+        WalletRestore.startRestore,
         queueMode: true,
         exitHandler: (data) {
           mutex.release();
@@ -336,16 +335,6 @@ class WalletService implements IWalletService {
     await wallet.close();
     await wallet.init();
     return result;
-  }
-
-  static _searchAccounts(dynamic data, SendPort mainSendPort, SendErrorFunction onSendError) async {
-    if (data is StartSyncMessage) {
-      final ret = await WalletRestore.startRestore(mainSendPort, data);
-      mainSendPort.send(ret);
-    } else {
-      final ret = await WalletRestore.restore(mainSendPort, data["chain"], data["network"], data["seed"], data["password"], data["apiService"]);
-      mainSendPort.send(ret);
-    }
   }
 
   @override

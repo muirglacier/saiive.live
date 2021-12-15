@@ -2,6 +2,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:defichaindart/defichaindart.dart';
+import 'package:easy_isolate/easy_isolate.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
@@ -36,8 +37,8 @@ class WalletRestoreMessage {
 }
 
 class WalletRestore {
-  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> startRestore(SendPort sendPort, StartSyncMessage message) {
-    return restore(sendPort, message.chain, message.network, message.seed, message.password, message.apiService);
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> startRestore(dynamic message, SendPort sendPort, SendErrorFunction onSendError) async {
+    return await restore(sendPort, message.chain, message.network, message.seed, message.password, message.apiService);
   }
 
   static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(SendPort sendPort, ChainType chain, ChainNet network, String seed, String password, ApiService apiService,

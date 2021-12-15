@@ -22,6 +22,7 @@ import 'package:saiive.live/crypto/wallet/wallet_restore.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/api_service.dart';
+import 'package:saiive.live/network/enclosure_account_service.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/network/model/transaction.dart' as tx;
 import 'package:saiive.live/network/model/transaction_data.dart';
@@ -255,7 +256,8 @@ abstract class Wallet extends IWallet {
     accounts.sort((a, b) => a.id.compareTo(b.id));
 
     var accountIdList = accounts.map((e) => e.id).toList();
-    var unusedAccounts = await WalletRestore.restore(null, _chain, _network, _seed, _password, _apiService, existingAccounts: accountIdList);
+    var enclosureService = new EnclosureAccountService(_apiService.accountService.getServerAddress(), _apiService.accountService.getNetwork());
+    var unusedAccounts = await WalletRestore.restore(null, _chain, _network, _seed, _password, enclosureService, existingAccounts: accountIdList);
     unusedAccounts.item1.sort((a, b) => a.id.compareTo(b.id));
 
     if (unusedAccounts.item1.isEmpty) {

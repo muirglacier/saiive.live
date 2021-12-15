@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:defichaindart/defichaindart.dart';
 import 'package:easy_isolate/easy_isolate.dart';
@@ -255,7 +254,8 @@ class WalletService implements IWalletService {
   }
 
   Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreWallet(ChainType chain, ChainNet network, IWallet wallet, {StreamController<String> loadingStream}) async {
-    var startSyncMsg = StartSyncMessage(chain, network, await sl.get<IVault>().getSeed(), "", sl.get<ApiService>());
+    var apiService = sl.get<ApiService>();
+    var startSyncMsg = StartSyncMessage(chain, network, await sl.get<IVault>().getSeed(), "", apiService.accountService.getServerAddress());
 
     var db = await sl.get<IWalletDatabaseFactory>().getDatabase(chain, network);
 

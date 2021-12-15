@@ -46,4 +46,7 @@ class MockHttpService extends IHttpService {
   String getNetwork() {
     return "testnet";
   }
+
+  @override
+  String getServerAddress() => "mock";
 }

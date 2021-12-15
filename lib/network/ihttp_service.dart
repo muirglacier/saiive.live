@@ -2,6 +2,7 @@ import 'base_request.dart';
 
 abstract class IHttpService {
   String getNetwork();
+  String getServerAddress();
 
   Future init();
   Future<Map<String, dynamic>> makeHttpGetRequest(String url, String coin, {cached: false});

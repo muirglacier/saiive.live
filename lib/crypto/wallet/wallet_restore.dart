@@ -9,9 +9,9 @@ import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
-import 'package:saiive.live/network/api_service.dart';
 import 'package:hex/hex.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/enclosure_account_service.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,9 +20,9 @@ class StartSyncMessage {
   final ChainNet network;
   final String seed;
   final String password;
-  final ApiService apiService;
+  final String serverAddress;
 
-  StartSyncMessage(this.chain, this.network, this.seed, this.password, this.apiService);
+  StartSyncMessage(this.chain, this.network, this.seed, this.password, this.serverAddress);
 }
 
 class WalletRestoreMessage {
@@ -38,10 +38,15 @@ class WalletRestoreMessage {
 
 class WalletRestore {
   static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> startRestore(dynamic message, SendPort sendPort, SendErrorFunction onSendError) async {
-    return await restore(sendPort, message.chain, message.network, message.seed, message.password, message.apiService);
+    if (message is StartSyncMessage) {
+      var enclosureAccountService = new EnclosureAccountService(message.serverAddress, ChainHelper.chainNetworkString(message.network));
+      return await restore(sendPort, message.chain, message.network, message.seed, message.password, enclosureAccountService);
+    }
+    return null;
   }
 
-  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(SendPort sendPort, ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(
+      SendPort sendPort, ChainType chain, ChainNet network, String seed, String password, EnclosureAccountService apiService,
       {List<int> existingAccounts}) async {
     assert(chain != null);
     assert(network != null);
@@ -87,7 +92,7 @@ class WalletRestore {
   }
 
   static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreAll(
-      SendPort sendPort, int account, List<int> key, ApiService api, ChainType chain, ChainNet network) async {
+      SendPort sendPort, int account, List<int> key, EnclosureAccountService api, ChainType chain, ChainNet network) async {
     var walletAccounts = List<WalletAccount>.empty(growable: true);
     var walletAddresses = List<WalletAddress>.empty(growable: true);
 
@@ -116,7 +121,7 @@ class WalletRestore {
   }
 
   static Future<Tuple2<WalletAccount, List<WalletAddress>>> _restoreDerivationPath(
-      SendPort sendPort, int account, List<int> key, ApiService api, ChainType chain, ChainNet network, PathDerivationType pathDerivationType) async {
+      SendPort sendPort, int account, List<int> key, EnclosureAccountService api, ChainType chain, ChainNet network, PathDerivationType pathDerivationType) async {
     final walletAccount = WalletAccount(Uuid().v4(),
         name: "${ChainHelper.chainTypeString(chain)}_${pathDerivationTypeString(pathDerivationType)}_${(account + 1)}",
         id: account,
@@ -147,8 +152,8 @@ class WalletRestore {
     return Tuple2(walletAccount, ret);
   }
 
-  static Future<List<WalletAddress>> _restore(SendPort sendPort, WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType,
-      PathDerivationType pathDerivationType) async {
+  static Future<List<WalletAddress>> _restore(SendPort sendPort, WalletAccount account, Uint8List key, EnclosureAccountService api, ChainType chain, ChainNet net,
+      AddressType addressType, PathDerivationType pathDerivationType) async {
     int i = 0;
     int maxEmpty = chain == ChainType.DeFiChain ? IWallet.MaxUnusedIndexScan : IWallet.MaxUnusedIndexScanBitcoin;
 
@@ -163,7 +168,7 @@ class WalletRestore {
         var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account.account, keysPerQuery * i, chain, net, addressType, account.derivationPathType, keysPerQuery);
         var path = HdWalletUtil.derivePathsWithChange(account.account, keysPerQuery * i, account.derivationPathType, keysPerQuery);
 
-        var transactions = await api.accountService.getAccounts(ChainHelper.chainTypeString(chain), publicKeys);
+        var transactions = await api.getAccounts(ChainHelper.chainTypeString(chain), publicKeys);
         LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
         for (final tx in transactions) {

@@ -40,7 +40,9 @@ class WalletRestore {
   static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> startRestore(dynamic message, SendPort sendPort, SendErrorFunction onSendError) async {
     if (message is StartSyncMessage) {
       var enclosureAccountService = new EnclosureAccountService(message.serverAddress, ChainHelper.chainNetworkString(message.network));
-      return await restore(sendPort, message.chain, message.network, message.seed, message.password, enclosureAccountService);
+      var ret = await restore(sendPort, message.chain, message.network, message.seed, message.password, enclosureAccountService);
+      sendPort.send(ret);
+      return ret;
     }
     return null;
   }
@@ -174,6 +176,10 @@ class WalletRestore {
         for (final tx in transactions) {
           final keyIndex = publicKeys.indexWhere((item) => item == tx.address);
           var pathString = path[keyIndex];
+
+          if (!tx.accounts.any((element) => element.balance > 0)) {
+            continue;
+          }
 
           if (!addresses.any((element) => element.publicKey == tx.address)) {
             final walletAddress = WalletAddress(

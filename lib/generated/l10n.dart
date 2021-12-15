@@ -845,10 +845,10 @@ class S {
     );
   }
 
-  /// `Restore for {chain}\n({pathDerivation}, {addressType}, {account})`
+  /// `Restore for {chain} (Path type: {pathDerivation}, Address type: {addressType}, Account index: {account})`
   String wallet_restore_for(Object chain, Object pathDerivation, Object addressType, Object account) {
     return Intl.message(
-      'Restore for $chain\n($pathDerivation, $addressType, $account)',
+      'Restore for $chain (Path type: $pathDerivation, Address type: $addressType, Account index: $account)',
       name: 'wallet_restore_for',
       desc: '',
       args: [chain, pathDerivation, addressType, account],

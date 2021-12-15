@@ -95,7 +95,7 @@
   "wallet_operation_success": "Transaction was successful :)",
   "wallet_operation_show_tx": "Show transaction in the explorer...",
   "wallet_restore_noAccountFound": "We did not found a used account, but we have created one for you!",
-  "wallet_restore_for": "Restore for {chain}\n({pathDerivation}, {addressType}, {account})",
+  "wallet_restore_for": "Restore for {chain} (Path type: {pathDerivation}, Address type: {addressType}, Account index: {account})",
   "wallet_restore_accountsFound": "We have found the following accounts:",
   "wallet_restore_accountsAdded": "The accounts have been added to your local datastore! Your acounts will be synced in the background!",
   "wallet_restore_loading": "Restoring your wallet, this can take up some time!",

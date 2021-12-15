@@ -39,7 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m9(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
 
-  static m10(chain, pathDerivation, addressType, account) => "Restore for ${chain}\n(${pathDerivation}, ${addressType}, ${account})";
+  static m10(chain, pathDerivation, addressType, account) => "Restore for ${chain} (Path type: ${pathDerivation}, Address type: ${addressType}, Account index: ${account})";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {

@@ -23,8 +23,10 @@ import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/wallet/wallet_buy.dart';
 import 'package:saiive.live/ui/wallet/wallet_token.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
+import 'package:saiive.live/ui/widgets/buttons.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
@@ -439,80 +441,89 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   buildGroupedList(BuildContext context, Map<String, List<AccountBalance>> items) {
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: RefreshIndicator(
-            onRefresh: () async {
-              return await _refresh();
-            },
-            child: GroupListView(
-              sectionsCount: items.keys.toList().length,
-              countOfItemInSection: (int section) {
-                return items.values.toList()[section].length;
-              },
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, IndexPath index) {
-                return _buildAccountEntry(items.values.toList()[index.section][index.index]);
-              },
-              groupHeaderBuilder: (BuildContext context, int section) {
-                var text = items.keys.toList()[section];
-                if (items.values.toList()[section].isEmpty) {
-                  var noAccSelected = S.of(context).wallet_account_nothing_selected;
-                  text += " ($noAccSelected)";
-                }
-                var balances = items.values.toList()[section].toList();
+    return Column(children: [
+      Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).dfx_buy_title,
+              onPressed: () => {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DfxBuyScreen()))},
+              icon: Icons.add_shopping_cart,
+              key: const Key("buy_dfx"))),
+      Expanded(
+          child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              child: RefreshIndicator(
+                  onRefresh: () async {
+                    return await _refresh();
+                  },
+                  child: GroupListView(
+                    sectionsCount: items.keys.toList().length,
+                    countOfItemInSection: (int section) {
+                      return items.values.toList()[section].length;
+                    },
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, IndexPath index) {
+                      return _buildAccountEntry(items.values.toList()[index.section][index.index]);
+                    },
+                    groupHeaderBuilder: (BuildContext context, int section) {
+                      var text = items.keys.toList()[section];
+                      if (items.values.toList()[section].isEmpty) {
+                        var noAccSelected = S.of(context).wallet_account_nothing_selected;
+                        text += " ($noAccSelected)";
+                      }
+                      var balances = items.values.toList()[section].toList();
 
-                var totalUSD = balances.fold(0, (previousValue, balance) {
-                  if (balance == null) {
-                    return previousValue;
-                  }
+                      var totalUSD = balances.fold(0, (previousValue, balance) {
+                        if (balance == null) {
+                          return previousValue;
+                        }
 
-                  var price = _prices != null ? _prices.firstWhere((element) => element.token == balance.token, orElse: () => null) : null;
-                  var priceUsd = price != null ? price.aggregated.amount : null;
+                        var price = _prices != null ? _prices.firstWhere((element) => element.token == balance.token, orElse: () => null) : null;
+                        var priceUsd = price != null ? price.aggregated.amount : null;
 
-                  if (balance.token.toLowerCase() == 'dusd') {
-                    priceUsd = 1;
-                  }
+                        if (balance.token.toLowerCase() == 'dusd') {
+                          priceUsd = 1;
+                        }
 
-                  if (null == priceUsd) {
-                    return previousValue;
-                  }
+                        if (null == priceUsd) {
+                          return previousValue;
+                        }
 
-                  return previousValue + (priceUsd * balance.balanceDisplay) * _tetherPrice;
-                });
+                        return previousValue + (priceUsd * balance.balanceDisplay) * _tetherPrice;
+                      });
 
-                var priceWidget;
+                      var priceWidget;
 
-                if (_pricesLoading) {
-                  priceWidget = Text(
-                    S.of(context).loading,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.right,
-                  );
-                } else {
-                  priceWidget = Text(
-                    FundFormatter.format(totalUSD, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.right,
-                  );
-                }
-
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    child: Row(
-                      children: [
-                        Text(
-                          text,
+                      if (_pricesLoading) {
+                        priceWidget = Text(
+                          S.of(context).loading,
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                        ),
-                        Expanded(child: priceWidget)
-                      ],
-                    ));
-              },
-              dragStartBehavior: DragStartBehavior.down,
-              separatorBuilder: (context, index) => SizedBox(height: 5),
-              sectionSeparatorBuilder: (context, section) => SizedBox(height: 5),
-            )));
+                          textAlign: TextAlign.right,
+                        );
+                      } else {
+                        priceWidget = Text(
+                          FundFormatter.format(totalUSD, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.right,
+                        );
+                      }
+
+                      return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                          child: Row(
+                            children: [
+                              Text(
+                                text,
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                              Expanded(child: priceWidget)
+                            ],
+                          ));
+                    },
+                    dragStartBehavior: DragStartBehavior.down,
+                    separatorBuilder: (context, index) => SizedBox(height: 5),
+                    sectionSeparatorBuilder: (context, section) => SizedBox(height: 5),
+                  ))))
+    ]);
   }
 
   buildWalletScreen(BuildContext context, bool useReadonlyData) {

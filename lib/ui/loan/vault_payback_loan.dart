@@ -46,12 +46,12 @@ class VaultPaybackLoanScreen extends StatefulWidget {
 }
 
 class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
-  double percentage = 100;
+  double percentage = 105;
   int amountToRemove = 0;
   double amountToRemoveDouble = 0.0;
   int availableBalance = 0;
   bool balanceLoaded = false;
-  var _percentageTextController = TextEditingController(text: '100');
+  var _percentageTextController = TextEditingController(text: '105');
 
   double totalVaultValue = 0.0;
   int totalVaultValueSat = 0;
@@ -114,7 +114,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
   calculateMaxToPayback() {
     if (availableBalance > totalVaultValueSat) {
-      _percentageTextController.text = "100.0";
+      _percentageTextController.text = "105.0";
     } else {
       var dif = min(availableBalance, totalVaultValueSat) / max(totalVaultValueSat, availableBalance);
 
@@ -153,7 +153,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             child: TextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 maxLength: 3,
-                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
+                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(105(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
                 textAlign: TextAlign.right,
                 decoration: InputDecoration(labelText: '', counterText: '', suffix: Text('%')),
                 controller: _percentageTextController),
@@ -163,7 +163,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
               child: Slider(
                 value: percentage,
                 min: 0,
-                max: 100,
+                max: 105,
                 label: percentage.round().toString() + '%',
                 onChanged: (double value) {
                   setState(() {
@@ -287,6 +287,8 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)),
-        body: Padding(padding: EdgeInsets.all(20), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])));
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(20), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])))));
   }
 }

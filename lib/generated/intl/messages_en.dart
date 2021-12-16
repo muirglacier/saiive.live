@@ -39,6 +39,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m9(coin) => "Send only ${coin} to this address. Sending coin or token other than ${coin} to this address may result in the loss of your deposit!";
 
+  static m10(chain, pathDerivation, addressType, account) => "Restore for ${chain} (Path type: ${pathDerivation}, Address type: ${addressType}, Account index: ${account})";
+
+  static m11(chain) => "${chain}: Saving addresses...";
+
+  static m12(chain) => "${chain}: Prepare restore...";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "add" : MessageLookupByLibrary.simpleMessage("Add"),
@@ -394,10 +400,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_restore_accountsFound" : MessageLookupByLibrary.simpleMessage("We have found the following accounts:"),
     "wallet_restore_enterMnemonic" : MessageLookupByLibrary.simpleMessage("Enter your recovery phrase to restore your wallet!"),
     "wallet_restore_enterWords" : MessageLookupByLibrary.simpleMessage("Selelct phrase words"),
+    "wallet_restore_for" : m10,
     "wallet_restore_invalidMnemonic" : MessageLookupByLibrary.simpleMessage("The recovery phrase is invalid!"),
     "wallet_restore_loading" : MessageLookupByLibrary.simpleMessage("Restoring your wallet, this can take up some time!"),
     "wallet_restore_noAccountFound" : MessageLookupByLibrary.simpleMessage("We did not found a used account, but we have created one for you!"),
     "wallet_restore_not_safed" : MessageLookupByLibrary.simpleMessage("You didn\'t safed your recovery words, wanna do that now?"),
+    "wallet_restore_prepare_addresses" : m11,
+    "wallet_restore_prepare_restore" : m12,
     "wallet_restore_recoveryPhrase" : MessageLookupByLibrary.simpleMessage("Recovery phrase"),
     "wallet_restore_word_empty" : MessageLookupByLibrary.simpleMessage("Please enter Word"),
     "wallet_restore_word_hint" : MessageLookupByLibrary.simpleMessage("Enter Word"),

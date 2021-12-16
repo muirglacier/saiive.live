@@ -1,20 +1,54 @@
+import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:defichaindart/defichaindart.dart';
+import 'package:easy_isolate/easy_isolate.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/crypto/hd_wallet_util.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
-import 'package:saiive.live/network/api_service.dart';
 import 'package:hex/hex.dart';
 import 'package:saiive.live/helper/logger/LogHelper.dart';
+import 'package:saiive.live/network/enclosure_account_service.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 
+class StartSyncMessage {
+  final ChainType chain;
+  final ChainNet network;
+  final String seed;
+  final String password;
+  final String serverAddress;
+
+  StartSyncMessage(this.chain, this.network, this.seed, this.password, this.serverAddress);
+}
+
+class WalletRestoreMessage {
+  final String message;
+  final ChainType chainType;
+  final ChainNet chainNet;
+  final WalletAccount account;
+  final PathDerivationType pathType;
+  final AddressType addressType;
+
+  WalletRestoreMessage(this.message, this.chainType, this.chainNet, this.account, this.pathType, this.addressType);
+}
+
 class WalletRestore {
-  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(ChainType chain, ChainNet network, String seed, String password, ApiService apiService,
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> startRestore(dynamic message, SendPort sendPort, SendErrorFunction onSendError) async {
+    if (message is StartSyncMessage) {
+      var enclosureAccountService = new EnclosureAccountService(message.serverAddress, ChainHelper.chainNetworkString(message.network));
+      var ret = await restore(sendPort, message.chain, message.network, message.seed, message.password, enclosureAccountService);
+      sendPort.send(ret);
+      return ret;
+    }
+    return null;
+  }
+
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> restore(
+      SendPort sendPort, ChainType chain, ChainNet network, String seed, String password, EnclosureAccountService apiService,
       {List<int> existingAccounts}) async {
     assert(chain != null);
     assert(network != null);
@@ -38,7 +72,7 @@ class WalletRestore {
 
     do {
       if (!existingAccounts.contains(i)) {
-        var all = await _restoreAll(i, key, api, chain, network);
+        var all = await _restoreAll(sendPort, i, key, api, chain, network);
 
         final result = List<WalletAddress>.from(all.item2);
 
@@ -59,7 +93,8 @@ class WalletRestore {
     return Tuple2(ret, walletAddresses);
   }
 
-  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreAll(int account, List<int> key, ApiService api, ChainType chain, ChainNet network) async {
+  static Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> _restoreAll(
+      SendPort sendPort, int account, List<int> key, EnclosureAccountService api, ChainType chain, ChainNet network) async {
     var walletAccounts = List<WalletAccount>.empty(growable: true);
     var walletAddresses = List<WalletAddress>.empty(growable: true);
 
@@ -71,10 +106,10 @@ class WalletRestore {
     }
 
     try {
-      var fullNode = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.FullNodeWallet);
-      var jellyFish = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
-      var bip32 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP32);
-      var bip44 = await _restoreDerivationPath(account, key, api, chain, network, PathDerivationType.BIP44);
+      var fullNode = await _restoreDerivationPath(sendPort, account, key, api, chain, network, PathDerivationType.FullNodeWallet);
+      var jellyFish = await _restoreDerivationPath(sendPort, account, key, api, chain, network, PathDerivationType.JellyfishBullshit);
+      var bip32 = await _restoreDerivationPath(sendPort, account, key, api, chain, network, PathDerivationType.BIP32);
+      var bip44 = await _restoreDerivationPath(sendPort, account, key, api, chain, network, PathDerivationType.BIP44);
 
       checkIfExistingAndAddToList(fullNode);
       checkIfExistingAndAddToList(jellyFish);
@@ -88,7 +123,7 @@ class WalletRestore {
   }
 
   static Future<Tuple2<WalletAccount, List<WalletAddress>>> _restoreDerivationPath(
-      int account, List<int> key, ApiService api, ChainType chain, ChainNet network, PathDerivationType pathDerivationType) async {
+      SendPort sendPort, int account, List<int> key, EnclosureAccountService api, ChainType chain, ChainNet network, PathDerivationType pathDerivationType) async {
     final walletAccount = WalletAccount(Uuid().v4(),
         name: "${ChainHelper.chainTypeString(chain)}_${pathDerivationTypeString(pathDerivationType)}_${(account + 1)}",
         id: account,
@@ -101,9 +136,9 @@ class WalletRestore {
 
     var startDate = DateTime.now();
 
-    final p2sh = await _restore(walletAccount, key, api, chain, network, AddressType.P2SHSegwit, pathDerivationType);
-    final bech32 = await _restore(walletAccount, key, api, chain, network, AddressType.Bech32, pathDerivationType);
-    final legacy = await _restore(walletAccount, key, api, chain, network, AddressType.Legacy, pathDerivationType);
+    final p2sh = await _restore(sendPort, walletAccount, key, api, chain, network, AddressType.P2SHSegwit, pathDerivationType);
+    final bech32 = await _restore(sendPort, walletAccount, key, api, chain, network, AddressType.Bech32, pathDerivationType);
+    final legacy = await _restore(sendPort, walletAccount, key, api, chain, network, AddressType.Legacy, pathDerivationType);
     var ret = List<WalletAddress>.empty(growable: true);
 
     ret.addAll(p2sh);
@@ -119,8 +154,8 @@ class WalletRestore {
     return Tuple2(walletAccount, ret);
   }
 
-  static Future<List<WalletAddress>> _restore(
-      WalletAccount account, Uint8List key, ApiService api, ChainType chain, ChainNet net, AddressType addressType, PathDerivationType pathDerivationType) async {
+  static Future<List<WalletAddress>> _restore(SendPort sendPort, WalletAccount account, Uint8List key, EnclosureAccountService api, ChainType chain, ChainNet net,
+      AddressType addressType, PathDerivationType pathDerivationType) async {
     int i = 0;
     int maxEmpty = chain == ChainType.DeFiChain ? IWallet.MaxUnusedIndexScan : IWallet.MaxUnusedIndexScanBitcoin;
 
@@ -128,17 +163,23 @@ class WalletRestore {
     var startDate = DateTime.now();
     var addresses = List<WalletAddress>.empty(growable: true);
 
+    sendPort?.send(WalletRestoreMessage("restore", chain, net, account, pathDerivationType, addressType));
+
     do {
       try {
         var publicKeys = await HdWalletUtil.derivePublicKeysWithChange(key, account.account, keysPerQuery * i, chain, net, addressType, account.derivationPathType, keysPerQuery);
         var path = HdWalletUtil.derivePathsWithChange(account.account, keysPerQuery * i, account.derivationPathType, keysPerQuery);
 
-        var transactions = await api.transactionService.getAddressesTransactions(ChainHelper.chainTypeString(chain), publicKeys);
+        var transactions = await api.getAccounts(ChainHelper.chainTypeString(chain), publicKeys);
         LogHelper.instance.d("($chain) [${account.derivationPathType}] found ${transactions.length} for path ${path.first} length ${IWallet.KeysPerQuery} (${publicKeys[0]})");
 
         for (final tx in transactions) {
           final keyIndex = publicKeys.indexWhere((item) => item == tx.address);
           var pathString = path[keyIndex];
+
+          if (!tx.accounts.any((element) => element.balance > 0)) {
+            continue;
+          }
 
           if (!addresses.any((element) => element.publicKey == tx.address)) {
             final walletAddress = WalletAddress(

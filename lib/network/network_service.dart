@@ -22,6 +22,14 @@ abstract class NetworkService {
     httpService = sl.get<IHttpService>();
   }
 
+  String getServerAddress() {
+    return httpService.getServerAddress();
+  }
+
+  String getNetwork() {
+    return httpService.getNetwork();
+  }
+
   void fireEvent(Event event) {
     EventTaxiImpl.singleton().fire(event);
   }

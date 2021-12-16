@@ -845,6 +845,36 @@ class S {
     );
   }
 
+  /// `Restore for {chain} (Path type: {pathDerivation}, Address type: {addressType}, Account index: {account})`
+  String wallet_restore_for(Object chain, Object pathDerivation, Object addressType, Object account) {
+    return Intl.message(
+      'Restore for $chain (Path type: $pathDerivation, Address type: $addressType, Account index: $account)',
+      name: 'wallet_restore_for',
+      desc: '',
+      args: [chain, pathDerivation, addressType, account],
+    );
+  }
+
+  /// `{chain}: Prepare restore...`
+  String wallet_restore_prepare_restore(Object chain) {
+    return Intl.message(
+      '$chain: Prepare restore...',
+      name: 'wallet_restore_prepare_restore',
+      desc: '',
+      args: [chain],
+    );
+  }
+
+  /// `{chain}: Saving addresses...`
+  String wallet_restore_prepare_addresses(Object chain) {
+    return Intl.message(
+      '$chain: Saving addresses...',
+      name: 'wallet_restore_prepare_addresses',
+      desc: '',
+      args: [chain],
+    );
+  }
+
   /// `We have found the following accounts:`
   String get wallet_restore_accountsFound {
     return Intl.message(

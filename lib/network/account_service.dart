@@ -3,13 +3,14 @@ import 'dart:convert';
 
 import 'package:saiive.live/bus/accounts_loaded_event.dart';
 import 'package:saiive.live/bus/key_account_wrappers_loaded_event.dart';
+import 'package:saiive.live/network/base_service.dart';
 import 'package:saiive.live/network/model/account.dart';
 import 'package:saiive.live/network/model/key_account_wrapper.dart';
 import 'package:saiive.live/network/network_service.dart';
 import 'package:saiive.live/network/request/addresses_request.dart';
 import 'package:saiive.live/network/response/error_response.dart';
 
-abstract class IAccountService {
+abstract class IAccountService extends IBaseService {
   Future<List<Account>> getAccount(String coin, String address);
   Future<List<KeyAccountWrapper>> getAccounts(String coin, List<String> addresses);
 }

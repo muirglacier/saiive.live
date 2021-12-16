@@ -39,6 +39,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m9(coin) => "Sende nur ${coin} an diese Adresse. Wenn du einen anderen Coin als ${coin} an diese Adresse sendest, kann das zum Verlust deiner Einzahlung führen!";
 
+  static m10(chain, pathDerivation, addressType, account) => "Wiederherstellen von ${chain} (Pfadtyp: ${pathDerivation}, Adresstyp: ${addressType}, Konto Index: ${account})";
+
+  static m11(chain) => "${chain}: Adressen werden abgespeichert...";
+
+  static m12(chain) => "${chain}: Wiederherstellung wird vorbereitet...";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "add" : MessageLookupByLibrary.simpleMessage("Hinzufügen"),
@@ -392,10 +398,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_restore_accountsFound" : MessageLookupByLibrary.simpleMessage("Wir haben die folgenden Kontos gefunden:"),
     "wallet_restore_enterMnemonic" : MessageLookupByLibrary.simpleMessage("Gib deinen Wiederherstellungssatz ein!"),
     "wallet_restore_enterWords" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter eingeben"),
+    "wallet_restore_for" : m10,
     "wallet_restore_invalidMnemonic" : MessageLookupByLibrary.simpleMessage("Der Wiederherstellungsastz ist ungültig."),
     "wallet_restore_loading" : MessageLookupByLibrary.simpleMessage("Wallet wiederherstellung, dies kann einige Zeit dauern!"),
     "wallet_restore_noAccountFound" : MessageLookupByLibrary.simpleMessage("Wir konnten kein Konto finden, wir haben eines für dich angelegt!"),
     "wallet_restore_not_safed" : MessageLookupByLibrary.simpleMessage("Du hast deine Wiederherstellungswörter noch nicht gesichert, willst du das jetzt machen?"),
+    "wallet_restore_prepare_addresses" : m11,
+    "wallet_restore_prepare_restore" : m12,
     "wallet_restore_recoveryPhrase" : MessageLookupByLibrary.simpleMessage("Wiederherstellungswörter"),
     "wallet_restore_word_empty" : MessageLookupByLibrary.simpleMessage("Bitte Wort eingeben"),
     "wallet_restore_word_hint" : MessageLookupByLibrary.simpleMessage("Wort eingeben"),

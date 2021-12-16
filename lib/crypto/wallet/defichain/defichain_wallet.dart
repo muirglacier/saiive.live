@@ -1005,15 +1005,28 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     final accBalance = await walletDatabase.getAccountBalance(DeFiConstants.DefiAccountSymbol);
 
     final accountBalance = accBalance.balance != null ? accBalance.balance : 0;
-    final totalBalance = (tokenBalance.balance != null ? tokenBalance.balance : 0) + accountBalance;
 
     if (accountBalance > amount && !force) {
       // we already have enough acc balance
       return Tuple2(amount, List<TransactionData>.empty(growable: false));
     }
+    final fee = await getTxFee(0, 0);
 
-    if (totalBalance == amount) {
+    var checkAmount = (amount - accountBalance) + fee;
+    if (checkAmount >= tokenBalance.balance) {
+      checkAmount -= MinKeepUTXO - fee;
+      amount -= MinKeepUTXO - fee;
+    } else if (checkAmount == tokenBalance.balance) {
+      checkAmount -= MinKeepUTXO;
       amount -= MinKeepUTXO;
+    }
+
+    if (checkAmount <= 0) {
+      if (amount <= 0) {
+        throw new InsufficientBalanceError("We do neet to save up some UTXO token, you can't do this transaction right now!", "");
+      }
+
+      return Tuple2(amount, List<TransactionData>.empty(growable: false));
     }
 
     // if (amount > totalBalance) {
@@ -1024,9 +1037,6 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
 
     final unspentTxs = await walletDatabase.getUnspentTransactions();
     final useTxs = List<tx.Transaction>.empty(growable: true);
-    final fee = await getTxFee(0, 0);
-
-    var checkAmount = (amount - accountBalance) + fee;
 
     if (force) {
       checkAmount = amount + fee;

@@ -287,6 +287,8 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)),
-        body: Padding(padding: EdgeInsets.all(20), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])));
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(20), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])))));
   }
 }

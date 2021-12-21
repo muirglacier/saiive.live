@@ -54,7 +54,7 @@ class _VaultAddCollateralConfirmScreen extends State<VaultAddCollateralConfirmSc
     return Column(children: [
       Card(
           child: Padding(
-              padding: EdgeInsets.all(30),
+              padding: EdgeInsets.all(20),
               child: Column(children: [
                 Row(children: <Widget>[
                   Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),

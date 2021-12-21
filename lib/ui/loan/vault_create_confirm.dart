@@ -99,7 +99,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
       SliverToBoxAdapter(
           child: Card(
               child: Padding(
-                  padding: EdgeInsets.all(30),
+                  padding: EdgeInsets.all(20),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(S.of(context).loan_create_vault_info, style: Theme.of(context).textTheme.headline6),
                     Row(children: <Widget>[

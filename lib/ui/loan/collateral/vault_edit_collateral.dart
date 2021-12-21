@@ -81,7 +81,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
         body: Container(
             color: StateContainer.of(context).curTheme.cardBackgroundColor,
             child: Padding(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.all(20),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   TextField(
                       controller: _amountController,

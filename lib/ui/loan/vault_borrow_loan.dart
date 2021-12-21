@@ -142,7 +142,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
         child: (null == _loanToken)
             ? Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(children: <Widget>[
                         Text(
@@ -156,7 +156,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                     ])))
             : Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(
                         children: <Widget>[
@@ -251,7 +251,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
         child: null == _loanVault
             ? Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(children: <Widget>[
                         Text(
@@ -265,7 +265,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                     ])))
             : Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(children: <Widget>[
                         Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),

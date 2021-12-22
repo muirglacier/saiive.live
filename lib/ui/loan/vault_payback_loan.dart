@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/services.dart';
@@ -46,12 +45,11 @@ class VaultPaybackLoanScreen extends StatefulWidget {
 }
 
 class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
-  double percentage = 105;
   int amountToRemove = 0;
   double amountToRemoveDouble = 0.0;
   int availableBalance = 0;
   bool balanceLoaded = false;
-  var _percentageTextController = TextEditingController(text: '105');
+  var _amountTextController = TextEditingController();
 
   double totalVaultValue = 0.0;
   int totalVaultValueSat = 0;
@@ -65,8 +63,12 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
     totalVaultValueSat = (totalVaultValue * 100000000).round();
     loadBalance();
 
-    handleChangePercentage();
-    _percentageTextController.addListener(handleChangePercentage);
+    setState(() {
+      amountToRemove = totalVaultValueSat;
+      amountToRemoveDouble = totalVaultValue;
+    });
+    _amountTextController.text = amountToRemoveDouble.toString();
+    _amountTextController.addListener(handleChange);
   }
 
   loadBalance() async {
@@ -113,34 +115,21 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   calculateMaxToPayback() {
-    if (availableBalance > totalVaultValueSat) {
-      _percentageTextController.text = "105.0";
-    } else {
-      var dif = min(availableBalance, totalVaultValueSat) / max(totalVaultValueSat, availableBalance);
+    _amountTextController.text = totalVaultValue.toString();
 
-      var difPercentage = dif * 100;
-      _percentageTextController.text = difPercentage.toString();
-    }
-    handleChangePercentage();
+    handleChange();
   }
 
-  handleChangePercentage() {
-    double amount = double.tryParse(_percentageTextController.text.replaceAll(',', '.'));
+  handleChange() {
+    double amount = double.tryParse(_amountTextController.text.replaceAll(',', '.'));
 
     if (amount == null) {
       return;
     }
-    double toRemove = 0;
-    percentage = amount;
-    if (percentage == 100) {
-      toRemove = totalVaultValue;
-    } else {
-      toRemove = (totalVaultValue / 100) * amount;
-    }
 
     setState(() {
-      amountToRemoveDouble = toRemove;
-      amountToRemove = (toRemove * 100000000).round();
+      amountToRemoveDouble = amount;
+      amountToRemove = (amount * 100000000).round();
     });
   }
 
@@ -148,31 +137,15 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Column(children: [
         Row(children: [
-          SizedBox(
-            width: 80,
+          Expanded(
+            flex: 1,
             child: TextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                maxLength: 3,
-                inputFormatters: [FilteringTextInputFormatter(RegExp(r"^(105(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)"), allow: true)],
                 textAlign: TextAlign.right,
-                decoration: InputDecoration(labelText: '', counterText: '', suffix: Text('%')),
-                controller: _percentageTextController),
+                decoration: InputDecoration(labelText: '', counterText: '', suffix: Text(widget.loanAmount.symbolKey)),
+                controller: _amountTextController),
           ),
-          Expanded(
-              flex: 4,
-              child: Slider(
-                value: percentage,
-                min: 0,
-                max: 105,
-                label: percentage.round().toString() + '%',
-                onChanged: (double value) {
-                  setState(() {
-                    percentage = value;
-
-                    _percentageTextController.text = value.toStringAsFixed(1);
-                  });
-                },
-              )),
+          Container(width: 10),
           ElevatedButton(
             child: Text(S.of(context).dex_add_max),
             onPressed: () {
@@ -195,7 +168,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             color: Colors.red,
             alert: Alert.error,
           ),
-        if (percentage > 0)
+        if (amountToRemove > 0)
           ElevatedButton(
             child: Text(S.of(context).loan_payback),
             onPressed: availableBalance >= amountToRemove
@@ -221,7 +194,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     return Card(
         child: Padding(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.all(20),
             child: Column(children: [
               Row(children: <Widget>[TokenIcon(widget.loanAmount.symbol), Container(width: 5), Text(widget.loanAmount.displaySymbol)]),
               Container(height: 10),
@@ -265,7 +238,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     return Card(
         child: Padding(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.all(20),
             child: Column(children: [
               Table(border: TableBorder(), children: [
                 TableRow(children: [Text(S.of(context).loan_tokens_to_pay_back, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_payback_value)]),
@@ -289,6 +262,6 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)),
         body: PrimaryScrollController(
             controller: new ScrollController(),
-            child: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(20), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])))));
+            child: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(10), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])))));
   }
 }

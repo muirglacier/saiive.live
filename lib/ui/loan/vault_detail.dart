@@ -262,7 +262,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
 
     return Card(
         child: Padding(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.all(20),
             child: Column(children: [
               Row(children: <Widget>[TokenIcon(amount.symbol), Container(width: 5), Text(amount.displaySymbol)]),
               Container(height: 10),
@@ -272,10 +272,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                   Text(S.of(context).loan_interest_amount + ' (${myVault.schema.interestRate} %)', style: Theme.of(context).textTheme.caption)
                 ]),
                 TableRow(children: [
-                  Text(FundFormatter.format(double.tryParse(amount.amount) * widget.tetherPrice)),
-                  Text(FundFormatter.format((double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100) * widget.tetherPrice, fractions: 4) +
-                      ' ' +
-                      Currency.getCurrencySymbol(widget.currency))
+                  Text(FundFormatter.format(double.tryParse(amount.amount))),
+                  Text(FundFormatter.format((double.tryParse(amount.amount) * double.tryParse(myVault.schema.interestRate) / 100), fractions: 4))
                 ]),
               ]),
               Container(height: 10),
@@ -290,7 +288,9 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                 ]),
               ]),
               Container(height: 10),
-              Wrap(crossAxisAlignment: WrapCrossAlignment.start, children: [
+              SizedBox(
+                width: double.infinity,
+                child: Wrap(alignment: WrapAlignment.spaceBetween, children: [
                 ElevatedButton(
                   child: Text(S.of(context).loan_payback_loan),
                   onPressed: () async {
@@ -311,7 +311,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                           await refreshVault();
                         },
                 )
-              ])
+              ]))
             ])));
   }
 
@@ -333,7 +333,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
           S.of(context).loan_collateral_value,
           FundFormatter.format(double.tryParse(myVault.collateralValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
         ],
-        [S.of(context).loan_vault_health, myVault.healthStatus.toString()],
+        [S.of(context).loan_vault_health, myVault.healthStatus.toText()],
       ];
     }
 
@@ -391,7 +391,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
 
     return Card(
         child: Padding(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.all(20),
             child: Column(children: [
               Row(children: <Widget>[
                 TokenIcon(amount.symbol),
@@ -436,7 +436,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
         child: Column(children: [
           Card(
               child: Padding(
-                  padding: EdgeInsets.all(30),
+                  padding: EdgeInsets.all(20),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       VaultStatusWidget(myVault.healthStatus),
@@ -525,7 +525,6 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                                   }
                                 : null,
                           )),
-                      SizedBox(height: 10),
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(

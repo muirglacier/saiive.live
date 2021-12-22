@@ -2795,10 +2795,10 @@ class S {
     );
   }
 
-  /// `Collateral was successfully added`
+  /// `Collateral was successfully changed`
   String get loan_collateral_success {
     return Intl.message(
-      'Collateral was successfully added',
+      'Collateral was successfully changed',
       name: 'loan_collateral_success',
       desc: '',
       args: [],
@@ -2855,10 +2855,10 @@ class S {
     );
   }
 
-  /// `Payback Loan`
+  /// `Payback`
   String get loan_payback_loan {
     return Intl.message(
-      'Payback Loan',
+      'Payback',
       name: 'loan_payback_loan',
       desc: '',
       args: [],

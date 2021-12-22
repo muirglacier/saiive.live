@@ -67,7 +67,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     return Column(children: [
       Card(
           child: Padding(
-        padding: EdgeInsets.all(30),
+        padding: EdgeInsets.all(20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             S.of(context).loan_you_are_borrowing,

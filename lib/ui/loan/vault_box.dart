@@ -29,7 +29,7 @@ class _VaultBoxWidget extends State<VaultBoxWidget> {
         },
         child: Card(
             child: Padding(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.all(20),
                 child: widget.vault.state != LoanVaultStatus.in_liquidation
                     ? Column(children: [
                         vaultHead(),

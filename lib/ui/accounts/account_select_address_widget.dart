@@ -6,6 +6,7 @@ import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
@@ -41,27 +42,29 @@ class _AccountSelectAddressWidget extends State<AccountSelectAddressWidget> {
 
   _init() async {
     _reset();
-    final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
-    final database = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, currentNet);
     _isSingleAddressWallet = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
 
-    final accounts = await database.getAccounts();
+    if (!_isSingleAddressWallet) {
+      final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
+      final database = await sl.get<IWalletDatabaseFactory>().getDatabase(ChainType.DeFiChain, currentNet);
+      final accounts = await database.getAccounts();
 
-    for (final acc in accounts) {
-      if (acc.selected) {
-        final addresses = await database.getWalletAddressesById(acc.uniqueId);
-        _walletAddresses.addAll(addresses);
-        _walletAccounts.putIfAbsent(acc.uniqueId, () => acc);
+      for (final acc in accounts) {
+        if (acc.selected) {
+          final addresses = await database.getWalletAddressesById(acc.uniqueId);
+          _walletAddresses.addAll(addresses);
+          _walletAccounts.putIfAbsent(acc.uniqueId, () => acc);
 
-        if (_selectedWalletAddress == null && _walletAddresses.isNotEmpty) {
-          _selectedWalletAddress = _walletAddresses.last;
-          if (widget.onChanged != null) {
-            widget.onChanged(_selectedWalletAddress);
+          if (_selectedWalletAddress == null && _walletAddresses.isNotEmpty) {
+            _selectedWalletAddress = _walletAddresses.last;
+            if (widget.onChanged != null) {
+              widget.onChanged(_selectedWalletAddress);
+            }
           }
         }
-      }
 
-      _walletAddresses.sort((a, b) => a.uniqueId.compareTo(b.uniqueId));
+        _walletAddresses.sort((a, b) => a.uniqueId.compareTo(b.uniqueId));
+      }
     }
 
     setState(() {

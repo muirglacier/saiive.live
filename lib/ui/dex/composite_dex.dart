@@ -371,7 +371,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     final wallet = sl.get<DeFiChainWallet>();
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
 
-    final walletTo = _toAddress.publicKey;
+    final walletTo = _toAddress?.publicKey;
     try {
       var streamController = StreamController<String>();
 

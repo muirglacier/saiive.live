@@ -288,6 +288,8 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
     }
 
     final changeAddress = returnAddress ?? await getPublicKey(true);
+    to = to ?? await getPublicKey(false);
+
     final fees = await getTxFee(1, 2) + 5000;
 
     final fromTok = await apiService.tokenService.getToken("DFI", fromToken);

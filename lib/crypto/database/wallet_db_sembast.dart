@@ -302,6 +302,11 @@ class SembastWalletDatabase extends IWalletDatabase {
     await _initAddresses();
   }
 
+  @override
+  Future removeAccountAddress(WalletAddress walletAddress) async {
+    await removeAddress(walletAddress);
+  }
+
   Future<WalletAccount> addAccount(
       {@required String name, @required int account, @required ChainType chain, @required PathDerivationType derivationPathType, bool isSelected = false}) async {
     final db = await database;
@@ -570,6 +575,22 @@ class SembastWalletDatabase extends IWalletDatabase {
     }
 
     return data.first;
+  }
+
+  @override
+  Future<List<Account>> getAccountBalancesForPubKey(String pubKey) async {
+    var dbStore = _balancesStoreInstance;
+
+    var finder = Finder(filter: Filter.equals('address', pubKey));
+    final accounts = await dbStore.find(await database, finder: finder);
+
+    final data = accounts.map((e) => e == null ? null : Account.fromJson(e.value))?.toList();
+
+    if (data.isEmpty) {
+      return null;
+    }
+
+    return data;
   }
 
   @override

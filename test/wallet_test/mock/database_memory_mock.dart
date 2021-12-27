@@ -303,4 +303,16 @@ class MemoryDatabaseMock extends IWalletDatabase {
   Future<List<Transaction>> getAllTransactions() async {
     return _transactions;
   }
+
+  @override
+  Future<List<Account>> getAccountBalancesForPubKey(String pubKey) {
+    // TODO: implement getAccountBalancesForPubKey
+    throw UnimplementedError();
+  }
+
+  @override
+  Future removeAccountAddress(WalletAddress walletAddress) {
+    // TODO: implement removeAccountAddress
+    throw UnimplementedError();
+  }
 }

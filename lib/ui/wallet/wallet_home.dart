@@ -472,7 +472,7 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                       }
                       var balances = items.values.toList()[section].toList();
 
-                      var totalUSD = balances.fold(0, (previousValue, balance) {
+                      var totalUSD = balances.fold(0.0, (previousValue, balance) {
                         if (balance == null) {
                           return previousValue;
                         }

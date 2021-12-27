@@ -51,8 +51,13 @@ class _AccountScreen extends State<AccountsScreen> {
 
   Future onTap(bool isSelected, WalletAccount account) async {
     if (isSelectionMode) {
+      for (var wa in _walletAccounts) {
+        if (wa.chain == account.chain) {
+          wa.selected = false;
+        }
+      }
       setState(() {
-        account.selected = !account.selected;
+        account.selected = !isSelected;
       });
     } else {
       await Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: "/accountsDetails"), builder: (BuildContext context) => AccountsDetailScreen(account)));
@@ -119,7 +124,7 @@ class _AccountScreen extends State<AccountsScreen> {
             bottom: 0,
             right: 0,
             child: Icon(
-              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
               color: Theme.of(context).primaryColor,
             ),
           ),

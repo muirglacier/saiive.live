@@ -9,6 +9,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/accounts/accounts_add_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_address_add_screen.dart';
+import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/wallet/wallet_receive.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
@@ -124,7 +125,7 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
               },
               child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
             )),
-      if (widget.walletAccount.walletAccountType != WalletAccountType.HdAccount && widget.walletAccount.id != 0)
+      if (!_isSingleAddressWallet)
         Padding(
             padding: EdgeInsets.only(right: 15.0),
             child: GestureDetector(
@@ -132,13 +133,15 @@ class _AccountsDetailScreen extends State<AccountsDetailScreen> {
                 Widget okButton = TextButton(
                   child: Text(S.of(context).ok),
                   onPressed: () async {
-                    final walletDbFactory = sl.get<IWalletDatabaseFactory>();
-                    final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
-                    final walletDb = await walletDbFactory.getDatabase(widget.walletAccount.chain, currentNet);
+                    sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                      final walletDbFactory = sl.get<IWalletDatabaseFactory>();
+                      final currentNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
+                      final walletDb = await walletDbFactory.getDatabase(widget.walletAccount.chain, currentNet);
 
-                    await walletDb.removeAccount(widget.walletAccount);
+                      await walletDb.removeAccount(widget.walletAccount);
 
-                    Navigator.of(context, rootNavigator: true).popUntil(ModalRoute.withName("/home"));
+                      Navigator.of(context, rootNavigator: true).popUntil(ModalRoute.withName("/home"));
+                    });
 
                     // await doChainNetSwitch(net, _curNet);
                   },

@@ -1265,6 +1265,26 @@ class S {
     );
   }
 
+  /// `Do you want to delete this account address?`
+  String get wallet_accounts_address_delete {
+    return Intl.message(
+      'Do you want to delete this account address?',
+      name: 'wallet_accounts_address_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to delete this account address? It still contains some funds!`
+  String get wallet_accounts_address_delete_not_empty {
+    return Intl.message(
+      'Do you want to delete this account address? It still contains some funds!',
+      name: 'wallet_accounts_address_delete_not_empty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Account details`
   String get wallet_accounts_detail {
     return Intl.message(
@@ -1315,20 +1335,20 @@ class S {
     );
   }
 
-  /// `Add account`
+  /// `Add account address`
   String get wallet_accounts_add {
     return Intl.message(
-      'Add account',
+      'Add account address',
       name: 'wallet_accounts_add',
       desc: '',
       args: [],
     );
   }
 
-  /// `Edit account`
+  /// `Edit account address`
   String get wallet_accounts_edit {
     return Intl.message(
-      'Edit account',
+      'Edit account address',
       name: 'wallet_accounts_edit',
       desc: '',
       args: [],

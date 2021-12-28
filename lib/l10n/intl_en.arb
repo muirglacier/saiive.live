@@ -408,6 +408,7 @@
   "loan_payback_value": "Value",
   "loan_collateral_edit": "Edit",
   "loan_value": "Loan Value",
+  "loan_vault_transfer": "Transfer Vault",
 
   "loan_faq": "FAQ",
   "loan_faq_collateral": "How is the collateralization ratio calculated?",

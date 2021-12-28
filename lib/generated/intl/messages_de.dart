@@ -266,6 +266,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "loan_vault_interest_rate_apr" : MessageLookupByLibrary.simpleMessage("Zinssatz (APR)"),
     "loan_vault_loan_scheme" : MessageLookupByLibrary.simpleMessage("Darlehen Schema"),
     "loan_vault_owner_address" : MessageLookupByLibrary.simpleMessage("Vault Benutzer Adresse"),
+    "loan_vault_transfer" : MessageLookupByLibrary.simpleMessage("Darlehen übertragen"),
     "loan_vaults" : MessageLookupByLibrary.simpleMessage("Darlehen"),
     "loan_you_are_borrowing" : MessageLookupByLibrary.simpleMessage("Du leihst dir aus"),
     "loan_your_loans" : MessageLookupByLibrary.simpleMessage("Deine Darlehen"),

@@ -401,6 +401,7 @@
   "loan_tokens_to_pay_back": "Tokens zum Zurückzahlen",
   "loan_payback_value": "Wert",
   "loan_collateral_edit": "Bearbeiten",
+  "loan_vault_transfer": "Darlehen übertragen",
 
   "loan_faq": "FAQ",
   "loan_faq_collateral": "Wie wird die Besicherungsquote berechnet?",

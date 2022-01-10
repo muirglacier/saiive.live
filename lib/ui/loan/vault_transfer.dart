@@ -1,18 +1,24 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:event_taxi/event_taxi.dart';
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/model/address_book_model.dart';
+import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/addressbook/addressbook_screen.dart';
 import 'package:saiive.live/ui/utils/qr_code_scan.dart';
+import 'package:saiive.live/ui/utils/transaction_fail.dart';
+import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock/wakelock.dart';
 
 class VaultTransferScreen extends StatefulWidget {
   final LoanVault vault;
@@ -26,10 +32,36 @@ class VaultTransferScreen extends StatefulWidget {
 }
 
 class _VaultTransferScreen extends State<VaultTransferScreen> {
-  var _addressController;
+  TextEditingController _addressController;
 
   Future transferVault(StreamController<String> stream) async {
+    Wakelock.enable();
 
+    final wallet = sl.get<DeFiChainWallet>();
+
+    final walletTo = _addressController.text;
+    var streamController = StreamController<String>();
+    try {
+      var createVault = wallet.updateVaultOwner(widget.vault.vaultId, widget.vault.schema.id, widget.vault.ownerAddress, walletTo);
+
+      final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
+      var tx = await overlay.during(createVault);
+
+      EventTaxiImpl.singleton().fire(VaultSyncStartEvent());
+
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionSuccessScreen(ChainType.DeFiChain, tx, S.of(context).loan_update_vault_success),
+      ));
+
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } catch (e) {
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => TransactionFailScreen(S.of(context).wallet_operation_failed, ChainType.DeFiChain, error: e),
+      ));
+    } finally {
+      streamController.close();
+      Wakelock.disable();
+    }
   }
 
   @override
@@ -98,6 +130,9 @@ class _VaultTransferScreen extends State<VaultTransferScreen> {
                                     ])))))
               ]),
               SizedBox(
+                height: 10,
+              ),
+              SizedBox(
                   width: 250,
                   child: ElevatedButton(
                     child: Text(S.of(context).wallet_send),
@@ -107,7 +142,7 @@ class _VaultTransferScreen extends State<VaultTransferScreen> {
                         final streamController = new StreamController<String>();
                         final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
 
-                        //overlay.during(transferVault(streamController));
+                        overlay.during(transferVault(streamController));
                       });
                     },
                   ))

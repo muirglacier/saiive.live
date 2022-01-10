@@ -12,8 +12,17 @@ abstract class ITokenService {
 
 class TokenService extends NetworkService implements ITokenService {
   Map<String, Map<String, Token>> _tokenMap = Map<String, Map<String, Token>>();
+  DateTime _tokenSyncTime = DateTime.now();
+
+  final int const15MinutesInMilliseconds = 900000;
 
   Future<List<Token>> getTokens(String coin) async {
+    var syncTimeDif = DateTime.now().millisecondsSinceEpoch - _tokenSyncTime.millisecondsSinceEpoch;
+
+    if (syncTimeDif > const15MinutesInMilliseconds) {
+      _tokenMap.clear();
+    }
+
     if (_tokenMap.isNotEmpty && _tokenMap.containsKey(this.httpService.getNetwork()) && _tokenMap[this.httpService.getNetwork()].isNotEmpty) {
       return _tokenMap[this.httpService.getNetwork()].values.toList();
     }
@@ -34,6 +43,8 @@ class TokenService extends NetworkService implements ITokenService {
     for (final token in tokens) {
       _tokenMap[this.httpService.getNetwork()].putIfAbsent(token.symbolKey, () => token);
     }
+
+    _tokenSyncTime = DateTime.now();
 
     return tokens;
   }

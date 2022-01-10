@@ -21,6 +21,7 @@ import 'package:saiive.live/ui/loan/vault_add_collateral.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan.dart';
 import 'package:saiive.live/ui/loan/vault_edit_scheme.dart';
 import 'package:saiive.live/ui/loan/vault_payback_loan.dart';
+import 'package:saiive.live/ui/loan/vault_transfer.dart';
 import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
@@ -453,6 +454,14 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                               icon: Icon(Icons.edit)),
                           SizedBox(width: 10),
                           IconButton(
+                              onPressed: () async {
+                                await Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (BuildContext context) => VaultTransferScreen(myVault)));
+                                await refreshVault();
+                              },
+                              icon: Icon(Icons.swap_horiz)),
+                          SizedBox(width: 10),
+                          IconButton(
                               onPressed: !_canEditCollateral
                                   ? null
                                   : () async {
@@ -465,7 +474,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                                         await _doCloseVault();
                                       });
                                     },
-                              icon: Icon(Icons.close))
+                              icon: Icon(Icons.close)),
                         ],
                       )
                     ]),

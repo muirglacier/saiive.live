@@ -3685,6 +3685,16 @@ class S {
     );
   }
 
+  /// `Transfer Vault`
+  String get loan_vault_transfer {
+    return Intl.message(
+      'Transfer Vault',
+      name: 'loan_vault_transfer',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `FAQ`
   String get loan_faq {
     return Intl.message(

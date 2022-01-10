@@ -102,6 +102,9 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
   Future<String> _addPoolLiquidity(String tokenA, int amountA, String tokenB, int amountB, String shareAddress,
       {String returnAddress, StreamController<String> loadingStream}) async {
     var useAmount = amountA;
+
+    shareAddress = shareAddress ?? await getPublicKey(false);
+
     if (DeFiConstants.isDfiToken(tokenA) || DeFiConstants.isDfiToken(tokenB)) {
       final prepareAccountData = await prepareAccount(shareAddress, DeFiConstants.isDfiToken(tokenA) ? amountA : amountB, loadingStream: loadingStream);
       useAmount = prepareAccountData.item1;

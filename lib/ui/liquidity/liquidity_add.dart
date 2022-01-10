@@ -27,6 +27,7 @@ import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:wakelock/wakelock.dart';
 
 class LiquidityAddScreen extends StatefulWidget {
@@ -355,7 +356,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
-    final walletTo = _toAddress.publicKey;
+    final walletTo = _toAddress?.publicKey;
 
     int amountTokenA = (_amountTokenA * DefiChainConstants.COIN).round();
     int amountTokenB = (_amountTokenB * DefiChainConstants.COIN).round();
@@ -519,7 +520,7 @@ class _LiquidityAddScreen extends State<LiquidityAddScreen> {
           Padding(padding: EdgeInsets.only(top: 10)),
           Text(S.of(context).liquidity_add_insufficient_funds, style: Theme.of(context).textTheme.headline6),
         ]),
-      if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false && _toAddress != null)
+      if (_selectedPoolPair != null && _amountTokenB != null && _amountTokenA != null && _insufficientFunds == false)
         Column(children: [
           SizedBox(height: 10),
           Row(children: [

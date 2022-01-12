@@ -33,7 +33,7 @@ class _DfxBuyWidget extends State<DfxBuyWidget> {
     var lang = StateContainer.of(context).curLanguage;
 
     var signature = await signMessage(address);
-    var url = "$dfxPaymentUrl/login?address=$address&signature=${Uri.encodeComponent(signature)}&walletId=3&lang=${lang.language.toString()}&ref=001-639&refCode=001-639";
+    var url = "$dfxPaymentUrl/login?address=$address&code=001-639&signature=${Uri.encodeComponent(signature)}&walletId=3&lang=${lang.language.toString()}";
 
     return url;
   }

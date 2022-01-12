@@ -65,6 +65,10 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
   LoanVault myVault;
 
   Future refreshVault() async {
+    if (!this.mounted) {
+      return;
+    }
+
     setState(() {
       _loading = true;
     });
@@ -72,11 +76,13 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
     var vault = await sl.get<IVaultsService>().getVault(DeFiConstants.DefiAccountSymbol, widget.vault.vaultId);
 
     if (vault != null) {
-      _calculateDFIPercentage();
-
       setState(() {
         myVault = vault;
+        _canEditCollateral = myVault.state != LoanVaultStatus.in_liquidation && myVault.state != LoanVaultStatus.unknown && myVault.state != LoanVaultStatus.frozen;
+        _length = myVault.state != LoanVaultStatus.in_liquidation ? 3 : 1;
       });
+
+      _calculateDFIPercentage();
     }
 
     setState(() {
@@ -94,8 +100,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
 
     _initTokens();
 
-    _canEditCollateral = widget.vault.state != LoanVaultStatus.in_liquidation && widget.vault.state != LoanVaultStatus.unknown && widget.vault.state != LoanVaultStatus.frozen;
-    _length = widget.vault.state != LoanVaultStatus.in_liquidation ? 3 : 1;
+    _canEditCollateral = myVault.state != LoanVaultStatus.in_liquidation && myVault.state != LoanVaultStatus.unknown && myVault.state != LoanVaultStatus.frozen;
+    _length = myVault.state != LoanVaultStatus.in_liquidation ? 3 : 1;
 
     _tabController = TabController(length: _length, vsync: this);
     _tabController.addListener(_smoothScrollToTop);
@@ -118,7 +124,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
   }
 
   List<Widget> buildChilds() {
-    if (widget.vault.state != LoanVaultStatus.in_liquidation) {
+    if (myVault.state != LoanVaultStatus.in_liquidation) {
       return [
         _buildTabActiveLoans(),
         _buildTabDetails(),
@@ -133,7 +139,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
   }
 
   List<Widget> buildChildsTabs() {
-    if (widget.vault.state != LoanVaultStatus.in_liquidation) {
+    if (myVault.state != LoanVaultStatus.in_liquidation) {
       return [
         Tab(text: S.of(context).loan_vault_details_tab_active_loan),
         Tab(text: S.of(context).loan_vault_details_tab_details),
@@ -324,7 +330,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
 
     List<List<String>> itemsVault = [];
 
-    if (widget.vault.state != LoanVaultStatus.in_liquidation) {
+    if (myVault.state != LoanVaultStatus.in_liquidation) {
       itemsVault = [
         [S.of(context).loan_collateral_ratio, myVault.collateralRatioDouble.toStringAsFixed(2) + '%'],
         [S.of(context).loan_next_collateral_ratio, myVault.nextCollateralRatioDouble.toStringAsFixed(2) + '%'],
@@ -457,7 +463,6 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                               onPressed: () async {
                                 await Navigator.of(context)
                                     .push(MaterialPageRoute(builder: (BuildContext context) => VaultTransferScreen(myVault)));
-                                await refreshVault();
                               },
                               icon: Icon(Icons.swap_horiz)),
                           SizedBox(width: 10),
@@ -492,8 +497,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                     ]),
                     if (isDFILessThan50) Padding(padding: EdgeInsets.only(bottom: 10), child: AlertWidget(S.of(context).loan_collateral_dfi_ratio, color: Colors.red)),
                     Row(children: [Expanded(child: LoanCollateralsWidget(myVault, _tokens, myVault.collateralAmounts))]),
-                    if (widget.vault.state != LoanVaultStatus.in_liquidation) Container(height: 5),
-                    if (widget.vault.state != LoanVaultStatus.in_liquidation)
+                    if (myVault.state != LoanVaultStatus.in_liquidation) Container(height: 5),
+                    if (myVault.state != LoanVaultStatus.in_liquidation)
                       Table(border: TableBorder(), children: [
                         TableRow(children: [
                           Text(S.of(context).loan_active_loans, style: Theme.of(context).textTheme.caption),
@@ -506,8 +511,8 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                           Text(FundFormatter.format(double.tryParse(myVault.loanValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency))
                         ]),
                       ]),
-                    if (widget.vault.state != LoanVaultStatus.in_liquidation) Container(height: 10),
-                    if (widget.vault.state != LoanVaultStatus.in_liquidation)
+                    if (myVault.state != LoanVaultStatus.in_liquidation) Container(height: 10),
+                    if (myVault.state != LoanVaultStatus.in_liquidation)
                       Table(border: TableBorder(), children: [
                         TableRow(children: [
                           Text(S.of(context).loan_collateral_amount, style: Theme.of(context).textTheme.caption),
@@ -520,7 +525,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                           Text(myVault.collateralRatioDouble.toStringAsFixed(2) + ' %' + ' / ' + myVault.nextCollateralRatioDouble.toStringAsFixed(2) + ' %')
                         ]),
                       ]),
-                    if (widget.vault.state != LoanVaultStatus.in_liquidation) Container(height: 10),
+                    if (myVault.state != LoanVaultStatus.in_liquidation) Container(height: 10),
                     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       SizedBox(
                           width: double.infinity,
@@ -534,11 +539,12 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
                                   }
                                 : null,
                           )),
+                      Container(height:10),
                       SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             child: Text(S.of(context).loan_borrow),
-                            onPressed: widget.vault.state != LoanVaultStatus.in_liquidation
+                            onPressed: myVault.state != LoanVaultStatus.in_liquidation
                                 ? () async {
                                     await Navigator.of(context).push(MaterialPageRoute(
                                         builder: (BuildContext context) => VaultBorrowLoan(loanVault: myVault, currency: widget.currency, tetherPrice: widget.tetherPrice)));

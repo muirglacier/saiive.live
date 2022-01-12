@@ -23,7 +23,7 @@ class VaultEditCollateralTokenScreen extends StatefulWidget {
 class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScreen> {
   var _amountController = TextEditingController(text: '');
   double _amount = 0;
-  bool _valid = false;
+  bool _valid = true;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
     double currentAmount = double.tryParse(widget.current.amount);
     double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     double loanAmount = double.tryParse(widget.current.amount);
-    double availableBalance = currentAmount + widget.balance.balance / DefiChainConstants.COIN;
+    double availableBalance = currentAmount + (widget.balance != null ? widget.balance.balance : 0) / DefiChainConstants.COIN;
 
     bool valid = true;
 
@@ -47,7 +47,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
     }
 
     if (widget.balance == null) {
-      if (loanAmount > amount) {
+      if (amount > loanAmount) {
         valid = false;
       }
     } else {

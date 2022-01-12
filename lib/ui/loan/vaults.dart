@@ -66,6 +66,10 @@ class _VaultsScreen extends State<VaultsScreen> with AutomaticKeepAliveClientMix
   }
 
   _initVaults() async {
+    if (!this.mounted) {
+      return;
+    }
+
     setState(() {
       _vaults = null;
     });

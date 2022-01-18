@@ -564,7 +564,6 @@ class _DexScreen extends State<DexScreen> {
                     padding: const EdgeInsets.only(left: 5, right: 5),
                     child: SlippageWidget(
                         initialValue: DefiChainConstants.DEFAULT_SLIPPAGE,
-                        isExpanded: true,
                         title: S.of(context).dex_slippage,
                         onValueChange: (a) {
                           _slippage = a;

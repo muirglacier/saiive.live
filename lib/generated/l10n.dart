@@ -2185,6 +2185,16 @@ class S {
     );
   }
 
+  /// `Max Price`
+  String get dex_v2_max_price {
+    return Intl.message(
+      'Max Price',
+      name: 'dex_v2_max_price',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Good morning`
   String get home_welcome_good_morning {
     return Intl.message(

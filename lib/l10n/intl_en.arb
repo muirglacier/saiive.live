@@ -246,6 +246,7 @@
   "dex_v2_tx_details": "Transaction Details",
   "dex_v2_swap_details": "Swap Details",
   "dex_v2_swap_successful": "Swap was successful!",
+  "dex_v2_max_price": "Max Price",
 
   "home_welcome_good_morning": "Good morning",
   "home_welcome_good_day": "Good day",

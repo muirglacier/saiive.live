@@ -8,7 +8,7 @@ class DefiChainConstants {
 
   static const int COIN = 100000000;
   static const double COIND = 100000000.0;
-  static const double DEFAULT_SLIPPAGE = 0.05;
+  static const double DEFAULT_SLIPPAGE = 0.03;
   static const int BLOCK_TIME_S = 30;
 
   static getExplorerUrlForNet(ChainType chainType, ChainNet net) {

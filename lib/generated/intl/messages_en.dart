@@ -84,6 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_v2_from_amount" : MessageLookupByLibrary.simpleMessage("From Amount"),
     "dex_v2_from_token" : MessageLookupByLibrary.simpleMessage("From Token"),
     "dex_v2_max" : MessageLookupByLibrary.simpleMessage("Max."),
+    "dex_v2_max_price" : MessageLookupByLibrary.simpleMessage("Max Price"),
     "dex_v2_price_in" : MessageLookupByLibrary.simpleMessage("price in"),
     "dex_v2_prices" : MessageLookupByLibrary.simpleMessage("Prices"),
     "dex_v2_swap_amount" : MessageLookupByLibrary.simpleMessage("How much from you wanna swap?"),

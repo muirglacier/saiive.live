@@ -72,6 +72,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   TokenBalance _selectedValueFrom;
 
   double _amountFrom;
+  double _maxPrice;
 
   WalletAddress _toAddress;
   String _returnAddress;
@@ -166,6 +167,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     if (_amountFromController.text == null || _amountFromController.text.isEmpty) {
       setState(() {
         _price = null;
+        _maxPrice = null;
       });
     } else {
       double amount = double.tryParse(_amountFromController.text.replaceAll(',', '.'));
@@ -185,6 +187,12 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
         calculatePriceRates();
       }
     }
+  }
+
+  calculateMaxPrice() {
+    setState(() {
+      _maxPrice = _amountFrom / (_price.estimated) * (1 + _slippage);
+    });
   }
 
   handleChangeTokenTo() {
@@ -273,6 +281,8 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       _price = price;
       _swapWays = swapWays;
     });
+
+    calculateMaxPrice();
   }
 
   findPath(List<PoolPair> pairs, String origin, String target) {
@@ -524,35 +534,29 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                     if (_amountFrom != null && _amountFrom > 0 && _swapWays.length > 0) _buildSwapWaysDetails(),
                     if (_amountFrom != null && _amountFrom > 0 && _price != null) _buildTxDetails(),
                     Container(height: 20),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        child: SlippageWidget(
-                            initialValue: DefiChainConstants.DEFAULT_SLIPPAGE,
-                            isExpanded: true,
-                            title: S.of(context).dex_slippage,
-                            onValueChange: (a) {
-                              _slippage = a;
-                            })),
+                    SlippageWidget(
+                      initialValue: DefiChainConstants.DEFAULT_SLIPPAGE,
+                      title: S.of(context).dex_slippage,
+                      onValueChange: (a) {
+                        _slippage = a;
+                        calculateMaxPrice();
+                      }),
                     Container(height: 20),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        child: AccountSelectAddressWidget(
-                            label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
-                            onChanged: (newValue) {
-                              setState(() {
-                                _toAddress = newValue;
-                              });
-                            })),
+                    AccountSelectAddressWidget(
+                      label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _toAddress = newValue;
+                        });
+                      }),
                     Container(height: 20),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        child: WalletReturnAddressWidget(
-                          onChanged: (v) {
-                            setState(() {
-                              _returnAddress = v;
-                            });
-                          },
-                        )),
+                    WalletReturnAddressWidget(
+                      onChanged: (v) {
+                        setState(() {
+                          _returnAddress = v;
+                        });
+                      },
+                    ),
                     Container(height: 20),
                     Center(
                         child: ElevatedButton(
@@ -577,7 +581,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     ];
 
     return Column(children: [
-      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_prices, style: Theme.of(context).textTheme.caption)),
+      Text(S.of(context).dex_v2_prices, style: Theme.of(context).textTheme.caption),
       CustomTableWidget(items)
     ]);
   }
@@ -585,11 +589,12 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   _buildTxDetails() {
     List<List<String>> items = [
       [S.of(context).dex_v2_amount_to_be_converted, FundFormatter.format(_amountFrom) + ' ' + _selectedValueFrom.displayName],
-      [S.of(context).dex_v2_estimated_to_receive, FundFormatter.format(_price.estimated) + ' ' + _selectedValueTo.displayName]
+      [S.of(context).dex_v2_estimated_to_receive, FundFormatter.format(_price.estimated) + ' ' + _selectedValueTo.displayName],
+      [S.of(context).dex_v2_max_price, FundFormatter.format(_maxPrice)],
     ];
 
     return Column(children: [
-      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_tx_details, style: Theme.of(context).textTheme.caption)),
+      Text(S.of(context).dex_v2_tx_details, style: Theme.of(context).textTheme.caption),
       CustomTableWidget(items)
     ]);
   }
@@ -602,7 +607,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     });
 
     return Column(children: [
-      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_swap_details, style: Theme.of(context).textTheme.caption)),
+      Text(S.of(context).dex_v2_swap_details, style: Theme.of(context).textTheme.caption),
       CustomTableWidget(items)
     ]);
   }

@@ -112,7 +112,7 @@
 
   "wallet_use_single_address_mode": "Nur eine Adresse verwenden",
   "wallet_use_single_address_mode_info": "Wenn ja wird nur eine Adresse zum Senden/Empfangen generiert!",
-  "wallet_single_address_mode_switch": "Änderungen dieser Einstellung ändert das Verhalten der Adressgeneriung!",
+  "wallet_single_address_mode_switch": "Änderungen dieser Einstellung verändern das Verhalten der Adressgeneriung!",
 
   "wallet_operation_share": "Teilen...",
   "wallet_operation_failed": "Transaktionsfehler :(",
@@ -191,7 +191,7 @@
   "settings_show_wallet_addresses": "Wallet Adressen",
   "settings_show_seed": "Seed anzeigen",
   "settings_removed_seed": "Seed gelöscht",
-  "settings_donate": "Wenn du uns helfen willst die App noch besser machen, kannst du uns gerne DFI spenden:",
+  "settings_donate": "Wenn du uns helfen willst, die App noch besser zu machen, kannst du uns gerne DFI spenden:",
   "settings_disclaimer": "No one who is contributing to this project is taking any responsibility of what happens to your funds.",
   "settings_auth_biometric": "Biometrisch",
   "settings_auth_none": "Keine",

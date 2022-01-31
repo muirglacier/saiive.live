@@ -68,7 +68,7 @@ class _MnemonicSeedWidget extends State<MnemonicSeedWidget> {
   }
 
   Widget buildUseSingleAddressMode(BuildContext context) {
-    return Row(children: [
+    return Wrap(children: [
       Checkbox(
         value: _useSingleAddressMode,
         onChanged: (v) async {

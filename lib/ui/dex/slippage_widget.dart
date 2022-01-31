@@ -37,7 +37,7 @@ class _SlippageWidgetState extends State<SlippageWidget> {
 
     setState(() {
       _percentage = amount;
-      widget.onValueChange(_percentage);
+      widget.onValueChange(_percentage / 100);
     });
   }
 

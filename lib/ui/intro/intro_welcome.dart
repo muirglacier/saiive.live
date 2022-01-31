@@ -84,7 +84,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.start, verticalDirection: VerticalDirection.down, children: <Widget>[
+      body: SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.start, verticalDirection: VerticalDirection.down, children: <Widget>[
         Container(
             margin: const EdgeInsets.only(top: 100),
             child: SizedBox(
@@ -147,7 +147,7 @@ class _IntroWelcomeScreenState extends State<IntroWelcomeScreen> {
           Container(
               child: AppButton.buildAppButton(context, AppButtonType.SECONDARY, S.of(context).dark_mode,
                   onPressed: () => {setTheme(ThemeOptions.DEFI_DARK)}, icon: FontAwesome5.moon, key: const Key("theme_dakr"))),
-      ]),
+      ])),
     );
   }
 }

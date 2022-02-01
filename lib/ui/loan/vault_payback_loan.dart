@@ -102,8 +102,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
         loanTokenLoaded = true;
         dfiToken = token;
       });
-    }
-    else {
+    } else {
       setState(() {
         loanTokenLoaded = true;
       });
@@ -117,8 +116,12 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
 
     var streamController = StreamController<String>();
     try {
-      var paybackLoan = wallet.paybackLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, widget.loanToken.token.symbolKey, amountToRemove,
-          returnAddress: _returnAddress, loadingStream: streamController);
+      var paybackToken = widget.loanToken.token.symbolKey;
+      if (isDFIPayment) {
+        paybackToken = DeFiConstants.DefiAccountSymbol;
+      }
+      var paybackLoan =
+          wallet.paybackLoan(widget.loanVault.vaultId, widget.loanVault.ownerAddress, paybackToken, amountToRemove, returnAddress: _returnAddress, loadingStream: streamController);
 
       final overlay = LoadingOverlay.of(context, loadingText: streamController.stream);
       var tx = await overlay.during(paybackLoan);
@@ -144,8 +147,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   calculateMaxToPayback() {
     if (isDFIPayment) {
       _amountTextController.text = priceInDFI.toString();
-    }
-    else {
+    } else {
       _amountTextController.text = totalVaultValue.toString();
     }
 
@@ -354,12 +356,6 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             controller: new ScrollController(),
             child: SingleChildScrollView(
                 child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(children: [
-                      buildAmount(),
-                      buildPayback(),
-                      if (isDUSDLoan) buildPaymentSelection(),
-                      _buildRemove(context)
-                    ])))));
+                    padding: EdgeInsets.all(10), child: Column(children: [buildAmount(), buildPayback(), if (isDUSDLoan) buildPaymentSelection(), _buildRemove(context)])))));
   }
 }

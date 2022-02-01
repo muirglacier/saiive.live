@@ -659,6 +659,10 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       {StreamController<String> loadingStream}) async {
     final fees = await getTxFee(1, 2) + 5000;
 
+    if (token == DeFiConstants.DefiAccountSymbol) {
+      await prepareAccount(to, amount);
+    }
+
     final fromTok = await apiService.tokenService.getToken("DFI", token);
     final tokenBalance = await walletDatabase.getAccountBalanceForPubKey(to, token);
     final totalBalance = await walletDatabase.getAccountBalance(token);

@@ -10,7 +10,9 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/model/currency.dart';
+import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +51,13 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   double amountToRemoveDouble = 0.0;
   int availableBalance = 0;
   bool balanceLoaded = false;
+  bool loanTokenLoaded = false;
   var _amountTextController = TextEditingController();
+  bool isDUSDLoan = false;
+  var paymentSelection;
+  bool isDFIPayment = false;
+  LoanCollateral dfiToken;
+  double priceInDFI = 0;
 
   double totalVaultValue = 0.0;
   int totalVaultValueSat = 0;
@@ -59,9 +67,12 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   void initState() {
     super.initState();
 
+    isDUSDLoan = widget.loanAmount.symbolKey == "DUSD";
+    paymentSelection = widget.loanAmount.symbolKey;
     totalVaultValue = double.parse(widget.loanAmount.amount);
     totalVaultValueSat = (totalVaultValue * 100000000).round();
     loadBalance();
+    loadLoanToken();
 
     setState(() {
       amountToRemove = totalVaultValueSat;
@@ -81,6 +92,22 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
       balanceLoaded = true;
       availableBalance = tokenBalance != null ? tokenBalance.balance : 0;
     });
+  }
+
+  loadLoanToken() async {
+    if (isDUSDLoan) {
+      var token = await sl<ILoansService>().getLoanCollateral(DeFiConstants.DefiAccountSymbol, 'DFI');
+
+      setState(() {
+        loanTokenLoaded = true;
+        dfiToken = token;
+      });
+    }
+    else {
+      setState(() {
+        loanTokenLoaded = true;
+      });
+    }
   }
 
   doPaybakLoan() async {
@@ -115,7 +142,12 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   calculateMaxToPayback() {
-    _amountTextController.text = totalVaultValue.toString();
+    if (isDFIPayment) {
+      _amountTextController.text = priceInDFI.toString();
+    }
+    else {
+      _amountTextController.text = totalVaultValue.toString();
+    }
 
     handleChange();
   }
@@ -133,6 +165,14 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
     });
   }
 
+  calculatePaymentValue() {
+    setState(() {
+      priceInDFI = double.parse((double.parse(widget.loanAmount.amount) / dfiToken.activePrice.active.amount).toStringAsFixed(8));
+    });
+
+    calculateMaxToPayback();
+  }
+
   Widget _buildRemove(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Column(children: [
@@ -142,7 +182,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             child: TextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 textAlign: TextAlign.right,
-                decoration: InputDecoration(labelText: '', counterText: '', suffix: Text(widget.loanAmount.symbolKey)),
+                decoration: InputDecoration(labelText: '', counterText: '', suffix: Text(paymentSelection)),
                 controller: _amountTextController),
           ),
           Container(width: 10),
@@ -186,7 +226,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   buildAmount() {
     var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 1.0;
 
-    if (widget.loanAmount.symbolKey.toUpperCase() == "DUSD") {
+    if (isDUSDLoan) {
       pricePerToken = 1.0;
     }
 
@@ -232,8 +272,31 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   buildPayback() {
     var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 1.0;
 
-    if (widget.loanAmount.symbolKey == "DUSD") {
+    if (isDUSDLoan) {
       pricePerToken = 1.0;
+    }
+
+    if (isDFIPayment) {
+      return Card(
+          child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(children: [
+                Table(border: TableBorder(), children: [
+                  TableRow(children: [Text(S.of(context).loan_tokens_to_pay_back, style: Theme.of(context).textTheme.caption), Text(S.of(context).loan_payback_value)]),
+                  TableRow(children: [
+                    Text(FundFormatter.format(amountToRemoveDouble)),
+                    Text(FundFormatter.format((amountToRemoveDouble) * pricePerToken * widget.tetherPrice, fractions: 2) + " " + Currency.getCurrencySymbol(widget.currency)),
+                  ]),
+                ]),
+                Container(height: 10),
+                Table(border: TableBorder(), children: [
+                  TableRow(children: [Text('DFI Wert in \$', style: Theme.of(context).textTheme.caption), Text('DFI Loan Wert', style: Theme.of(context).textTheme.caption)]),
+                  TableRow(children: [
+                    Text(FundFormatter.format(dfiToken.activePrice.active.amount, fractions: 2) + " \$"),
+                    Text(FundFormatter.format(priceInDFI, fractions: 8) + " DFI"),
+                  ]),
+                ])
+              ])));
     }
 
     return Card(
@@ -250,9 +313,36 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
             ])));
   }
 
+  buildPaymentSelection() {
+    return Card(
+        child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(children: [
+              DropdownButton<String>(
+                isExpanded: true,
+                value: paymentSelection,
+                onChanged: (e) async {
+                  setState(() {
+                    paymentSelection = e;
+                    isDFIPayment = paymentSelection == 'DFI';
+                  });
+
+                  calculatePaymentValue();
+                },
+                items: ['DUSD', 'DFI'].map((e) {
+                  return new DropdownMenuItem<String>(
+                    value: e,
+                    child: Text(e),
+                  );
+                }).toList(),
+              ),
+              if (isDFIPayment) Text('1% fee Text'),
+            ])));
+  }
+
   @override
   Widget build(Object context) {
-    if (!balanceLoaded) {
+    if (!balanceLoaded || !loanTokenLoaded) {
       return Scaffold(
           appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)),
           body: LoadingWidget(text: S.of(context).loading));
@@ -262,6 +352,14 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_payback_title)),
         body: PrimaryScrollController(
             controller: new ScrollController(),
-            child: SingleChildScrollView(child: Padding(padding: EdgeInsets.all(10), child: Column(children: [buildAmount(), buildPayback(), _buildRemove(context)])))));
+            child: SingleChildScrollView(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(children: [
+                      buildAmount(),
+                      buildPayback(),
+                      if (isDUSDLoan) buildPaymentSelection(),
+                      _buildRemove(context)
+                    ])))));
   }
 }

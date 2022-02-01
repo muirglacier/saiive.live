@@ -176,6 +176,13 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
   }
 
   _calculateDFIPercentage() {
+    if (myVault.collateralAmounts.length == 0) {
+      setState(() {
+        isDFILessThan50 = false;
+      });
+      return;
+    }
+
     var amount = myVault.collateralAmounts.firstWhere((element) => element.symbol == 'DFI', orElse: () => null);
     var token = _tokens.firstWhere((element) => element.token.symbol == 'DFI', orElse: () => null);
     var percentage = 0.0;

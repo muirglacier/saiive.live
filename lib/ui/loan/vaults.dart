@@ -31,7 +31,7 @@ class VaultsScreen extends RefreshableWidget {
 
   @override
   void refresh() {
-    _state._initVaults();
+    // _state._initVaults();
   }
 }
 

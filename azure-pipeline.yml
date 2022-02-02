@@ -1757,7 +1757,7 @@ stages:
           buildFlavour: 'dev'
           entryPoint: 'lib/main.dart'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target=lib/main.dart
+          extraArgs: --target=lib/main.dart --build-name $(AppVersion)
 
           
       - task: CopyFiles@2
@@ -1790,7 +1790,7 @@ stages:
           buildName: $(AppVersion)
           buildFlavour: 'devappcenter'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target=lib/main.dart 
+          extraArgs: --target=lib/main.dart --build-name $(AppVersion)
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -1883,7 +1883,7 @@ stages:
           buildFlavour: 'stagingappcenter'
           entryPoint: 'lib/main_staging.dart'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target=lib/main_staging.dart
+          extraArgs: --target=lib/main_staging.dart --build-name $(AppVersion)
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -1977,7 +1977,7 @@ stages:
           buildFlavour: 'prodgooglePlay'
           entryPoint: 'lib/main_prod.dart'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target=lib/main_prod.dart
+          extraArgs: --target=lib/main_prod.dart --build-name $(AppVersion)
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"

@@ -3705,6 +3705,56 @@ class S {
     );
   }
 
+  /// `A 1% fee is applied when you pay with DFI`
+  String get loan_payback_dfi_fee {
+    return Intl.message(
+      'A 1% fee is applied when you pay with DFI',
+      name: 'loan_payback_dfi_fee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DFI Value in $`
+  String get loan_payback_dfi_value_in_usd {
+    return Intl.message(
+      'DFI Value in \$',
+      name: 'loan_payback_dfi_value_in_usd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loan Value in DFI`
+  String get loan_payback_loan_value_in_dfi {
+    return Intl.message(
+      'Loan Value in DFI',
+      name: 'loan_payback_loan_value_in_dfi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DFI to pay`
+  String get loan_payback_dfi_to_pay {
+    return Intl.message(
+      'DFI to pay',
+      name: 'loan_payback_dfi_to_pay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DFI Penalty`
+  String get loan_payback_dfi_penalty {
+    return Intl.message(
+      'DFI Penalty',
+      name: 'loan_payback_dfi_penalty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `FAQ`
   String get loan_faq {
     return Intl.message(

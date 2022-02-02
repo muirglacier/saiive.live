@@ -1709,6 +1709,11 @@ stages:
           useLegacyPattern: false
           enableTelemetry: false
 
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version="$(AppVersion).$(Build.BuildNumber)"'
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1790,7 +1795,7 @@ stages:
           buildName: $(AppVersion)
           buildFlavour: 'devappcenter'
           buildNumber: $(Build.BuildNumber)
-          extraArgs: --target=lib/main.dart 
+          extraArgs: --target=lib/main.dart
 
       - task: CopyFiles@2
         displayName: "Copy artifacts"
@@ -1838,6 +1843,12 @@ stages:
           enableTransforms: false
           useLegacyPattern: false
           enableTelemetry: false
+
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version="$(AppVersion).$(Build.BuildNumber)"'
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1932,6 +1943,11 @@ stages:
           useLegacyPattern: false
           enableTelemetry: false
 
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version="$(AppVersion).$(Build.BuildNumber)"'
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -2023,7 +2039,12 @@ stages:
           actionOnNoFiles: 'continue'
           enableTransforms: false
           useLegacyPattern: false
-          enableTelemetry: false      
+          enableTelemetry: false    
+          
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version="$(AppVersion).$(Build.BuildNumber)"'            
           
       - task: FlutterInstall@0
         displayName: "Flutter install"

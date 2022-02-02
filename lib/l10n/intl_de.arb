@@ -403,6 +403,11 @@
   "loan_payback_value": "Wert",
   "loan_collateral_edit": "Bearbeiten",
   "loan_vault_transfer": "Darlehen übertragen",
+  "loan_payback_dfi_fee": "Wenn du mit DFI bezahlst, wird eine Gebühr von 1% erhoben",
+  "loan_payback_dfi_value_in_usd": "DFI Wert in $",
+  "loan_payback_loan_value_in_dfi": "Dahrlehen Wert in DFI",
+  "loan_payback_dfi_to_pay": "DFI zu bezahlen",
+  "loan_payback_dfi_penalty": "DFI Gebühr",
 
   "loan_faq": "FAQ",
   "loan_faq_collateral": "Wie wird die Besicherungsquote berechnet?",

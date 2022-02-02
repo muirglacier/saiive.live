@@ -410,6 +410,11 @@
   "loan_collateral_edit": "Edit",
   "loan_value": "Loan Value",
   "loan_vault_transfer": "Transfer Vault",
+  "loan_payback_dfi_fee": "A 1% fee is applied when you pay with DFI",
+  "loan_payback_dfi_value_in_usd": "DFI Value in $",
+  "loan_payback_loan_value_in_dfi": "Loan Value in DFI",
+  "loan_payback_dfi_to_pay": "DFI to pay",
+  "loan_payback_dfi_penalty": "DFI Penalty",
 
   "loan_faq": "FAQ",
   "loan_faq_collateral": "How is the collateralization ratio calculated?",

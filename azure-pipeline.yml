@@ -1708,6 +1708,10 @@ stages:
           enableTransforms: false
           useLegacyPattern: false
           enableTelemetry: false
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version=$(AppVersion).$(Build.BuildNumber)'
 
       - task: FlutterInstall@0
         displayName: "Flutter install"
@@ -1838,6 +1842,11 @@ stages:
           enableTransforms: false
           useLegacyPattern: false
           enableTelemetry: false
+
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version=$(AppVersion).$(Build.BuildNumber)'
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -1932,6 +1941,11 @@ stages:
           useLegacyPattern: false
           enableTelemetry: false
 
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version=$(AppVersion).$(Build.BuildNumber)'
+
       - task: FlutterInstall@0
         displayName: "Flutter install"
         inputs:
@@ -2023,7 +2037,12 @@ stages:
           actionOnNoFiles: 'continue'
           enableTransforms: false
           useLegacyPattern: false
-          enableTelemetry: false      
+          enableTelemetry: false    
+          
+      - task: YamlWriter@0
+        inputs:
+          file: 'pubspec.yaml'
+          set: 'version=$(AppVersion).$(Build.BuildNumber)'            
           
       - task: FlutterInstall@0
         displayName: "Flutter install"

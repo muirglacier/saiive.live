@@ -1302,7 +1302,7 @@ class DeFiChainWallet extends wallet.Wallet implements IDeFiCHainWallet {
       }
 
       var txHex = await HdWalletUtil.buildTransaction(useInputs, keys, pubKey, 0, fees, pubKey, (txb, inputTxs, network) async {
-        final mintingStartsAt = txb.tx.ins.length + 1;
+        final mintingStartsAt = txb.tx.outs.length + 1;
 
         if (useAcc.balance > DUST_AMOUNT) {
           txb.addOutput(pubKey, useAcc.balance);

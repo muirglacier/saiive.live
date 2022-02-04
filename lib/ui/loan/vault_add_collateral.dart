@@ -262,7 +262,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var val = 0.0;
 
     widget._collateralAmounts.forEach((e) {
-      var priceValue = e.activePrice != null ? e.activePrice.active.amount : 1.0;
+      var priceValue = LoanHelper.activePrice(e.symbol, e.activePrice);
 
       val += priceValue * double.tryParse(e.amount);
     });
@@ -287,7 +287,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
   _buildCollateralEntry(LoanVaultAmount amount) {
     var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
-    double price = amount.activePrice != null ? amount.activePrice.active.amount : 1.0;
+    double price = LoanHelper.activePrice(amount.symbol, amount.activePrice);
     double factor = token != null ? double.tryParse(token.factor) : 1.0;
 
     return Card(

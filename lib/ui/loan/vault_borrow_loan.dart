@@ -11,6 +11,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan_choose_token.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan_choose_vault.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan_confirm.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
@@ -112,7 +113,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
     _totalInterestAmount = (totalAmount * _totalInterest / 100);
     _totalTokenWithInterest = totalAmount + _totalInterestAmount;
 
-    var _loanTokenPriceUSD = _loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 1.0;
+    var _loanTokenPriceUSD = LoanHelper.activePrice(_loanToken.token.symbol, _loanToken.activePrice);
 
     if (_loanToken.token.symbolKey == "DUSD") {
       _loanTokenPriceUSD = 1;
@@ -177,8 +178,9 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                       Row(children: [
                         Text(S.of(context).loan_price_usd(Currency.getCurrencyShortage(widget.currency)), style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(_loanToken.activePrice != null
-                            ? FundFormatter.format(_loanToken.activePrice.active.amount * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+                        Text(
+                            _loanToken.activePrice != null
+                            ? FundFormatter.format(LoanHelper.activePrice(_loanToken.token.symbol, _loanToken.activePrice) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
                             : '-'),
                       ]),
                       if (currentLoanAmount != null)
@@ -192,7 +194,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                           Text(S.of(context).loan_current_amount_usd(Currency.getCurrencyShortage(widget.currency)), style: Theme.of(context).textTheme.caption),
                           Spacer(),
                           Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) *
-                                  (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount * widget.tetherPrice : 1.0 * widget.tetherPrice)) +
+                                  (LoanHelper.activePrice(_loanToken.token.symbol, _loanToken.activePrice) * widget.tetherPrice)) +
                               ' ' +
                               Currency.getCurrencySymbol(widget.currency)),
                         ]),

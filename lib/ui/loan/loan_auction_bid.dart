@@ -4,6 +4,7 @@ import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_vault_auction.dart';
 import 'package:saiive.live/network/model/loan_vault_auction_batch.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
@@ -101,7 +102,7 @@ class _VaultAuctionBidScreen extends State<VaultAuctionBidScreen> {
                             (widget.balance != null
                                     ? FundFormatter.format(
                                         widget.balance.balanceDisplay *
-                                            (widget.batch.loan.activePrice != null ? widget.batch.loan.activePrice.active.amount : 1) *
+                                            LoanHelper.activePrice(widget.batch.loan.symbol, widget.batch.loan.activePrice) *
                                             widget.tetherPrice,
                                         fractions: 2)
                                     : '0') +

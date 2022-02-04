@@ -269,7 +269,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
   }
 
   _buildLoanEntry(LoanVaultAmount amount) {
-    var pricePerToken = amount.activePrice != null ? amount.activePrice.active.amount : 1.0;
+    var pricePerToken = LoanHelper.activePrice(amount.symbol, amount.activePrice);
     var totalAmount = pricePerToken * double.tryParse(amount.amount);
     var token = _loanTokens.firstWhere((element) => element.token.symbol == amount.symbol, orElse: () => null);
     var interest = myVault.interestAmounts.firstWhere((element) => element.symbol == amount.symbol, orElse: () => null);
@@ -400,7 +400,7 @@ class _VaultDetailScreen extends State<VaultDetailScreen> with TickerProviderSta
 
   _buildCollateralEntry(LoanVaultAmount amount) {
     var token = _tokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
-    double price = amount.activePrice != null ? amount.activePrice.active.amount : 1.0;
+    double price = LoanHelper.activePrice(amount.symbol, amount.activePrice);
     double factor = token != null ? double.tryParse(token.factor) : 1.0;
 
     return Card(

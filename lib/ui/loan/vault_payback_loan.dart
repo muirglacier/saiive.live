@@ -18,6 +18,7 @@ import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:flutter/material.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -246,7 +247,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   buildAmount() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 1.0;
+    var pricePerToken = LoanHelper.activePrice(widget.loanAmount.amount, widget.loanAmount.activePrice);
 
     if (isDUSDLoan) {
       pricePerToken = 1.0;
@@ -292,7 +293,7 @@ class _VaultPaybackLoanScreen extends State<VaultPaybackLoanScreen> {
   }
 
   buildPayback() {
-    var pricePerToken = widget.loanAmount.activePrice != null ? widget.loanAmount.activePrice.active.amount : 1.0;
+    var pricePerToken = LoanHelper.activePrice(widget.loanAmount.amount, widget.loanAmount.activePrice);
 
     if (isDUSDLoan) {
       pricePerToken = 1.0;

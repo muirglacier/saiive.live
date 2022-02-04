@@ -1,6 +1,7 @@
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -22,6 +23,8 @@ class VaultTokenBoxWidget extends StatefulWidget {
 class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
   @override
   Widget build(Object context) {
+    var price = LoanHelper.activePrice(widget.token.token.symbol, widget.token.activePrice);
+
     return InkWell(
         onTap: () async {
           Navigator.of(context)
@@ -53,12 +56,12 @@ class _VaultTokenBoxWidget extends State<VaultTokenBoxWidget> {
                       Text(widget.token.interest),
                       Text(widget.token.activePrice != null
                           ? FundFormatter.format(
-                                  widget.token.token.symbolKey == "DUSD" ? (1.0 * widget.tetherPrice) : (widget.token.activePrice.active.amount * widget.tetherPrice),
+                                  widget.token.token.symbolKey == "DUSD" ? (price * widget.tetherPrice) : (price * widget.tetherPrice),
                                   fractions: 2) +
                               ' ' +
                               Currency.getCurrencySymbol(widget.currency)
                           : (widget.token.token.symbolKey == "DUSD"
-                              ? FundFormatter.format(1.0 * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+                              ? FundFormatter.format(price * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
                               : '-')),
                     ]),
                   ]),

@@ -11,6 +11,7 @@ import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     _totalInterestAmount = (widget.amount * _totalInterest / 100);
     _totalTokenWithInterest = widget.amount + _totalInterestAmount;
 
-    _loanTokenPriceUSD = widget.loanToken.activePrice != null ? widget.loanToken.activePrice.active.amount : 1.0;
+    _loanTokenPriceUSD = LoanHelper.activePrice(widget.loanToken.token.symbol, widget.loanToken.activePrice);
 
     _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD + double.tryParse(widget.loanVault.loanValue);
     _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(widget.loanVault.collateralValue);

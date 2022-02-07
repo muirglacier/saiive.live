@@ -80,16 +80,8 @@ class WalletService implements IWalletService {
   }
 
   Future<bool> isRestoreNeeded() async {
-    var hasAnyoneMissingAccounts = false;
-    for (var wallet in _wallets) {
-      var hasAccounts = await wallet.hasAccounts();
-
-      if (!hasAccounts) {
-        hasAnyoneMissingAccounts = true;
-        break;
-      }
-    }
-    return hasAnyoneMissingAccounts;
+    var hasAnyoneMissingAccounts = await _defiWallet.hasAccounts();
+    return !hasAnyoneMissingAccounts;
   }
 
   @override

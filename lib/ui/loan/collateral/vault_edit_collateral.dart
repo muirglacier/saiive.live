@@ -1,5 +1,6 @@
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
+import 'package:saiive.live/helper/constants.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class VaultEditCollateralTokenScreen extends StatefulWidget {
 class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScreen> {
   var _amountController = TextEditingController(text: '');
   double _amount = 0;
-  bool _valid = false;
+  bool _valid = true;
 
   @override
   void initState() {
@@ -33,8 +34,11 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
   }
 
   handleChange() async {
+    double currentAmount = double.tryParse(widget.current.amount);
     double amount = double.tryParse(_amountController.text.replaceAll(',', '.'));
     double loanAmount = double.tryParse(widget.current.amount);
+    double availableBalance = currentAmount + (widget.balance != null ? widget.balance.balance : 0) / DefiChainConstants.COIN;
+
     bool valid = true;
 
     if (null == amount) {
@@ -43,11 +47,11 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
     }
 
     if (widget.balance == null) {
-      if (loanAmount > amount) {
+      if (amount > loanAmount) {
         valid = false;
       }
     } else {
-      if (amount + widget.changes > widget.balance.balanceDisplay) {
+      if (amount + widget.changes > availableBalance) {
         valid = false;
       }
     }
@@ -77,7 +81,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
         body: Container(
             color: StateContainer.of(context).curTheme.cardBackgroundColor,
             child: Padding(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.all(20),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   TextField(
                       controller: _amountController,
@@ -92,7 +96,7 @@ class _VaultEditCollateralTokenScreen extends State<VaultEditCollateralTokenScre
                       ),
                       keyboardType: TextInputType.numberWithOptions(decimal: true)),
                   Container(height: 10),
-                  Text(S.of(context).loan_add_collateral_available + ': ' + FundFormatter.format(widget.balance != null ? widget.balance.balanceDisplay - widget.changes : '0')),
+                  Text(S.of(context).loan_add_collateral_available + ': ' + FundFormatter.format(widget.balance != null ? widget.balance.balanceDisplay - widget.changes : 0.0)),
                   SizedBox(
                     height: 20,
                   ),

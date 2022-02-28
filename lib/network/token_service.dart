@@ -11,11 +11,20 @@ abstract class ITokenService {
 }
 
 class TokenService extends NetworkService implements ITokenService {
-  Map<String, Token> _tokenMap = Map<String, Token>();
+  Map<String, Map<String, Token>> _tokenMap = Map<String, Map<String, Token>>();
+  DateTime _tokenSyncTime = DateTime.now();
+
+  final int const15MinutesInMilliseconds = 900000;
 
   Future<List<Token>> getTokens(String coin) async {
-    if (_tokenMap.isNotEmpty) {
-      return _tokenMap.values.toList();
+    var syncTimeDif = DateTime.now().millisecondsSinceEpoch - _tokenSyncTime.millisecondsSinceEpoch;
+
+    if (syncTimeDif > const15MinutesInMilliseconds) {
+      _tokenMap.clear();
+    }
+
+    if (_tokenMap.isNotEmpty && _tokenMap.containsKey(this.httpService.getNetwork()) && _tokenMap[this.httpService.getNetwork()].isNotEmpty) {
+      return _tokenMap[this.httpService.getNetwork()].values.toList();
     }
 
     dynamic map = await this.httpService.makeHttpGetRequest('/tokens', coin);
@@ -27,19 +36,24 @@ class TokenService extends NetworkService implements ITokenService {
     List<Token> tokens = map.entries.map<Token>((data) => Token.fromJson(data.value)).toList();
 
     this.fireEvent(new TokensLoadedEvent(tokens: tokens));
+    if (!_tokenMap.containsKey(this.httpService.getNetwork())) {
+      _tokenMap.putIfAbsent(this.httpService.getNetwork(), () => new Map<String, Token>());
+    }
 
     for (final token in tokens) {
-      _tokenMap.putIfAbsent(token.symbolKey, () => token);
+      _tokenMap[this.httpService.getNetwork()].putIfAbsent(token.symbolKey, () => token);
     }
+
+    _tokenSyncTime = DateTime.now();
 
     return tokens;
   }
 
   Future<Token> getToken(String coin, String token) async {
-    if (_tokenMap.isNotEmpty && _tokenMap.containsKey(token)) {
-      return _tokenMap[token];
+    if (_tokenMap.isNotEmpty && _tokenMap.containsKey(this.httpService.getNetwork()) && _tokenMap[this.httpService.getNetwork()].containsKey(token)) {
+      return _tokenMap[this.httpService.getNetwork()][token];
     } else {
-      _tokenMap.clear();
+      _tokenMap[this.httpService.getNetwork()].clear();
     }
 
     dynamic response = await this.httpService.makeHttpGetRequest('/tokens/$token', coin);

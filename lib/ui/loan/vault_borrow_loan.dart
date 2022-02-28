@@ -3,6 +3,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/loans_service.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/vaults_service.dart';
@@ -10,6 +11,7 @@ import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan_choose_token.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan_choose_vault.dart';
 import 'package:saiive.live/ui/loan/vault_borrow_loan_confirm.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
@@ -22,9 +24,13 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class VaultBorrowLoan extends StatefulWidget {
   final LoanToken loanToken;
   final LoanVault loanVault;
+
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
   final key = GlobalKey();
 
-  VaultBorrowLoan({this.loanToken, this.loanVault});
+  VaultBorrowLoan({this.loanToken, this.loanVault, this.currency = CurrencyEnum.USD, this.tetherPrice = 1.0});
 
   @override
   State<StatefulWidget> createState() {
@@ -81,7 +87,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       _vaults = null;
     });
 
-    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys();
+    var pubKeyList = await sl.get<DeFiChainWallet>().getPublicKeys(onlyActive: true);
     var vaults = await sl.get<IVaultsService>().getMyVaults(DeFiConstants.DefiAccountSymbol, pubKeyList);
 
     setState(() {
@@ -99,38 +105,21 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
       return;
     }
 
-    var otherLoanValues = _loanVault.loanAmounts.fold(0.0, (previousValue, element) {
-      if (element.symbol == _loanToken.token.symbol) {
-        return previousValue;
-      }
-
-      var amount = double.tryParse(element.amount);
-      var _loanTokenPriceUSD = element.activePrice != null ? element.activePrice.active.amount : 0;
-
-      if (_loanToken.token.symbolKey == "DUSD") {
-        _loanTokenPriceUSD = 1;
-      }
-
-      return previousValue + (amount * _loanTokenPriceUSD);
-    });
-
-    var currentLoanAmount = _loanVault.loanAmounts.firstWhere((element) => element.symbol == _loanToken.token.symbol, orElse: () => null);
-
     var _interestToken = double.tryParse(_loanToken.interest);
     var _interestVault = double.tryParse(_loanVault.schema.interestRate);
-    var totalAmount = (currentLoanAmount != null ? double.tryParse(currentLoanAmount.amount) : 0.0) + amount;
+    var totalAmount = amount;
 
     _totalInterest = _interestVault + _interestToken;
     _totalInterestAmount = (totalAmount * _totalInterest / 100);
     _totalTokenWithInterest = totalAmount + _totalInterestAmount;
 
-    var _loanTokenPriceUSD = _loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0;
+    var _loanTokenPriceUSD = LoanHelper.activePrice(_loanToken.token.symbol, _loanToken.activePrice);
 
     if (_loanToken.token.symbolKey == "DUSD") {
       _loanTokenPriceUSD = 1;
     }
 
-    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + otherLoanValues;
+    _totalUSDValue = (_totalTokenWithInterest * _loanTokenPriceUSD) + double.tryParse(widget.loanVault.loanValue);
 
     setState(() {
       _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(_loanVault.collateralValue);
@@ -154,7 +143,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
         child: (null == _loanToken)
             ? Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(children: <Widget>[
                         Text(
@@ -168,7 +157,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                     ])))
             : Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(
                         children: <Widget>[
@@ -187,9 +176,12 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         ],
                       ),
                       Row(children: [
-                        Text(S.of(context).loan_price_usd, style: Theme.of(context).textTheme.caption),
+                        Text(S.of(context).loan_price_usd(Currency.getCurrencyShortage(widget.currency)), style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(_loanToken.activePrice != null ? FundFormatter.format(_loanToken.activePrice.active.amount, fractions: 2) + ' \$' : '-'),
+                        Text(
+                            _loanToken.activePrice != null
+                            ? FundFormatter.format(LoanHelper.activePrice(_loanToken.token.symbol, _loanToken.activePrice) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+                            : '-'),
                       ]),
                       if (currentLoanAmount != null)
                         Row(children: [
@@ -199,10 +191,12 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                         ]),
                       if (currentLoanAmount != null)
                         Row(children: [
-                          Text(S.of(context).loan_current_amount_usd, style: Theme.of(context).textTheme.caption),
+                          Text(S.of(context).loan_current_amount_usd(Currency.getCurrencyShortage(widget.currency)), style: Theme.of(context).textTheme.caption),
                           Spacer(),
-                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) * (_loanToken.activePrice != null ? _loanToken.activePrice.active.amount : 0)) +
-                              ' \$'),
+                          Text(FundFormatter.format(double.tryParse(currentLoanAmount.amount) *
+                                  (LoanHelper.activePrice(_loanToken.token.symbol, _loanToken.activePrice) * widget.tetherPrice)) +
+                              ' ' +
+                              Currency.getCurrencySymbol(widget.currency)),
                         ]),
                       Row(children: [Text(S.of(context).loan_interest, style: Theme.of(context).textTheme.caption), Spacer(), Text(_loanToken.interest + '%')])
                     ]))));
@@ -259,7 +253,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
         child: null == _loanVault
             ? Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(children: <Widget>[
                         Text(
@@ -273,7 +267,7 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                     ])))
             : Card(
                 child: Padding(
-                    padding: EdgeInsets.all(30),
+                    padding: EdgeInsets.all(20),
                     child: Column(children: [
                       Row(children: <Widget>[
                         Container(decoration: BoxDecoration(color: Colors.transparent), child: Icon(Icons.shield, size: 40)),
@@ -293,12 +287,14 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
                       Row(children: [
                         Text(S.of(context).loan_total_collateral, style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue), fractions: 2) + ' \$'),
+                        Text(FundFormatter.format(double.tryParse(_loanVault.collateralValue) * widget.tetherPrice, fractions: 2) +
+                            ' ' +
+                            Currency.getCurrencySymbol(widget.currency)),
                       ]),
                       Row(children: [
                         Text(S.of(context).loan_total_loan_amount, style: Theme.of(context).textTheme.caption),
                         Spacer(),
-                        Text(FundFormatter.format(double.tryParse(_loanVault.loanValue), fractions: 2) + ' \$'),
+                        Text(FundFormatter.format(double.tryParse(_loanVault.loanValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
                       ]),
                       Row(children: [
                         Text(S.of(context).loan_collateral_ratio, style: Theme.of(context).textTheme.caption),
@@ -326,87 +322,95 @@ class _VaultBorrowLoan extends State<VaultBorrowLoan> {
 
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_title)),
-        body: SlidingUpPanel(
-            controller: _panelController,
-            backdropEnabled: true,
-            defaultPanelState: PanelState.CLOSED,
-            minHeight: 0,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
-            color: StateContainer.of(context).curTheme.cardBackgroundColor,
-            onPanelClosed: () {
-              if (key != null && key.currentState != null && key.currentState.canPop()) {
-                key.currentState.pop();
-              }
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: SlidingUpPanel(
+                controller: _panelController,
+                backdropEnabled: true,
+                defaultPanelState: PanelState.CLOSED,
+                minHeight: 0,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
+                color: StateContainer.of(context).curTheme.cardBackgroundColor,
+                onPanelClosed: () {
+                  if (key != null && key.currentState != null && key.currentState.canPop()) {
+                    key.currentState.pop();
+                  }
 
-              setState(() {
-                _panel = Container();
-              });
-            },
-            panel: LayoutBuilder(builder: (_, builder) {
-              return Column(children: [
-                SizedBox(
-                  height: 12.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: 30,
-                      height: 5,
-                      decoration: BoxDecoration(color: StateContainer.of(context).curTheme.backgroundColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                  setState(() {
+                    _panel = Container();
+                  });
+                },
+                panel: LayoutBuilder(builder: (_, builder) {
+                  return Column(children: [
+                    SizedBox(
+                      height: 12.0,
                     ),
-                  ],
-                ),
-                Expanded(child: _panel)
-              ]);
-            }),
-            body: Padding(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onPanDown: (_) {
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    },
-                    child: NestedScrollView(
-                        headerSliverBuilder: (context, value) {
-                          return [
-                            SliverToBoxAdapter(
-                                child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
-                            SliverToBoxAdapter(child: buildTokenEntry()),
-                            SliverToBoxAdapter(
-                                child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
-                            SliverToBoxAdapter(child: buildVaultEntry()),
-                          ];
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: 30,
+                          height: 5,
+                          decoration: BoxDecoration(color: StateContainer.of(context).curTheme.backgroundColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                        ),
+                      ],
+                    ),
+                    Expanded(child: _panel)
+                  ]);
+                }),
+                body: Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onPanDown: (_) {
+                          FocusScope.of(context).requestFocus(FocusNode());
                         },
-                        body: Column(children: [
-                          if (_loanVault != null && _loanToken != null)
-                            Column(children: [
-                              Container(height: 20),
-                              Text(S.of(context).loan_amount),
-                              TextField(
-                                  controller: _amountController,
-                                  decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
-                                  keyboardType: TextInputType.numberWithOptions(decimal: true)),
-                              buildTXDetails(),
-                              Padding(
-                                  padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
-                                  child: WalletReturnAddressWidget(
-                                    onChanged: (v) {
-                                      setState(() {
-                                        _returnAddress = v;
-                                      });
-                                    },
-                                  )),
-                              SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    child: Text(S.of(context).loan_continue),
-                                    onPressed: () async {
-                                      await Navigator.of(context).push(
-                                          MaterialPageRoute(builder: (BuildContext context) => VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress)));
-                                    },
-                                  ))
-                            ]),
-                        ]))))));
+                        child: NestedScrollView(
+                            controller: new ScrollController(),
+                            headerSliverBuilder: (context, value) {
+                              return [
+                                SliverToBoxAdapter(
+                                    child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_token, style: Theme.of(context).textTheme.caption))),
+                                SliverToBoxAdapter(child: buildTokenEntry()),
+                                SliverToBoxAdapter(
+                                    child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault, style: Theme.of(context).textTheme.caption))),
+                                SliverToBoxAdapter(child: buildVaultEntry()),
+                              ];
+                            },
+                            body: Container(
+                              child: (_loanVault != null && _loanToken != null)
+                                  ? SingleChildScrollView(
+                                      child: Column(children: [
+                                      Container(height: 20),
+                                      Text(S.of(context).loan_amount),
+                                      TextField(
+                                          controller: _amountController,
+                                          decoration: InputDecoration(hintText: S.of(context).loan_borrow_amount, contentPadding: const EdgeInsets.symmetric(vertical: 10.0)),
+                                          keyboardType: TextInputType.numberWithOptions(decimal: true)),
+                                      buildTXDetails(),
+                                      Padding(
+                                          padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 10),
+                                          child: WalletReturnAddressWidget(
+                                            onChanged: (v) {
+                                              setState(() {
+                                                _returnAddress = v;
+                                              });
+                                            },
+                                          )),
+                                      Padding(
+                                          padding: const EdgeInsets.only(left: 4, right: 4.0, bottom: 20),
+                                          child: SizedBox(
+                                              width: double.infinity,
+                                              child: ElevatedButton(
+                                                  child: Text(S.of(context).loan_continue),
+                                                  onPressed: () async {
+                                                    await Navigator.of(context).push(MaterialPageRoute(
+                                                        builder: (BuildContext context) =>
+                                                            VaultBorrowLoanConfirmScreen(_loanVault, _loanToken, _amount, _returnAddress, widget.currency, widget.tetherPrice)));
+                                                  }))),
+                                      SizedBox(height: 100)
+                                    ]))
+                                  : Container(),
+                            )))))));
   }
 }

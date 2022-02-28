@@ -19,19 +19,19 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'es';
 
-  static m0(appName) => "¡Una nueva versión de ${appName} está disponible!";
+  static m3(appName) => "¡Una nueva versión de ${appName} está disponible!";
 
-  static m1(pubKey) => "Do you want to import the Private Key for the existing account? (${pubKey})";
+  static m4(pubKey) => "Do you want to import the Private Key for the existing account? (${pubKey})";
 
-  static m2(chains) => "Parece que estamos teniendo algunos problemas con el supernodo (${chains}), estamos trabajando duro para restaurar nuestros servicios. Inténtalo más tarde...";
+  static m5(chains) => "Parece que estamos teniendo algunos problemas con el supernodo (${chains}), estamos trabajando duro para restaurar nuestros servicios. Inténtalo más tarde...";
 
-  static m3(from, to) => "Refrescando direcciones (${from}/${to})";
+  static m6(from, to) => "Refrescando direcciones (${from}/${to})";
 
-  static m4(from, to) => "Refrescando transacciones (${from}/${to})";
+  static m7(from, to) => "Refrescando transacciones (${from}/${to})";
 
-  static m5(txId) => "Esperando confirmación (${txId})...";
+  static m8(txId) => "Esperando confirmación (${txId})...";
 
-  static m6(coin) => "Envía solo ${coin} a esta dirección. Enviar monedas o fichas que no sean ${coin} a esta dirección puede resultar en la pérdida de tu depósito!";
+  static m9(coin) => "Envía solo ${coin} a esta dirección. Enviar monedas o fichas que no sean ${coin} a esta dirección puede resultar en la pérdida de tu depósito!";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dex_from_token" : MessageLookupByLibrary.simpleMessage("De Token"),
     "dex_insufficient_funds" : MessageLookupByLibrary.simpleMessage("Fondos insuficientes para el intercambio"),
     "dex_price" : MessageLookupByLibrary.simpleMessage("Precio"),
+    "dex_slippage" : MessageLookupByLibrary.simpleMessage("Slippage"),
     "dex_swap" : MessageLookupByLibrary.simpleMessage("Intercambio"),
     "dex_swap_show_transaction" : MessageLookupByLibrary.simpleMessage("En el explorador"),
     "dex_swap_successfull" : MessageLookupByLibrary.simpleMessage("Intercambio exitoso"),
@@ -148,7 +149,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "title" : MessageLookupByLibrary.simpleMessage("saiive.live"),
     "update_cancel" : MessageLookupByLibrary.simpleMessage("MÁS TARDE"),
     "update_start" : MessageLookupByLibrary.simpleMessage("ACTUALIZAR"),
-    "update_text" : m0,
+    "update_text" : m3,
     "update_title" : MessageLookupByLibrary.simpleMessage("Versión"),
     "version" : MessageLookupByLibrary.simpleMessage("Version"),
     "visibility" : MessageLookupByLibrary.simpleMessage("Visibilidad"),
@@ -169,13 +170,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_accounts_import_invalid" : MessageLookupByLibrary.simpleMessage("The content is invalid!"),
     "wallet_accounts_import_invalid_priv_key" : MessageLookupByLibrary.simpleMessage("The private key is invalid!"),
     "wallet_accounts_import_invalid_pub_key" : MessageLookupByLibrary.simpleMessage("The public key is invalid!"),
-    "wallet_accounts_import_priv_key_for_pub_key" : m1,
+    "wallet_accounts_import_priv_key_for_pub_key" : m4,
     "wallet_accounts_import_unsupported_key" : MessageLookupByLibrary.simpleMessage("The public key is not supported!"),
     "wallet_accounts_key_already_imported" : MessageLookupByLibrary.simpleMessage("The key is already imported!"),
     "wallet_accounts_readonly" : MessageLookupByLibrary.simpleMessage("Readonly"),
     "wallet_accounts_saved" : MessageLookupByLibrary.simpleMessage("Account saved"),
     "wallet_accounts_select_type" : MessageLookupByLibrary.simpleMessage("Select type"),
-    "wallet_accounts_spentable" : MessageLookupByLibrary.simpleMessage("Spentable"),
+    "wallet_accounts_spentable" : MessageLookupByLibrary.simpleMessage("Spendable"),
     "wallet_empty" : MessageLookupByLibrary.simpleMessage("Tu billetera está vacía!"),
     "wallet_home_network" : MessageLookupByLibrary.simpleMessage("Red"),
     "wallet_locked" : MessageLookupByLibrary.simpleMessage("Wallet se está sincronizando en este momento!"),
@@ -200,7 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_new_test_put1" : MessageLookupByLibrary.simpleMessage("Pona la #"),
     "wallet_new_test_put2" : MessageLookupByLibrary.simpleMessage(" palabra aquí"),
     "wallet_new_test_word" : MessageLookupByLibrary.simpleMessage(" palabra"),
-    "wallet_offline" : m2,
+    "wallet_offline" : m5,
     "wallet_operation_build_tx" : MessageLookupByLibrary.simpleMessage("Construyendo transacción"),
     "wallet_operation_create_auth_tx" : MessageLookupByLibrary.simpleMessage("Creando auth tx"),
     "wallet_operation_create_pepare_acc_tx" : MessageLookupByLibrary.simpleMessage("Preparando el saldo de la cuenta"),
@@ -210,17 +211,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "wallet_operation_mempool_conflict_retry" : MessageLookupByLibrary.simpleMessage("Encontramos transacciones pendientes. Vamos a esperarlas, ¡esto podría llevar algo de tiempo!"),
     "wallet_operation_missing_inputs" : MessageLookupByLibrary.simpleMessage("Tu Wallet no está sincronizado. Vuelva a intentar la transacción."),
     "wallet_operation_no_utxo" : MessageLookupByLibrary.simpleMessage("No UTXO existing. To create a transaction your wallet needs to have some UTXO!"),
-    "wallet_operation_refresh_addresses" : m3,
-    "wallet_operation_refresh_tx" : m4,
+    "wallet_operation_price_higher_than_indicated" : MessageLookupByLibrary.simpleMessage("Price is higher than indicated. Increase the slippage to commit the transaction to the blockchain!"),
+    "wallet_operation_refresh_addresses" : m6,
+    "wallet_operation_refresh_tx" : m7,
     "wallet_operation_refresh_utxo" : MessageLookupByLibrary.simpleMessage("Refrescando utxo..."),
     "wallet_operation_refresh_utxo_done" : MessageLookupByLibrary.simpleMessage("Refrescando utxo...acabado"),
     "wallet_operation_send_tx" : MessageLookupByLibrary.simpleMessage("Enviando transacción"),
     "wallet_operation_show_tx" : MessageLookupByLibrary.simpleMessage("Mostrar transacción en el explorador..."),
     "wallet_operation_success" : MessageLookupByLibrary.simpleMessage("Transacción exitosa :)"),
-    "wallet_operation_tx_wait_for_confirmation" : m5,
+    "wallet_operation_tx_wait_for_confirmation" : m8,
     "wallet_operation_wait_for_confirmation" : MessageLookupByLibrary.simpleMessage("Esperando confirmación..."),
     "wallet_receive" : MessageLookupByLibrary.simpleMessage("Recibir"),
-    "wallet_receive_warning" : m6,
+    "wallet_receive_warning" : m9,
     "wallet_recovery_phrase_test_title" : MessageLookupByLibrary.simpleMessage("Prueba frase de recuperación"),
     "wallet_recovery_phrase_title" : MessageLookupByLibrary.simpleMessage("Frase de recuperación"),
     "wallet_restore_accountsAdded" : MessageLookupByLibrary.simpleMessage("¡Las cuentas se han agregado a tu base de datos local! Tus cuentas se sincronizarán en segundo plano!"),

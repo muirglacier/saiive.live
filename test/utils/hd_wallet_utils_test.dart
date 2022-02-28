@@ -40,5 +40,29 @@ void main() async {
       expect(HdWalletUtil.getIndexFromPath("m/0'/0'/0'"), 0);
       expect(HdWalletUtil.getIndexFromPath("m/0'/0'/1'"), 1);
     });
+    test("test BIP44 path isChangeAddress", () {
+      expect(HdWalletUtil.isPathChangeAddress("m/10'/11'/1'/100'"), true);
+      expect(HdWalletUtil.isPathChangeAddress("m/0'/1'/1'/100'"), true);
+      expect(HdWalletUtil.isPathChangeAddress("m/0'/2'/0'/100'"), false);
+      expect(HdWalletUtil.isPathChangeAddress("m/0'/5'/0'/100'"), false);
+    });
+    test("test BIP44 path getIndexFromPath", () {
+      expect(HdWalletUtil.getIndexFromPath("m/10'/1'/1'/100'"), 100);
+      expect(HdWalletUtil.getIndexFromPath("m/0'/1'/1'/69'"), 69);
+      expect(HdWalletUtil.getIndexFromPath("m/0'/0'/1'/0'"), 0);
+      expect(HdWalletUtil.getIndexFromPath("m/0'/0'/1'/1'"), 1);
+    });
+    test("test Jellyfish path isChangeAddress", () {
+      expect(HdWalletUtil.isPathChangeAddress("m/10/1/100"), true);
+      expect(HdWalletUtil.isPathChangeAddress("m/0/1/69"), true);
+      expect(HdWalletUtil.isPathChangeAddress("m/0/0/0"), false);
+      expect(HdWalletUtil.isPathChangeAddress("m/0/0/1"), false);
+    });
+    test("test Jellyfish path getIndexFromPath", () {
+      expect(HdWalletUtil.getIndexFromPath("m/10/1/100"), 100);
+      expect(HdWalletUtil.getIndexFromPath("m/0/1/69"), 69);
+      expect(HdWalletUtil.getIndexFromPath("m/0/0/0"), 0);
+      expect(HdWalletUtil.getIndexFromPath("m/0/0/1"), 1);
+    });
   });
 }

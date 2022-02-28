@@ -13,6 +13,7 @@ import 'package:saiive.live/ui/accounts/accounts_detail_screen.dart';
 import 'package:saiive.live/ui/accounts/accounts_select_action_screen.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 import 'accounts_import_screen.dart';
 
@@ -32,6 +33,7 @@ class AccountsScreen extends StatefulWidget {
 class _AccountScreen extends State<AccountsScreen> {
   List<WalletAccount> _walletAccounts = List<WalletAccount>.empty();
   bool _isLoading = false;
+  bool _isSingleAddressWallet = false;
 
   IWalletService _walletService;
 
@@ -49,8 +51,13 @@ class _AccountScreen extends State<AccountsScreen> {
 
   Future onTap(bool isSelected, WalletAccount account) async {
     if (isSelectionMode) {
+      for (var wa in _walletAccounts) {
+        if (wa.chain == account.chain) {
+          wa.selected = false;
+        }
+      }
       setState(() {
-        account.selected = !account.selected;
+        account.selected = !isSelected;
       });
     } else {
       await Navigator.of(context).push(MaterialPageRoute(settings: RouteSettings(name: "/accountsDetails"), builder: (BuildContext context) => AccountsDetailScreen(account)));
@@ -64,6 +71,7 @@ class _AccountScreen extends State<AccountsScreen> {
 
     var accounts = await _walletService.getAccounts();
 
+    _isSingleAddressWallet = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
     if (widget.useOnlyFilter) {
       accounts = accounts.where((element) => element.chain == widget.chainType).toList();
     }
@@ -116,7 +124,7 @@ class _AccountScreen extends State<AccountsScreen> {
             bottom: 0,
             right: 0,
             child: Icon(
-              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
               color: Theme.of(context).primaryColor,
             ),
           ),
@@ -165,21 +173,20 @@ class _AccountScreen extends State<AccountsScreen> {
 
     return Padding(
         padding: EdgeInsets.all(10),
-        child: Scrollbar(
-            child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: ListView(children: [
-                  ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: _walletAccounts.length,
-                      itemBuilder: (context, index) {
-                        final wa = _walletAccounts.elementAt(index);
+        child: Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ListView(children: [
+              ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _walletAccounts.length,
+                  itemBuilder: (context, index) {
+                    final wa = _walletAccounts.elementAt(index);
 
-                        return _buildAccountEntry(context, wa);
-                      })
-                ]))));
+                    return _buildAccountEntry(context, wa);
+                  })
+            ])));
   }
 
   _buildFloatingActionButton(BuildContext context) {
@@ -210,20 +217,21 @@ class _AccountScreen extends State<AccountsScreen> {
           toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight,
           title: Row(children: [Text(S.of(context).wallet_accounts)]),
           actions: [
-            Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => AccountsSelectActionScreen((chainType) async {
-                              await Navigator.of(context).push(MaterialPageRoute(
-                                  settings: RouteSettings(name: "/accountsAddScreen"), builder: (BuildContext context) => AccountsAddScreen(chainType, null, true)));
-                              await _init();
-                            })));
-                  },
-                  child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
-                )),
-            if (!_isLoading && widget.allowImport)
+            if (!_isSingleAddressWallet)
+              Padding(
+                  padding: EdgeInsets.only(right: 15.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => AccountsSelectActionScreen((chainType) async {
+                                await Navigator.of(context).push(MaterialPageRoute(
+                                    settings: RouteSettings(name: "/accountsAddScreen"), builder: (BuildContext context) => AccountsAddScreen(chainType, null, true)));
+                                await _init();
+                              })));
+                    },
+                    child: Icon(Icons.add, size: 30.0, color: Theme.of(context).appBarTheme.actionsIconTheme.color),
+                  )),
+            if (!_isLoading && widget.allowImport && !_isSingleAddressWallet)
               Padding(
                   padding: EdgeInsets.only(right: 15.0),
                   child: GestureDetector(
@@ -250,6 +258,6 @@ class _AccountScreen extends State<AccountsScreen> {
           ],
         ),
         floatingActionButton: _buildFloatingActionButton(context),
-        body: _buildAccountPage(context));
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildAccountPage(context)));
   }
 }

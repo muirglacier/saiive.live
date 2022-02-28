@@ -18,6 +18,7 @@ abstract class IWalletDatabase {
       {@required String name, @required int account, @required ChainType chain, @required PathDerivationType derivationPathType, bool isSelected = false});
   Future<WalletAccount> addOrUpdateAccount(WalletAccount walletAccount);
   Future removeAccount(WalletAccount walletAccount);
+  Future removeAccountAddress(WalletAddress walletAddress);
 
   Future clearTransactions(WalletAccount account);
 
@@ -41,19 +42,17 @@ abstract class IWalletDatabase {
   Future<List<Account>> getAccountBalancesForToken(String token);
   Future<List<AccountBalance>> getTotalBalances({bool spentable = true});
   Future<Account> getAccountBalanceForPubKey(String pubKey, String token);
+  Future<List<Account>> getAccountBalancesForPubKey(String pubKey);
 
   Future<WalletAddress> addAddress(WalletAddress address);
   Future<bool> isOwnAddress(String pubKey);
   Future<WalletAddress> getWalletAddress(String pubKey);
-  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType);
-  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account);
-  Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType);
+  Future<WalletAddress> getWalletAddressById(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType);
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account, {bool onlyActive});
+  Future<bool> addressExists(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType);
   Future<bool> addressAlreadyUsed(String address);
 
   Future<List<WalletAddress>> getWalletAddressesById(String uniqueId);
-
-  int getAddressCreationCount();
-  int getReturnAddressCreationCount();
 
   Future open();
   Future close();

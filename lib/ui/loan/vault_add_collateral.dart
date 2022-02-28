@@ -3,6 +3,7 @@ import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_collateral.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/network/model/loan_vault_collateral_amount.dart';
@@ -23,11 +24,15 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class VaultAddCollateral extends StatefulWidget {
   final LoanVault vault;
   final List<LoanCollateral> collateralTokens;
+
+  final CurrencyEnum currency;
+  final double tetherPrice;
+
   final key = GlobalKey();
 
   List<LoanVaultAmount> _collateralAmounts;
 
-  VaultAddCollateral(this.vault, this.collateralTokens) {
+  VaultAddCollateral(this.vault, this.collateralTokens, this.currency, this.tetherPrice) {
     this._collateralAmounts = vault.collateralAmounts
         .map((e) => LoanVaultAmount(id: e.id, amount: e.amount, symbol: e.symbol, symbolKey: e.symbolKey, name: e.name, displaySymbol: e.displaySymbol, activePrice: e.activePrice))
         .toList();
@@ -124,7 +129,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
         child: Column(children: [
           Card(
               child: Padding(
-                  padding: EdgeInsets.all(30),
+                  padding: EdgeInsets.all(20),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(
                       children: <Widget>[
@@ -138,7 +143,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                             style: Theme.of(context).textTheme.headline6,
                           ),
                           Text(S.of(context).loan_collateral_value),
-                          Text(FundFormatter.format(_collateralValue, fractions: 2) + ' \$'),
+                          Text(FundFormatter.format(_collateralValue * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
                           Text(S.of(context).loan_min_collateral_ratio),
                           Text(widget.vault.schema.minColRatio + '%'),
                           Text(S.of(context).loan_collateral_ratio),
@@ -152,8 +157,13 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
   handleRemoveCollateral(LoanVaultAmount loanAmount) {
     var existingCollateral = widget._collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
+    var existingOriginalCollateral = widget.vault.collateralAmounts.firstWhere((element) => element.symbolKey == loanAmount.symbolKey, orElse: () => null);
 
-    this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
+    if (existingOriginalCollateral != null) {
+      this.changes[loanAmount.symbolKey] = -1 * double.tryParse(loanAmount.amount);
+    } else {
+      this.changes.removeWhere((key, value) => key == loanAmount.symbolKey);
+    }
 
     if (existingCollateral != null) {
       setState(() {
@@ -252,7 +262,7 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
     var val = 0.0;
 
     widget._collateralAmounts.forEach((e) {
-      var priceValue = e.activePrice != null ? e.activePrice.active.amount : 0;
+      var priceValue = LoanHelper.activePrice(e.symbol, e.activePrice);
 
       val += priceValue * double.tryParse(e.amount);
     });
@@ -277,8 +287,8 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
 
   _buildCollateralEntry(LoanVaultAmount amount) {
     var token = widget.collateralTokens.firstWhere((element) => amount.symbol == element.token.symbol, orElse: () => null);
-    double price = amount.activePrice != null ? amount.activePrice.active.amount : 0;
-    double factor = token != null ? double.tryParse(token.factor) : 0;
+    double price = LoanHelper.activePrice(amount.symbol, amount.activePrice);
+    double factor = token != null ? double.tryParse(token.factor) : 1.0;
 
     return Card(
         child: Padding(
@@ -315,7 +325,10 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                   Text(S.of(context).loan_vault + ' %', style: Theme.of(context).textTheme.caption)
                 ]),
                 TableRow(children: [Text(amount.amount), Text(LoanHelper.calculateCollateralShare(_collateralValue, amount, token).toStringAsFixed(2) + '%')]),
-                TableRow(children: [Text(FundFormatter.format(price * double.tryParse(amount.amount), fractions: 2) + ' \$'), Text('')]),
+                TableRow(children: [
+                  Text(FundFormatter.format(price * double.tryParse(amount.amount) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)),
+                  Text('')
+                ]),
               ])
             ])));
   }
@@ -423,7 +436,9 @@ class _VaultAddCollateral extends State<VaultAddCollateral> {
                                                 _collateralValue,
                                                 double.tryParse(widget.vault.collateralValue),
                                                 changes,
-                                                _returnAddress)));
+                                                _returnAddress,
+                                                widget.currency,
+                                                widget.tetherPrice)));
                                       }
                                     : null)),
                         Padding(padding: EdgeInsets.only(bottom: 100))

@@ -13,7 +13,7 @@ abstract class IPoolPairService {
 
 class PoolPairService extends NetworkService implements IPoolPairService {
   Future<List<PoolPair>> getPoolPairs(String coin) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/listpoolpairs', coin);
+    dynamic response = await this.httpService.makeHttpGetRequest('/listpoolpairs', coin, cached: true);
 
     if (response is ErrorResponse) {
       this.handleError(response);
@@ -27,7 +27,7 @@ class PoolPairService extends NetworkService implements IPoolPairService {
   }
 
   Future<PoolPair> getPoolPair(String coin, String poolID) async {
-    dynamic response = await this.httpService.makeHttpGetRequest('/getpoolpair/$poolID', coin);
+    dynamic response = await this.httpService.makeHttpGetRequest('/getpoolpair/$poolID', coin, cached: true);
 
     if (response is ErrorResponse) {
       this.handleError(response);

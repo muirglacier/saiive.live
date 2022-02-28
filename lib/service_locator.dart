@@ -19,15 +19,21 @@ import 'package:saiive.live/network/gov_service.dart';
 import 'package:saiive.live/network/healthcheck_service.dart';
 import 'package:saiive.live/network/http_service.dart';
 import 'package:saiive.live/network/ihttp_service.dart';
+import 'package:saiive.live/network/loans_auctions_service.dart';
 import 'package:saiive.live/network/loans_service.dart';
 import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/network/pool_share_service.dart';
+import 'package:saiive.live/network/prices.dart';
+import 'package:saiive.live/network/stats.dart';
 import 'package:saiive.live/network/token_service.dart';
 import 'package:saiive.live/network/transaction_service.dart';
 import 'package:saiive.live/network/vaults_service.dart';
+import 'package:saiive.live/services/background.dart';
 import 'package:saiive.live/services/desktop_vault.dart';
 import 'package:saiive.live/services/env_service.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/prices_background.dart';
+import 'package:saiive.live/services/stats_background.dart';
 import 'package:saiive.live/services/wallet_service.dart';
 import 'package:saiive.live/ui/lock/desktop_unlock_handler.dart';
 import 'package:saiive.live/ui/lock/mobile_unlock_handler.dart';
@@ -82,6 +88,12 @@ void setupServiceLocator() {
   sl.registerLazySingleton<ITestInfoService>(() => TestInfoService());
   sl.registerLazySingleton<ILoansService>(() => LoansService());
   sl.registerLazySingleton<IVaultsService>(() => VaultsService());
+  sl.registerLazySingleton<ILoansAuctionsService>(() => LoansAuctionsService());
+  sl.registerLazySingleton<IStatsService>(() => StatsService());
+  sl.registerLazySingleton<IPricesService>(() => PricesService());
+  sl.registerLazySingleton<StatsBackgroundService>(() => StatsBackgroundService());
+  sl.registerLazySingleton<PricesBackgroundService>(() => PricesBackgroundService());
+  sl.registerLazySingleton<BackgroundService>(() => BackgroundService());
 
   sl.registerLazySingleton<AppCenterWrapper>(() => AppCenterWrapper());
 

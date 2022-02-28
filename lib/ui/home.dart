@@ -57,8 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
             visibleForBottomNav: true,
             routeSettingName: "/vaults"),
         NavigationEntry(
-            icon: Icon(Icons.compare_arrows), label: S.of(context).home_dex, page: DexScreen(key: PageStorageKey('DEX')), routeSettingName: "/dex", visibleForBottomNav: false),
-        NavigationEntry(
             icon: Icon(Icons.account_box),
             label: S.of(context).wallet_accounts,
             page: AccountsScreen(key: PageStorageKey('Accounts')),
@@ -70,8 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
             page: AddressBookScreen(key: PageStorageKey('AddressBook')),
             visibleForBottomNav: false,
             routeSettingName: "/addressbook"),
-        // NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
-
+        NavigationEntry(icon: Icon(Icons.add_shopping_cart), label: S.of(context).dfx_buy_title, page: DfxBuyScreen(), visibleForBottomNav: false, routeSettingName: "/buy_dfi"),
         NavigationEntry(
             icon: Icon(Icons.radio_button_unchecked),
             label: S.of(context).home_tokens,

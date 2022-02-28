@@ -99,7 +99,7 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
       SliverToBoxAdapter(
           child: Card(
               child: Padding(
-                  padding: EdgeInsets.all(30),
+                  padding: EdgeInsets.all(20),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(S.of(context).loan_create_vault_info, style: Theme.of(context).textTheme.headline6),
                     Row(children: <Widget>[
@@ -198,6 +198,8 @@ class _VaultCreateConfirmScreen extends State<VaultCreateConfirmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_confirm_create_vault)), body: _buildView());
+    return Scaffold(
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_confirm_create_vault)),
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildView()));
   }
 }

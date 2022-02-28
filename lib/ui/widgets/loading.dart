@@ -66,11 +66,13 @@ class _LoadingWidget extends State<LoadingWidget> {
 
     return Container(
         color: backgroundColor,
-        child: Padding(padding: EdgeInsets.all(20), child: Center(
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-          SizedBox(height: 100, width: 100, child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor))),
-          SizedBox(height: 20),
-          Text(this._text)
-        ]))));
+        child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Center(
+                child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+              SizedBox(height: 100, width: 100, child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor))),
+              SizedBox(height: 20),
+              Text(this._text)
+            ]))));
   }
 }

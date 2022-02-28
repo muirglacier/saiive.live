@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:group_list_view/group_list_view.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/bus/prices_loaded_event.dart';
 import 'package:saiive.live/channel.dart';
 import 'package:saiive.live/crypto/wallet/bitcoin_wallet.dart';
 import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
@@ -13,14 +14,19 @@ import 'package:saiive.live/helper/balance.dart';
 import 'package:saiive.live/network/events/events.dart';
 import 'package:saiive.live/network/model/account_balance.dart';
 import 'package:saiive.live/network/model/block.dart';
+import 'package:saiive.live/network/model/currency.dart';
+import 'package:saiive.live/network/model/price.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/prices_background.dart';
 import 'package:saiive.live/ui/accounts/accounts_screen.dart';
 import 'package:saiive.live/ui/settings/settings.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
+import 'package:saiive.live/ui/wallet/wallet_buy.dart';
 import 'package:saiive.live/ui/wallet/wallet_token.dart';
 import 'package:saiive.live/ui/widgets/auto_resize_text.dart';
+import 'package:saiive.live/ui/widgets/buttons.dart';
 import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:event_taxi/event_taxi.dart';
@@ -41,6 +47,14 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   StreamSubscription<BlockTipUpdatedEvent> _blockTipUpdatedEvent;
   StreamSubscription<WalletSyncStartEvent> _walletSyncStartEvent;
 
+  StreamSubscription<PricesLoadedEvent> _pricesLoadedEvent;
+  StreamSubscription<PriceLoadingStarted> _pricesLoadingEvent;
+
+  bool _pricesLoading = true;
+  List<Price> _prices;
+  double _tetherPrice = 1.0;
+  CurrencyEnum _currency = CurrencyEnum.USD;
+
   AnimationController _controller;
 
   Block _lastSyncBlockTip;
@@ -59,8 +73,15 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
 
     sl.get<IHealthService>().checkHealth(context);
 
+    _prices = sl<PricesBackgroundService>().get();
+    var tetherPrice = sl<PricesBackgroundService>().tetherPrice();
+
+    if (tetherPrice != null) _tetherPrice = tetherPrice.fiat;
+    _currency = await sl<ISharedPrefsUtil>().getCurrency();
+
     setState(() {
       _isSyncing = true;
+      _pricesLoading = false;
     });
   }
 
@@ -99,6 +120,25 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       });
     }
 
+    if (_pricesLoadingEvent == null) {
+      _pricesLoadingEvent = EventTaxiImpl.singleton().registerTo<PriceLoadingStarted>().listen((event) async {
+        setState(() {
+          _pricesLoading = true;
+        });
+      });
+    }
+
+    if (_pricesLoadedEvent == null) {
+      _pricesLoadedEvent = EventTaxiImpl.singleton().registerTo<PricesLoadedEvent>().listen((event) async {
+        setState(() {
+          _pricesLoading = false;
+          _prices = event.prices;
+          _tetherPrice = event.tetherPrice.fiat;
+          _currency = event.currency;
+        });
+      });
+    }
+
     EventTaxiImpl.singleton().fire(WalletInitStartEvent());
   }
 
@@ -128,8 +168,8 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
           _syncText = S.of(context).home_welcome_account_synced;
         });
 
-        var pubKeyListDFI = await sl.get<DeFiChainWallet>().getPublicKeys();
-        var pubKeyListBTC = await sl.get<BitcoinWallet>().getPublicKeys();
+        var pubKeyListDFI = await sl.get<DeFiChainWallet>().getPublicKeys(onlyActive: true);
+        var pubKeyListBTC = await sl.get<BitcoinWallet>().getPublicKeys(onlyActive: true);
 
         sl.get<ChannelConnection>().sendPublicKeysDFI(pubKeyListDFI);
         sl.get<ChannelConnection>().sendPublicKeysBTC(pubKeyListBTC);
@@ -237,9 +277,33 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
       _walletSyncStartEvent.cancel();
       _walletSyncStartEvent = null;
     }
+
+    if (_pricesLoadedEvent != null) {
+      _pricesLoadedEvent.cancel();
+      _pricesLoadedEvent = null;
+    }
+
+    if (_pricesLoadingEvent != null) {
+      _pricesLoadingEvent.cancel();
+      _pricesLoadingEvent = null;
+    }
   }
 
   Widget _buildAccountEntry(AccountBalance balance) {
+    var price = _prices != null ? _prices.firstWhere((element) => element.token == balance.token, orElse: () => null) : null;
+    var priceUsd = price != null ? price.aggregated.amount : null;
+    var finalPrice = 1.0;
+
+    if (priceUsd != null) {
+      finalPrice = priceUsd * _tetherPrice;
+    } else {
+      finalPrice = null;
+    }
+    if (balance.token.toLowerCase() == 'dusd') {
+      priceUsd = 1;
+      finalPrice = 1;
+    }
+
     if (balance is MixedAccountBalance) {
       return Card(
           child: ListTile(
@@ -285,6 +349,20 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
               maxLines: 1,
             )),
           ]),
+          if (priceUsd != null)
+            Row(children: [
+              Text(
+                S.of(context).price,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+              Expanded(
+                  child: AutoSizeText(
+                FundFormatter.format(balance.balanceDisplay * finalPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.right,
+                maxLines: 1,
+              )),
+            ]),
         ]),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain, balance.tokenDisplay, balance)));
@@ -310,12 +388,37 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 backgroundColor: Theme.of(context).primaryColor)
         ]),
         Expanded(
-            child: AutoSizeText(
-          FundFormatter.format(balance.balanceDisplay),
-          style: Theme.of(context).textTheme.headline3,
-          textAlign: TextAlign.right,
-          maxLines: 1,
-        )),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Expanded(
+                child: AutoSizeText(
+              FundFormatter.format(balance.balanceDisplay),
+              style: Theme.of(context).textTheme.headline3,
+              textAlign: TextAlign.right,
+              maxLines: 1,
+            )),
+          ]),
+          if (priceUsd != null && !_pricesLoading)
+            Row(children: [
+              Expanded(
+                  child: AutoSizeText(
+                FundFormatter.format(balance.balanceDisplay * finalPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.right,
+                maxLines: 1,
+              )),
+            ]),
+          if (priceUsd != null && _pricesLoading)
+            Row(children: [
+              Expanded(
+                  child: AutoSizeText(
+                S.of(context).loading,
+                style: Theme.of(context).textTheme.bodyText1,
+                textAlign: TextAlign.right,
+                maxLines: 1,
+              )),
+            ]),
+        ])),
       ]),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => WalletTokenScreen(balance.token, balance.chain, balance.tokenDisplay, balance)));
@@ -338,40 +441,89 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
   }
 
   buildGroupedList(BuildContext context, Map<String, List<AccountBalance>> items) {
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: RefreshIndicator(
-            onRefresh: () async {
-              return await _refresh();
-            },
-            child: GroupListView(
-              sectionsCount: items.keys.toList().length,
-              countOfItemInSection: (int section) {
-                return items.values.toList()[section].length;
-              },
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, IndexPath index) {
-                return _buildAccountEntry(items.values.toList()[index.section][index.index]);
-              },
-              groupHeaderBuilder: (BuildContext context, int section) {
-                var text = items.keys.toList()[section];
-                if (items.values.toList()[section].isEmpty) {
-                  var noAccSelected = S.of(context).wallet_account_nothing_selected;
-                  text += " ($noAccSelected)";
-                }
+    return Column(children: [
+      Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: AppButton.buildAppButton(context, AppButtonType.PRIMARY, S.of(context).dfx_buy_title,
+              onPressed: () => {Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DfxBuyScreen()))},
+              icon: Icons.add_shopping_cart,
+              key: const Key("buy_dfx"))),
+      Expanded(
+          child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              child: RefreshIndicator(
+                  onRefresh: () async {
+                    return await _refresh();
+                  },
+                  child: GroupListView(
+                    sectionsCount: items.keys.toList().length,
+                    countOfItemInSection: (int section) {
+                      return items.values.toList()[section].length;
+                    },
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, IndexPath index) {
+                      return _buildAccountEntry(items.values.toList()[index.section][index.index]);
+                    },
+                    groupHeaderBuilder: (BuildContext context, int section) {
+                      var text = items.keys.toList()[section];
+                      if (items.values.toList()[section].isEmpty) {
+                        var noAccSelected = S.of(context).wallet_account_nothing_selected;
+                        text += " ($noAccSelected)";
+                      }
+                      var balances = items.values.toList()[section].toList();
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                  child: Text(
-                    text,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                );
-              },
-              dragStartBehavior: DragStartBehavior.down,
-              separatorBuilder: (context, index) => SizedBox(height: 5),
-              sectionSeparatorBuilder: (context, section) => SizedBox(height: 5),
-            )));
+                      var totalUSD = balances.fold(0.0, (previousValue, balance) {
+                        if (balance == null) {
+                          return previousValue;
+                        }
+
+                        var price = _prices != null ? _prices.firstWhere((element) => element.token == balance.token, orElse: () => null) : null;
+                        var priceUsd = price != null ? price.aggregated.amount : null;
+
+                        if (balance.token.toLowerCase() == 'dusd') {
+                          priceUsd = 1;
+                        }
+
+                        if (null == priceUsd) {
+                          return previousValue;
+                        }
+
+                        return previousValue + (priceUsd * balance.balanceDisplay) * _tetherPrice;
+                      });
+
+                      var priceWidget;
+
+                      if (_pricesLoading) {
+                        priceWidget = Text(
+                          S.of(context).loading,
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.right,
+                        );
+                      } else {
+                        priceWidget = Text(
+                          FundFormatter.format(totalUSD, fractions: 2) + ' ' + Currency.getCurrencySymbol(_currency),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.right,
+                        );
+                      }
+
+                      return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                          child: Row(
+                            children: [
+                              Text(
+                                text,
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                              Expanded(child: priceWidget)
+                            ],
+                          ));
+                    },
+                    dragStartBehavior: DragStartBehavior.down,
+                    separatorBuilder: (context, index) => SizedBox(height: 5),
+                    sectionSeparatorBuilder: (context, section) => SizedBox(height: 5),
+                  ))))
+    ]);
   }
 
   buildWalletScreen(BuildContext context, bool useReadonlyData) {
@@ -479,6 +631,6 @@ class _WalletHomeScreenScreen extends State<WalletHomeScreen> with TickerProvide
                 ))
           ],
         ),
-        body: buildMultiWalletScreen(context));
+        body: PrimaryScrollController(controller: new ScrollController(), child: buildMultiWalletScreen(context)));
   }
 }

@@ -33,7 +33,7 @@ class TransactionFailScreen extends StatefulWidget {
 }
 
 class _TransactionFailScreenState extends State<TransactionFailScreen> {
-  String _errorText;
+  String _errorText = "some unknown error occured";
 
   String _copyText;
   String _version;
@@ -97,6 +97,10 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
     }
 
     LogHelper.instance.e(_errorText);
+
+    setState(() {
+      _errorText = _errorText;
+    });
   }
 
   _init() async {
@@ -183,7 +187,7 @@ class _TransactionFailScreenState extends State<TransactionFailScreen> {
               if (widget.error != null) SizedBox(height: 30),
               if (widget.error != null)
                 SelectableText(
-                  _errorText,
+                  _errorText ?? "some unknown error occured",
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               if (widget.error != null) SizedBox(height: 30),

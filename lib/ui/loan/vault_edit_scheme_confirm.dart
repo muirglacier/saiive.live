@@ -17,7 +17,6 @@ import 'package:saiive.live/ui/utils/transaction_success.dart';
 import 'package:saiive.live/ui/widgets/loading_overlay.dart';
 import 'package:saiive.live/ui/widgets/table_widget.dart';
 import 'package:saiive.live/ui/widgets/wallet_return_address_widget.dart';
-import 'package:saiive.live/util/sharedprefsutil.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VaultEditSchemeConfirmScreen extends StatefulWidget {
@@ -84,7 +83,7 @@ class _VaultEditSchemeConfirmScreen extends State<VaultEditSchemeConfirmScreen> 
       SliverToBoxAdapter(
           child: Card(
               child: Padding(
-                  padding: EdgeInsets.all(30),
+                  padding: EdgeInsets.all(20),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(S.of(context).loan_edit_vault_info, style: Theme.of(context).textTheme.headline6),
                     Row(children: <Widget>[

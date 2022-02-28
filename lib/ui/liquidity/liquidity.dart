@@ -3,16 +3,19 @@ import 'dart:io';
 
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/generated/l10n.dart';
-import 'package:saiive.live/helper/logger/LogHelper.dart';
 import 'package:saiive.live/helper/poolpair.dart';
 import 'package:saiive.live/helper/poolshare.dart';
-import 'package:saiive.live/navigation.helper.dart';
+import 'package:saiive.live/network/model/currency.dart';
+import 'package:saiive.live/network/model/stats.dart';
+import 'package:saiive.live/network/stats.dart';
 import 'package:saiive.live/network/events/wallet_sync_liquidity_data.dart';
 import 'package:saiive.live/network/model/pool_pair_liquidity.dart';
 import 'package:saiive.live/network/model/pool_share_liquidity.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
+import 'package:saiive.live/services/prices_background.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/widgets/responsive.dart';
 import 'package:saiive.live/ui/liquidity/liquidity_add.dart';
@@ -22,6 +25,7 @@ import 'package:saiive.live/ui/widgets/loading.dart';
 import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:saiive.live/util/sharedprefsutil.dart';
 
 class LiquidityScreen extends StatefulWidget {
   const LiquidityScreen({Key key}) : super(key: key);
@@ -35,9 +39,13 @@ class LiquidityScreen extends StatefulWidget {
 class _LiquidityScreen extends State<LiquidityScreen> {
   List<PoolShareLiquidity> _liquidity;
   List<PoolPairLiquidity> _poolPairLiquidity;
-  final formatCurrency = new NumberFormat.simpleCurrency();
+  var _formatCurrency = new NumberFormat.simpleCurrency();
   bool showEstimatedRewards = false;
   bool _isLoading = false;
+  Stats _stats;
+
+  double _tetherPrice = 1.0;
+  CurrencyEnum _currency = CurrencyEnum.USD;
 
   StreamSubscription<WalletSyncLiquidityData> _refreshPoolDataSubscription;
 
@@ -57,13 +65,14 @@ class _LiquidityScreen extends State<LiquidityScreen> {
 
     sl.get<AppCenterWrapper>().trackEvent("openLiquidityPage", <String, String>{});
     sl.get<IHealthService>().checkHealth(context);
-    _init();
 
     if (_refreshPoolDataSubscription == null) {
       _refreshPoolDataSubscription = EventTaxiImpl.singleton().registerTo<WalletSyncLiquidityData>().listen((event) async {
         await _refresh();
       });
     }
+
+    _init();
   }
 
   _init() async {
@@ -74,24 +83,41 @@ class _LiquidityScreen extends State<LiquidityScreen> {
     if (_isLoading) {
       return;
     }
+
+    _tetherPrice = sl<PricesBackgroundService>().tetherPrice().fiat;
+    _currency = await sl<ISharedPrefsUtil>().getCurrency();
+    _formatCurrency = new NumberFormat.simpleCurrency(name: Currency.getCurrencyShortage(_currency));
+
+    _stats = await sl<IStatsService>().getStats(DeFiConstants.DefiAccountSymbol);
+
     sl.get<AppCenterWrapper>().trackEvent("openLiquidityPageLoadStart", <String, String>{"timestamp": DateTime.now().millisecondsSinceEpoch.toString()});
 
     setState(() {
       _isLoading = true;
     });
 
-    var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD');
-    var poolPairLiquidity = await new PoolPairHelper().getPoolPairs('DFI', 'USD');
+    try {
+      var liquidity = await new PoolShareHelper().getMyPoolShares('DFI', 'USD', _stats);
+      var poolPairLiquidity = await new PoolPairHelper().getPoolPairs(
+        'DFI',
+        'USD',
+      );
 
-    if (!this.mounted) {
-      return;
+      if (!this.mounted) {
+        return;
+      }
+      setState(() {
+        _liquidity = liquidity;
+        _poolPairLiquidity = poolPairLiquidity;
+        _isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
     }
-    
-    setState(() {
-      _liquidity = liquidity;
-      _poolPairLiquidity = poolPairLiquidity;
-      _isLoading = false;
-    });
   }
 
   Widget _buildPoolPairLiquidityEntry(PoolPairLiquidity liquidity) {
@@ -107,7 +133,7 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                   Expanded(
                       flex: 10,
                       child: Text(
-                        liquidity.apy.toStringAsFixed(2) + '%',
+                        (liquidity.apr != null ? liquidity.apr.toStringAsFixed(2) : 0.0.toStringAsFixed(2)) + '%',
                         textAlign: TextAlign.right,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ))
@@ -115,8 +141,8 @@ class _LiquidityScreen extends State<LiquidityScreen> {
               ),
               Container(
                 child: Row(children: [
-                  Expanded(flex: 4, child: Text('USD \$')),
-                  Expanded(flex: 6, child: Text(formatCurrency.format(liquidity.totalLiquidityInUSDT), textAlign: TextAlign.right))
+                  Expanded(flex: 4, child: Text(Currency.getCurrencyShortage(_currency) + ' ' + Currency.getCurrencySymbol(_currency))),
+                  Expanded(flex: 6, child: Text(_formatCurrency.format(liquidity.totalLiquidityInUSDT * _tetherPrice), textAlign: TextAlign.right))
                 ]),
               ),
               Container(
@@ -205,8 +231,10 @@ class _LiquidityScreen extends State<LiquidityScreen> {
                 )),
           ],
         ),
-        body: LayoutBuilder(builder: (_, builder) {
-          return buildAllLiquidityScreen(context);
-        }));
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: LayoutBuilder(builder: (_, builder) {
+              return buildAllLiquidityScreen(context);
+            })));
   }
 }

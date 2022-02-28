@@ -16,6 +16,7 @@ import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
+import 'package:saiive.live/ui/dex/slippage_widget.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -63,6 +64,7 @@ class _DexScreen extends State<DexScreen> {
 
   WalletAddress _toAddress;
   String _returnAddress;
+  double _slippage = DefiChainConstants.DEFAULT_SLIPPAGE;
 
   void resetForm() {
     setState(() {
@@ -390,15 +392,19 @@ class _DexScreen extends State<DexScreen> {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
-
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-    //int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
     final walletTo = _toAddress.publicKey;
     try {
       var streamController = StreamController<String>();
 
-      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807,
+      var maxPrice = _amountFrom / (_amountTo) * (1 + _slippage);
+      var oneHundredMillions = DefiChainConstants.COIN;
+      var n = maxPrice * oneHundredMillions;
+      var fraction = (n % oneHundredMillions).round();
+      var integer = ((n - fraction) / oneHundredMillions).round();
+
+      var createSwapFuture = wallet.createAndSendSwap(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, integer, fraction,
           returnAddress: _returnAddress, loadingStream: streamController);
 
       sl
@@ -554,6 +560,15 @@ class _DexScreen extends State<DexScreen> {
                     decoration: InputDecoration(hintText: S.of(context).dex_to_amount),
                     keyboardType: TextInputType.numberWithOptions(decimal: true)),
                 SizedBox(height: 20),
+                Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: SlippageWidget(
+                        initialValue: DefiChainConstants.DEFAULT_SLIPPAGE,
+                        title: S.of(context).dex_slippage,
+                        onValueChange: (a) {
+                          _slippage = a;
+                        })),
+                SizedBox(height: 20),
                 AccountSelectAddressWidget(
                     label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
                     onChanged: (newValue) {
@@ -609,6 +624,7 @@ class _DexScreen extends State<DexScreen> {
                             ],
                           )),
                     ]),
+                    SizedBox(height: 20),
                     WalletReturnAddressWidget(
                       onChanged: (v) {
                         setState(() {
@@ -636,6 +652,7 @@ class _DexScreen extends State<DexScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Row(children: [Text(S.of(context).dex)])), body: _buildDexPage(context));
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Row(children: [Text(S.of(context).dex)])),
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildDexPage(context)));
   }
 }

@@ -18,8 +18,9 @@ class IntroRestoreScreen extends StatefulWidget {
 class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
   List<String> _phrase = [];
 
-  Future saveSeed(String seed) async {
-    await sl.get<ISharedPrefsUtil>().setSeedBackedUp(true);
+  Future saveSeed(String seed, bool singleWalletMode) async {
+    var prefs = sl.get<ISharedPrefsUtil>();
+    await prefs.setSeedBackedUp(true);
     await sl.get<IVault>().setSeed(seed);
   }
 
@@ -38,7 +39,8 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
       if (Platform.isAndroid || Platform.isWindows) {
         demoWords2 =
             "wrong turtle frost decide labor verify correct north interest explain velvet mirror that frost alcohol brain ripple coach fortune verb surge suffer pizza rate";
-        // demoWords2 = "sample visa rain lab truly dwarf hospital uphold stereo ride combine arrest aspect exist oil just boy garment estate enable marriage coyote blue yellow";
+        demoWords2 = "shaft blue often ring catalog marble prize tank canvas mention hope valve february dawn appear humor cloth maid color stage weather disagree result subway";
+        demoWords2 = "bubble year chase pair benefit swarm ripple pottery price device receive gain over loud give reopen point input menu execute daring much prefer sauce";
         //demoWords2 = "rely denial exact surprise entire female lounge play put click charge finger leader true raven mobile inflict kitten lady topic caught input there apple";
       }
       //demoWords2 = "capital sick crisp frozen dial black syrup burden fruit loan material wheel giraffe slight sentence long cancel quit parrot arena wine island mutual praise";
@@ -56,8 +58,8 @@ class _IntroRestoreScreenState extends State<IntroRestoreScreen> {
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_wallet_restore)),
         body: MnemonicSeedWidget(
           words: _phrase,
-          onNext: (seed, pathType) async {
-            await saveSeed(seed);
+          onNext: (seed, pathType, singleWalletMode) async {
+            await saveSeed(seed, singleWalletMode);
             Navigator.of(context).pushNamedAndRemoveUntil("/intro_accounts_restore", (route) => false);
           },
         ));

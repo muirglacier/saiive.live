@@ -232,7 +232,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<bool> addressExists(int account, bool isChangeAddress, int index, AddressType addressType) async {
+  Future<bool> addressExists(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType) async {
     for (final address in _addresses) {
       if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index && address.addressType == addressType) {
         return true;
@@ -252,7 +252,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account) {
+  Future<List<WalletAddress>> getWalletAllAddresses(WalletAccount account, {bool onlyActive}) {
     var ret = _addresses.where((element) => element.accountId == account.uniqueId).toList();
     return Future.value(ret);
   }
@@ -274,12 +274,7 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  int getAddressCreationCount() {
-    return 20;
-  }
-
-  @override
-  Future<WalletAddress> getWalletAddressById(int account, bool isChangeAddress, int index, AddressType addressType) async {
+  Future<WalletAddress> getWalletAddressById(WalletAccount walletAccount, int account, bool isChangeAddress, int index, AddressType addressType) async {
     for (final address in _addresses) {
       if (address.account == account && address.isChangeAddress == isChangeAddress && address.index == index && address.addressType == addressType) {
         return address;
@@ -310,7 +305,14 @@ class MemoryDatabaseMock extends IWalletDatabase {
   }
 
   @override
-  int getReturnAddressCreationCount() {
-    return 10;
+  Future<List<Account>> getAccountBalancesForPubKey(String pubKey) {
+    // TODO: implement getAccountBalancesForPubKey
+    throw UnimplementedError();
+  }
+
+  @override
+  Future removeAccountAddress(WalletAddress walletAddress) {
+    // TODO: implement removeAccountAddress
+    throw UnimplementedError();
   }
 }

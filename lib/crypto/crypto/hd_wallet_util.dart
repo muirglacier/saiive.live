@@ -365,7 +365,7 @@ class HdWalletUtil {
     if (!regex.hasMatch(path)) throw new ArgumentError("Expected BIP32 Path");
 
     final splitted = path.split("/");
-    final changeIndex = splitted[2].replaceAll("'", "");
+    final changeIndex = splitted[splitted.length - 2].replaceAll("'", "");
 
     return changeIndex == "1";
   }
@@ -375,7 +375,7 @@ class HdWalletUtil {
     if (!regex.hasMatch(path)) throw new ArgumentError("Expected BIP32 Path");
 
     final splitted = path.split("/");
-    final addressIndex = splitted[3].replaceAll("'", "");
+    final addressIndex = splitted[splitted.length - 1].replaceAll("'", "");
 
     return int.parse(addressIndex);
   }

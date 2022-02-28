@@ -1,6 +1,7 @@
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:flutter/material.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 
 class VaultBorrowLoanChooseTokenScreen extends StatefulWidget {
@@ -35,7 +36,7 @@ class _VaultBorrowLoanChooseTokenScreen extends State<VaultBorrowLoanChooseToken
   }
 
   Widget _buildTokenEntry(LoanToken token) {
-    var loanTokenPriceUSD = token.activePrice != null ? token.activePrice.active.amount : 0.0;
+    var loanTokenPriceUSD = LoanHelper.activePrice(token.token.symbol, token.activePrice);
 
     if (token.token.symbolKey == "DUSD") {
       loanTokenPriceUSD = 1.0;

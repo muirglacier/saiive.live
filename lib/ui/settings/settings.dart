@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:clipboard_manager/clipboard_manager.dart';
+import 'package:event_taxi/event_taxi.dart';
 import 'package:flutter/services.dart';
 import 'package:saiive.live/appcenter/appcenter.dart';
 import 'package:saiive.live/appstate_container.dart';
+import 'package:saiive.live/bus/prices_loaded_event.dart';
 import 'package:saiive.live/crypto/chain.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -11,9 +13,11 @@ import 'package:saiive.live/helper/env.dart';
 import 'package:saiive.live/helper/version.dart';
 import 'package:saiive.live/navigation.helper.dart';
 import 'package:saiive.live/network/ihttp_service.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/ivault.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/wallet_service.dart';
+import 'package:saiive.live/ui/expert/expert_generate_address.dart';
 import 'package:saiive.live/ui/expert/expert_screen.dart';
 import 'package:saiive.live/ui/lock/unlock_handler.dart';
 import 'package:saiive.live/ui/model/available_themes.dart';
@@ -40,6 +44,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _theme;
 
   ChainNet _curNet;
+  bool _useSingleAddressMode = false;
+  CurrencyEnum _currency;
 
   @override
   void initState() {
@@ -54,12 +60,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     var version = await new VersionHelper().getVersion();
     var theme = await sl.get<ISharedPrefsUtil>().getTheme();
     var chainNet = await sl.get<ISharedPrefsUtil>().getChainNetwork();
+    var singleAddressMode = await sl.get<ISharedPrefsUtil>().getUseSingleAddressWallet();
+    var currency = await sl.get<ISharedPrefsUtil>().getCurrency();
 
     setState(() {
       _currentEnvironment = currentEnvironment;
       _version = version;
       _theme = theme.getIndex();
       _curNet = chainNet;
+      _useSingleAddressMode = singleAddressMode;
+      _currency = currency;
     });
   }
 
@@ -83,6 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     await sl.get<IVault>().setSeed(null);
     await sl.get<ISharedPrefsUtil>().setPasswordHash(null);
+    await sl.get<ISharedPrefsUtil>().setUseSingleAddressWallet(true);
     await sl.get<ISharedPrefsUtil>().resetInstanceId();
     await sl.get<IWalletService>().close();
     await sl.get<IWalletService>().destroy();
@@ -107,6 +118,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(S.of(context).settings_network_changed),
     ));
+  }
+
+  Future doChangeSingleAddressMode(bool mode) async {
+    Widget okButton = TextButton(
+        child: Text(S.of(context).ok),
+        onPressed: () async {
+          await sl.get<ISharedPrefsUtil>().setUseSingleAddressWallet(mode);
+          _useSingleAddressMode = mode;
+          setState(() {});
+          Navigator.of(context, rootNavigator: true).pop();
+        });
+    Widget cancelButton = TextButton(
+      child: Text(S.of(context).cancel),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(S.of(context).wallet_use_single_address_mode),
+      content: Text(S.of(context).wallet_single_address_mode_switch),
+      actions: [okButton, cancelButton],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Future doChangeChainNet(ChainNet net) async {
@@ -204,6 +247,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 },
                               ))),
                           SizedBox(height: 5),
+                          Padding(
+                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
+                              child: Container(
+                                  child: DropdownButton<CurrencyEnum>(
+                                isExpanded: true,
+                                value: _currency,
+                                onChanged: (e) async {
+                                  await sl.get<ISharedPrefsUtil>().setCurrency(e);
+                                  EventTaxiImpl.singleton().fire(new PricesStartLoadEvent());
+                                  _currency = e;
+                                  setState(() {});
+                                },
+                                items: CurrencyEnum.values.map((e) {
+                                  return new DropdownMenuItem<CurrencyEnum>(
+                                    value: e,
+                                    child: Text(Currency.getCurrencyName(e)),
+                                  );
+                                }).toList(),
+                              ))),
+                          SizedBox(height: 5),
                           CardItemWidget(S.of(context).settings_network, null, backgroundColor: Colors.transparent),
                           Padding(
                               padding: EdgeInsets.only(left: itemPaddingLeft + 5),
@@ -219,6 +282,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   return new DropdownMenuItem<ChainNet>(
                                     value: e,
                                     child: Text(ChainHelper.chainNetworkString(e)),
+                                  );
+                                }).toList(),
+                              ))),
+                          CardItemWidget(S.of(context).wallet_use_single_address_mode, null, backgroundColor: Colors.transparent),
+                          Padding(
+                              padding: EdgeInsets.only(left: itemPaddingLeft + 5),
+                              child: Container(
+                                  child: DropdownButton<bool>(
+                                isExpanded: true,
+                                disabledHint: Text(S.of(context).yes),
+                                value: _useSingleAddressMode,
+                                onChanged: (e) async {
+                                  await doChangeSingleAddressMode(e);
+                                },
+                                items: [true, false].map((e) {
+                                  return new DropdownMenuItem<bool>(
+                                    value: e,
+                                    child: Text(e ? S.of(context).yes : S.of(context).no),
                                   );
                                 }).toList(),
                               ))),
@@ -279,6 +360,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           CardItemWidget(S.of(context).expert, null, backgroundColor: Colors.transparent),
                           CardItemWidget(S.of(context).expert_title, () async {
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertScreen()));
+                          }, padding: EdgeInsets.only(left: itemPaddingLeft)),
+                          CardItemWidget(S.of(context).expert_address_title, () async {
+                            sl.get<AuthenticationHelper>().forceAuth(context, () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ExpertAddressScreen()));
+                            });
                           }, padding: EdgeInsets.only(left: itemPaddingLeft)),
                         ],
                       )),

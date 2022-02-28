@@ -56,7 +56,7 @@ class _IntroLegalState extends State<IntroLegalScreen> {
     final marginLeft = 20.0;
     return Scaffold(
       appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).welcome_legal)),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.start, verticalDirection: VerticalDirection.down, children: <Widget>[
+      body: SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.start, verticalDirection: VerticalDirection.down, children: <Widget>[
         SizedBox(height: 20),
         Container(padding: EdgeInsets.only(left: marginLeft, right: marginRight), child: Text(S.of(context).welcome_legal_text)),
         SizedBox(height: 20),
@@ -83,7 +83,7 @@ class _IntroLegalState extends State<IntroLegalScreen> {
               }
             }, icon: Icons.check)),
         SizedBox(height: 10)
-      ]),
+      ])),
     );
   }
 }

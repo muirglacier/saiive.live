@@ -7,9 +7,11 @@ import 'package:saiive.live/crypto/wallet/defichain/defichain_wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/events/vaults_sync_start_event.dart';
 import 'package:saiive.live/network/events/wallet_sync_start_event.dart';
+import 'package:saiive.live/network/model/currency.dart';
 import 'package:saiive.live/network/model/loan_token.dart';
 import 'package:saiive.live/network/model/loan_vault.dart';
 import 'package:saiive.live/service_locator.dart';
+import 'package:saiive.live/ui/utils/LoanHelper.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +26,10 @@ class VaultBorrowLoanConfirmScreen extends StatefulWidget {
   final LoanToken loanToken;
   final double amount;
   final String returnAddress;
+  final CurrencyEnum currency;
+  final double tetherPrice;
 
-  VaultBorrowLoanConfirmScreen(this.loanVault, this.loanToken, this.amount, this.returnAddress);
+  VaultBorrowLoanConfirmScreen(this.loanVault, this.loanToken, this.amount, this.returnAddress, this.currency, this.tetherPrice);
 
   @override
   State<StatefulWidget> createState() {
@@ -54,7 +58,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     _totalInterestAmount = (widget.amount * _totalInterest / 100);
     _totalTokenWithInterest = widget.amount + _totalInterestAmount;
 
-    _loanTokenPriceUSD = widget.loanToken.activePrice != null ? widget.loanToken.activePrice.active.amount : 0;
+    _loanTokenPriceUSD = LoanHelper.activePrice(widget.loanToken.token.symbol, widget.loanToken.activePrice);
 
     _totalUSDValue = _totalTokenWithInterest * _loanTokenPriceUSD + double.tryParse(widget.loanVault.loanValue);
     _collateralizationRatio = (100 / _totalUSDValue) * double.tryParse(widget.loanVault.collateralValue);
@@ -64,7 +68,7 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
     return Column(children: [
       Card(
           child: Padding(
-        padding: EdgeInsets.all(30),
+        padding: EdgeInsets.all(20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             S.of(context).loan_you_are_borrowing,
@@ -93,7 +97,10 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
       [S.of(context).loan_vault_interest, _interestVault.toStringAsFixed(2) + '%'],
       [S.of(context).loan_token_interest_amount, FundFormatter.format(_totalInterestAmount) + ' ' + widget.loanToken.token.symbol],
       [S.of(context).loan_token_total_interest, FundFormatter.format(_totalTokenWithInterest) + ' ' + widget.loanToken.token.symbol],
-      [S.of(context).loan_total_loan_usd, FundFormatter.format(_totalUSDValue, fractions: 2) + ' \$'],
+      [
+        S.of(context).loan_total_loan_usd(Currency.getCurrencyShortage(widget.currency)),
+        FundFormatter.format(_totalUSDValue, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+      ],
     ];
 
     return CustomTableWidget(items);
@@ -102,7 +109,10 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
   buildVaultDetails() {
     List<List<String>> items = [
       [S.of(context).loan_vault_id, widget.loanVault.vaultId],
-      [S.of(context).loan_collateral_amount, FundFormatter.format(double.tryParse(widget.loanVault.collateralValue), fractions: 2) + ' \$'],
+      [
+        S.of(context).loan_collateral_amount,
+        FundFormatter.format(double.tryParse(widget.loanVault.collateralValue) * widget.tetherPrice, fractions: 2) + ' ' + Currency.getCurrencySymbol(widget.currency)
+      ],
       [S.of(context).loan_collateral_ratio, widget.loanVault.collateralRatio + '%'],
     ];
 
@@ -153,33 +163,35 @@ class _VaultBorrowLoanConfirmScreen extends State<VaultBorrowLoanConfirmScreen> 
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_borrow_confirm_title)),
-        body: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: CustomScrollView(slivers: [
-              SliverToBoxAdapter(child: buildTopPart()),
-              SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_details, style: Theme.of(context).textTheme.caption))),
-              SliverToBoxAdapter(child: buildTXDetails()),
-              SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
-              SliverToBoxAdapter(child: buildVaultDetails()),
-              SliverToBoxAdapter(child: Container(height: 5)),
-              SliverToBoxAdapter(
-                  child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_result, style: Theme.of(context).textTheme.caption))),
-              SliverToBoxAdapter(child: buildResultDetails()),
-              SliverToBoxAdapter(
-                  child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          child: Text(S.of(context).loan_borrow_confirm),
-                          onPressed: () async {
-                            await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                              await doBorrowLoan();
-                            });
-                          }))),
-              SliverToBoxAdapter(child: Container(height: 40)),
-            ])));
+        body: PrimaryScrollController(
+            controller: new ScrollController(),
+            child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: CustomScrollView(slivers: [
+                  SliverToBoxAdapter(child: buildTopPart()),
+                  SliverToBoxAdapter(child: Container(height: 5)),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_details, style: Theme.of(context).textTheme.caption))),
+                  SliverToBoxAdapter(child: buildTXDetails()),
+                  SliverToBoxAdapter(child: Container(height: 5)),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_vault_details, style: Theme.of(context).textTheme.caption))),
+                  SliverToBoxAdapter(child: buildVaultDetails()),
+                  SliverToBoxAdapter(child: Container(height: 5)),
+                  SliverToBoxAdapter(
+                      child: Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).loan_transaction_result, style: Theme.of(context).textTheme.caption))),
+                  SliverToBoxAdapter(child: buildResultDetails()),
+                  SliverToBoxAdapter(
+                      child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              child: Text(S.of(context).loan_borrow_confirm),
+                              onPressed: () async {
+                                await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                  await doBorrowLoan();
+                                });
+                              }))),
+                  SliverToBoxAdapter(child: Container(height: 40)),
+                ]))));
   }
 }

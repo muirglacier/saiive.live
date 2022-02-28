@@ -44,21 +44,20 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   var _amountController = TextEditingController(text: '1');
   EnvironmentType _currentEnvironment;
 
+  var _sendAmount = 1 * DefiChainConstants.COIN;
+
   String _toAddress;
 
   Future sendFunds(StreamController<String> stream) async {
     try {
       Wakelock.enable();
 
-      final amount = double.parse(_amountController.text.replaceAll(',', '.'));
-      final totalAmount = (amount * DefiChainConstants.COIN).toInt();
-
       var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
 
       sl.get<AppCenterWrapper>().trackEvent("sendToken", <String, String>{"coin": widget.token, "to": _addressController.text, "amount": _amountController.text});
 
-      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, totalAmount, widget.token, _addressController.text, _toAddress,
-          waitForConfirmaton: true, loadingStream: stream, sendMax: totalAmount == tokenAmount.balance);
+      final tx = await sl.get<IWalletService>().createAndSend(widget.chainType, _sendAmount, widget.token, _addressController.text, _toAddress,
+          waitForConfirmaton: true, loadingStream: stream, sendMax: _sendAmount == tokenAmount.balance);
 
       final txId = tx;
       LogHelper.instance.d("sent tx $txId");
@@ -85,6 +84,8 @@ class _WalletSendScreen extends State<WalletSendScreen> {
   handleSetMax() async {
     var tokenAmount = await BalanceHelper().getAccountBalance(widget.token, widget.chainType);
     _amountController.text = (tokenAmount.balance / DefiChainConstants.COIN).toString();
+
+    _sendAmount = tokenAmount.balance;
   }
 
   @override
@@ -103,6 +104,12 @@ class _WalletSendScreen extends State<WalletSendScreen> {
     }
 
     _addressController = TextEditingController(text: toAddress);
+
+    _amountController.addListener(() {
+      final amount = double.parse(_amountController.text.replaceAll(',', '.'));
+      final totalAmount = (amount * DefiChainConstants.COIN).toInt();
+      _sendAmount = totalAmount;
+    });
   }
 
   @override
@@ -119,51 +126,49 @@ class _WalletSendScreen extends State<WalletSendScreen> {
                         child: TextField(
                             controller: _addressController,
                             keyboardType: TextInputType.text,
-                            decoration: (Platform.isMacOS || Platform.isWindows)
-                                ? InputDecoration(hintText: S.of(context).wallet_send_address)
-                                : InputDecoration(
-                                    hintText: S.of(context).wallet_send_address,
-                                    suffixIcon: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          if (Platform.isAndroid || Platform.isIOS)
-                                            IconButton(
-                                              onPressed: () async {
-                                                var status = await Permission.camera.status;
-                                                if (!status.isGranted) {
-                                                  final permission = await Permission.camera.request();
+                            decoration: InputDecoration(
+                                hintText: S.of(context).wallet_send_address,
+                                suffixIcon: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (Platform.isAndroid || Platform.isIOS)
+                                        IconButton(
+                                          onPressed: () async {
+                                            var status = await Permission.camera.status;
+                                            if (!status.isGranted) {
+                                              final permission = await Permission.camera.request();
 
-                                                  if (!permission.isGranted) {
-                                                    return;
-                                                  }
-                                                }
-                                                final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
-                                                _addressController.text = address;
-                                              },
-                                              icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
-                                            ),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                            onPressed: () async {
-                                              AddressBookEntry usedAddress;
-                                              await Navigator.of(context).push(MaterialPageRoute(
-                                                  builder: (BuildContext context) => AddressBookScreen(
-                                                      selectOnlyMode: true,
-                                                      chainFilter: widget.chainType,
-                                                      onAddressSelected: (a) {
-                                                        usedAddress = a;
-                                                      })));
-
-                                              if (usedAddress != null) {
-                                                setState(() {
-                                                  _addressController.text = usedAddress.publicKey;
-                                                });
+                                              if (!permission.isGranted) {
+                                                return;
                                               }
-                                            },
-                                            icon: Icon(Icons.import_contacts, color: StateContainer.of(context).curTheme.primary),
-                                          ),
-                                        ])))))
+                                            }
+                                            final address = await Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => QrCodeScan()));
+                                            _addressController.text = address;
+                                          },
+                                          icon: Icon(Icons.camera_alt, color: StateContainer.of(context).curTheme.primary),
+                                        ),
+                                      SizedBox(width: 10),
+                                      IconButton(
+                                        onPressed: () async {
+                                          AddressBookEntry usedAddress;
+                                          await Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (BuildContext context) => AddressBookScreen(
+                                                  selectOnlyMode: true,
+                                                  chainFilter: widget.chainType,
+                                                  onAddressSelected: (a) {
+                                                    usedAddress = a;
+                                                  })));
+
+                                          if (usedAddress != null) {
+                                            setState(() {
+                                              _addressController.text = usedAddress.publicKey;
+                                            });
+                                          }
+                                        },
+                                        icon: Icon(Icons.import_contacts, color: StateContainer.of(context).curTheme.primary),
+                                      ),
+                                    ])))))
               ]),
               Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                 Expanded(

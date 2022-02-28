@@ -19,6 +19,7 @@ import 'package:saiive.live/network/pool_pair_service.dart';
 import 'package:saiive.live/service_locator.dart';
 import 'package:saiive.live/services/health_service.dart';
 import 'package:saiive.live/ui/accounts/account_select_address_widget.dart';
+import 'package:saiive.live/ui/dex/slippage_widget.dart';
 import 'package:saiive.live/ui/utils/authentication_helper.dart';
 import 'package:saiive.live/ui/utils/fund_formatter.dart';
 import 'package:saiive.live/ui/utils/token_icon.dart';
@@ -71,9 +72,12 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   TokenBalance _selectedValueFrom;
 
   double _amountFrom;
+  double _maxPrice;
 
   WalletAddress _toAddress;
   String _returnAddress;
+
+  double _slippage = DefiChainConstants.DEFAULT_SLIPPAGE;
 
   @override
   void initState() {
@@ -160,26 +164,40 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   }
 
   handleChangeFrom() async {
-    double amount = double.tryParse(_amountFromController.text.replaceAll(',', '.'));
-
-    if (amount == null || amount == 0) {
+    if (_amountFromController.text == null || _amountFromController.text.isEmpty) {
       setState(() {
-        _amountFrom = null;
+        _price = null;
+        _maxPrice = null;
       });
-      return;
-    }
+    } else {
+      double amount = double.tryParse(_amountFromController.text.replaceAll(',', '.'));
 
+      if (amount == null || amount == 0) {
+        setState(() {
+          _amountFrom = null;
+        });
+        return;
+      }
+
+      setState(() {
+        _amountFrom = amount;
+      });
+
+      if (calculatePriceRates != null && _amountFrom > 0) {
+        calculatePriceRates();
+      }
+    }
+  }
+
+  calculateMaxPrice() {
     setState(() {
-      _amountFrom = amount;
+      _maxPrice = _amountFrom / (_price.estimated) * (1 + _slippage);
     });
-
-    if (calculatePriceRates != null && _amountFrom > 0) {
-      calculatePriceRates();
-    }
   }
 
   handleChangeTokenTo() {
     findPrice();
+    calculatePriceRates();
   }
 
   findPrice() {
@@ -215,7 +233,9 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     if (tokenA == null) {
       return;
     }
-
+    if (_amountFrom == null) {
+      return;
+    }
     var slippage = 1 - _amountFrom / tokenA.reserve;
     var lastTokenBySymbol = tokenA.symbol;
     var lastAmount = _amountFrom;
@@ -261,22 +281,24 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       _price = price;
       _swapWays = swapWays;
     });
+
+    calculateMaxPrice();
   }
 
   findPath(List<PoolPair> pairs, String origin, String target) {
     bool isPathFound = false;
-    List<String> nodesToVisit = [origin];
+    List<String> nodesToVisit = [origin, ...getAdjacentNodes(origin, pairs)];
     List<String> visitedNodes = [];
-    List<String> path = [];
+    Map<int, String> path = new Map();
 
-    bfs(String start, List<String> edges, String target) {
+    bfs(String start, List<String> edges, currentDistance, String target) {
       if (edges.length == 0 && start != target) {
         visitedNodes.add(start);
         return;
       }
 
       if (!isPathFound) {
-        path.add(start);
+        path[currentDistance] = start;
       }
 
       if (start == target) {
@@ -299,7 +321,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
 
           nodesToVisit.addAll(innerEdges);
 
-          bfs(startValue, innerEdges, target);
+          bfs(startValue, innerEdges, currentDistance + 1, target);
 
           nextNodeVisitEdges.removeAt(0);
         }
@@ -307,8 +329,8 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     }
 
     var adjacentNodes = getAdjacentNodes(origin, pairs);
-    bfs(origin, adjacentNodes, target);
-    return [visitedNodes, isPathFound ? path : []];
+    bfs(origin, adjacentNodes, 0, target);
+    return [visitedNodes, isPathFound ? path.values.toList() : []];
   }
 
   List<String> getAdjacentNodes(String startNode, List<PoolPair> pairs) {
@@ -357,11 +379,9 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     Wakelock.enable();
 
     final wallet = sl.get<DeFiChainWallet>();
-
     int valueFrom = (_amountFrom * DefiChainConstants.COIN).round();
-    //int maxPrice = (_conversionRate * DefiChainConstants.COIN).round();
 
-    final walletTo = _toAddress.publicKey;
+    final walletTo = _toAddress?.publicKey;
     try {
       var streamController = StreamController<String>();
 
@@ -369,7 +389,14 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
       for (var pool in _selectedPoolPairs) {
         poolIds.add(int.parse(pool.id));
       }
-      var createSwapFuture = wallet.createAndSendSwapV2(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, 9223372036854775807, 9223372036854775807, poolIds,
+
+      var maxPrice = _amountFrom / (_price.estimated) * (1 + _slippage);
+      var oneHundredMillions = DefiChainConstants.COIN;
+      var n = maxPrice * oneHundredMillions;
+      var fraction = (n % oneHundredMillions).round();
+      var integer = ((n - fraction) / oneHundredMillions).round();
+
+      var createSwapFuture = wallet.createAndSendSwapV2(_selectedValueFrom.hash, valueFrom, _selectedValueTo.hash, walletTo, integer, fraction, poolIds,
           returnAddress: _returnAddress, loadingStream: streamController);
 
       sl
@@ -507,13 +534,21 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                     if (_amountFrom != null && _amountFrom > 0 && _swapWays.length > 0) _buildSwapWaysDetails(),
                     if (_amountFrom != null && _amountFrom > 0 && _price != null) _buildTxDetails(),
                     Container(height: 20),
+                    SlippageWidget(
+                      initialValue: DefiChainConstants.DEFAULT_SLIPPAGE,
+                      title: S.of(context).dex_slippage,
+                      onValueChange: (a) {
+                        _slippage = a;
+                        calculateMaxPrice();
+                      }),
+                    Container(height: 20),
                     AccountSelectAddressWidget(
-                        label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
-                        onChanged: (newValue) {
-                          setState(() {
-                            _toAddress = newValue;
-                          });
-                        }),
+                      label: Text(S.of(context).dex_to_address, style: Theme.of(context).inputDecorationTheme.hintStyle),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _toAddress = newValue;
+                        });
+                      }),
                     Container(height: 20),
                     WalletReturnAddressWidget(
                       onChanged: (v) {
@@ -523,16 +558,17 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                       },
                     ),
                     Container(height: 20),
-                    if (_price != null)
-                      Center(
-                          child: ElevatedButton(
-                        child: Text(S.of(context).dex_swap),
-                        onPressed: () async {
-                          await sl.get<AuthenticationHelper>().forceAuth(context, () async {
-                            await doSwap();
-                          });
-                        },
-                      ))
+                    Center(
+                        child: ElevatedButton(
+                      child: Text(S.of(context).dex_swap),
+                      onPressed: _price != null
+                          ? () async {
+                              await sl.get<AuthenticationHelper>().forceAuth(context, () async {
+                                await doSwap();
+                              });
+                            }
+                          : null,
+                    ))
                   ])
               ])));
     }
@@ -545,7 +581,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     ];
 
     return Column(children: [
-      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_prices, style: Theme.of(context).textTheme.caption)),
+      Text(S.of(context).dex_v2_prices, style: Theme.of(context).textTheme.caption),
       CustomTableWidget(items)
     ]);
   }
@@ -553,11 +589,12 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
   _buildTxDetails() {
     List<List<String>> items = [
       [S.of(context).dex_v2_amount_to_be_converted, FundFormatter.format(_amountFrom) + ' ' + _selectedValueFrom.displayName],
-      [S.of(context).dex_v2_estimated_to_receive, FundFormatter.format(_price.estimated) + ' ' + _selectedValueTo.displayName]
+      [S.of(context).dex_v2_estimated_to_receive, FundFormatter.format(_price.estimated) + ' ' + _selectedValueTo.displayName],
+      [S.of(context).dex_v2_max_price, FundFormatter.format(_maxPrice)],
     ];
 
     return Column(children: [
-      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_tx_details, style: Theme.of(context).textTheme.caption)),
+      Text(S.of(context).dex_v2_tx_details, style: Theme.of(context).textTheme.caption),
       CustomTableWidget(items)
     ]);
   }
@@ -570,7 +607,7 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
     });
 
     return Column(children: [
-      Padding(padding: const EdgeInsets.only(left: 8.0), child: Text(S.of(context).dex_v2_swap_details, style: Theme.of(context).textTheme.caption)),
+      Text(S.of(context).dex_v2_swap_details, style: Theme.of(context).textTheme.caption),
       CustomTableWidget(items)
     ]);
   }
@@ -593,6 +630,6 @@ class _CompositeDexScreen extends State<CompositeDexScreen> {
                     )),
               Text(S.of(context).dex_v2)
             ])),
-        body: _buildDexPage(context));
+        body: PrimaryScrollController(controller: new ScrollController(), child: _buildDexPage(context)));
   }
 }

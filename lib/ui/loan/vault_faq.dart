@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,6 @@ class VaultFAQScreen extends StatefulWidget {
 }
 
 class _VaultFAQScreen extends State<VaultFAQScreen> {
-
   _buildView() {
     List<List<String>> items = [
       [S.of(context).loan_faq_collateral, S.of(context).loan_faq_collateral_answer],

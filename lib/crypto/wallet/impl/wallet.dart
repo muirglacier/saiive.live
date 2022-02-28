@@ -11,13 +11,13 @@ import 'package:saiive.live/crypto/database/wallet_database.dart';
 import 'package:saiive.live/crypto/database/wallet_database_factory.dart';
 import 'package:saiive.live/crypto/errors/MempoolConflictError.dart';
 import 'package:saiive.live/crypto/errors/MissingInputsError.dart';
+import 'package:saiive.live/crypto/errors/PriceHigherThanIndicatedError.dart';
 import 'package:saiive.live/crypto/errors/RegenerateWalletAddressError.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/crypto/model/wallet_address.dart';
 import 'package:saiive.live/crypto/wallet/address_type.dart' as adressType;
 import 'package:saiive.live/crypto/wallet/hdWallet.dart';
 import 'package:saiive.live/crypto/wallet/impl/hdWallet.dart';
-import 'package:saiive.live/crypto/wallet/wallet-restore.dart';
 import 'package:saiive.live/crypto/wallet/wallet.dart';
 import 'package:saiive.live/generated/l10n.dart';
 import 'package:saiive.live/network/api_service.dart';
@@ -34,7 +34,6 @@ import 'package:retry/retry.dart';
 
 import 'package:tuple/tuple.dart';
 import 'package:mutex/mutex.dart';
-import 'package:uuid/uuid.dart';
 
 abstract class Wallet extends IWallet {
   Map<String, IHdWallet> _wallets = Map<String, IHdWallet>();
@@ -108,7 +107,7 @@ abstract class Wallet extends IWallet {
     for (var account in accounts) {
       final wallet = new HdWallet(_password, account, _chain, _network, seedList, _apiService);
 
-      await wallet.init(_walletDatabase);
+      await wallet.init(_walletDatabase, _sharedPrefsUtil);
 
       _wallets.putIfAbsent(account.uniqueId, () => wallet);
     }
@@ -152,6 +151,13 @@ abstract class Wallet extends IWallet {
     throw UnimplementedError();
   }
 
+  @override
+  Future<WalletAddress> generateAddress(WalletAccount account, bool isChangeAddress, int index, adressType.AddressType addressType, {bool previewOnly = false}) async {
+    assert(_wallets.containsKey(account.uniqueId));
+
+    return await _wallets[account.uniqueId].generateAddress(_walletDatabase, account, isChangeAddress, index, addressType);
+  }
+
   Future<List<WalletAddress>> getAllPublicKeysFromAccount(WalletAccount account) async {
     if (!_wallets.containsKey(account.uniqueId)) {
       return List<WalletAddress>.empty();
@@ -160,12 +166,12 @@ abstract class Wallet extends IWallet {
     return await _wallets[account.uniqueId].getPublicKeys(walletDatabase);
   }
 
-  Future<List<String>> getPublicKeys() async {
+  Future<List<String>> getPublicKeys({bool onlyActive}) async {
     isInitialzed();
     List<String> keys = [];
 
     for (var wallet in _wallets.values) {
-      final walletAddresses = await wallet.getPublicKeys(_walletDatabase);
+      final walletAddresses = await wallet.getPublicKeys(_walletDatabase, onlyActive: onlyActive);
       final allAddresses = walletAddresses.map((e) => e.publicKey).toList();
 
       keys.addAll(allAddresses);
@@ -174,7 +180,7 @@ abstract class Wallet extends IWallet {
     return keys;
   }
 
-  Future<String> getPublicKey(bool isChangeAddress, adressType.AddressType addressType) async {
+  Future<String> getPublicKey(bool isChangeAddress) async {
     var accounts = await _walletDatabase.getAccounts();
     accounts = accounts.where((element) => element.chain == _chain).toList();
     accounts = accounts.where((element) => element.selected).toList();
@@ -184,7 +190,7 @@ abstract class Wallet extends IWallet {
     }
     if (accounts.length == 1) {
       final acc = accounts.single;
-      final walletAddr = await _wallets[acc.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+      final walletAddr = await _wallets[acc.uniqueId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, acc.defaultAddressType);
       return walletAddr.publicKey;
     }
 
@@ -197,7 +203,7 @@ abstract class Wallet extends IWallet {
           continue;
         }
 
-        final walletAddr = await _wallets[walletId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, addressType);
+        final walletAddr = await _wallets[walletId].nextFreePublicKeyAccount(_walletDatabase, _sharedPrefsUtil, isChangeAddress, wallet.defaultAddressType);
         return walletAddr.publicKey;
       }
     }
@@ -218,9 +224,13 @@ abstract class Wallet extends IWallet {
   }
 
   @override
-  Future<WalletAccount> addAccount(WalletAccount account) {
+  Future<WalletAccount> addAccount(WalletAccount account) async {
     isInitialzed();
-    return _walletDatabase.addOrUpdateAccount(account);
+    var ret = await _walletDatabase.addOrUpdateAccount(account);
+    _isInitialized = false;
+
+    await init();
+    return ret;
   }
 
   Future<bool> hasAccounts() async {
@@ -233,39 +243,6 @@ abstract class Wallet extends IWallet {
   Future<List<WalletAccount>> getAccounts() {
     isInitialzed();
     return _walletDatabase.getAccounts();
-  }
-
-  @override
-  Future<Tuple2<List<WalletAccount>, List<WalletAddress>>> searchAccounts() async {
-    isInitialzed();
-
-    var accounts = await getAccounts();
-    accounts.sort((a, b) => a.id.compareTo(b.id));
-
-    var accountIdList = accounts.map((e) => e.id).toList();
-    var unusedAccounts = await WalletRestore.restore(_chain, _network, _seed, _password, _apiService, existingAccounts: accountIdList);
-    unusedAccounts.item1.sort((a, b) => a.id.compareTo(b.id));
-
-    if (unusedAccounts.item1.isEmpty) {
-      var lastItem = accounts.last;
-      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
-          account: lastItem.account + 1,
-          id: lastItem.account + 1,
-          chain: _chain,
-          name: ChainHelper.chainTypeString(_chain) + (lastItem.account + 2).toString(),
-          derivationPathType: PathDerivationType.FullNodeWallet,
-          walletAccountType: WalletAccountType.HdAccount));
-    } else {
-      var lastItem = unusedAccounts.item1.last;
-      unusedAccounts.item1.add(WalletAccount(Uuid().v4(),
-          account: lastItem.account + 1,
-          id: lastItem.account + 1,
-          chain: _chain,
-          name: ChainHelper.chainTypeString(_chain) + " " + (lastItem.account + 2).toString(),
-          derivationPathType: PathDerivationType.FullNodeWallet,
-          walletAccountType: WalletAccountType.HdAccount));
-    }
-    return unusedAccounts;
   }
 
   @override
@@ -319,6 +296,16 @@ abstract class Wallet extends IWallet {
 
     // add check that we can spent the utxo from the changeAddress
     await getPrivateKey(retAddress, retWalletAccount);
+  }
+
+  @override
+  Future<bool> validateAddress(WalletAccount account, WalletAddress address) async {
+    try {
+      await getPrivateKey(address, account);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   Future<ECPair> getPrivateKey(WalletAddress address, WalletAccount walletAccount) async {
@@ -398,10 +385,6 @@ abstract class Wallet extends IWallet {
 
     var fees = await getTxFee(useTxs.length, 2);
     fees += additionalFees;
-
-    if (sendMax) {
-      //fees *= -1;
-    }
 
     if (amount == tokenBalance?.balance) {
       amount -= fees;
@@ -487,6 +470,9 @@ abstract class Wallet extends IWallet {
         }
         if (e.error.error.contains("Missing inputs")) {
           throw new MissingInputsError(S.current.wallet_operation_missing_inputs, txHex);
+        }
+        if (e.error.error.contains("Price is higher than indicated.")) {
+          throw new PriceHigherThanIndicatedError(S.current.wallet_operation_price_higher_than_indicated, txHex);
         }
       }
 

@@ -119,7 +119,7 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
                             }));
                   }),
               // Text('Keep note of your selected collateral ratio for your vault to sustain the loans within it', style: Theme.of(context).textTheme.caption),
-              // Container(height: 20),
+              Container(height: 10),
               SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -134,6 +134,7 @@ class _VaultCreateScreen extends State<VaultCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_create_vault)), body: buildCreateVaultScreen(context));
+    return Scaffold(
+        appBar: AppBar(toolbarHeight: StateContainer.of(context).curTheme.toolbarHeight, title: Text(S.of(context).loan_create_vault)), body: buildCreateVaultScreen(context));
   }
 }

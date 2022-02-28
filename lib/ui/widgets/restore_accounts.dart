@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:saiive.live/appstate_container.dart';
 import 'package:saiive.live/crypto/model/wallet_account.dart';
 import 'package:saiive.live/generated/l10n.dart';
@@ -20,6 +22,8 @@ class RestoreAccountsScreen extends StatefulWidget {
 }
 
 class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
+  var _streamController = new StreamController<String>();
+
   Future<List<WalletAccount>> searchAccounts() async {
     Wakelock.enable();
 
@@ -28,7 +32,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
 
       final walletService = sl.get<IWalletService>();
 
-      var result = await walletService.restore(network);
+      var result = await walletService.restore(network, loadingStream: _streamController);
       var ret = List<WalletAccount>.empty(growable: true);
 
       for (final res in result) {
@@ -40,6 +44,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
       return ret;
     } finally {
       Wakelock.disable();
+      _streamController.close();
     }
   }
 
@@ -114,7 +119,7 @@ class _RestoreAccountsScreen extends State<RestoreAccountsScreen> {
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
-        return LoadingWidget(text: S.of(context).loading);
+        return LoadingWidget(text: S.of(context).loading, stream: _streamController.stream);
       },
     );
   }

@@ -64,7 +64,7 @@ dependencies:
   qr_flutter: ^4.0.0
   flutter_qr_reader:
     git: 
-      url: git://github.com/saiive/flutter_qr_reader
+      url: https://github.com/muirglacier/flutter_qr_reader
       ref: master
 
   flutter_launcher_icons: ^0.9.0
@@ -79,7 +79,7 @@ dependencies:
   # Desktop
   window_size:
     git:
-      url: git://github.com/google/flutter-desktop-embedding.git
+      url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
 
   # Dependency Injection
@@ -114,7 +114,7 @@ dependencies:
   local_auth: ^1.1.2
   flutter_screen_lock: 
     git: 
-      url: git://github.com/saiive/flutter_screen_lock
+      url: https://github.com/muirglacier/flutter_screen_lock
       ref: master
   app_tracking_transparency: ^2.0.1
   

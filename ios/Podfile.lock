@@ -1,5 +1,4 @@
 PODS:
-  - Alamofire (5.4.3)
   - app_tracking_transparency (0.0.1):
     - Flutter
   - AppCenter (3.3.4):
@@ -61,7 +60,6 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - Alamofire (~> 5.4)
   - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - clipboard_manager (from `.symlinks/plugins/clipboard_manager/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
@@ -87,7 +85,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Alamofire
     - AppCenter
     - FMDB
 
@@ -138,7 +135,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
-  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
   app_tracking_transparency: 5b1745ef9ade815f7455cb6a0848349589afb7c5
   AppCenter: 0487be185c038ed2ecc5ed38219af1dcd280af23
   clipboard_manager: f4800834e62cc26b1cc4e0a92a35cd452dd8b827
@@ -164,6 +160,6 @@ SPEC CHECKSUMS:
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
   webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
 
-PODFILE CHECKSUM: 9e1c16b8cf0111891ce6d9cd9d1b906853fbaca6
+PODFILE CHECKSUM: 255c98a435892803648f8ec5c537fe4c54e84de6
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.11.3
